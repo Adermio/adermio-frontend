@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About Us - Adermio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',   
+                            dark: '#0F3D39',   
+                            primary: '#14B8A6',
+                            text: '#334155',   
+                            muted: '#94A3B8',  
+                            surface: '#FFFFFF' 
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                    animation: {
+                        'float-slow': 'float 8s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        a, a:visited, a:hover, a:active {
+            color: inherit; 
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        .premium-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                0 20px 50px -10px rgba(15, 61, 57, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .text-balance { text-wrap: balance; }
+        
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bg-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .image-mask {
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        }
+
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="https://adermio.com" class="flex items-center gap-2">
+                 <img src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+                
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+                        <img src="https://flagcdn.com/us.svg" width="16" alt="EN" class="rounded-sm shadow-sm">
+                        <span class="font-sans font-medium text-sm">EN</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+                    </button>
+                    
+                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-36 bg-white rounded-xl shadow-luxury border border-adermio-dark/5 overflow-hidden z-[80]">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                            <img src="https://flagcdn.com/us.svg" width="20" alt="English" class="rounded-sm shadow-sm">
+                            <span>English</span>
+                        </a>
+                        <a href="https://adermio.com/about" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/fr.svg" width="20" alt="Français" class="rounded-sm shadow-sm">
+                            <span>Français</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="https://adermio.com" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Home</a>
+            <a href="https://adermio.com/en/form" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Start Analysis</a>
+            <a href="#" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark text-teal-600 transition-colors">About Us</a>
+            <a href="https://adermio.com/en/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Contact Us</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2025</span>
+        </div>
+    </div>
+
+    <header class="relative w-full pt-40 pb-20 px-6 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-teal-50/60 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="fade-up inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/50 border border-adermio-dark/5 text-[10px] uppercase tracking-[0.2em] font-medium text-adermio-dark shadow-sm mb-6">
+                <span>Our Mission</span>
+            </div>
+            <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl text-adermio-dark leading-[1.1] mb-8 text-balance fade-up" style="animation-delay: 0.1s;">
+                Democratizing access <br> <span class="italic text-teal-800/80">to skin expertise.</span>
+            </h1>
+            <p class="font-sans text-lg text-adermio-text/70 leading-relaxed max-w-2xl mx-auto text-balance fade-up font-light" style="animation-delay: 0.2s;">
+                We created Adermio to bridge the gap between everyday skin problems and appropriate answers that are often hard to find.
+            </p>
+        </div>
+    </header>
+
+    <section class="py-12 md:py-24 px-6 relative z-10">
+        <div class="max-w-3xl mx-auto">
+            <div class="w-full fade-up" style="animation-delay: 0.4s;">
+                <span class="text-teal-600 font-bold tracking-widest text-[10px] uppercase mb-4 block text-center md:text-left">Our Story</span>
+                <h2 class="font-serif text-3xl md:text-4xl text-adermio-dark mb-8 text-center md:text-left">Why Adermio?</h2>
+                <div class="space-y-6 text-adermio-text/80 font-light leading-relaxed text-lg text-justify md:text-left">
+                    <p>
+                        Acne affects 80% of teenagers and 40% of adults. Yet, obtaining reliable and personalized advice remains complex, and medical waiting times can be long.
+                    </p>
+                    <p>
+                        Faced with this waiting time, many turn to unsuitable solutions on the internet or multiply expensive products without results. Adermio was born from this observation.
+                    </p>
+                    <p>
+                        Our goal is to offer an <span class="font-medium text-adermio-dark">instant, reliable, and objective analysis</span>. Using computer vision, we analyze your skin to guide you towards the right routine.
+                    </p>
+                </div>
+                
+                <div class="mt-12 p-6 bg-teal-50/50 border border-teal-100 rounded-2xl flex flex-col md:flex-row items-start gap-5">
+                    <div class="bg-white p-3 rounded-full shadow-sm text-teal-600 flex-shrink-0">
+                        <i data-lucide="scale" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-adermio-dark text-lg mb-2">Our Adermio Commitment</p>
+                        <p class="text-adermio-text/70 leading-relaxed">
+                            Adermio does not sell any cosmetic products. We are not affiliated with any brand. Our recommendations are 100% neutral and come from our database of over 100 dermatologically reliable products.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 bg-white relative">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-teal-600 font-bold tracking-widest text-[10px] uppercase mb-3 block">Our Values</span>
+                <h2 class="font-serif text-3xl md:text-4xl text-adermio-dark mb-4">An Ethical Approach</h2>
+                <p class="text-adermio-text/60 font-light">We believe technology should serve your well-being, with complete transparency.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="premium-card rounded-[2rem] p-8 md:p-10 group hover:-translate-y-2 transition-transform duration-500">
+                    <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 mb-6 group-hover:bg-teal-600 group-hover:text-white transition-colors duration-300">
+                        <i data-lucide="shield-check" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-adermio-dark mb-3">100% Independent</h3>
+                    <p class="text-sm text-adermio-text/70 leading-relaxed font-light">
+                        We refuse all commercial partnerships. Unlike influencers or magazines, our recommendations are based solely on ingredient efficacy, not marketing.
+                    </p>
+                </div>
+
+                <div class="premium-card rounded-[2rem] p-8 md:p-10 group hover:-translate-y-2 transition-transform duration-500">
+                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                        <i data-lucide="lock" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-adermio-dark mb-3">Total Privacy</h3>
+                    <p class="text-sm text-adermio-text/70 leading-relaxed font-light">Your face is sensitive data. Your photos are encrypted, analyzed by AI, then anonymized. Your identity remains protected, and data is never resold.</p>
+                </div>
+
+                <div class="premium-card rounded-[2rem] p-8 md:p-10 group hover:-translate-y-2 transition-transform duration-500">
+                    <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                        <i data-lucide="heart-handshake" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-adermio-dark mb-3">Kindness & Support</h3>
+                    <p class="text-sm text-adermio-text/70 leading-relaxed font-light">Acne has a strong psychological impact. Our tone is always encouraging, never guilt-inducing. We are here to help you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 bg-adermio-dark text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div class="md:w-1/2">
+                <span class="text-teal-300 font-bold tracking-widest text-[10px] uppercase mb-3 block">Technology</span>
+                <h2 class="font-serif text-3xl md:text-5xl mb-6 leading-tight">Adermio AI Core™</h2>
+                <p class="text-teal-50/80 font-light text-lg leading-relaxed mb-8">
+                    Our Deep Learning model detects 12 types of imperfections with precision comparable to an expert human eye. It continuously learns to refine its diagnoses.
+                </p>
+                <div class="flex gap-4">
+                    <div class="border border-white/20 rounded-xl p-4 flex-1 backdrop-blur-sm">
+                        <div class="text-3xl font-serif font-bold text-white mb-1">98%</div>
+                        <div class="text-xs text-teal-200 uppercase tracking-wide">Detection Accuracy</div>
+                    </div>
+                    <div class="border border-white/20 rounded-xl p-4 flex-1 backdrop-blur-sm">
+                        <div class="text-3xl font-serif font-bold text-white mb-1">&lt; 45s</div>
+                        <div class="text-xs text-teal-200 uppercase tracking-wide">Analysis Time</div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                 <div class="relative w-64 h-64 md:w-80 md:h-80">
+                    <div class="absolute inset-0 border border-teal-500/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                    <div class="absolute inset-4 border border-dashed border-teal-500/50 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i data-lucide="scan-face" class="w-24 h-24 text-teal-300 opacity-80"></i>
+                    </div>
+                    <div class="absolute top-0 left-1/2 w-2 h-2 bg-teal-400 rounded-full shadow-[0_0_15px_rgba(45,212,191,0.8)] animate-[spin_4s_linear_infinite] origin-[0_128px]"></div>
+                 </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png" 
+                     alt="Adermio Logo" 
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                Dermatology reinvented by artificial intelligence.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="https://adermio.com" class="hover:text-teal-600 transition-colors !text-adermio-dark">Home</a>
+                <a href="https://adermio.com/en/form" class="hover:text-teal-600 transition-colors !text-adermio-dark">Start Analysis</a>
+                <a href="#" class="hover:text-teal-600 transition-colors !text-adermio-dark">About Us</a>
+                <a href="https://adermio.com/en/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Contact Us</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="https://adermio.com/en/conditions" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Terms of Service</a>
+                <a href="https://adermio.com/en/legal-notice" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Legal Notice</a>
+                <a href="https://adermio.com/en/confidentialite" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Privacy Policy</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2025 Adermio Lab. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+</body>
+</html>
