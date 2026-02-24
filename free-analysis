@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title id="page-title">Votre Rapport Adermio</title>
+  
+  <style>
+    /* Reset de base pour que l'iframe prenne bien tout l'écran */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden; /* Empêche le double scroll (parent + iframe) */
+      background-color: #e5e7eb; /* Assorti au fond de ton rapport S3 */
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Conteneur plein écran pour l'iframe */
+    .iframe-container {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* Message d'erreur stylisé si le jobId est manquant */
+    #error-state {
+      display: none;
+      position: fixed;
+      inset: 0;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: #f8fafc;
+      z-index: 20;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .error-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f3d39;
+      margin-bottom: 10px;
+    }
+
+    .error-text {
+      font-size: 15px;
+      color: #64748b;
+      margin-bottom: 25px;
+    }
+
+    .btn-home {
+      background-color: #00897b;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="iframe-container">
+    <iframe id="reportFrame" title="Rapport Adermio"></iframe>
+  </div>
+
+  <div id="error-state">
+    <div id="err-title" class="error-title">Lien invalide ou expiré</div>
+    <div id="err-text" class="error-text">Nous n'avons pas pu trouver votre analyse.</div>
+    <a id="err-btn" href="https://adermio.com/formulaire" class="btn-home">Refaire une analyse</a>
+  </div>
+
+<script>
+  // 1. LE CORRECTIF MAGIQUE : Détecter le retour navigateur (Bfcache)
+  window.addEventListener("pageshow", (event) => {
+    // event.persisted est "true" si la page est chargée depuis le cache (bouton retour Stripe)
+    if (event.persisted) {
+      console.log("[Adermio] Retour détecté, rechargement pour réactiver les boutons.");
+      window.location.reload(); 
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const jobId = urlParams.get("jobId");
+    const lang = urlParams.get("lang") || "fr"; // FR par défaut si pas de paramètre
+    
+    const errorState = document.getElementById("error-state");
+    const iframe = document.getElementById("reportFrame");
+
+    // --- NOUVEAUTÉ : Traduction UX si lang=en ---
+    if (lang === "en") {
+      document.documentElement.lang = "en"; // Pour le SEO et l'accessibilité
+      document.getElementById("page-title").textContent = "Your Adermio Report";
+      document.getElementById("err-title").textContent = "Invalid or expired link";
+      document.getElementById("err-text").textContent = "We couldn't find your analysis.";
+      document.getElementById("err-btn").textContent = "Restart Analysis";
+      document.getElementById("err-btn").href = "https://adermio.com/en/form"; // Lien vers le formulaire anglais
+    }
+
+    // Gestion de l'erreur si aucun jobId n'est présent
+    if (!jobId) {
+      errorState.style.display = "flex";
+      return;
+    }
+
+    // Construction et injection de l'URL S3
+    const reportUrl = `https://adermio-free.s3.eu-north-1.amazonaws.com/ANALYSE_${encodeURIComponent(jobId)}.html`;
+    
+    // On expose l'origine autorisée globalement pour l'écouteur de message
+    window.adermioAllowedOrigin = new URL(reportUrl).origin;
+    
+    iframe.src = reportUrl;
+  });
+
+  // 2. On place l'écouteur HORS du DOMContentLoaded pour qu'il soit toujours actif
+  window.addEventListener("message", (event) => {
+    // On s'assure que l'origine a bien été définie
+    if (!window.adermioAllowedOrigin) return;
+
+    // Validation stricte de l'origine
+    if (event.origin !== window.adermioAllowedOrigin) return;
+
+    // Validation du type de message
+    if (!event.data || event.data.type !== "OPEN_STRIPE") return;
+
+    const stripeUrl = String(event.data.url || "");
+
+    // Validation stricte de l'URL cible
+    const isValidStripeUrl = 
+      stripeUrl.startsWith("https://checkout.stripe.com/") || 
+      stripeUrl.startsWith("https://buy.stripe.com/");
+    
+    if (!isValidStripeUrl) return;
+
+    // 3. Redirection (on utilise assign() qui gère un peu mieux l'historique navigateur que href)
+    console.log("[Adermio] Ouverture de Stripe...");
+    window.location.assign(stripeUrl);
+  });
+</script>
+
+</body>
+</html>
