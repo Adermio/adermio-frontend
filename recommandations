@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nos Recommandations Produits - Adermio</title>
+    <meta name="description" content="Découvrez une sélection de produits dermatologiques (nettoyants, hydratants, solaires) recommandés pour une routine de soin équilibrée.">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://adermio.com/recommandations">
+    <meta property="og:title" content="Nos Recommandations Produits - Adermio">
+    <meta property="og:description" content="Une sélection neutre et adaptée pour prendre soin de votre peau au quotidien.">
+    
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --primary-color: #00897b;
+            --primary-hover: #00695c;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-gray: #64748B;
+            --border-color: #E2E8F0;
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        /* --- LAYOUT UTILS --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 60px 0;
+        }
+
+        /* --- HEADER & HERO --- */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .brand-dot {
+            width: 10px; height: 10px; 
+            background: var(--primary-color); 
+            border-radius: 50%;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--card-bg);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* --- TRANSPARENCE (AMAZON COMPLIANCE) --- */
+        .transparency-box {
+            background-color: #fffbeb; /* Fond jaune très pâle pour visibilité */
+            border: 1px solid #fcd34d;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 0 auto 40px auto;
+            max-width: 800px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #92400e;
+        }
+
+        .transparency-box strong {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        /* --- CATEGORIES & PRODUITS --- */
+        .category-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            margin-top: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            display: inline-block;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .product-header {
+            margin-bottom: 15px;
+        }
+
+        .product-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .product-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .product-desc {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+        }
+
+        .warning-note {
+            font-size: 0.85rem;
+            background-color: #fef2f2;
+            color: #b91c1c;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        .btn-amazon {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #F3F4F6;
+            color: var(--text-dark);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-amazon:hover {
+            background-color: #E5E7EB;
+            color: #000;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: white;
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .footer-links {
+            margin-top: 15px;
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .disclaimer-footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 40px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="brand">
+                <div class="brand-dot"></div>
+                Adermio
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Les essentiels d'une routine équilibrée</h1>
+            <p>Une sélection de produits reconnus pour leur composition et leur tolérance, classés par étape clé de votre routine.</p>
+            <a href="#produits" class="btn-primary">Voir les produits</a>
+        </div>
+    </section>
+
+    <main id="produits" class="container section">
+
+        <div class="transparency-box">
+            <strong>Transparence & Affiliation</strong>
+            En tant que Partenaire Amazon, je réalise un bénéfice sur les achats remplissant les conditions requises.<br>
+            Cela ne modifie pas le prix pour vous. Cette sélection est réalisée en toute indépendance pour vous guider vers des références fiables.
+        </div>
+
+        <p style="text-align: center; color: var(--text-gray); font-style: italic; margin-bottom: 40px;">
+            Note : Ces recommandations sont générales et ne remplacent pas un avis médical.
+        </p>
+
+        <h2 class="category-title">1. Nettoyants Doux</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-header">
+                    <span class="product-tag">Peaux Normales à Sèches</span>
+                    <h3 class="product-name">Crème Lavante Hydratante</h3>
+                    <p class="product-desc">Nettoie en douceur sans altérer la barrière cutanée grâce aux céramides.</p>
+                </div>
+                <a href="https://www.amazon.fr/dp/B01I4OSYJ2/?tag=adermio00-21" target="_blank" rel="nofollow sponsored noopener noreferrer" class="btn-amazon">
+                    Voir sur Amazon ↗
+                </a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-header">
+                    <span class="product-tag">Peaux Grasses / Sensibles</span>
+                    <h3 class="product-name">Gel Moussant Purifiant</h3>
+                    <p class="product-desc">Élimine l'excès de sébum et les impuretés sans dessécher l'épiderme.</p>
+                </div>
+                <a href="https://www.amazon.fr/dp/B07C5R51Q9/?tag=adermio00-21" target="_blank" rel="nofollow sponsored noopener noreferrer" class="btn-amazon">
+                    Voir sur Amazon ↗
+                </a>
+            </div>
+        </div>
+
+        <h2 class="category-title">2. Exfoliants (Actifs)</h2>
+        <div class="warning-note">
+            ⚠️ Prudence : Commencer progressivement (1 à 2 fois par semaine). Espacer en cas d’irritation.
+        </div>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-header">
+                    <span class="product-tag">Ciblé Pores & Points Noirs</span>
+                    <h3 class="product-name">Lotion Exfoliante 2% BHA</h3>
+                    <p class="product-desc">Aide à désobstruer les pores en profondeur et lisser le grain de peau.</p>
+                </div>
+                <a href="https://www.amazon.fr/dp/B000P6W7C8/?tag=adermio00-21" target="_blank" rel="nofollow sponsored noopener noreferrer" class="btn-amazon">
+                    Voir sur Amazon ↗
+                </a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-header">
+                    <span class="product-tag">Éclat & Texture</span>
+                    <h3 class="product-name">Solution Tonique 7% AHA</h3>
+                    <p class="product-desc">Exfoliation de surface pour un teint plus lumineux et régulier.</p>
+                </div>
+                <a href="https://www.amazon.fr/dp/B07GLHC5J9/?tag=adermio00-21" target="_blank" rel="nofollow sponsored noopener noreferrer" class="btn-amazon">
+                    Voir sur Amazon ↗
+                </a>
+            </div>
+        </div>
+
+        <h2 class="category-title">3. Crèmes Hydratantes</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-header">
+                    <span class="product-tag">Réparation & Protection</span>
+                    <h3 class="product-name">Baume Hydratant Visage & Corps</h3>
+                    <p class="product-desc">Hydratation longue durée, formule riche en céramides essentiels.</p>
+                </div>
+                <a href="https://www.amazon.fr/dp/B09WDRFSLN/?tag=adermio00-21" target="_blank" rel="nofollow sponsored noopener noreferrer" class="btn-amazon">
+                    Voir sur Amazon ↗
+                </a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-header">
+                    <span class="product-tag">Polyvalent & Léger</span>
+                    <h3 class="product-name">Lait-Crème Concentré</h3>
+                    <p class="product-desc">Soin nutritif multi-fonctions, texture fluide qui pénètre rapidement.</p>
+                </div>
+                <a href="https://www.amazon.fr/dp/B0041MEMVG/?tag=adermio00-21" target="_blank" rel="nofollow sponsored noopener noreferrer" class="btn-amazon">
+                    Voir sur Amazon ↗
+                </a>
+            </div>
+        </div>
+
+        <h2 class="category-title">4. Protection Solaire (SPF)</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-header">
+                    <span class="product-tag">Texture Fluide</span>
+                    <h3 class="product-name">Fluide Invisible SPF 50+</h3>
+                    <p class="product-desc">Très haute protection large spectre, fini non gras et sans traces blanches.</p>
+                </div>
+                <a href="https://www.amazon.fr/dp/B09SQF23RV/?tag=adermio00-21" target="_blank" rel="nofollow sponsored noopener noreferrer" class="btn-amazon">
+                    Voir sur Amazon ↗
+                </a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-header">
+                    <span class="product-tag">Usage Quotidien</span>
+                    <h3 class="product-name">Sérum Invisible Super UV 50+</h3>
+                    <p class="product-desc">Protection quotidienne légère, idéale à appliquer sous le maquillage.</p>
+                </div>
+                <a href="https://www.amazon.fr/dp/B092HW5JYZ/?tag=adermio00-21" target="_blank" rel="nofollow sponsored noopener noreferrer" class="btn-amazon">
+                    Voir sur Amazon ↗
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Adermio © 2026. Tous droits réservés.</p>
+            <p class="footer-links">
+                Dernière mise à jour : Janvier 2026 &bull; 
+                <a href="mailto:contact@adermio.com">Nous contacter</a>
+            </p>
+            <div class="disclaimer-footer">
+                En tant que Partenaire Amazon, je réalise un bénéfice sur les achats remplissant les conditions requises.
+                Les informations fournies sur cette page sont à titre informatif et ne constituent pas un avis médical.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
