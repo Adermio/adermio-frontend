@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Adermio - Cycle 2 Analysis</title>
+<style>
+  :root {
+    --primary: #0f766e;
+    --primary-dark: #115e59;
+    --primary-light: #f0fdfa;
+    --secondary: #64748b;
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --danger: #ef4444;
+  }
+
+  html, body {
+    margin: 0 !important; padding: 0 !important; height: 100% !important;
+    overflow: hidden !important; background: var(--bg-body);
+    font-family: var(--font-main);
+    color: #1e293b;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  * { box-sizing: border-box; outline: none; }
+
+  #premium-loading, #premium-error {
+    position: fixed; inset: 0; z-index: 999999;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; text-align: center;
+    background: var(--bg-body);
+    font-size: 14px; color: var(--secondary);
+  }
+  #premium-error { display: none; color: #b00020; flex-direction: column; gap: 10px; }
+
+  #premium-container {
+    position: fixed; inset: 0; z-index: 999998;
+    display: none;
+    width: 100vw; height: 100vh;
+    background: var(--bg-body);
+    overflow: hidden;
+  }
+  #premium-iframe {
+    width: 100%; height: 100%;
+    border: 0; display: block;
+    background: var(--bg-body);
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div id="premium-loading">Loading your Cycle 2 analysis...</div>
+<div id="premium-error"></div>
+
+<div id="premium-container">
+  <iframe
+    id="premium-iframe"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="fullscreen"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<script>
+(function() {
+  const SUPABASE_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTk2MTIsImV4cCI6MjA2MDIzNTYxMn0.D2NPwMFJqjlSZZMqFn3VJGx-o57gMSQsTYqzPl3sJis";
+
+  let GLOBAL_TOKEN = null;
+
+  async function init() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      GLOBAL_TOKEN = params.get("token");
+
+      const loadingEl = document.getElementById("premium-loading");
+      const errorEl = document.getElementById("premium-error");
+      const containerEl = document.getElementById("premium-container");
+      const iframeEl = document.getElementById("premium-iframe");
+
+      if (!GLOBAL_TOKEN) {
+        if(loadingEl) loadingEl.style.display = "none";
+        if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Invalid link: missing token."; }
+        return;
+      }
+
+      const res = await fetch(
+        SUPABASE_URL + "/rest/v1/cycle2_intake?access_token=eq." + encodeURIComponent(GLOBAL_TOKEN) + "&select=report_html_url,downloadUrl,job_id,client_name&limit=1",
+        {
+          method: "GET",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + SUPABASE_KEY
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error("Loading error");
+
+      const data = await res.json();
+      if (!data || !Array.isArray(data) || data.length === 0) throw new Error("Report not found");
+
+      const record = data[0];
+      const reportUrl = record.report_html_url || record.downloadUrl;
+      if (!reportUrl) throw new Error("Report URL missing");
+
+      iframeEl.src = reportUrl;
+      if(loadingEl) loadingEl.style.display = "none";
+      if(containerEl) containerEl.style.display = "block";
+
+      const fit = () => {
+        const h = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
+        containerEl.style.height = h + "px";
+      };
+      fit();
+      window.addEventListener("resize", fit);
+      if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
+
+    } catch (e) {
+      console.error(e);
+      const loadingEl = document.getElementById("premium-loading");
+      const errorEl = document.getElementById("premium-error");
+      if(loadingEl) loadingEl.style.display = "none";
+      if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = e.message || "Loading error. Please try again later."; }
+    }
+  }
+
+  init();
+})();
+</script>
+
+
+<style>
+  :root {
+    --ad-primary: #0d9488;
+    --ad-bg-user: #0d9488;
+    --ad-text-user: #ffffff;
+    --ad-bg-bot: #f1f5f9;
+    --ad-text-bot: #1e293b;
+    --ad-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --ad-z-index: 2147483647;
+  }
+
+  #adermio-chat-launcher {
+    position: fixed; right: 20px; bottom: 25px; z-index: var(--ad-z-index);
+    width: 48px; height: 48px; background-color: var(--ad-primary);
+    border-radius: 50%; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  #adermio-chat-launcher:active { transform: scale(0.95); }
+  #adermio-chat-launcher svg { width: 22px; height: 22px; color: white; }
+  #adermio-chat-launcher .dot {
+    position: absolute; top: 0; right: 0; width: 10px; height: 10px;
+    background: #ef4444; border: 2px solid white; border-radius: 50%; display: none;
+  }
+
+  #adermio-welcome-bubble {
+    position: fixed; bottom: 85px; right: 20px; z-index: var(--ad-z-index);
+    width: 260px; background: white; padding: 12px 30px 12px 14px;
+    border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    font-family: var(--ad-font); font-size: 13px; line-height: 1.4; color: #334155;
+    border: 1px solid rgba(0,0,0,0.04);
+    opacity: 0; transform: translateY(10px); animation: bubble-in 0.5s ease-out 1s forwards;
+    display: flex;
+  }
+  #adermio-welcome-bubble::after {
+    content: ''; position: absolute; bottom: -6px; right: 18px;
+    width: 12px; height: 12px; background: white; transform: rotate(45deg);
+    border-bottom: 1px solid rgba(0,0,0,0.04); border-right: 1px solid rgba(0,0,0,0.04);
+  }
+  #adermio-welcome-close {
+    position: absolute; top: 5px; right: 5px; width: 20px; height: 20px;
+    border: none; background: transparent; color: #94a3b8;
+    cursor: pointer; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  }
+
+  #adermio-chat {
+    display: none; position: fixed; z-index: var(--ad-z-index);
+    background: #ffffff; overflow: hidden; font-family: var(--ad-font);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15); flex-direction: column;
+  }
+  @media (min-width: 768px) { #adermio-chat { bottom: 90px; right: 20px; width: 380px; height: 600px; border-radius: 16px; border: 1px solid rgba(0,0,0,0.05); } }
+  @media (max-width: 767px) { #adermio-chat { inset: 0; width: 100%; height: 100dvh; border-radius: 0; } }
+
+  .adermio-chat-header { height: 64px; padding: 0 20px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .adermio-header-title { font-weight: 700; font-size: 16px; color: #0f172a; }
+  .adermio-header-subtitle { font-size: 12px; color: var(--ad-primary); display:flex; align-items:center; gap:4px; }
+  .adermio-header-subtitle::before { content:''; width:6px; height:6px; background:var(--ad-primary); border-radius:50%; }
+  .adermio-chat-close { background: none; border: none; padding: 8px; cursor: pointer; color: #64748b; }
+
+  .adermio-chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #fff; }
+  .adermio-chat-msg { display: flex; max-width: 85%; }
+  .adermio-chat-msg.bot { align-self: flex-start; }
+  .adermio-chat-msg.user { align-self: flex-end; justify-content: flex-end; }
+  .adermio-chat-bubble { padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.5; word-wrap: break-word; }
+  .adermio-chat-msg.bot .adermio-chat-bubble { background: var(--ad-bg-bot); color: var(--ad-text-bot); border-bottom-left-radius: 4px; }
+  .adermio-chat-msg.user .adermio-chat-bubble { background: var(--ad-bg-user); color: var(--ad-text-user); border-bottom-right-radius: 4px; }
+
+  .adermio-chat-footer { flex-shrink: 0; padding: 12px 16px; border-top: 1px solid #e2e8f0; padding-bottom: max(12px, env(safe-area-inset-bottom)); background: #fff; }
+  .adermio-input-wrapper { display: flex; align-items: flex-end; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 24px; padding: 4px 4px 4px 16px; }
+  #adermio-chat-input { flex: 1; background: transparent; border: none; max-height: 100px; padding: 10px 0; font-size: 15px; resize: none; outline: none; color: #0f172a; font-family: var(--ad-font); }
+  #adermio-chat-send { width: 40px; height: 40px; background: var(--ad-primary); border: none; border-radius: 50%; margin-left: 8px; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  #adermio-chat-send:disabled { background: #cbd5e1; }
+  #adermio-chat-send svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+  .adermio-chat-hint { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 8px; }
+
+  @keyframes bubble-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div id="adermio-welcome-bubble">
+  I'm the Adermio AI &#128075;<br>Questions about your Cycle 2? I'm here to help!
+  <button id="adermio-welcome-close">&#215;</button>
+</div>
+
+<div id="adermio-chat-launcher" aria-label="Open Adermio chat">
+  <span class="dot" id="adermio-chat-dot"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+</div>
+
+<div id="adermio-chat" role="dialog" aria-modal="true">
+  <div class="adermio-chat-header">
+    <div class="adermio-header-info">
+      <span class="adermio-header-title">Adermio Assistant</span>
+      <span class="adermio-header-subtitle">Online</span>
+    </div>
+    <button class="adermio-chat-close" id="adermio-chat-close" aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <div class="adermio-chat-body" id="adermio-chat-body">
+    <div class="adermio-chat-msg bot">
+      <div class="adermio-chat-bubble">
+        Hello! I'm the Adermio AI. I've analyzed your Cycle 1 and Cycle 2 data. Ask me anything! &#128071;
+      </div>
+    </div>
+  </div>
+  <div class="adermio-chat-footer">
+    <div class="adermio-input-wrapper">
+      <textarea id="adermio-chat-input" placeholder="Ask your question..." rows="1"></textarea>
+      <button id="adermio-chat-send" disabled><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+    </div>
+    <div class="adermio-chat-hint">Adermio AI may make mistakes.</div>
+  </div>
+</div>
+
+<script>
+(function() {
+    const DOM = {
+        launcher: document.getElementById('adermio-chat-launcher'),
+        panel: document.getElementById('adermio-chat'),
+        closeBtn: document.getElementById('adermio-chat-close'),
+        body: document.getElementById('adermio-chat-body'),
+        input: document.getElementById('adermio-chat-input'),
+        sendBtn: document.getElementById('adermio-chat-send'),
+        dot: document.getElementById('adermio-chat-dot'),
+        bubble: document.getElementById('adermio-welcome-bubble'),
+        bubbleClose: document.getElementById('adermio-welcome-close')
+    };
+
+    if (!DOM.launcher || !DOM.panel) return;
+
+    if(DOM.bubbleClose) {
+        DOM.bubbleClose.addEventListener('click', (e) => { e.stopPropagation(); DOM.bubble.style.display = 'none'; });
+    }
+
+    function getToken() {
+        return new URLSearchParams(window.location.search).get('token');
+    }
+
+    const token = getToken();
+    const storageKey = token ? 'adermio_thread_c2_' + token : null;
+    let threadId = storageKey ? localStorage.getItem(storageKey) : null;
+
+    function formatText(text) {
+        if (!text) return "";
+        return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+    }
+
+    function scrollToBottom() { requestAnimationFrame(() => { DOM.body.scrollTop = DOM.body.scrollHeight; }); }
+
+    function addMessage(role, text, isTyping) {
+        isTyping = isTyping || false;
+        const wrap = document.createElement('div');
+        wrap.className = 'adermio-chat-msg ' + role;
+        const bubble = document.createElement('div');
+        bubble.className = 'adermio-chat-bubble';
+        if (isTyping) {
+            bubble.innerHTML = '<span class="typing-dot" style="animation-delay:0s;">&#9679;</span><span class="typing-dot" style="animation-delay:0.2s;">&#9679;</span><span class="typing-dot" style="animation-delay:0.4s;">&#9679;</span>';
+            bubble.style.color = '#ccc'; bubble.style.fontSize = '10px';
+            wrap.id = 'adermio-typing-indicator';
+        } else { bubble.innerHTML = formatText(text); }
+        wrap.appendChild(bubble); DOM.body.appendChild(wrap); scrollToBottom();
+    }
+
+    function removeTypingIndicator() { var i = document.getElementById('adermio-typing-indicator'); if (i) i.remove(); }
+
+    function toggleChat(forceClose) {
+        forceClose = forceClose || false;
+        var isHidden = DOM.panel.style.display === 'none' || DOM.panel.style.display === '';
+        if (forceClose || !isHidden) { DOM.panel.style.display = 'none'; }
+        else {
+            DOM.panel.style.display = 'flex'; DOM.dot.style.display = 'none';
+            if(DOM.bubble) DOM.bubble.style.display = 'none';
+            if (window.innerWidth > 768) setTimeout(function() { DOM.input.focus(); }, 100);
+            scrollToBottom();
+        }
+    }
+
+    DOM.launcher.addEventListener('click', function() { toggleChat(); });
+    DOM.closeBtn.addEventListener('click', function() { toggleChat(true); });
+
+    function resizeInput() {
+        DOM.input.style.height = 'auto';
+        DOM.input.style.height = Math.min(DOM.input.scrollHeight, 100) + 'px';
+        DOM.sendBtn.disabled = !DOM.input.value.trim();
+    }
+    DOM.input.addEventListener('input', resizeInput);
+    DOM.input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (!DOM.sendBtn.disabled) DOM.sendBtn.click(); }
+    });
+
+    DOM.sendBtn.addEventListener('click', async function() {
+        var text = DOM.input.value.trim();
+        if (!text) return;
+        DOM.input.value = ''; DOM.input.style.height = 'auto'; DOM.sendBtn.disabled = true;
+        addMessage('user', text); addMessage('bot', '', true);
+        try {
+            if (!token) throw new Error("Unable to identify your report.");
+            var resp = await fetch("https://ai.adermio.com/api/chat", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: token, message: text, thread_id: threadId })
+            });
+            var data = await resp.json(); removeTypingIndicator();
+            if (!resp.ok || !data.ok) throw new Error(data.error || "AI Error");
+            if (data.thread_id) { threadId = data.thread_id; localStorage.setItem(storageKey, threadId); }
+            addMessage('bot', (data.assistant && data.assistant.content) ? data.assistant.content : "Sorry, I didn't understand.");
+        } catch (err) { removeTypingIndicator(); addMessage('bot', "&#9888; " + (err.message || "Error.")); }
+    });
+
+    var styleSheet = document.createElement("style");
+    styleSheet.innerText = '@keyframes blink { 0% { opacity: 0.2; transform: scale(0.8); } 20% { opacity: 1; transform: scale(1); } 100% { opacity: 0.2; transform: scale(0.8); } } .typing-dot { display: inline-block; animation: blink 1.4s infinite both; margin: 0 1px; font-size: 20px; line-height: 10px; }';
+    document.head.appendChild(styleSheet);
+})();
+</script>
+
+</body>
+</html>
