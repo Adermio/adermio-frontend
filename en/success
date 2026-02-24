@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Finalization - Adermio Premium</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',   
+                            dark: '#0F3D39',   
+                            primary: '#14B8A6',
+                            text: '#334155',   
+                            muted: '#94A3B8',  
+                            surface: '#FFFFFF' 
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                        manrope: ['"Manrope"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        a, a:visited, a:hover, a:active {
+            color: inherit; 
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Language Dropdown */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+
+    <style>
+        :root {
+            --primary-gold: #d97706; 
+            --primary-dark: #0f172a; 
+            --text-grey: #64748b;
+            --bg-soft: #f8fafc;
+            --white: #ffffff;
+            --shadow-card: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+            --radius-card: 24px;
+            --adermio-teal: #00897b; 
+        }
+
+        .main-container {
+            font-family: 'Manrope', sans-serif;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 80vh;
+            color: var(--primary-dark);
+        }
+
+        /* 1. HEADER */
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .icon-success-wrapper {
+            width: 50px;
+            height: 50px;
+            background: #dcfce7;
+            color: #15803d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 10px 20px rgba(22, 163, 74, 0.1);
+        }
+
+        .main-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+        }
+        
+        .main-subtitle {
+            font-size: 15px;
+            color: var(--text-grey);
+            font-weight: 500;
+        }
+
+        /* 2. ANALYSIS CARD */
+        .analysis-card {
+            background: var(--white);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 50px 40px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            border: 1px solid #f1f5f9;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden; 
+        }
+
+        /* LOADER */
+        .loader-container {
+            position: relative;
+            width: 220px; 
+            height: 220px; 
+            margin: 0 auto 40px auto;
+        }
+
+        .status-text-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+        }
+
+        .status-text-sub {
+            font-size: 14px;
+            color: var(--text-grey);
+            height: 20px;
+            margin-bottom: 30px;
+            transition: opacity 0.3s ease;
+        }
+
+        .percentage-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px; 
+            font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: -1px;
+        }
+
+        /* SECONDARY BAR (Extension) */
+        .extension-bar-wrapper {
+            width: 160px;
+            height: 4px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            margin: -20px auto 30px auto; /* Positioned below circle */
+            overflow: hidden;
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .extension-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #d97706; /* Gold */
+            border-radius: 10px;
+            transition: width 30s linear; /* CSS Animation 30s */
+        }
+
+        /* --- EMAIL BLOCK --- */
+        .info-box-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        .download-hint {
+            font-size: 12px;
+            color: var(--primary-gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .email-assurance-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .email-icon-circle {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 14px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .email-text {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* SUCCESS STATE */
+        .success-state {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-premium-access {
+            background-color: var(--adermio-teal);
+            color: #ffffff !important; 
+            padding: 18px 45px;
+            border-radius: 50px; 
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px -5px rgba(0, 137, 123, 0.4); 
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-premium-access:hover {
+            background-color: #00796b; 
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px -5px rgba(0, 137, 123, 0.5);
+            color: #ffffff !important;
+        }
+
+        .success-icon-container {
+            font-size: 40px; 
+            color: var(--primary-gold); 
+            margin-bottom: 25px;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 3. TRUST FOOTER */
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.5s forwards;
+        }
+
+        .trust-item {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .trust-icon { font-size: 20px; color: var(--primary-gold); margin-bottom: 10px; display: block; opacity: 0.8; }
+        .trust-title { font-size: 11px; font-weight: 800; color: var(--primary-dark); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .trust-desc { font-size: 11px; color: var(--text-grey); line-height: 1.4; }
+
+        @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+        
+        /* --- TIMEOUT MODAL (Popup) --- */
+        .timeout-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 61, 57, 0.4); /* Dark teal overlay */
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .timeout-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .timeout-modal {
+            background: white;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .timeout-modal-overlay.active .timeout-modal {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 32px;
+            color: var(--primary-gold);
+            margin-bottom: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .trust-grid { grid-template-columns: 1fr; gap: 10px; }
+            .trust-item { display: flex; align-items: center; gap: 15px; text-align: left; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 12px; }
+            .trust-icon { margin-bottom: 0; }
+            .analysis-card { padding: 40px 20px; }
+            .loader-container { width: 200px; height: 200px; } 
+            .percentage-display { font-size: 32px; }
+            .btn-premium-access { width: 100%; justify-content: center; padding: 20px; }
+        }
+    </style>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="https://adermio.com" class="flex items-center gap-2">
+                 <img src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+                
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+                        <img src="https://flagcdn.com/us.svg" width="16" alt="EN" class="rounded-sm shadow-sm">
+                        <span class="font-sans font-medium text-sm">EN</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+                    </button>
+                    
+                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-36 bg-white rounded-xl shadow-luxury border border-adermio-dark/5 overflow-hidden z-[80]">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                            <img src="https://flagcdn.com/us.svg" width="20" alt="English" class="rounded-sm shadow-sm">
+                            <span>English</span>
+                        </a>
+                        <a href="https://adermio.com/finalisation" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/fr.svg" width="20" alt="Français" class="rounded-sm shadow-sm">
+                            <span>Français</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="https://adermio.com" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Home</a>
+            <a href="https://adermio.com/en/form" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Start Analysis</a>
+            <a href="https://adermio.com/en/about" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">About Us</a>
+            <a href="https://adermio.com/en/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Contact Us</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2025</span>
+        </div>
+    </div>
+
+    <main class="pt-20">
+        
+        <div class="main-container">
+
+            <div class="header-section">
+                <div class="icon-success-wrapper">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h1 class="main-title">Order Confirmed</h1>
+                <div class="main-subtitle">Thank you. Your complete Adermio report is being generated.</div>
+            </div>
+
+            <div class="analysis-card">
+                
+                <div id="loading-content">
+                    <div id="status-title" class="status-text-title">Dermatological analysis in progress...</div>
+                    <div id="status-subtitle" class="status-text-sub">Initializing AI...</div>
+
+                    <div class="loader-container">
+                        <svg viewBox="0 0 100 100" style="transform:rotate(-90deg);width:100%;height:100%;">
+                            <circle cx="50" cy="50" r="45" stroke="#f1f5f9" stroke-width="8" fill="none" />
+                            <circle id="progress-circle" cx="50" cy="50" r="45" stroke="#d97706" stroke-width="8"
+                                    fill="none" stroke-linecap="round"
+                                    stroke-dasharray="282.6" stroke-dashoffset="282.6"
+                                    style="transition: stroke-dashoffset 0.5s linear;" />
+                        </svg>
+                        <div id="progress-text" class="percentage-display">0%</div>
+                    </div>
+
+                    <div id="extension-bar-wrapper" class="extension-bar-wrapper">
+                        <div id="extension-bar-fill" class="extension-bar-fill"></div>
+                    </div>
+
+                    <div class="info-box-container">
+                        <div class="download-hint">
+                            <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px;"></i> Finalizing report...
+                        </div>
+                        
+                        <div class="email-assurance-box">
+                            <div class="email-icon-circle">
+                                <i class="fa-regular fa-envelope"></i>
+                            </div>
+                            <div class="email-text">
+                                <strong>Backup Copy</strong><br>
+                                The PDF report will be sent automatically to your email.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="success-state" class="success-state">
+                    <div class="success-icon-container">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    
+                    <h2 style="font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 12px; letter-spacing: -0.5px;">Your report is ready</h2>
+                    <p style="color: #64748b; font-size: 15px; margin-bottom: 40px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                        Your complete skin analysis is finished. You can view your results now.
+                    </p>
+
+                    <a id="access-btn" href="#" class="btn-premium-access">
+                        Open my full analysis
+                    </a>
+                    
+                    <div style="margin-top:30px; font-size:12px; color:#94a3b8; font-weight: 500;">
+                        <i class="fa-solid fa-check" style="color:#16a34a; margin-right:6px;"></i> PDF copy sent by email
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="trust-grid" id="trust-grid">
+                <div class="trust-item">
+                    <i class="fa-solid fa-microscope trust-icon"></i>
+                    <div>
+                        <div class="trust-title">HD Scan</div>
+                        <div class="trust-desc">Pore-by-pore analysis</div>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fa-solid fa-flask trust-icon"></i>
+                    <div>
+                        <div class="trust-title">Clinical Method</div>
+                        <div class="trust-desc">Adermio Lab AI</div>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fa-solid fa-lock trust-icon"></i>
+                    <div>
+                        <div class="trust-title">Encrypted Data</div>
+                        <div class="trust-desc">100% Confidential</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="timeout-modal" class="timeout-modal-overlay">
+        <div class="timeout-modal">
+            <div class="modal-icon">
+                <i class="fa-regular fa-circle-question"></i>
+            </div>
+            <h3 class="text-xl font-bold text-adermio-dark mb-3">Just a minute...</h3>
+            <p class="text-sm text-gray-500 mb-6 leading-relaxed">
+                Haven't received your analysis yet? No problem. Our server might be busy. <br>Send us a message and we'll email it to you immediately.
+            </p>
+            <a href="https://adermio.com/en/contact" class="inline-flex items-center justify-center w-full px-6 py-3 text-sm font-bold text-teal-700 bg-teal-50 rounded-xl hover:bg-teal-100 transition-colors">
+                Contact Support
+            </a>
+            <button onclick="document.getElementById('timeout-modal').classList.remove('active')" class="mt-4 text-xs text-gray-400 underline hover:text-gray-600">
+                Keep waiting
+            </button>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png" 
+                     alt="Adermio Logo" 
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                Dermatology reinvented by artificial intelligence.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="https://adermio.com" class="hover:text-teal-600 transition-colors !text-adermio-dark">Home</a>
+                <a href="https://adermio.com/en/form" class="hover:text-teal-600 transition-colors !text-adermio-dark">Start Analysis</a>
+                <a href="https://adermio.com/en/about" class="hover:text-teal-600 transition-colors !text-adermio-dark">About Us</a>
+                <a href="https://adermio.com/en/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Contact Us</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="https://adermio.com/en/conditions" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Terms of Service</a>
+                <a href="https://adermio.com/en/legal-notice" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Legal Notice</a>
+                <a href="https://adermio.com/en/confidentialite" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Privacy Policy</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2025 Adermio Lab. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+       
+          // 1. GET JOB ID
+          const params = new URLSearchParams(window.location.search);
+          const jobId = params.get("jobId") || params.get("client_reference_id");
+       
+          if (!jobId) {
+              document.getElementById("status-subtitle").innerText = "Error: Order not found.";
+              document.getElementById("status-subtitle").style.color = "#ef4444";
+              return; 
+          }
+       
+          // --- CONFIGURATION ---
+          const POLL_URL = "https://n8n.adermio.com/webhook/aae2ff2f-cd35-48d0-b0d2-f56d2341452a?jobId="; 
+          
+          // 1. Normal Load Time: 90 seconds
+          const MAIN_LOAD_TIME = 90 * 1000; 
+          
+          // 2. Extension Time: 30 seconds
+          const EXTENSION_TIME = 30 * 1000;
+
+          // 3. Final Buffer: 15 seconds
+          const EXTRA_BUFFER_TIME = 15 * 1000;
+
+          const POLL_INTERVAL = 3000; 
+          
+          const loadingSteps = [
+              { pct: 0,  text: "Secure connection to server..." },
+              { pct: 20, text: "High definition image processing..." },
+              { pct: 40, text: "Analyzing imperfections and texture..." },
+              { pct: 60, text: "Generating bespoke protocol..." },
+              { pct: 85, text: "Building interface..." },
+              { pct: 95, text: "Finalizing report..." }
+          ];
+       
+          const startTime = Date.now();
+          const progressCircle = document.getElementById("progress-circle");
+          const progressText   = document.getElementById("progress-text");
+          const circumference  = 2 * Math.PI * 45; 
+          
+          const loadingContent = document.getElementById("loading-content");
+          const successState   = document.getElementById("success-state");
+          const accessBtn      = document.getElementById("access-btn");
+          const subtitle       = document.getElementById("status-subtitle");
+          const trustGrid      = document.getElementById("trust-grid");
+
+          // Elements for extension and timeout
+          const extensionBarWrapper = document.getElementById("extension-bar-wrapper");
+          const extensionBarFill    = document.getElementById("extension-bar-fill");
+          const timeoutModal        = document.getElementById("timeout-modal");
+       
+          let progressInterval;
+          let pollingInterval;
+          let isSuccess = false;
+          let isExtendedPhase = false;
+          let hasTriggeredTimeout = false;
+       
+          // A. Visual Animation (0 -> 60s)
+          function animateProgress() {
+            progressInterval = setInterval(() => {
+              const elapsed  = Date.now() - startTime;
+              
+              // Base progress on MAIN_LOAD_TIME (60s)
+              // Block at 99%
+              const progress = Math.min((elapsed / MAIN_LOAD_TIME) * 100, 99);
+              
+              if (isSuccess) return;
+       
+              // UI CIRCLE UPDATE
+              const offset   = circumference - (progress / 100) * circumference;
+              if(progressCircle) progressCircle.style.strokeDashoffset = offset.toFixed(2);
+              if(progressText) progressText.textContent = Math.floor(progress) + "%";
+       
+              // UI TEXT UPDATE
+              const currentStep = loadingSteps.slice().reverse().find(step => progress >= step.pct);
+              if (currentStep && subtitle && subtitle.innerText !== currentStep.text && !isExtendedPhase) {
+                    subtitle.style.opacity = 0; 
+                    setTimeout(() => {
+                        if(!isExtendedPhase) subtitle.innerText = currentStep.text;
+                        subtitle.style.opacity = 1;
+                    }, 300);
+              }
+
+              // END OF CIRCLE (60s) -> TRIGGER EXTENSION BAR
+              if (elapsed >= MAIN_LOAD_TIME && !isSuccess && !isExtendedPhase) {
+                  startExtensionPhase();
+              }
+
+            }, 100);
+          }
+
+          // B. Extension Phase (Horizontal Bar - 30 seconds)
+          function startExtensionPhase() {
+              isExtendedPhase = true;
+              clearInterval(progressInterval); // Stop circle at 99%
+
+              // Update Text for extension
+              subtitle.style.opacity = 0;
+              setTimeout(() => {
+                  subtitle.innerText = "Traffic is heavier than expected: finalization in progress...";
+                  subtitle.style.color = "#d97706"; // Gold color
+                  subtitle.style.opacity = 1;
+              }, 300);
+
+              // Show and animate extension bar
+              extensionBarWrapper.style.display = "block";
+              setTimeout(() => {
+                  extensionBarWrapper.style.opacity = 1;
+                  extensionBarFill.style.width = "100%"; // Triggers 30s CSS transition
+              }, 100);
+
+              // When bar is full (30s later), trigger final buffer
+              setTimeout(() => {
+                  if (!isSuccess && !hasTriggeredTimeout) {
+                      startFinalBufferPhase();
+                  }
+              }, EXTENSION_TIME);
+          }
+
+          // C. Final Buffer (Extra 15s "just in case")
+          function startFinalBufferPhase() {
+              // No UI change, just keep polling for 15s more
+              // Total elapsed here: 60s + 30s = 1m30s
+              
+              setTimeout(() => {
+                  if (!isSuccess && !hasTriggeredTimeout) {
+                      showTimeoutPopup(); // Stop polling happens here
+                  }
+              }, EXTRA_BUFFER_TIME);
+          }
+
+          // D. Show Timeout Popup & STOP POLLING
+          function showTimeoutPopup() {
+              hasTriggeredTimeout = true;
+              stopPolling(); // <--- CRITICAL STOP
+              timeoutModal.classList.add('active');
+          }
+       
+          // E. Polling
+          async function checkStatus() {
+            try {
+              if (isSuccess) return;
+
+              const res = await fetch(POLL_URL + encodeURIComponent(jobId), { method: "GET", cache: "no-store" });
+              const data = await res.json();
+              if (!data) return;
+              
+              const record = Array.isArray(data) ? data[0] : data;
+       
+              // "ROBUST" Condition
+              if (record && record.downloadUrl && record.downloadUrl.length > 10) {
+                isSuccess = true;
+                stopPolling();
+                showSuccess(record.downloadUrl);
+              }
+            } catch (e) { console.error("Polling...", e); }
+          }
+       
+          // F. Success
+          function showSuccess(url) {
+              // Close timeout modal if open
+              if(timeoutModal.classList.contains('active')) {
+                  timeoutModal.classList.remove('active');
+              }
+
+              if(progressText) progressText.textContent = "100%";
+              if(progressCircle) {
+                  progressCircle.style.strokeDashoffset = 0;
+                  progressCircle.style.stroke = "#16a34a"; // Success Green
+              }
+
+              // Hide extension bar if active
+              if(isExtendedPhase) {
+                   extensionBarWrapper.style.opacity = 0;
+              }
+       
+              setTimeout(() => {
+                  loadingContent.style.opacity = 0;
+                  loadingContent.style.transition = "opacity 0.5s ease";
+                  
+                  setTimeout(() => {
+                      loadingContent.style.display = "none";
+                      accessBtn.href = url;
+                      
+                      successState.style.display = "block";
+                      setTimeout(() => {
+                          successState.style.opacity = 1;
+                          successState.style.transform = "translateY(0)";
+                      }, 50);
+
+                      if(trustGrid) trustGrid.style.opacity = 0.6;
+                  }, 500);
+              }, 600);
+          }
+       
+          function stopPolling() {
+            clearInterval(pollingInterval);
+            clearInterval(progressInterval);
+          }
+       
+          // Start
+          animateProgress();
+          setTimeout(() => {
+            checkStatus(); 
+            pollingInterval = setInterval(() => checkStatus(), POLL_INTERVAL);
+          }, 2500);
+       
+          window.addEventListener('beforeunload', () => stopPolling());
+        });
+      </script>
+</body>
+</html>
