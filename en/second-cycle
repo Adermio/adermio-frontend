@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Adermio - Cycle 2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0F3D39',
+                            primary: '#14B8A6',
+                            light: '#F0FDFA',
+                            cream: '#FAFAF9',
+                            sand: '#E7E5E4',
+                            gold: '#D4B483'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s ease-out',
+                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+                        'scan': 'scan 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        },
+                        scan: {
+                            '0%, 100%': { top: '0%' },
+                            '50%': { top: '100%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        .step-container {
+            transition: opacity 0.3s ease;
+            position: absolute; width: 100%; top: 0; left: 0;
+            opacity: 0; pointer-events: none; display: none;
+        }
+        .step-container.active {
+            opacity: 1; pointer-events: all; display: block; position: relative;
+            margin-top: auto; margin-bottom: auto;
+        }
+        .zone-item { transition: all 0.2s; }
+        .zone-item.selected { background-color: #F0FDFA; border-color: #14B8A6; color: #0F3D39; font-weight: 500; }
+        .zone-item.selected .indicator { background-color: #14B8A6; border-color: #14B8A6; }
+        .input-error { border-color: #ef4444 !important; animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        textarea, input { font-size: 16px !important; }
+
+        .product-card { transition: all 0.3s ease; }
+        .product-card .verdict-btn { transition: all 0.2s; }
+        .product-card .verdict-btn.active-keep { background: #F0FDFA; border-color: #14B8A6; color: #0F3D39; }
+        .product-card .verdict-btn.active-review { background: #FFFBEB; border-color: #F59E0B; color: #92400E; }
+        .product-card .verdict-btn.active-stop { background: #FEF2F2; border-color: #EF4444; color: #991B1B; }
+
+        .star-btn { transition: all 0.15s; cursor: pointer; }
+        .star-btn:hover { transform: scale(1.2); }
+        .star-btn.active { color: #F59E0B; }
+
+        #loading-overlay { backdrop-filter: blur(5px); }
+    </style>
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans min-h-screen flex flex-col selection:bg-brand-primary/20">
+
+    <div id="loading-overlay" class="fixed inset-0 z-[120] bg-brand-cream/80 hidden items-center justify-center flex-col">
+        <div class="w-12 h-12 border-4 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin mb-4"></div>
+        <p class="font-serif text-brand-dark animate-pulse">Submitting...</p>
+    </div>
+
+    <header class="fixed top-0 w-full z-50 bg-brand-cream/90 backdrop-blur-xl border-b border-stone-200/50">
+        <div class="max-w-xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-brand-dark"></div>
+                <span class="font-serif text-lg tracking-wide text-brand-dark">Adermio</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-brand-primary bg-brand-light px-3 py-1 rounded-full">Cycle 2</span>
+                <div class="flex gap-1.5" id="progress-container"></div>
+            </div>
+        </div>
+    </header>
+
+<main class="flex-grow flex flex-col px-6 pt-28 pb-64 max-w-2xl mx-auto w-full relative min-h-[90vh]">
+
+    <!-- ===== STEP 1 ‚Äî WELCOME + SATISFACTION ===== -->
+    <div id="step-1" class="step-container active">
+        <div class="space-y-8 animate-fade-in max-w-xl mx-auto">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-stone-200 text-[10px] uppercase tracking-widest text-stone-500 shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse"></span>
+                Payment confirmed
+            </div>
+
+            <h1 class="font-serif text-4xl leading-[1.15] text-brand-dark">
+                Congratulations, <br><span class="text-brand-primary italic" id="hero-name">...</span>
+            </h1>
+            <p class="text-stone-500 text-lg font-light leading-relaxed max-w-sm">
+                Your Cycle 2 is ready. A few quick questions to tailor your new routine.
+            </p>
+
+            <!-- Satisfaction stars -->
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-stone-100">
+                <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-4">How would you rate the results of Cycle 1?</label>
+                <div class="flex justify-center gap-3" id="stars-container">
+                    <button type="button" onclick="setSatisfaction(1)" class="star-btn text-stone-300"><i data-lucide="star" class="w-10 h-10" fill="currentColor"></i></button>
+                    <button type="button" onclick="setSatisfaction(2)" class="star-btn text-stone-300"><i data-lucide="star" class="w-10 h-10" fill="currentColor"></i></button>
+                    <button type="button" onclick="setSatisfaction(3)" class="star-btn text-stone-300"><i data-lucide="star" class="w-10 h-10" fill="currentColor"></i></button>
+                    <button type="button" onclick="setSatisfaction(4)" class="star-btn text-stone-300"><i data-lucide="star" class="w-10 h-10" fill="currentColor"></i></button>
+                    <button type="button" onclick="setSatisfaction(5)" class="star-btn text-stone-300"><i data-lucide="star" class="w-10 h-10" fill="currentColor"></i></button>
+                </div>
+                <p class="text-center text-sm text-stone-400 mt-3" id="stars-label">Tap to rate</p>
+            </div>
+            <p id="error-stars" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Please give a rating.</p>
+        </div>
+    </div>
+
+    <!-- ===== STEP 2 ‚Äî SKIN STATE UPDATE ===== -->
+    <div id="step-2" class="step-container">
+        <div class="space-y-8 animate-fade-in max-w-xl mx-auto">
+            <div>
+                <h2 class="font-serif text-3xl mb-3 text-brand-dark">Your skin condition</h2>
+                <p class="text-stone-500 font-light">Since the end of Cycle 1, how is your skin doing?</p>
+            </div>
+
+            <!-- Global feeling -->
+            <div>
+                <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-3">Overall, your skin is...</label>
+                <div class="grid grid-cols-1 gap-2" id="skin-feeling-container">
+                    <button type="button" onclick="setSkinFeeling('much_better', this)" class="zone-item w-full flex items-center justify-between px-4 py-3.5 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <div class="flex items-center gap-3"><span class="text-xl">&#x1F929;</span><span class="font-medium">Much improved</span></div>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                    <button type="button" onclick="setSkinFeeling('better', this)" class="zone-item w-full flex items-center justify-between px-4 py-3.5 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <div class="flex items-center gap-3"><span class="text-xl">&#x1F60A;</span><span class="font-medium">Slightly better</span></div>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                    <button type="button" onclick="setSkinFeeling('same', this)" class="zone-item w-full flex items-center justify-between px-4 py-3.5 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <div class="flex items-center gap-3"><span class="text-xl">&#x1F610;</span><span class="font-medium">About the same</span></div>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                    <button type="button" onclick="setSkinFeeling('worse', this)" class="zone-item w-full flex items-center justify-between px-4 py-3.5 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <div class="flex items-center gap-3"><span class="text-xl">&#x1F615;</span><span class="font-medium">Worse than before</span></div>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                </div>
+                <p id="error-feeling" class="text-red-500 text-xs mt-2 hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Selection required.</p>
+            </div>
+
+            <!-- Current concerns -->
+            <div>
+                <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-3">Current concerns</label>
+                <p class="text-xs text-stone-500 mb-3">Select all that apply to you today.</p>
+                <div class="grid grid-cols-2 gap-2" id="concerns-container">
+                    <button type="button" onclick="toggleConcern('acne', this)" class="zone-item w-full px-3 py-2.5 rounded-xl border border-stone-100 bg-white text-xs text-stone-500 hover:border-brand-primary/30 text-left font-medium">Active acne</button>
+                    <button type="button" onclick="toggleConcern('scars', this)" class="zone-item w-full px-3 py-2.5 rounded-xl border border-stone-100 bg-white text-xs text-stone-500 hover:border-brand-primary/30 text-left font-medium">Scars / Dark marks</button>
+                    <button type="button" onclick="toggleConcern('dull', this)" class="zone-item w-full px-3 py-2.5 rounded-xl border border-stone-100 bg-white text-xs text-stone-500 hover:border-brand-primary/30 text-left font-medium">Dull complexion</button>
+                    <button type="button" onclick="toggleConcern('pores', this)" class="zone-item w-full px-3 py-2.5 rounded-xl border border-stone-100 bg-white text-xs text-stone-500 hover:border-brand-primary/30 text-left font-medium">Enlarged pores</button>
+                    <button type="button" onclick="toggleConcern('redness', this)" class="zone-item w-full px-3 py-2.5 rounded-xl border border-stone-100 bg-white text-xs text-stone-500 hover:border-brand-primary/30 text-left font-medium">Redness</button>
+                    <button type="button" onclick="toggleConcern('dryness', this)" class="zone-item w-full px-3 py-2.5 rounded-xl border border-stone-100 bg-white text-xs text-stone-500 hover:border-brand-primary/30 text-left font-medium">Dryness</button>
+                    <button type="button" onclick="toggleConcern('oily', this)" class="zone-item w-full px-3 py-2.5 rounded-xl border border-stone-100 bg-white text-xs text-stone-500 hover:border-brand-primary/30 text-left font-medium">Excess oil</button>
+                    <button type="button" onclick="toggleConcern('texture', this)" class="zone-item w-full px-3 py-2.5 rounded-xl border border-stone-100 bg-white text-xs text-stone-500 hover:border-brand-primary/30 text-left font-medium">Uneven texture</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STEP 3 ‚Äî ROUTINE REVIEW ===== -->
+    <div id="step-3" class="step-container">
+        <div class="space-y-8 animate-fade-in max-w-xl mx-auto">
+            <div>
+                <h2 class="font-serif text-3xl mb-3 text-brand-dark">Your current routine</h2>
+                <p class="text-stone-500 font-light">For each product, tell us how it worked for you.</p>
+            </div>
+
+            <div id="routine-products" class="space-y-3">
+                <!-- Dynamically loaded from tracking data, or manual entry -->
+            </div>
+
+            <div class="border-t border-stone-200/50 pt-6">
+                <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-3">Products added on your own</label>
+                <p class="text-xs text-stone-500 mb-3">Did you add any products not recommended during Cycle 1?</p>
+                <textarea id="added-products" rows="3" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="E.g.: I added a vitamin C serum in the morning..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STEP 4 ‚Äî REACTIONS & TOLERANCE ===== -->
+    <div id="step-4" class="step-container">
+        <div class="space-y-8 animate-fade-in max-w-xl mx-auto">
+            <div>
+                <h2 class="font-serif text-3xl mb-3 text-brand-dark">Tolerance &amp; Reactions</h2>
+                <p class="text-stone-500 font-light">To adjust the strength of active ingredients for Cycle 2.</p>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-3">Did you experience any adverse reactions?</label>
+                <div class="grid grid-cols-1 gap-2" id="reactions-container">
+                    <button type="button" onclick="toggleReaction('none', this)" class="zone-item w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <span class="font-medium">No, none at all</span>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                    <button type="button" onclick="toggleReaction('irritation', this)" class="zone-item w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <span class="font-medium">Irritation / Stinging</span>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                    <button type="button" onclick="toggleReaction('dryness', this)" class="zone-item w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <span class="font-medium">Excessive dryness</span>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                    <button type="button" onclick="toggleReaction('redness', this)" class="zone-item w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <span class="font-medium">Persistent redness</span>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                    <button type="button" onclick="toggleReaction('purge', this)" class="zone-item w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <span class="font-medium">Extended purging (&gt; 2 weeks)</span>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                    <button type="button" onclick="toggleReaction('allergy', this)" class="zone-item w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left">
+                        <span class="font-medium">Allergic reaction</span>
+                        <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="reaction-detail-container" class="hidden animate-fade-in">
+                <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-2">Please describe</label>
+                <textarea id="reaction-detail" rows="3" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Which product caused the reaction? When did it appear?"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STEP 5 ‚Äî PHOTOS ===== -->
+    <div id="step-5" class="step-container">
+        <div class="text-center mb-8">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-brand-primary mb-2 block animate-pulse">Adermio Scan&trade; Technology</span>
+            <h2 class="font-serif text-3xl text-brand-dark">Photos of your skin</h2>
+            <p class="text-stone-500 font-light mt-2 text-sm">To measure your progress and tailor Cycle 2.</p>
+        </div>
+
+        <div class="bg-brand-light/50 border border-brand-primary/20 rounded-xl p-4 mb-6 max-w-sm mx-auto">
+            <h4 class="text-xs font-bold uppercase text-brand-dark mb-2 flex items-center gap-2">
+                <i data-lucide="info" class="w-3 h-3"></i> Tips for a perfect analysis
+            </h4>
+            <ul class="text-xs text-stone-600 space-y-1 font-light">
+                <li>&bull; Face centered and well-lit.</li>
+                <li>&bull; Hair pulled back, no glasses.</li>
+                <li>&bull; Bare skin if possible (no makeup).</li>
+            </ul>
+        </div>
+
+        <div class="space-y-4 animate-fade-in max-w-sm mx-auto">
+            <!-- FACE ‚Äî main photo -->
+            <div class="relative w-10/12 mx-auto sm:w-full">
+                <div class="flex justify-between items-center mb-2 px-1">
+                    <label class="text-xs font-bold uppercase text-brand-dark tracking-wide">1. Front face</label>
+                    <span class="text-[10px] font-bold text-white bg-brand-primary px-2 py-0.5 rounded-full">Required</span>
+                </div>
+                <label class="block relative group cursor-pointer w-full aspect-square sm:aspect-[4/5] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden shadow-xl sm:shadow-2xl transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(20,184,166,0.3)]">
+                    <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 z-50 cursor-pointer"
+                           data-type="face" onclick="event.stopPropagation()"
+                           onchange="handlePhotoUpload('face', this, 'preview-face', 'overlay-face', 'empty-face')">
+                    <div class="absolute inset-0 bg-stone-900 z-0 pointer-events-none">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-stone-800 to-stone-950"></div>
+                    </div>
+                    <div id="empty-face" class="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center transition-opacity duration-300 pointer-events-none">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border border-white/10 flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-105 group-hover:border-brand-primary transition-all duration-500 backdrop-blur-sm bg-white/5">
+                            <svg viewBox="0 0 100 120" class="w-16 h-16 sm:w-20 sm:h-20 stroke-white/40 fill-none stroke-[1.5]" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20,40 Q20,10 50,10 T80,40 V60 Q80,95 50,105 Q20,95 20,60 Z" />
+                                <path d="M30,50 Q35,45 40,50" /><path d="M60,50 Q65,45 70,50" />
+                                <path d="M48,60 L50,70 L52,60" /><path d="M40,85 Q50,90 60,85" />
+                            </svg>
+                        </div>
+                        <span class="text-white text-base sm:text-lg font-serif mb-1">Front photo</span>
+                        <span class="text-white/40 text-[10px] sm:text-xs font-light">Tap to add</span>
+                    </div>
+                    <img id="preview-face" class="absolute inset-0 w-full h-full object-cover hidden z-20 pointer-events-none">
+                    <div id="overlay-face" class="absolute inset-0 z-30 bg-black/40 hidden flex-col items-center justify-center backdrop-blur-[2px] pointer-events-none">
+                        <div class="absolute top-0 left-0 w-full h-[2px] bg-brand-primary shadow-[0_0_20px_rgba(20,184,166,1)] animate-scan"></div>
+                        <div class="absolute bottom-8 px-3 py-1 rounded-full border border-brand-primary/50 bg-black/50 text-brand-primary text-[10px] uppercase tracking-widest animate-pulse">Uploading...</div>
+                    </div>
+                </label>
+            </div>
+
+            <!-- PROFILES -->
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <!-- Left profile -->
+                <div class="relative">
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Left profile</label>
+                        <span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Optional</span>
+                    </div>
+                    <label class="block relative group cursor-pointer w-full aspect-square rounded-[1.5rem] overflow-hidden bg-stone-900 shadow-lg">
+                        <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 z-50 cursor-pointer"
+                               data-type="left" onclick="event.stopPropagation()"
+                               onchange="handlePhotoUpload('left', this, 'preview-left', 'overlay-left', 'empty-left')">
+                        <div id="empty-left" class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-70 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <svg viewBox="0 0 100 100" class="w-16 h-16 stroke-white/40 fill-none stroke-[1.2] mb-1 transform -scale-x-100">
+                                <path d="M45,90 C35,80 30,60 30,45 C30,25 45,15 60,15 C75,15 80,30 80,45 L85,50 L80,55 C80,65 80,80 70,90" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M80,45 L85,50 L80,55" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="text-[10px] text-white/40 uppercase tracking-widest">Add</span>
+                        </div>
+                        <img id="preview-left" class="absolute inset-0 w-full h-full object-cover hidden z-20 pointer-events-none">
+                        <div id="overlay-left" class="absolute inset-0 z-30 bg-black/40 hidden flex-col items-center justify-center backdrop-blur-[1px] pointer-events-none">
+                            <div class="absolute top-0 left-0 w-full h-[1px] bg-brand-primary shadow-[0_0_15px_rgba(20,184,166,1)] animate-scan"></div>
+                        </div>
+                    </label>
+                </div>
+                <!-- Right profile -->
+                <div class="relative">
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Right profile</label>
+                        <span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Optional</span>
+                    </div>
+                    <label class="block relative group cursor-pointer w-full aspect-square rounded-[1.5rem] overflow-hidden bg-stone-900 shadow-lg">
+                        <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 z-50 cursor-pointer"
+                               data-type="right" onclick="event.stopPropagation()"
+                               onchange="handlePhotoUpload('right', this, 'preview-right', 'overlay-right', 'empty-right')">
+                        <div id="empty-right" class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-70 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <svg viewBox="0 0 100 100" class="w-16 h-16 stroke-white/40 fill-none stroke-[1.2] mb-1">
+                                <path d="M45,90 C35,80 30,60 30,45 C30,25 45,15 60,15 C75,15 80,30 80,45 L85,50 L80,55 C80,65 80,80 70,90" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M80,45 L85,50 L80,55" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="text-[10px] text-white/40 uppercase tracking-widest">Add</span>
+                        </div>
+                        <img id="preview-right" class="absolute inset-0 w-full h-full object-cover hidden z-20 pointer-events-none">
+                        <div id="overlay-right" class="absolute inset-0 z-30 bg-black/40 hidden flex-col items-center justify-center backdrop-blur-[1px] pointer-events-none">
+                            <div class="absolute top-0 left-0 w-full h-[1px] bg-brand-primary shadow-[0_0_15px_rgba(20,184,166,1)] animate-scan"></div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <p id="error-photos" class="text-red-500 text-xs text-center mt-6 hidden flex items-center justify-center gap-1 animate-pulse">
+            <i data-lucide="alert-circle" class="w-3 h-3"></i> The front photo is required.
+        </p>
+    </div>
+
+    <!-- ===== STEP 6 ‚Äî NOTES + CONFIRMATION ===== -->
+    <div id="step-6" class="step-container">
+        <div class="space-y-8 animate-fade-in max-w-xl mx-auto">
+            <div>
+                <h2 class="font-serif text-3xl mb-3 text-brand-dark">Final step</h2>
+                <p class="text-stone-500 font-light">Before we generate your new routine.</p>
+            </div>
+
+            <div>
+                <label class="block text-brand-dark font-medium mb-1">Anything else to add?</label>
+                <textarea id="extra-notes" rows="4" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Additional details, lifestyle changes, new medications..."></textarea>
+            </div>
+
+            <!-- Timeline -->
+            <div class="bg-gradient-to-br from-brand-light/80 to-white border border-brand-primary/20 rounded-2xl p-5 shadow-sm">
+                <h4 class="text-xs font-bold uppercase text-brand-dark mb-5 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-primary"></i> Your Cycle 2 at a glance
+                </h4>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-brand-primary flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm"><span class="text-[9px] font-bold text-white">D1</span></div>
+                        <div>
+                            <p class="text-sm font-medium text-brand-dark">New custom routine</p>
+                            <p class="text-[11px] text-stone-400">Products + actives tailored to your feedback &mdash; directly accessible on your dashboard</p>
+                        </div>
+                    </div>
+                    <div class="w-px h-3 bg-brand-primary/20 ml-3.5"></div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-brand-primary/80 flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-[9px] font-bold text-white">D7</span></div>
+                        <div>
+                            <p class="text-sm font-medium text-brand-dark">Skin check-in + adjustments</p>
+                            <p class="text-[11px] text-stone-400">We verify your skin is responding well to the new actives</p>
+                        </div>
+                    </div>
+                    <div class="w-px h-3 bg-brand-primary/20 ml-3.5"></div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-brand-primary/60 flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-[9px] font-bold text-white">D14</span></div>
+                        <div>
+                            <p class="text-sm font-medium text-brand-dark">Mid-cycle review</p>
+                            <p class="text-[11px] text-stone-400">Intermediate analysis with photos &mdash; adjusted if needed</p>
+                        </div>
+                    </div>
+                    <div class="w-px h-3 bg-brand-primary/20 ml-3.5"></div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-primary to-brand-gold flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm"><span class="text-[9px] font-bold text-white">D28</span></div>
+                        <div>
+                            <p class="text-sm font-medium text-brand-dark">Full D56 comparative report &#x2728;</p>
+                            <p class="text-[11px] text-stone-400">Your complete AI-powered progress &mdash; accessible directly from your Adermio dashboard</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h-10"></div>
+        </div>
+    </div>
+
+    <!-- ===== STEP 7 ‚Äî SUCCESS ===== -->
+    <div id="step-7" class="step-container">
+        <div class="flex flex-col items-center justify-center text-center py-20 animate-fade-in">
+            <div class="w-20 h-20 rounded-full bg-brand-light flex items-center justify-center mb-8 animate-bounce">
+                <i data-lucide="check" class="w-10 h-10 text-brand-primary"></i>
+            </div>
+            <h1 class="font-serif text-4xl mb-6 text-brand-dark">Thank you!</h1>
+            <p class="text-lg text-brand-dark font-medium mb-2">
+                Your data has been submitted successfully.
+            </p>
+            <p class="text-stone-500 font-light mb-12">
+                Analysis in progress, you will be redirected shortly...
+            </p>
+        </div>
+    </div>
+
+</main>
+
+    <!-- NAV BAR -->
+    <div class="fixed bottom-0 left-0 right-0 p-6 z-[100] transition-transform duration-500" id="nav-bar">
+        <div class="max-w-xl mx-auto flex items-center gap-4">
+            <button id="btn-back" class="w-14 h-14 rounded-full bg-white border border-stone-200 text-stone-400 flex items-center justify-center shadow-lg shadow-stone-200/50 hover:bg-stone-50 active:scale-95 transition-all hidden">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <button id="btn-next" class="flex-1 h-14 rounded-full bg-brand-dark text-white shadow-xl shadow-brand-dark/20 flex items-center justify-center gap-3 hover:bg-brand-dark/90 active:scale-[0.98] transition-all group overflow-hidden relative">
+                <span class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-full"></span>
+                <span id="btn-text" class="text-sm font-bold uppercase tracking-widest relative z-10">Continue</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform"></i>
+            </button>
+        </div>
+    </div>
+
+<script>
+lucide.createIcons();
+
+// ============================================================
+// CONFIG
+// ============================================================
+const SUPABASE_URL = 'https://zqhmobgjxmyziuwkrkqf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w';
+
+const JOB_ID = new URLSearchParams(window.location.search).get('jobId') || '';
+const SESSION_ID = new URLSearchParams(window.location.search).get('session_id') || '';
+
+const totalSteps = 6;
+let currentStep = 1;
+let isSubmitting = false;
+let clientName = '';
+let clientEmail = '';
+let routineProducts = [];
+
+// Form state
+const formState = {
+    satisfaction: 0,
+    skinFeeling: '',
+    concerns: [],
+    productVerdicts: {},
+    addedProducts: '',
+    reactions: [],
+    reactionDetail: '',
+    extraNotes: ''
+};
+
+// ============================================================
+// SUPABASE HELPERS
+// ============================================================
+async function sbGet(table, q='') {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${q}`, { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
+    if (!r.ok) return [];
+    return r.json();
+}
+
+// ============================================================
+// DOM
+// ============================================================
+const btnNext = document.getElementById('btn-next');
+const btnBack = document.getElementById('btn-back');
+const btnText = document.getElementById('btn-text');
+const progressContainer = document.getElementById('progress-container');
+const loadingOverlay = document.getElementById('loading-overlay');
+
+// ============================================================
+// PROGRESS
+// ============================================================
+function initProgress() {
+    progressContainer.innerHTML = '';
+    for(let i = 1; i <= totalSteps; i++) {
+        const dot = document.createElement('div');
+        dot.className = `h-1 rounded-full transition-all duration-500 ${i === 1 ? 'w-8 bg-brand-dark' : 'w-2 bg-stone-200'}`;
+        dot.id = `dot-${i}`;
+        progressContainer.appendChild(dot);
+    }
+}
+initProgress();
+
+function updateUI() {
+    for(let i = 1; i <= totalSteps; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if(i <= currentStep) {
+            dot.classList.remove('bg-stone-200', 'w-2');
+            dot.classList.add('bg-brand-dark');
+            dot.classList.toggle('w-8', i === currentStep);
+            dot.classList.toggle('w-2', i !== currentStep);
+        } else {
+            dot.classList.remove('bg-brand-dark', 'w-8');
+            dot.classList.add('bg-stone-200', 'w-2');
+        }
+    }
+    btnBack.classList.toggle('hidden', currentStep === 1);
+    if(currentStep === totalSteps) {
+        btnText.textContent = "START MY CYCLE 2";
+    } else {
+        btnText.textContent = "CONTINUE";
+    }
+}
+
+function goToStep(step) {
+    const currentEl = document.getElementById(`step-${currentStep}`);
+    if(!currentEl) return;
+    currentEl.style.opacity = '0';
+    currentEl.style.pointerEvents = 'none';
+    window.scrollTo(0, 0);
+    setTimeout(() => {
+        currentEl.classList.remove('active');
+        currentStep = step;
+        const nextEl = document.getElementById(`step-${currentStep}`);
+        if(nextEl) {
+            nextEl.classList.add('active');
+            void nextEl.offsetWidth;
+            nextEl.style.opacity = '1';
+            nextEl.style.pointerEvents = 'all';
+        }
+        updateUI();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 300);
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+window.setSatisfaction = function(n) {
+    formState.satisfaction = n;
+    const labels = ['', 'Disappointing', 'Insufficient', 'Decent', 'Satisfying', 'Excellent'];
+    document.getElementById('stars-label').innerHTML = labels[n] || '';
+    document.querySelectorAll('#stars-container .star-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i < n);
+        btn.classList.toggle('text-stone-300', i >= n);
+    });
+    document.getElementById('error-stars').classList.add('hidden');
+};
+
+window.setSkinFeeling = function(val, btn) {
+    formState.skinFeeling = val;
+    document.querySelectorAll('#skin-feeling-container .zone-item').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('error-feeling').classList.add('hidden');
+};
+
+window.toggleConcern = function(val, btn) {
+    if(formState.concerns.includes(val)) {
+        formState.concerns = formState.concerns.filter(c => c !== val);
+        btn.classList.remove('selected');
+    } else {
+        formState.concerns.push(val);
+        btn.classList.add('selected');
+    }
+};
+
+window.setProductVerdict = function(productId, verdict, btn) {
+    formState.productVerdicts[productId] = verdict;
+    const card = btn.closest('.product-card');
+    card.querySelectorAll('.verdict-btn').forEach(b => {
+        b.classList.remove('active-keep', 'active-review', 'active-stop');
+    });
+    const cls = verdict === 'keep' ? 'active-keep' : verdict === 'review' ? 'active-review' : 'active-stop';
+    btn.classList.add(cls);
+};
+
+window.toggleReaction = function(val, btn) {
+    if(val === 'none') {
+        formState.reactions = formState.reactions.includes('none') ? [] : ['none'];
+        document.querySelectorAll('#reactions-container .zone-item').forEach(b => b.classList.remove('selected'));
+        if(formState.reactions.includes('none')) btn.classList.add('selected');
+        document.getElementById('reaction-detail-container').classList.add('hidden');
+    } else {
+        formState.reactions = formState.reactions.filter(r => r !== 'none');
+        document.querySelectorAll('#reactions-container .zone-item').forEach(b => {
+            if(b.querySelector('span')?.textContent?.includes('No, none')) b.classList.remove('selected');
+        });
+        if(formState.reactions.includes(val)) {
+            formState.reactions = formState.reactions.filter(r => r !== val);
+            btn.classList.remove('selected');
+        } else {
+            formState.reactions.push(val);
+            btn.classList.add('selected');
+        }
+        document.getElementById('reaction-detail-container').classList.toggle('hidden', formState.reactions.length === 0);
+    }
+};
+
+// ============================================================
+// PHOTO UPLOAD (same pattern as original form)
+// ============================================================
+const STORAGE_BUCKET = 'skin-tracking';
+const photoUrls = { face: null, left: null, right: null };
+
+async function sbUpload(path, file) {
+    const mimeType = file.type || 'image/jpeg';
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${path}`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': mimeType, 'x-upsert': 'true' },
+        body: file
+    });
+    if (!r.ok) throw new Error(`Upload failed: ${r.status}`);
+    return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+}
+
+window.handlePhotoUpload = async function(slot, inputEl, previewId, overlayId, emptyId) {
+    const file = inputEl.files?.[0];
+    if (!file) return;
+    if (file.size > 25 * 1024 * 1024) { alert('Photo too large (25 MB max)'); inputEl.value = ''; return; }
+
+    // Instant local preview
+    try {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const empty = document.getElementById(emptyId);
+            const img = document.getElementById(previewId);
+            if (empty) empty.classList.add('hidden');
+            if (img) { img.src = ev.target.result; img.classList.remove('hidden'); }
+        };
+        reader.readAsDataURL(file);
+    } catch(_) {}
+
+    // Show scan overlay
+    const overlay = document.getElementById(overlayId);
+    if (overlay) { overlay.classList.remove('hidden'); overlay.classList.add('flex'); }
+
+    try {
+        const ext = (file.name || '').split('.').pop().toLowerCase() || 'jpg';
+        const path = `${JOB_ID}/cycle2/${slot}.${ext}`;
+        const url = await sbUpload(path, file);
+        photoUrls[slot] = url;
+        document.getElementById('error-photos')?.classList.add('hidden');
+    } catch (err) {
+        console.error('Upload error:', err);
+        photoUrls[slot] = null;
+        // Reset on failure
+        const empty = document.getElementById(emptyId);
+        const img = document.getElementById(previewId);
+        if (img) { img.src = ''; img.classList.add('hidden'); }
+        if (empty) empty.classList.remove('hidden');
+        inputEl.value = '';
+        alert('Unable to upload the photo. Please check your connection and try again.');
+    } finally {
+        if (overlay) { overlay.classList.add('hidden'); overlay.classList.remove('flex'); }
+    }
+};
+
+// ============================================================
+// RENDER ROUTINE PRODUCTS
+// ============================================================
+function renderRoutineProducts(products) {
+    const container = document.getElementById('routine-products');
+    if(!products || products.length === 0) {
+        container.innerHTML = `
+            <div class="bg-stone-50 rounded-xl border border-stone-200 p-5 text-center">
+                <p class="text-sm text-stone-500 mb-3">No routine found from Cycle 1.</p>
+                <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-2">Describe your current routine</label>
+                <textarea id="manual-routine" rows="4" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="E.g.: CeraVe cleanser morning and evening, niacinamide serum at night, moisturizer..."></textarea>
+            </div>`;
+        return;
+    }
+    container.innerHTML = products.map((p, i) => `
+        <div class="product-card bg-white rounded-xl border border-stone-100 p-4 shadow-sm">
+            <div class="flex items-center gap-3 mb-3">
+                ${p.img_url
+                    ? `<img src="${escHtml(p.img_url)}" class="w-10 h-10 rounded-lg object-contain bg-stone-50 flex-shrink-0" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+                    : ''}
+                <div class="w-10 h-10 rounded-lg bg-stone-100 items-center justify-center flex-shrink-0 ${p.img_url ? 'hidden' : 'flex'}" ${p.img_url ? 'style="display:none"' : ''}>
+                    <i data-lucide="flask-round" class="w-4 h-4 text-stone-400"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-brand-dark truncate">${escHtml(p.nom_produit || p.name || p)}</p>
+                    <p class="text-[10px] text-stone-400">${escHtml(p.marque || '')}${p.moment ? ' ¬∑ ' + escHtml(p.moment) : ''}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <button type="button" onclick="setProductVerdict('${i}', 'keep', this)" class="verdict-btn text-center py-2 rounded-lg border border-stone-200 text-[11px] font-bold uppercase tracking-wide text-stone-400 hover:border-teal-300">&#x2705; Keep</button>
+                <button type="button" onclick="setProductVerdict('${i}', 'review', this)" class="verdict-btn text-center py-2 rounded-lg border border-stone-200 text-[11px] font-bold uppercase tracking-wide text-stone-400 hover:border-amber-300">&#x26A0;&#xFE0F; Review</button>
+                <button type="button" onclick="setProductVerdict('${i}', 'stop', this)" class="verdict-btn text-center py-2 rounded-lg border border-stone-200 text-[11px] font-bold uppercase tracking-wide text-stone-400 hover:border-red-300">&#x274C; Stopped</button>
+            </div>
+        </div>`).join('');
+    lucide.createIcons();
+}
+
+function escHtml(str) { if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+
+// ============================================================
+// VALIDATION
+// ============================================================
+function validate() {
+    if(currentStep === 1) {
+        if(formState.satisfaction === 0) {
+            document.getElementById('error-stars').classList.remove('hidden');
+            return false;
+        }
+    }
+    if(currentStep === 2) {
+        if(!formState.skinFeeling) {
+            document.getElementById('error-feeling').classList.remove('hidden');
+            return false;
+        }
+    }
+    if(currentStep === 5) {
+        if(!photoUrls.face) {
+            document.getElementById('error-photos').classList.remove('hidden');
+            return false;
+        }
+    }
+    return true;
+}
+
+// ============================================================
+// SUBMIT
+// ============================================================
+async function submitForm() {
+    if(isSubmitting) return;
+    isSubmitting = true;
+    btnNext.disabled = true;
+    loadingOverlay.classList.remove('hidden');
+    loadingOverlay.classList.add('flex');
+
+    formState.addedProducts = document.getElementById('added-products')?.value?.trim() || '';
+    formState.reactionDetail = document.getElementById('reaction-detail')?.value?.trim() || '';
+    formState.extraNotes = document.getElementById('extra-notes')?.value?.trim() || '';
+
+    const manualRoutine = document.getElementById('manual-routine')?.value?.trim() || '';
+
+    const payload = {
+        job_id: JOB_ID,
+        session_id: SESSION_ID,
+        client_name: clientName,
+        client_email: clientEmail,
+        cycle: 2,
+        lang: 'en',
+        satisfaction: formState.satisfaction,
+        skin_feeling: formState.skinFeeling,
+        concerns: formState.concerns,
+        product_verdicts: formState.productVerdicts,
+        routine_products: routineProducts,
+        added_products: formState.addedProducts,
+        manual_routine: manualRoutine,
+        reactions: formState.reactions,
+        reaction_detail: formState.reactionDetail,
+        photos: photoUrls,
+        extra_notes: formState.extraNotes
+    };
+
+    try {
+        // 1. Save to Supabase cycle2_intake table
+        const supabasePromise = fetch(`${SUPABASE_URL}/rest/v1/cycle2_intake`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        // 2. Send to n8n webhook (text-only, photo URLs included in payload)
+        const webhookPromise = fetch('https://n8n.adermio.com/webhook/second-cycle-en', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).catch(err => {
+            // Don't block on webhook failure ‚Äî Supabase is the source of truth
+            console.warn('n8n webhook error (non-blocking):', err);
+            return null;
+        });
+
+        const [supabaseRes] = await Promise.all([supabasePromise, webhookPromise]);
+
+        if(!supabaseRes.ok) {
+            console.error('Save error:', supabaseRes.status);
+        }
+
+        // Show success + redirect
+        setTimeout(() => {
+            loadingOverlay.classList.add('hidden');
+            loadingOverlay.classList.remove('flex');
+            document.getElementById('nav-bar').style.transform = 'translateY(100%)';
+
+            const currentEl = document.getElementById(`step-${currentStep}`);
+            currentEl?.classList.remove('active');
+            currentEl && (currentEl.style.opacity = '0');
+            document.getElementById('step-7')?.classList.add('active');
+            document.getElementById('step-7').style.opacity = '1';
+
+            if(typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.3 }, colors: ['#14B8A6', '#0F3D39', '#D4B483'] });
+            }
+
+            // Redirect after brief delay
+            setTimeout(() => {
+                const redirectUrl = JOB_ID
+                    ? '/en/analysis-in-progress-second-cycle?jobId=' + encodeURIComponent(JOB_ID)
+                    : '/en/analysis-in-progress-second-cycle';
+                window.location.href = redirectUrl;
+            }, 1500);
+        }, 800);
+
+    } catch(err) {
+        console.error('Submit error:', err);
+        alert('An error occurred. Please try again.');
+        loadingOverlay.classList.add('hidden');
+        loadingOverlay.classList.remove('flex');
+    } finally {
+        isSubmitting = false;
+        btnNext.disabled = false;
+    }
+}
+
+// ============================================================
+// NAV EVENTS
+// ============================================================
+btnNext.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(!validate()) return;
+    if(currentStep < totalSteps) {
+        goToStep(currentStep + 1);
+    } else {
+        submitForm();
+    }
+});
+btnBack.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(currentStep > 1) goToStep(currentStep - 1);
+});
+
+// ============================================================
+// INIT ‚Äî Load patient data
+// ============================================================
+async function init() {
+    if(!JOB_ID) {
+        document.getElementById('hero-name').textContent = 'Patient';
+        renderRoutineProducts([]);
+        return;
+    }
+
+    // Get patient name + email from free_analysis (has structured name/email columns)
+    try {
+        const rows = await sbGet('free_analysis', `jobId=eq.${JOB_ID}&select=name,email&limit=1`);
+        if(rows.length > 0) {
+            clientName = rows[0].name || '';
+            clientEmail = rows[0].email || '';
+        }
+    } catch(e) {}
+
+    // Fallback: get email from premium_analysis if not found
+    if(!clientEmail) {
+        try {
+            const pa = await sbGet('premium_analysis', `jobId=eq.${JOB_ID}&select=mail&limit=1`);
+            if(pa.length > 0) clientEmail = pa[0].mail || '';
+        } catch(e) {}
+    }
+
+    document.getElementById('hero-name').textContent = clientName || 'Patient';
+
+    // Get routine from skin_tracking (custom_routine = { matin: [...], soir: [...], hebdo: [...] })
+    try {
+        const rows = await sbGet('skin_tracking', `job_id=eq.${JOB_ID}&cycle_number=eq.1&select=custom_routine&limit=1`);
+        if(rows.length > 0 && rows[0].custom_routine) {
+            const cr = rows[0].custom_routine;
+            const all = [];
+            if(cr.matin) cr.matin.forEach(p => all.push({ ...p, moment: 'Morning' }));
+            if(cr.soir) cr.soir.forEach(p => all.push({ ...p, moment: 'Evening' }));
+            if(cr.hebdo) cr.hebdo.forEach(p => all.push({ ...p, moment: 'Weekly' }));
+            routineProducts = all;
+        }
+    } catch(e) {}
+
+    renderRoutineProducts(routineProducts);
+
+    // Confetti on load (payment confirmed!)
+    setTimeout(() => {
+        if(typeof confetti === 'function') {
+            confetti({ particleCount: 60, spread: 50, origin: { y: 0.4 }, colors: ['#14B8A6', '#0F3D39', '#D4B483'] });
+        }
+    }, 500);
+}
+
+init();
+</script>
+
+</body>
+</html>
