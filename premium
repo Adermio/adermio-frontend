@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Adermio Premium Analysis</title>
+<style>
+  /* --- 1. BASE & VARS --- */
+  :root {
+    --primary: #0f766e;       /* Teal 700 */
+    --primary-dark: #115e59;
+    --primary-light: #f0fdfa;
+    --secondary: #64748b;     /* Slate 500 */
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --danger: #ef4444;
+  }
+
+  html, body {
+    margin: 0 !important; padding: 0 !important; height: 100% !important;
+    overflow: hidden !important; background: var(--bg-body);
+    font-family: var(--font-main);
+    color: #1e293b;
+    -webkit-tap-highlight-color: transparent;
+  }
+   
+  * { box-sizing: border-box; outline: none; }
+
+  /* --- 2. LAYOUT IFRAME & LOADING --- */
+  #premium-loading, #premium-error {
+    position: fixed; inset: 0; z-index: 999999;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; text-align: center;
+    background: var(--bg-body);
+    font-size: 14px; color: var(--secondary);
+  }
+  #premium-error { display: none; color: #b00020; flex-direction: column; gap: 10px; }
+
+  #premium-container {
+    position: fixed; inset: 0; z-index: 999998;
+    display: none;
+    width: 100vw; height: 100vh;
+    background: var(--bg-body);
+    overflow: hidden;
+  }
+  #premium-iframe {
+    width: 100%; height: 100%;
+    border: 0; display: block;
+    background: var(--bg-body);
+  }
+
+  /* --- 3. MODAL FULL SCREEN --- */
+  #adjust-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000000;
+    background: #fff; 
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+   
+  @media (min-width: 768px) {
+    #adjust-overlay {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      padding: 20px;
+    }
+  }
+
+  #adjust-overlay.active { display: flex; opacity: 1; }
+
+  #adjust-card {
+    width: 100%; height: 100%;
+    max-width: 100%;
+    background: var(--bg-card);
+    border-radius: 0;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.98);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (min-width: 768px) {
+    #adjust-card {
+      max-width: 800px;
+      height: 90vh;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+  }
+
+  #adjust-overlay.active #adjust-card { transform: scale(1); }
+
+  #adjust-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: #fff; flex-shrink: 0;
+  }
+  .header-title { font-size: 16px; font-weight: 700; margin: 0; color: #0f172a; }
+  .header-sub { font-size: 12px; color: var(--secondary); margin: 2px 0 0; }
+   
+  .close-btn {
+    background: transparent; border: none; color: #94a3b8; cursor: pointer;
+    padding: 8px; border-radius: 50%; display: flex; transition: 0.2s;
+  }
+  .close-btn:hover { background: #f1f5f9; color: #334155; }
+
+  #adjust-body {
+    padding: 0; overflow-y: auto; background: #fcfcfc; flex-grow: 1;
+    display: flex; flex-direction: column;
+  }
+  .body-content-wrapper { width: 100%; }
+
+  .section { padding: 24px 20px; border-bottom: 1px solid var(--border); background: #fff; }
+  .section:last-child { border-bottom: none; }
+   
+  .section-header {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+    color: var(--secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-header svg { color: var(--primary); width: 16px; height: 16px; }
+
+  /* --- ROUTINE ITEMS (Mobile Optimized) --- */
+  .routine-container {
+    max-height: 350px; overflow-y: auto;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    margin-bottom: 20px;
+    scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;
+    background: #fff;
+  }
+   
+  .prod-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px; 
+    border-bottom: 1px solid #f1f5f9; 
+    background: #fff;
+    gap: 10px;
+  }
+  .prod-card:last-child { border-bottom: none; }
+   
+  .prod-info { 
+    flex: 1; 
+    min-width: 0; 
+  }
+  .prod-cat { 
+    font-size: 10px; font-weight: 700; color: var(--primary); 
+    text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px;
+  }
+  .prod-name { 
+    font-size: 13px; font-weight: 600; color: #334155; 
+    line-height: 1.3;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+  }
+
+  /* Compact Toggle Switch */
+  .toggle-group {
+    display: inline-flex; 
+    background: #f1f5f9; 
+    border-radius: 6px; 
+    padding: 2px; 
+    gap: 2px; 
+    flex-shrink: 0;
+  }
+  .toggle-opt {
+    padding: 6px 10px; 
+    font-size: 11px; 
+    font-weight: 600; 
+    color: #94a3b8;
+    border-radius: 5px; 
+    cursor: pointer; 
+    border: none; 
+    background: transparent; 
+    transition: 0.2s; 
+    white-space: nowrap;
+  }
+  .toggle-opt.active-keep { 
+    background: #fff; color: var(--primary); 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-weight: 700; 
+  }
+  .toggle-opt.active-replace { 
+    background: #fff; color: #475569; 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-weight: 700; 
+  }
+
+  /* INPUTS */
+  .routine-text-block { margin-bottom: 16px; }
+  .routine-text-block label { display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 6px; }
+  .text-area-sm {
+    width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; font-family: inherit; resize: vertical; min-height: 60px;
+    background: #f8fafc; color: #334155;
+  }
+  .text-area-sm:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1); }
+
+  /* OPTIONS GRID */
+  .intensity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .chip-opt { position: relative; cursor: pointer; }
+  .chip-opt input { position: absolute; opacity: 0; width: 0; }
+  .chip-visual {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+    padding: 14px; border: 1px solid var(--border); border-radius: 10px;
+    transition: 0.2s; background: #fff; height: 100%;
+  }
+  .chip-opt input:checked + .chip-visual {
+    border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark);
+    box-shadow: 0 0 0 1px var(--primary);
+  }
+  .chip-icon { color: var(--secondary); transition: 0.2s; width: 20px; height: 20px;}
+  .chip-opt input:checked + .chip-visual .chip-icon { color: var(--primary); }
+  .chip-title { font-size: 13px; font-weight: 600; }
+  .chip-desc { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+
+  /* BUDGET */
+  .budget-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .budget-item { position: relative; cursor: pointer; }
+  .budget-item input { position: absolute; opacity: 0; width: 0; }
+  .budget-tile {
+    padding: 12px 4px; border: 1px solid var(--border); border-radius: var(--radius);
+    text-align: center; transition: 0.2s; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .budget-item input:checked + .budget-tile {
+    border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark);
+    box-shadow: 0 0 0 1px var(--primary);
+  }
+  .b-title { font-size: 12px; font-weight: 700; display: block; margin-bottom: 2px; }
+  .b-range { font-size: 10px; opacity: 0.8; }
+
+  /* BRANDS */
+  .brand-section-group { margin-bottom: 16px; }
+  .brand-section-label { font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px; }
+  .brand-section-label.pos { color: #0f766e; }
+  .brand-section-label.neg { color: #ef4444; }
+
+  .brand-dropdown {
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px;
+  }
+  .bd-header {
+    padding: 12px 14px; background: #fff; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; font-weight: 500; color: var(--secondary);
+  }
+  .bd-content { display: none; padding: 12px; background: #f8fafc; border-top: 1px solid var(--border); }
+  .bd-content.open { display: block; }
+  .bd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .brand-check { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; color: #334155; }
+
+  /* Brand Input Row */
+  .brand-input-row { display: flex; gap: 8px; }
+  .brand-input-custom { flex: 1; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; }
+  .brand-add-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;
+    color: var(--primary); cursor: pointer; transition: 0.2s;
+  }
+  .brand-add-btn:active { background: #f1f5f9; transform: scale(0.95); }
+
+  .selected-tags-container { display: flex; flex-wrap: wrap; gap: 6px; min-height: 0; }
+  .brand-tag {
+    font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 12px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .brand-tag.pos { background: #f0fdfa; color: #0f766e; border: 1px solid #ccfbf1; }
+  .brand-tag.neg { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+  .remove-tag { cursor: pointer; font-size: 14px; opacity: 0.6; }
+
+  /* VIGILANCE */
+  .vigilance-container { display: flex; flex-direction: column; gap: 14px; }
+  .med-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 600px) { .med-grid { grid-template-columns: 1fr 1fr; } }
+  .med-box label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: #475569; }
+  .med-box label.alert { color: var(--danger); }
+   
+  .preg-toggle {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px; 
+    background: #fff; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: 0.2s;
+  }
+  .preg-toggle:hover { border-color: #cbd5e1; background: #f8fafc; }
+  .preg-toggle input { display: none; }
+  .toggle-switch {
+    width: 32px; height: 18px; background: #cbd5e1; border-radius: 20px; position: relative; transition: 0.3s; flex-shrink: 0;
+  }
+  .toggle-switch::after {
+    content: ''; position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; background: #fff; border-radius: 50%; transition: 0.3s;
+  }
+  .preg-toggle input:checked + .toggle-switch { background: var(--primary); }
+  .preg-toggle input:checked + .toggle-switch::after { transform: translateX(14px); }
+  .preg-label { font-size: 13px; font-weight: 600; color: #1e293b; }
+
+  /* FOOTER */
+  #adjust-footer {
+    padding: 16px 20px; border-top: 1px solid var(--border); background: #fff;
+    display: grid; 
+    grid-template-columns: 1fr auto 1fr; 
+    align-items: center;
+    flex-shrink: 0;
+  }
+   
+  #adjust-cancel-btn { justify-self: start; }
+  #adjust-submit-btn { justify-self: center; min-width: 160px; }
+
+  .btn { padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
+  .btn-ghost { background: transparent; color: var(--secondary); }
+  .btn-ghost:hover { background: #f1f5f9; color: #1e293b; }
+  .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2); }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+  /* TOAST */
+  #adjust-toast {
+    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    z-index: 1000001; background: #0f172a; color: #fff;
+    padding: 10px 16px; border-radius: 999px; font-size: 13px;
+    display: none; opacity: 0.95; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  /* GENERATION OVERLAY & PROGRESS BAR */
+  #generating-overlay {
+    position: fixed; inset: 0; z-index: 2000000;
+    background: #fff;
+    display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .gen-content { padding: 24px; max-width: 400px; width: 100%; animation: fadeIn 0.5s ease; }
+  
+  .gen-progress-wrapper {
+    width: 100%; height: 8px; background: #e2e8f0; 
+    border-radius: 4px; overflow: hidden; margin: 0 auto 24px auto; max-width: 200px;
+  }
+  .gen-progress-fill {
+    height: 100%; background: #0f766e; width: 0%;
+    /* Transition controlled by JS to create stages */
+    transition: width 15s linear; 
+  }
+
+  .gen-title { font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; }
+  .gen-desc { font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 24px; }
+  #gen-success-area { display: none; margin-top: 10px; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+</style>
+</head>
+<body>
+
+<div id="premium-loading">Chargement de votre analyse premium...</div>
+<div id="premium-error"></div>
+
+<div id="premium-container">
+  <iframe
+    id="premium-iframe"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="fullscreen"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<div id="adjust-overlay" role="dialog" aria-modal="true">
+  <div id="adjust-card">
+    
+    <div id="adjust-header">
+      <div>
+        <h2 class="header-title">Personnalisation Expert</h2>
+        <p class="header-sub">Configurez votre stratégie dermatologique</p>
+      </div>
+      <button class="close-btn" id="adjust-close-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div id="adjust-body">
+      <div class="body-content-wrapper">
+
+        <div class="section">
+          <div class="section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14h6"/><path d="M9 18h6"/><path d="M9 10h6"/></svg>
+            Votre routine Adermio
+          </div>
+          <div class="routine-container">
+            <div id="routine-rows"></div>
+          </div>
+          <div class="routine-text-block">
+            <label>Les produits que vous utilisez déjà (Modifiable)</label>
+            <textarea id="current-products-text" class="text-area-sm" style="min-height:50px;"></textarea>
+          </div>
+          <div class="routine-text-block">
+            <label style="color:#0f766e;">Produits de votre routine actuelle que vous souhaitez conserver</label>
+            <textarea id="keep-products-text" class="text-area-sm" placeholder="Ex: Je souhaite absolument garder ma crème hydratante Caudalie car je l'ai achetée récemment..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            Format de la Routine
+          </div>
+          <div class="intensity-grid">
+            <label class="chip-opt">
+              <input type="radio" name="intensity" value="minimal" onchange="window.updateBudgetRanges('minimal')">
+              <div class="chip-visual">
+                <svg class="chip-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <div><span class="chip-title">Minimaliste</span><div class="chip-desc">2-3 produits • Rapide</div></div>
+              </div>
+            </label>
+            <label class="chip-opt">
+              <input type="radio" name="intensity" value="complete" checked onchange="window.updateBudgetRanges('complete')">
+              <div class="chip-visual">
+                <svg class="chip-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <div><span class="chip-title">Complète</span><div class="chip-desc">4-6 produits • Standard</div></div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2 2 2 0 0 1 2-2h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2v-8h-2z"/></svg>
+            Budget Cible
+          </div>
+          <div class="budget-row">
+            <label class="budget-item">
+              <input type="radio" name="budget" value="low">
+              <div class="budget-tile">
+                <span class="b-title">Économique</span>
+                <span class="b-range" id="price-low">&lt; 60€</span>
+              </div>
+            </label>
+            <label class="budget-item">
+              <input type="radio" name="budget" value="mid" checked>
+              <div class="budget-tile">
+                <span class="b-title">Standard</span>
+                <span class="b-range" id="price-mid">60€ - 110€</span>
+              </div>
+            </label>
+            <label class="budget-item">
+              <input type="radio" name="budget" value="high">
+              <div class="budget-tile">
+                <span class="b-title">Premium</span>
+                <span class="b-range" id="price-high">&gt; 110€</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            Préférences Marques
+          </div>
+          
+          <div class="brand-section-group">
+            <label class="brand-section-label pos">Marques à Privilégier</label>
+            <div class="brand-dropdown">
+              <div class="bd-header" onclick="window.toggleDropdown('bd-love')">
+                <span>Ajouter une marque...</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div id="bd-love" class="bd-content">
+                <div class="bd-grid">
+                  <label class="brand-check"><input type="checkbox" value="Avène" onchange="window.updateTags('love')"> Avène</label>
+                  <label class="brand-check"><input type="checkbox" value="Bioderma" onchange="window.updateTags('love')"> Bioderma</label>
+                  <label class="brand-check"><input type="checkbox" value="CeraVe" onchange="window.updateTags('love')"> CeraVe</label>
+                  <label class="brand-check"><input type="checkbox" value="Eucerin" onchange="window.updateTags('love')"> Eucerin</label>
+                  <label class="brand-check"><input type="checkbox" value="Garnier" onchange="window.updateTags('love')"> Garnier</label>
+                  <label class="brand-check"><input type="checkbox" value="ISDIN" onchange="window.updateTags('love')"> ISDIN</label>
+                  <label class="brand-check"><input type="checkbox" value="La Roche-Posay" onchange="window.updateTags('love')"> La Roche-Posay</label>
+                  <label class="brand-check"><input type="checkbox" value="Neutrogena" onchange="window.updateTags('love')"> Neutrogena</label>
+                  <label class="brand-check"><input type="checkbox" value="Nivea" onchange="window.updateTags('love')"> Nivea</label>
+                  <label class="brand-check"><input type="checkbox" value="Paula's Choice" onchange="window.updateTags('love')"> Paula's Choice</label>
+                  <label class="brand-check"><input type="checkbox" value="SVR" onchange="window.updateTags('love')"> SVR</label>
+                  <label class="brand-check"><input type="checkbox" value="The INKEY List" onchange="window.updateTags('love')"> The INKEY List</label>
+                  <label class="brand-check"><input type="checkbox" value="The Ordinary" onchange="window.updateTags('love')"> The Ordinary</label>
+                  <label class="brand-check"><input type="checkbox" value="Uriage" onchange="window.updateTags('love')"> Uriage</label>
+                  <label class="brand-check"><input type="checkbox" value="Vichy" onchange="window.updateTags('love')"> Vichy</label>
+                </div>
+                <div class="brand-input-row">
+                  <input type="text" id="input-love" class="brand-input-custom" placeholder="Autre marque..." onkeypress="window.handleBrandInput(event, 'love')">
+                  <button type="button" class="brand-add-btn" onclick="window.addCustomBrand('love')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div id="tags-love" class="selected-tags-container"></div>
+          </div>
+
+          <div class="brand-section-group">
+            <label class="brand-section-label neg">Marques à Éviter</label>
+            <div class="brand-dropdown">
+              <div class="bd-header" onclick="window.toggleDropdown('bd-hate')">
+                <span>Ajouter une marque...</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div id="bd-hate" class="bd-content">
+                <div class="bd-grid">
+                  <label class="brand-check"><input type="checkbox" value="Avène" onchange="window.updateTags('hate')"> Avène</label>
+                  <label class="brand-check"><input type="checkbox" value="Bioderma" onchange="window.updateTags('hate')"> Bioderma</label>
+                  <label class="brand-check"><input type="checkbox" value="CeraVe" onchange="window.updateTags('hate')"> CeraVe</label>
+                  <label class="brand-check"><input type="checkbox" value="Eucerin" onchange="window.updateTags('hate')"> Eucerin</label>
+                  <label class="brand-check"><input type="checkbox" value="Garnier" onchange="window.updateTags('hate')"> Garnier</label>
+                  <label class="brand-check"><input type="checkbox" value="ISDIN" onchange="window.updateTags('hate')"> ISDIN</label>
+                  <label class="brand-check"><input type="checkbox" value="La Roche-Posay" onchange="window.updateTags('hate')"> La Roche-Posay</label>
+                  <label class="brand-check"><input type="checkbox" value="Neutrogena" onchange="window.updateTags('hate')"> Neutrogena</label>
+                  <label class="brand-check"><input type="checkbox" value="Nivea" onchange="window.updateTags('hate')"> Nivea</label>
+                  <label class="brand-check"><input type="checkbox" value="Paula's Choice" onchange="window.updateTags('hate')"> Paula's Choice</label>
+                  <label class="brand-check"><input type="checkbox" value="SVR" onchange="window.updateTags('hate')"> SVR</label>
+                  <label class="brand-check"><input type="checkbox" value="The INKEY List" onchange="window.updateTags('hate')"> The INKEY List</label>
+                  <label class="brand-check"><input type="checkbox" value="The Ordinary" onchange="window.updateTags('hate')"> The Ordinary</label>
+                  <label class="brand-check"><input type="checkbox" value="Uriage" onchange="window.updateTags('hate')"> Uriage</label>
+                  <label class="brand-check"><input type="checkbox" value="Vichy" onchange="window.updateTags('hate')"> Vichy</label>
+                </div>
+                <div class="brand-input-row">
+                  <input type="text" id="input-hate" class="brand-input-custom" placeholder="Autre marque..." onkeypress="window.handleBrandInput(event, 'hate')">
+                  <button type="button" class="brand-add-btn" onclick="window.addCustomBrand('hate')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div id="tags-hate" class="selected-tags-container"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">Note à l'IA Adermio</div>
+          <textarea id="user-note" class="text-area-sm" style="min-height: 120px;" placeholder="Indiquez ici tout ce que vous souhaitez que l’IA prenne en compte pour ajuster votre routine."></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="adjust-footer">
+      <button class="btn btn-ghost" id="adjust-cancel-btn">Annuler</button>
+      <button class="btn btn-primary" id="adjust-submit-btn">Valider la routine</button>
+      <div></div> 
+    </div>
+
+  </div>
+</div>
+
+<div id="adjust-toast"></div>
+
+<div id="generating-overlay">
+  <div class="gen-content">
+    
+    <div class="gen-progress-wrapper">
+      <div id="gen-progress-bar" class="gen-progress-fill"></div>
+    </div>
+    
+    <h3 id="gen-title" class="gen-title">Adermio génère votre nouvelle routine...</h3>
+    <p id="gen-desc" class="gen-desc">L'IA analyse vos contraintes et reformule votre protocole. <br>Cela peut prendre quelques secondes.</p>
+    
+    <div id="gen-success-area">
+      <button id="gen-open-btn" class="btn btn-primary" style="font-size:16px; padding:16px 32px;">
+        Voir mon nouveau protocole
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==========================================
+// UNIFIED SCRIPT BLOCK
+// ==========================================
+(function() {
+  // CONFIG
+  const URL_GET_CONTEXT = "https://n8n.adermio.com/webhook/get-form-context"; 
+  const URL_SUBMIT_ROUTINE = "https://n8n.adermio.com/webhook/routine";
+  const URL_POLL_STATUS = "https://n8n.adermio.com/webhook/job-status-routine";
+  const POLL_INTERVAL = 3000;      // 3 secondes
+  const MAX_POLL_TIME = 45000;     // 45 secondes max
+  
+  // STATE
+  let pollIntervalId = null;
+  let pollStartTime = 0;
+  let progressTimers = []; // pour gérer les timeouts de la barre
+  const customBrands = { love: [], hate: [] };
+  let userContext = { products: [], allergies: "", meds: "", note: "", keep_text: "" };
+  let GLOBAL_TOKEN = null;
+
+  // --- 1. INITIALISATION & IFRAME ---
+  async function init() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      GLOBAL_TOKEN = params.get("token");
+
+      const loadingEl = document.getElementById("premium-loading");
+      const errorEl = document.getElementById("premium-error");
+      const containerEl = document.getElementById("premium-container");
+      const iframeEl = document.getElementById("premium-iframe");
+
+      if (!GLOBAL_TOKEN) {
+        if(loadingEl) loadingEl.style.display = "none";
+        if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Lien invalide : token manquant."; }
+        return;
+      }
+
+      // Fetch Report
+      const resp = await fetch("https://ai.adermio.com/api/get_report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: GLOBAL_TOKEN })
+      });
+
+      if (!resp.ok) throw new Error("Accès refusé ou lien expiré");
+
+      const data = await resp.json();
+      if (!data.report_html_url) throw new Error("URL rapport manquante");
+
+      iframeEl.src = data.report_html_url;
+      if(loadingEl) loadingEl.style.display = "none";
+      if(containerEl) containerEl.style.display = "block";
+
+      // Viewport fix
+      const fit = () => {
+        const h = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
+        containerEl.style.height = h + "px";
+      };
+      fit();
+      window.addEventListener("resize", fit);
+      if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
+
+      // PRE-LOAD CONTEXT FOR FORM
+      fetchUserContext();
+
+    } catch (e) {
+      console.error(e);
+      const loadingEl = document.getElementById("premium-loading");
+      const errorEl = document.getElementById("premium-error");
+      if(loadingEl) loadingEl.style.display = "none";
+      if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Erreur de chargement. Réessayez plus tard."; }
+    }
+  }
+
+  // --- 2. FETCH CONTEXT (SILENT) ---
+  async function fetchUserContext() {
+    if(!GLOBAL_TOKEN) return;
+    try {
+      const res = await fetch(`${URL_GET_CONTEXT}?token=${encodeURIComponent(GLOBAL_TOKEN)}`);
+      if(res.ok) {
+        userContext = await res.json();
+        console.log("Context loaded:", userContext);
+      }
+    } catch(e) {
+      console.error("Context fetch error:", e);
+    }
+  }
+
+  // --- 3. UI HELPERS ---
+  function showToast(text) {
+    const toast = document.getElementById("adjust-toast");
+    if (!toast) return;
+    toast.textContent = text;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, 2500);
+  }
+
+  // Exposed to global for HTML attributes
+  window.setProductState = function(btn, state) {
+    const group = btn.parentElement;
+    const btns = group.querySelectorAll('.toggle-opt');
+    btns.forEach(b => b.classList.remove('active-keep', 'active-replace'));
+    if(state === 'keep') btn.classList.add('active-keep');
+    else btn.classList.add('active-replace');
+    group.dataset.choice = state; 
+  };
+
+  window.updateBudgetRanges = function(mode) {
+    const pLow = document.getElementById('price-low');
+    const pMid = document.getElementById('price-mid');
+    const pHigh = document.getElementById('price-high');
+    if(!pLow) return;
+    pLow.style.opacity = 0.5; pMid.style.opacity = 0.5; pHigh.style.opacity = 0.5;
+    setTimeout(() => {
+      if (mode === 'minimal') {
+        pLow.textContent = "< 40€"; pMid.textContent = "40€ - 70€"; pHigh.textContent = "> 70€";
+      } else {
+        pLow.textContent = "< 60€"; pMid.textContent = "60€ - 110€"; pHigh.textContent = "> 110€";
+      }
+      pLow.style.opacity = 0.8; pMid.style.opacity = 0.8; pHigh.style.opacity = 0.8;
+    }, 150);
+  };
+
+  window.toggleDropdown = function(id) {
+    document.getElementById(id).classList.toggle('open');
+  };
+
+  window.updateTags = function(type) {
+    const container = document.getElementById(`tags-${type}`);
+    const dropdownContent = document.getElementById(`bd-${type}`);
+    if(!container || !dropdownContent) return;
+    container.innerHTML = ''; 
+    const checkboxes = dropdownContent.querySelectorAll('input[type="checkbox"]:checked');
+    checkboxes.forEach(cb => {
+      createTag(cb.value, type, container, () => { cb.checked = false; window.updateTags(type); });
+    });
+    customBrands[type].forEach((val, index) => {
+      createTag(val, type, container, () => { customBrands[type].splice(index, 1); window.updateTags(type); });
+    });
+  };
+
+  function createTag(text, type, container, removeCallback) {
+    const tag = document.createElement('div');
+    tag.className = `brand-tag ${type === 'love' ? 'pos' : 'neg'}`;
+    tag.innerHTML = `<span>${text}</span><span class="remove-tag">×</span>`;
+    tag.querySelector('.remove-tag').onclick = removeCallback;
+    container.appendChild(tag);
+  }
+
+  window.handleBrandInput = function(e, type) {
+    if (e.key === 'Enter') window.addCustomBrand(type);
+  };
+
+  window.addCustomBrand = function(type) {
+      const input = document.getElementById(`input-${type}`);
+      const val = input.value.trim();
+      if (val) {
+        customBrands[type].push(val);
+        input.value = '';
+        window.updateTags(type);
+      }
+  };
+
+  // --- 4. FORM LOGIC ---
+  function initForm() {
+    const container = document.getElementById('routine-rows');
+    if(container) {
+      container.innerHTML = '';
+      const productsToDisplay = (userContext.products && userContext.products.length > 0) 
+                                ? userContext.products 
+                                : [{type: "Info", name: "Aucune routine détectée", id: "0"}];
+
+      productsToDisplay.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'prod-card';
+        el.dataset.prodId = item.id; 
+        el.dataset.prodName = item.name;
+        const hideButtons = item.id === "0" ? 'style="display:none;"' : '';
+        el.innerHTML = `
+          <div class="prod-info">
+            <div class="prod-cat">${item.type}</div>
+            <div class="prod-name">${item.name}</div>
+          </div>
+          <div class="toggle-group" data-choice="replace" ${hideButtons}>
+            <button type="button" class="toggle-opt active-replace" onclick="setProductState(this, 'replace')">Remplacer</button>
+            <button type="button" class="toggle-opt" onclick="setProductState(this, 'keep')">Garder</button>
+          </div>`;
+        container.appendChild(el);
+      });
+    }
+    if(userContext.allergies) document.getElementById('allergies-text').value = userContext.allergies;
+    if(userContext.meds) document.getElementById('meds-text').value = userContext.meds;
+    if(userContext.note) document.getElementById('user-note').value = userContext.note;
+    if(userContext.keep_text) document.getElementById('current-products-text').value = userContext.keep_text;
+  }
+
+  function openAdjustModal() {
+    document.getElementById('adjust-overlay').classList.add('active');
+    try {
+        initForm(); 
+        window.updateBudgetRanges('complete'); 
+    } catch(e) { console.error("Form init error", e); }
+  }
+
+  function closeAdjustModal() {
+    document.getElementById('adjust-overlay').classList.remove('active');
+  }
+
+  const closeBtn = document.getElementById("adjust-close-btn");
+  const cancelBtn = document.getElementById("adjust-cancel-btn");
+  const submitBtn = document.getElementById("adjust-submit-btn");
+
+  if (closeBtn) closeBtn.addEventListener("click", closeAdjustModal);
+  if (cancelBtn) cancelBtn.addEventListener("click", closeAdjustModal);
+
+  // --- 5. SUBMIT & POLLING START ---
+  if (submitBtn) {
+    submitBtn.addEventListener("click", async () => {
+      const routineItems = [];
+      document.querySelectorAll('#routine-rows .prod-card').forEach(card => {
+        if(card.dataset.prodId !== "0") {
+            routineItems.push({
+              id: card.dataset.prodId,
+              name: card.dataset.prodName,
+              action: card.querySelector('.toggle-group').dataset.choice || 'replace'
+            });
+        }
+      });
+
+      const getTags = (id) => Array.from(document.querySelectorAll(`#${id} .brand-tag span:first-child`)).map(s => s.innerText);
+      
+      const payload = {
+        token: GLOBAL_TOKEN,
+        source: "premium_parent_v10",
+        ts: Date.now(),
+        intensity: document.querySelector('input[name="intensity"]:checked')?.value || 'complete',
+        budget: document.querySelector('input[name="budget"]:checked')?.value || 'mid',
+        current_routine_status: routineItems,
+        text_current_products: document.getElementById('current-products-text')?.value || '',
+        text_keep_products: document.getElementById('keep-products-text')?.value || '',
+        brands_love: getTags('tags-love').join(", "),
+        brands_hate: getTags('tags-hate').join(", "),
+        is_pregnant: document.getElementById('pregnancy-status')?.checked || false,
+        text_allergies: document.getElementById('allergies-text')?.value || '',
+        text_meds: document.getElementById('meds-text')?.value || '',
+        user_note: document.getElementById('user-note')?.value || ''
+      };
+
+      closeAdjustModal();
+      
+      // Init UI Loading
+      const overlay = document.getElementById('generating-overlay');
+      overlay.style.display = 'flex';
+      
+      document.getElementById('gen-title').textContent = "Adermio génère votre nouvelle routine...";
+      document.getElementById('gen-desc').textContent = "L'IA analyse vos contraintes et reformule votre protocole. Cela peut prendre quelques secondes.";
+      document.getElementById('gen-success-area').style.display = 'none';
+
+      // Reset Bar & Start Animation Stages
+      const bar = document.getElementById('gen-progress-bar');
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+      
+      // Force repaint
+      void bar.offsetWidth;
+
+      // Etape 1 : 0 -> 15s (33%)
+      bar.style.transition = 'width 15s linear';
+      bar.style.width = '33%';
+
+      // Planification Etape 2 (15s -> 30s)
+      clearProgressTimers();
+      
+      const timer1 = setTimeout(() => {
+        if(bar.style.width !== '100%') {
+           bar.style.transition = 'width 15s linear';
+           bar.style.width = '66%';
+        }
+      }, 15000);
+      progressTimers.push(timer1);
+
+      // Planification Etape 3 (30s -> 45s)
+      const timer2 = setTimeout(() => {
+        if(bar.style.width !== '100%') {
+           bar.style.transition = 'width 15s linear';
+           bar.style.width = '95%'; // On bloque juste avant 100% si toujours pas fini
+        }
+      }, 30000);
+      progressTimers.push(timer2);
+
+      // Trigger Webhook
+      fetch(URL_SUBMIT_ROUTINE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error("Webhook trigger error:", err));
+
+      startPolling();
+    });
+  }
+
+  function clearProgressTimers() {
+    progressTimers.forEach(t => clearTimeout(t));
+    progressTimers = [];
+  }
+
+  // --- 6. POLLING ---
+  async function checkRoutineStatus() {
+    // 1. Check Max Time (45s safety)
+    const elapsed = Date.now() - pollStartTime;
+    if (elapsed > MAX_POLL_TIME) {
+      stopPolling();
+      // On stop visuellement ici si on veut, ou on laisse l'utilisateur bloqué (mais safe).
+      // Dans le doute, on laisse l'UI actuelle ou on affiche une erreur.
+      // Pour l'instant on arrête juste les appels réseaux.
+      console.warn("Polling timeout reached (45s).");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${URL_POLL_STATUS}?token=${encodeURIComponent(GLOBAL_TOKEN)}`, { method: "GET", cache: "no-store" });
+      const data = await res.json();
+      
+      if (data && data.status === "ready") {
+        stopPolling();
+        
+        // Success UI : Bar goes to 100% fast
+        clearProgressTimers();
+        const bar = document.getElementById('gen-progress-bar');
+        bar.style.transition = 'width 0.5s ease-out';
+        bar.style.width = '100%';
+
+        document.getElementById('gen-desc').textContent = "Finalisation de l'écriture du rapport...";
+        setTimeout(() => { showGenerationSuccess(); }, 800); 
+      }
+    } catch (e) { console.error("Polling error:", e); }
+  }
+
+  function startPolling() {
+    if (pollIntervalId) clearInterval(pollIntervalId);
+    pollStartTime = Date.now();
+    // Appel immédiat puis intervalle
+    checkRoutineStatus();
+    pollIntervalId = setInterval(checkRoutineStatus, POLL_INTERVAL);
+  }
+
+  function stopPolling() {
+    if (pollIntervalId) { clearInterval(pollIntervalId); pollIntervalId = null; }
+  }
+
+  function showGenerationSuccess() {
+    document.getElementById('gen-title').textContent = "Analyse prête !";
+    document.getElementById('gen-desc').textContent = "Votre nouvelle routine a été générée avec succès.";
+    document.getElementById('gen-success-area').style.display = 'block';
+  }
+
+  // --- 7. RELOAD ---
+  const openNewBtn = document.getElementById('gen-open-btn');
+  if(openNewBtn) {
+    openNewBtn.addEventListener('click', async () => {
+      const btn = document.getElementById('gen-open-btn');
+      const iframe = document.getElementById("premium-iframe");
+      btn.textContent = "Ouverture...";
+      btn.disabled = true;
+      document.getElementById('gen-desc').textContent = "Récupération de votre nouvelle routine...";
+
+      try {
+        const resp = await fetch("https://ai.adermio.com/api/get_report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: GLOBAL_TOKEN })
+        });
+        if (!resp.ok) throw new Error("Erreur récupération URL");
+        const data = await resp.json();
+        
+        iframe.src = "about:blank";
+        setTimeout(() => {
+            iframe.onload = function() {
+                document.getElementById('generating-overlay').style.display = 'none';
+                // TOAST REMOVED HERE AS REQUESTED
+                fetchUserContext(); // Refresh context for V3
+                btn.textContent = "Voir mon nouveau protocole";
+                btn.disabled = false;
+                iframe.onload = null;
+            };
+            iframe.src = data.report_html_url;
+        }, 100);
+      } catch (e) {
+        console.error(e);
+        window.location.reload();
+      }
+    });
+  }
+
+  // --- 8. MESSAGE LISTENER ---
+  window.addEventListener("message", (event) => {
+    if (!event.data || typeof event.data !== 'object') return;
+    
+    if (event.data.type === "ADDERMIO_OPEN_ADJUST_MODAL") {
+      console.log("✅ Clic détecté ! Ouverture de la modale...");
+      openAdjustModal();
+    }
+  });
+
+  window.addEventListener('beforeunload', () => stopPolling());
+
+  // START
+  init();
+
+})();
+</script>
+
+</body>
+</html>
+
+
+<style>
+  /* --- CONFIGURATION --- */
+  :root {
+    --ad-primary: #0d9488;
+    --ad-bg-user: #0d9488;
+    --ad-text-user: #ffffff;
+    --ad-bg-bot: #f1f5f9;
+    --ad-text-bot: #1e293b;
+    --ad-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --ad-z-index: 2147483647;
+  }
+
+  /* --- LE BOUTON FLOTTANT (Version Minimaliste) --- */
+  #adermio-chat-launcher {
+    position: fixed;
+    right: 20px;
+    bottom: 25px; 
+    z-index: var(--ad-z-index);
+    width: 48px;
+    height: 48px;
+    background-color: var(--ad-primary);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #adermio-chat-launcher:active { transform: scale(0.95); }
+  
+  #adermio-chat-launcher svg { width: 22px; height: 22px; color: white; }
+
+  #adermio-chat-launcher .dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background: #ef4444;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: none;
+  }
+
+  /* --- LA BULLE D'INVITATION --- */
+  #adermio-welcome-bubble {
+    position: fixed;
+    bottom: 85px; 
+    right: 20px;
+    z-index: var(--ad-z-index);
+    width: 260px;
+    background: white;
+    padding: 12px 30px 12px 14px; 
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    font-family: var(--ad-font);
+    font-size: 13px;
+    line-height: 1.4;
+    color: #334155;
+    border: 1px solid rgba(0,0,0,0.04);
+    
+    opacity: 0;
+    transform: translateY(10px);
+    animation: bubble-in 0.5s ease-out 1s forwards; 
+    display: flex; 
+  }
+
+  #adermio-welcome-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    right: 18px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    transform: rotate(45deg);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    border-right: 1px solid rgba(0,0,0,0.04);
+  }
+
+  #adermio-welcome-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* --- LE CHAT --- */
+  #adermio-chat {
+    display: none; 
+    position: fixed;
+    z-index: var(--ad-z-index);
+    background: #ffffff;
+    overflow: hidden;
+    font-family: var(--ad-font);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    flex-direction: column;
+  }
+
+  @media (min-width: 768px) {
+    #adermio-chat { bottom: 90px; right: 20px; width: 380px; height: 600px; border-radius: 16px; border: 1px solid rgba(0,0,0,0.05); }
+  }
+  @media (max-width: 767px) {
+    #adermio-chat { inset: 0; width: 100%; height: 100dvh; border-radius: 0; }
+  }
+
+  .adermio-chat-header { height: 64px; padding: 0 20px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .adermio-header-title { font-weight: 700; font-size: 16px; color: #0f172a; }
+  .adermio-header-subtitle { font-size: 12px; color: var(--ad-primary); display:flex; align-items:center; gap:4px; }
+  .adermio-header-subtitle::before { content:''; width:6px; height:6px; background:var(--ad-primary); border-radius:50%; }
+  .adermio-chat-close { background: none; border: none; padding: 8px; cursor: pointer; color: #64748b; }
+  
+  .adermio-chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #fff; }
+  .adermio-chat-msg { display: flex; max-width: 85%; }
+  .adermio-chat-msg.bot { align-self: flex-start; }
+  .adermio-chat-msg.user { align-self: flex-end; justify-content: flex-end; }
+  .adermio-chat-bubble { padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.5; word-wrap: break-word; }
+  .adermio-chat-msg.bot .adermio-chat-bubble { background: var(--ad-bg-bot); color: var(--ad-text-bot); border-bottom-left-radius: 4px; }
+  .adermio-chat-msg.user .adermio-chat-bubble { background: var(--ad-bg-user); color: var(--ad-text-user); border-bottom-right-radius: 4px; }
+  
+  .adermio-chat-footer { flex-shrink: 0; padding: 12px 16px; border-top: 1px solid #e2e8f0; padding-bottom: max(12px, env(safe-area-inset-bottom)); background: #fff; }
+  .adermio-input-wrapper { display: flex; align-items: flex-end; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 24px; padding: 4px 4px 4px 16px; }
+  #adermio-chat-input { flex: 1; background: transparent; border: none; max-height: 100px; padding: 10px 0; font-size: 15px; resize: none; outline: none; color: #0f172a; font-family: var(--ad-font); }
+  #adermio-chat-send { width: 40px; height: 40px; background: var(--ad-primary); border: none; border-radius: 50%; margin-left: 8px; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  #adermio-chat-send:disabled { background: #cbd5e1; }
+  #adermio-chat-send svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+  .adermio-chat-hint { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 8px; }
+
+  @keyframes bubble-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div id="adermio-welcome-bubble">
+  Je suis l'IA Adermio &#128075;<br>Si tu as des questions sur ton analyse, n'hésite pas à m'interroger !
+  <button id="adermio-welcome-close">×</button>
+</div>
+
+<div id="adermio-chat-launcher" aria-label="Ouvrir le chat Adermio">
+  <span class="dot" id="adermio-chat-dot"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+</div>
+
+<div id="adermio-chat" role="dialog" aria-modal="true">
+  <div class="adermio-chat-header">
+    <div class="adermio-header-info">
+      <span class="adermio-header-title">Adermio Assistant</span>
+      <span class="adermio-header-subtitle">En ligne</span>
+    </div>
+    <button class="adermio-chat-close" id="adermio-chat-close" aria-label="Fermer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <div class="adermio-chat-body" id="adermio-chat-body">
+    <div class="adermio-chat-msg bot">
+      <div class="adermio-chat-bubble">
+        Bonjour ! Je suis l'IA Adermio. J'ai analysé tes données, pose-moi une question sur ton rapport ! &#128071;
+      </div>
+    </div>
+  </div>
+  <div class="adermio-chat-footer">
+    <div class="adermio-input-wrapper">
+      <textarea id="adermio-chat-input" placeholder="Pose ta question..." rows="1"></textarea>
+      <button id="adermio-chat-send" disabled><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+    </div>
+    <div class="adermio-chat-hint">Adermio IA peut faire des erreurs.</div>
+  </div>
+</div>
+
+
+<script>
+(function() {
+    // --- 1. CONFIGURATION & ÉLÉMENTS ---
+    const DOM = {
+        launcher: document.getElementById('adermio-chat-launcher'),
+        panel: document.getElementById('adermio-chat'),
+        closeBtn: document.getElementById('adermio-chat-close'),
+        body: document.getElementById('adermio-chat-body'),
+        input: document.getElementById('adermio-chat-input'),
+        sendBtn: document.getElementById('adermio-chat-send'),
+        dot: document.getElementById('adermio-chat-dot'),
+        bubble: document.getElementById('adermio-welcome-bubble'),
+        bubbleClose: document.getElementById('adermio-welcome-close')
+    };
+
+    if (!DOM.launcher || !DOM.panel) return;
+
+    // --- 2. GESTION BULLE ---
+    if(DOM.bubbleClose) {
+        DOM.bubbleClose.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            DOM.bubble.style.display = 'none';
+        });
+    }
+
+    // --- 3. TOKENS ---
+    function getToken() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return window.ADERMIO_TOKEN || urlParams.get('token');
+    }
+
+    const token = getToken();
+    const storageKey = token ? `adermio_thread_${token}` : null;
+    let threadId = storageKey ? localStorage.getItem(storageKey) : null;
+
+    // --- 4. UTILITAIRES UI ---
+    function formatText(text) {
+        if (!text) return "";
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+    }
+
+    function scrollToBottom() {
+        requestAnimationFrame(() => {
+            DOM.body.scrollTop = DOM.body.scrollHeight;
+        });
+    }
+
+    function addMessage(role, text, isTyping = false) {
+        const wrap = document.createElement('div');
+        wrap.className = `adermio-chat-msg ${role}`;
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'adermio-chat-bubble';
+
+        if (isTyping) {
+            bubble.innerHTML = `
+                <span class="typing-dot" style="animation-delay: 0s;">&#9679;</span>
+                <span class="typing-dot" style="animation-delay: 0.2s;">&#9679;</span>
+                <span class="typing-dot" style="animation-delay: 0.4s;">&#9679;</span>
+            `;
+            bubble.style.color = '#ccc';
+            bubble.style.fontSize = '10px';
+            wrap.id = 'adermio-typing-indicator';
+        } else {
+            bubble.innerHTML = formatText(text);
+        }
+
+        wrap.appendChild(bubble);
+        DOM.body.appendChild(wrap);
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const indicator = document.getElementById('adermio-typing-indicator');
+        if (indicator) indicator.remove();
+    }
+
+    // --- 5. OUVERTURE / FERMETURE ---
+    function toggleChat(forceClose = false) {
+        const isHidden = DOM.panel.style.display === 'none' || DOM.panel.style.display === '';
+        
+        if (forceClose || !isHidden) {
+            DOM.panel.style.display = 'none';
+        } else {
+            DOM.panel.style.display = 'flex';
+            DOM.dot.style.display = 'none';
+            if(DOM.bubble) DOM.bubble.style.display = 'none'; // Cache la bulle
+            
+            if (window.innerWidth > 768) {
+                setTimeout(() => DOM.input.focus(), 100);
+            }
+            scrollToBottom();
+        }
+    }
+
+    DOM.launcher.addEventListener('click', () => toggleChat());
+    DOM.closeBtn.addEventListener('click', () => toggleChat(true));
+
+    // --- 6. INPUT ---
+    function resizeInput() {
+        DOM.input.style.height = 'auto';
+        DOM.input.style.height = Math.min(DOM.input.scrollHeight, 100) + 'px';
+        DOM.sendBtn.disabled = !DOM.input.value.trim();
+    }
+    DOM.input.addEventListener('input', resizeInput);
+    
+    DOM.input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (!DOM.sendBtn.disabled) DOM.sendBtn.click();
+        }
+    });
+
+    // --- 7. API ---
+    DOM.sendBtn.addEventListener('click', async () => {
+        const text = DOM.input.value.trim();
+        if (!text) return;
+
+        DOM.input.value = '';
+        DOM.input.style.height = 'auto';
+        DOM.sendBtn.disabled = true;
+        
+        addMessage('user', text);
+        addMessage('bot', '', true);
+
+        try {
+            if (!token) throw new Error("Impossible d'identifier votre rapport.");
+
+            const resp = await fetch("https://ai.adermio.com/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: token,
+                    message: text,
+                    thread_id: threadId
+                })
+            });
+
+            const data = await resp.json();
+            removeTypingIndicator();
+
+            if (!resp.ok || !data.ok) {
+                throw new Error(data.error || "Erreur IA");
+            }
+
+            if (data.thread_id) {
+                threadId = data.thread_id;
+                localStorage.setItem(storageKey, threadId);
+            }
+
+            const reply = data.assistant?.content || "Désolé, je n'ai pas compris.";
+            addMessage('bot', reply);
+
+        } catch (err) {
+            removeTypingIndicator();
+            // Emoji Attention converti en HTML Entity
+            addMessage('bot', "&#9888; " + (err.message || "Erreur."));
+        }
+    });
+
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+        @keyframes blink { 0% { opacity: 0.2; transform: scale(0.8); } 20% { opacity: 1; transform: scale(1); } 100% { opacity: 0.2; transform: scale(0.8); } }
+        .typing-dot { display: inline-block; animation: blink 1.4s infinite both; margin: 0 1px; font-size: 20px; line-height: 10px; }
+    `;
+    document.head.appendChild(styleSheet);
+
+})();
+</script>
