@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Conditions d'utilisation - Adermio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',   
+                            dark: '#0F3D39',   
+                            primary: '#14B8A6',
+                            text: '#334155',   
+                            muted: '#94A3B8',  
+                            surface: '#FFFFFF' 
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        a, a:visited, a:hover, a:active {
+            color: inherit; 
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-2">
+                 <img src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="/" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Accueil</a>
+            <a href="https://adermio.com/formulaire" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Faire l'analyse</a>
+            <a href="https://adermio.com/about" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">À Propos</a>
+            <a href="https://adermio.com/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Nous Contacter</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2026</span>
+        </div>
+    </div>
+
+    <header class="relative w-full pt-40 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="fade-up inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/50 border border-adermio-dark/5 text-[10px] uppercase tracking-[0.2em] font-medium text-adermio-dark shadow-sm mb-6">
+                <span>Juridique</span>
+            </div>
+            <h1 class="font-serif text-3xl md:text-5xl text-adermio-dark mb-4 fade-up" style="animation-delay: 0.1s;">
+                Conditions Générales d'Utilisation
+            </h1>
+            <p class="text-adermio-muted text-sm fade-up" style="animation-delay: 0.2s;">
+                En vigueur au 01/01/2026
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10 fade-up" style="animation-delay: 0.3s;">
+        <div class="bg-white rounded-[2rem] p-8 md:p-16 shadow-soft border border-adermio-dark/5">
+            
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">1. Acceptation des conditions</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>L'utilisation de la plateforme Adermio implique l'acceptation pleine et entière des présentes Conditions Générales d'Utilisation (CGU). Adermio se réserve le droit de modifier ces conditions à tout moment. Les nouvelles conditions s'appliqueront dès leur publication sur cette page.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">2. Objet du service</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio est une plateforme d’analyse cutanée assistée par intelligence artificielle.</p>
+                    <p>Le service permet aux utilisateurs de télécharger une photo de leur visage pour recevoir un rapport d’analyse cosmétique personnalisé. Ce rapport a une visée strictement informative.</p>
+                    <div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark">
+                        <strong>Avertissement :</strong> Adermio ne fournit pas de diagnostic médical, de prescription ou d'acte de télémédecine.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">3. Accès et disponibilité du service</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Le site est par principe accessible aux utilisateurs 24/24h et 7/7j. Toutefois, Adermio se réserve le droit, sans préavis ni indemnité, de fermer temporairement l'accès au site pour des opérations de mise à jour ou de maintenance. L'éditeur ne saurait être tenu responsable des dommages liés à l'impossibilité d'utiliser le service.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">4. Responsable du service</h2>
+                <p class="text-adermio-text/80 font-light leading-relaxed">
+                    Le service est édité par Adermio Lab.<br>
+                    Email de contact : <a href="mailto:adermio.contact@gmail.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a>
+                </p>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">5. Règles d'utilisation</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Pour garantir la fiabilité de l'analyse, l’utilisateur s’engage à :</p>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li>Soumettre des photos de son propre visage (ou avec l'accord explicite de la personne concernée) ;</li>
+                        <li>Ne pas utiliser le service à des fins frauduleuses ou pour collecter des données sur des tiers ;</li>
+                        <li>Utiliser le rapport uniquement dans un cadre personnel et privé.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">6. Données et Amélioration du service</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Le traitement des photos est nécessaire à la fourniture du service. Conformément à notre <a href="https://adermio.com/confidentialite" class="text-teal-600 hover:underline">Politique de Confidentialité</a>, nous nous engageons à :</p>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li>Sécuriser le transfert et le stockage des données ;</li>
+                        <li>Supprimer les données personnelles identifiantes après traitement (sauf demande d'archivage) ;</li>
+                        <li>Utiliser uniquement des données <strong>anonymisées</strong> et dépersonnalisées pour les besoins de Recherche & Développement (amélioration des algorithmes d'IA).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">7. Limites de responsabilité</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio s'efforce de fournir une analyse précise, mais ne garantit pas l’exactitude absolue des résultats, ceux-ci dépendant de la qualité des images fournies et de l'état actuel de la technologie.</p>
+                    <p>L'utilisateur reconnaît que les conseils prodigués ne remplacent pas une consultation chez un dermatologue. Adermio décline toute responsabilité quant aux décisions prises par l'utilisateur sur la base du rapport.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">8. Propriété intellectuelle</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>8.1. Site et Contenu Adermio :</strong><br>
+                    L’ensemble des éléments du site (textes, logos, design, structure des rapports) est la propriété exclusive d'Adermio.</p>
+                    
+                    <p><strong>8.2. Contenus Utilisateur (Licence) :</strong><br>
+                    L'utilisateur reste propriétaire des photos qu'il soumet.</p>
+                    <p>Toutefois, en utilisant le service, l'utilisateur accorde à Adermio une licence mondiale, non exclusive et gratuite pour :</p>
+                    <ul class="list-disc pl-5 space-y-1 marker:text-teal-600">
+                        <li>Utiliser l'image afin de réaliser l'analyse technique demandée ;</li>
+                        <li>Convertir l'image sous une forme anonymisée (suppression des données identifiantes) afin de l'intégrer aux bases de données d'entraînement de l'IA, pour l'amélioration continue du service.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">9. Tarifs et paiements</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Les services payants sont indiqués en euros (€) TTC. Le paiement est exigible immédiatement à la commande, via notre prestataire sécurisé (Stripe). Adermio se réserve le droit de modifier ses prix à tout moment, mais le service sera facturé sur la base du tarif en vigueur au moment de la validation de la commande.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">10. Délivrance du service</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>En raison de la nature entièrement numérique du service, le rapport d'analyse est généré et transmis à l'utilisateur de manière dématérialisée (par voie d'affichage direct sur le site, téléchargement ou envoi par courrier électronique), généralement dans les minutes qui suivent la validation complète des données et, le cas échéant, la confirmation du paiement.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">11. Droit applicable</h2>
+                <p class="text-adermio-text/80 font-light leading-relaxed">
+                    Les présentes CGU sont soumises au droit français. En cas de litige, une solution amiable sera recherchée avant tout recours judiciaire.
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png" 
+                     alt="Adermio Logo" 
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                La dermatologie réinventée par l'intelligence artificielle.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="/" class="hover:text-teal-600 transition-colors !text-adermio-dark">Accueil</a>
+                <a href="https://adermio.com/formulaire" class="hover:text-teal-600 transition-colors !text-adermio-dark">Faire l'analyse</a>
+                <a href="https://adermio.com/about" class="hover:text-teal-600 transition-colors !text-adermio-dark">À Propos</a>
+                <a href="https://adermio.com/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Nous Contacter</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="#" class="!text-adermio-dark font-medium transition-colors">Conditions d'utilisation</a>
+                <a href="https://www.adermio.com/mentions-legales" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Mentions Légales</a>
+                <a href="https://www.adermio.com/confidentialite" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Politique de Confidentialité</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2026 Adermio Lab. Tous droits réservés.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Logique du Menu
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+</body>
+</html>
