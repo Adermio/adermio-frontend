@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Feedback Matters to Adermio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+    body { font-family: 'Inter', sans-serif; }
+
+    .star-rating:hover .star { color: #fbbf24; }
+    .star:hover ~ .star { color: #d1d5db; }
+    .selected-star { color: #fbbf24 !important; }
+
+    /* Animation pour l'apparition */
+    .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; transform: translateY(10px); }
+    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* Checkbox personnalisé */
+    .custom-checkbox:checked + div { background-color: #4f46e5; border-color: #4f46e5; }
+    .custom-checkbox:checked + div i { opacity: 1; }
+
+    /* ✅ Option B: wrapper "Tilda-proof" (centre sur desktop même si le parent a une largeur contrainte) */
+    #pageWrap{
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen p-4 sm:p-8">
+  <div id="pageWrap" class="w-screen flex justify-center">
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden fade-in" style="animation-delay: 0.1s;">
+
+      <div class="bg-indigo-600 p-8 text-white text-center relative">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+
+        <div class="relative z-10 flex justify-center mb-4">
+          <img
+            src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png"
+            alt="Adermio"
+            class="h-8 sm:h-9 w-auto opacity-95 drop-shadow"
+            loading="eager"
+          />
+        </div>
+
+        <h1 class="text-3xl font-bold mb-2 relative z-10">Adermio &amp; You</h1>
+        <p class="text-indigo-100 text-sm max-w-md mx-auto relative z-10 leading-relaxed">
+          &quot;Thank you for testing our comprehensive analysis. Adermio is still young and growing fast.
+          Your feedback is the compass that guides our improvements. Please be honest, it's the best gift
+          you can give us.&quot;
+        </p>
+      </div>
+
+      <form id="feedbackForm" class="p-6 sm:p-8 space-y-8" novalidate>
+
+        <input type="hidden" id="jobIdInput" name="jobId" value="">
+        <input type="hidden" id="hadBugInput" name="hadBug" value="">
+
+        <p id="jobIdWarning" class="hidden text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">
+          Oops — invalid link. Please use the link received by email.
+        </p>
+
+        <div class="text-center space-y-3">
+          <label class="block text-lg font-medium text-slate-700">Overall, how would you rate your Adermio analysis?</label>
+
+          <div class="flex justify-center gap-2 text-3xl cursor-pointer" id="starContainer" aria-label="Global rating 1 to 5">
+            <i class="fas fa-star text-gray-300 transition-colors duration-200 star" data-value="1" role="button" tabindex="0"></i>
+            <i class="fas fa-star text-gray-300 transition-colors duration-200 star" data-value="2" role="button" tabindex="0"></i>
+            <i class="fas fa-star text-gray-300 transition-colors duration-200 star" data-value="3" role="button" tabindex="0"></i>
+            <i class="fas fa-star text-gray-300 transition-colors duration-200 star" data-value="4" role="button" tabindex="0"></i>
+            <i class="fas fa-star text-gray-300 transition-colors duration-200 star" data-value="5" role="button" tabindex="0"></i>
+          </div>
+
+          <input type="hidden" name="rating" id="ratingInput" value="">
+          <p id="ratingText" class="text-sm text-indigo-200 sm:text-indigo-100 font-medium h-5"></p>
+          <p id="ratingText" class="text-sm text-indigo-600 font-medium h-5"></p>
+        </div>
+
+        <hr class="border-slate-100">
+
+        <div class="space-y-3">
+          <label class="block text-lg font-medium text-slate-700">Did you encounter any bugs on our site or during the analysis?</label>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button type="button"
+                    class="flex-1 py-3 px-4 rounded-lg border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all text-slate-600 font-medium bug-btn"
+                    onclick="toggleBugDetails(false, this)">
+              <i class="fas fa-check-circle mr-2"></i>No, everything was smooth
+            </button>
+
+            <button type="button"
+                    class="flex-1 py-3 px-4 rounded-lg border border-slate-200 hover:border-red-500 hover:bg-red-50 transition-all text-slate-600 font-medium bug-btn"
+                    onclick="toggleBugDetails(true, this)">
+              <i class="fas fa-bug mr-2"></i>Yes, I had an issue
+            </button>
+          </div>
+
+          <div id="bugDetails" class="hidden mt-3">
+            <textarea id="bugDetailsText"
+                      name="bugDetails"
+                      class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm"
+                      rows="3"
+                      placeholder="Darn! Can you tell us what happened? (e.g., infinite loading, 404 error...)"></textarea>
+          </div>
+        </div>
+
+        <hr class="border-slate-100">
+
+        <div class="space-y-3">
+          <label class="block text-lg font-medium text-slate-700" id="feedbackLabel">
+            How could we improve?
+            <span class="block text-sm text-slate-400 font-normal mt-1" id="feedbackSubtext">
+              This is the most important question for us. Don't hold back!
+            </span>
+          </label>
+
+          <textarea id="feedbackText"
+                    name="feedback"
+                    class="w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow"
+                    rows="4"
+                    placeholder="Feature ideas, clarity of results, price... Tell us everything."></textarea>
+        </div>
+
+        <hr class="border-slate-100">
+
+        <div class="space-y-4">
+          <label class="block text-lg font-medium text-slate-700 text-center">On a scale of 1 to 10, would you recommend Adermio to a friend?</label>
+
+          <div class="flex justify-between gap-1 flex-wrap sm:flex-nowrap">
+            <div id="npsContainer" class="w-full flex justify-between gap-1"></div>
+          </div>
+
+          <div class="flex justify-between text-xs text-slate-400 px-1">
+            <span>Not at all</span>
+            <span>Absolutely</span>
+          </div>
+
+          <input type="hidden" name="nps" id="npsInput" value="5">
+        </div>
+
+        <div id="permissionContainer" class="hidden bg-indigo-50 rounded-xl p-5 fade-in">
+          <label class="flex items-start gap-3 cursor-pointer group">
+            <div class="relative flex items-center">
+              <input id="permissionCheckbox" type="checkbox" class="peer sr-only custom-checkbox">
+              <div class="w-6 h-6 border-2 border-slate-300 rounded bg-white transition-all peer-checked:bg-green-600 peer-checked:border-green-600 flex items-center justify-center">
+                <i class="fas fa-check text-white text-xs opacity-0 transition-opacity"></i>
+              </div>
+            </div>
+            <span class="text-sm text-slate-700 group-hover:text-green-800 transition-colors">
+              <strong>You love us? &#x1F60D;</strong> I authorize Adermio to use my comment as an anonymous testimonial on the site.
+            </span>
+          </label>
+        </div>
+
+        <button id="submitBtn" type="button" onclick="submitForm()"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+          Send my feedback
+        </button>
+
+        <p id="formError" class="hidden text-sm text-red-600 font-medium text-center"></p>
+      </form>
+
+      <div id="successMessage" class="hidden p-10 sm:p-12 text-center space-y-4">
+        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="fas fa-check text-3xl text-green-600"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-800">Thank you so much!</h2>
+        <p class="text-slate-600">Your feedback has been successfully recorded.</p>
+        <p class="text-slate-500 text-sm">Thanks to you, Adermio grows a little more today.</p>
+        <button onclick="window.location.href='https://adermio.com/'" class="mt-8 text-indigo-600 font-medium hover:underline">Return to site</button>
+      </div>
+
+      </div>
+  </div>
+
+  <script>
+    /**
+     * Version complète avec jobId intégré + envoi n8n :
+     * - récupération jobId depuis l'URL au chargement
+     * - stockage central dans feedbackState
+     * - garde-fou : si jobId absent -> bouton disabled + warning
+     * - envoi vers webhook n8n
+     */
+
+    // ---------------------------
+    // 1) État central
+    // ---------------------------
+    const feedbackState = {
+      jobId: "",
+      rating: null,               // 1..5
+      hadBug: null,               // "yes" | "no" | null
+      bugDetails: "",             // texte
+      feedback: "",               // texte
+      nps: 5,                     // 1..10
+      permissionTestimonial: false, // boolean
+      createdAt: null,
+      userAgent: navigator.userAgent
+    };
+
+    // Debug si besoin
+    window.feedbackState = feedbackState;
+
+    // ---------------------------
+    // 2) JobId depuis l'URL
+    // ---------------------------
+    function getJobIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const jobId = (params.get('jobId') || params.get('jobID') || '').trim();
+
+      if (!jobId) return "";
+      if (jobId.length > 200) return ""; // garde-fou simple
+
+      return jobId;
+    }
+
+    function initJobId() {
+      const jobId = getJobIdFromUrl();
+      feedbackState.jobId = jobId;
+      document.getElementById('jobIdInput').value = jobId;
+
+      if (!jobId) {
+        const warning = document.getElementById('jobIdWarning');
+        warning.classList.remove('hidden');
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.classList.add('opacity-60', 'cursor-not-allowed');
+        btn.innerHTML = "Invalid link";
+      }
+    }
+
+    // ---------------------------
+    // 3) Helpers (sync + payload)
+    // ---------------------------
+    function syncStateToHiddenInputs() {
+      document.getElementById('jobIdInput').value = feedbackState.jobId || "";
+      document.getElementById('ratingInput').value = feedbackState.rating ?? "";
+      document.getElementById('hadBugInput').value = feedbackState.hadBug ?? "";
+      document.getElementById('npsInput').value = String(feedbackState.nps ?? 5);
+    }
+
+    function buildPayload() {
+      return {
+        jobId: feedbackState.jobId || "",
+        rating: feedbackState.rating,
+        hadBug: feedbackState.hadBug,
+        bugDetails: (feedbackState.bugDetails || "").trim(),
+        feedback: (feedbackState.feedback || "").trim(),
+        nps: feedbackState.nps,
+        permissionTestimonial: feedbackState.permissionTestimonial,
+        createdAt: feedbackState.createdAt || new Date().toISOString(),
+        userAgent: feedbackState.userAgent
+      };
+    }
+
+    function setError(msg) {
+      const el = document.getElementById('formError');
+      if (!msg) {
+        el.classList.add('hidden');
+        el.textContent = '';
+        return;
+      }
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    // ---------------------------
+    // 4) Étoiles + texte dynamique
+    // ---------------------------
+    const stars = document.querySelectorAll('.star');
+    const ratingText = document.getElementById('ratingText');
+    const permissionContainer = document.getElementById('permissionContainer');
+    const feedbackLabel = document.getElementById('feedbackLabel');
+    const feedbackTextarea = document.getElementById('feedbackText');
+
+    const messages = ["Needs improvement", "Could be better", "Good", "Very good", "Excellent!"];
+
+    stars.forEach(star => {
+      const clickHandler = () => {
+        const value = parseInt(star.getAttribute('data-value'), 10);
+        feedbackState.rating = value;
+
+        updateStars(value);
+        ratingText.textContent = messages[value - 1] || "";
+        setError(null);
+
+        if (value >= 4) {
+          feedbackLabel.innerHTML =
+            'What did you like... and what should we improve?' +
+            '<span class="block text-sm text-slate-400 font-normal mt-1">Even if it\'s great, tell us what\'s missing to reach perfection!</span>';
+          feedbackTextarea.placeholder = "I loved the detailed analysis, but I would have liked more advice on...";
+          permissionContainer.classList.remove('hidden');
+        } else {
+          feedbackLabel.innerHTML =
+            'How could we improve?' +
+            '<span class="block text-sm text-slate-400 font-normal mt-1">This is the most important question for us. Don\'t hold back!</span>';
+          feedbackTextarea.placeholder = "Feature ideas, clarity of results, price... Tell us everything.";
+          permissionContainer.classList.add('hidden');
+
+          // reset permission si <4
+          feedbackState.permissionTestimonial = false;
+          document.getElementById('permissionCheckbox').checked = false;
+        }
+
+        syncStateToHiddenInputs();
+      };
+
+      star.addEventListener('click', clickHandler);
+
+      // accessibilité clavier
+      star.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          clickHandler();
+        }
+      });
+
+      star.addEventListener('mouseover', () => highlightStars(parseInt(star.getAttribute('data-value'), 10)));
+      star.addEventListener('mouseout', () => highlightStars(feedbackState.rating || 0));
+    });
+
+    function updateStars(value) {
+      stars.forEach(s => {
+        if (parseInt(s.getAttribute('data-value'), 10) <= value) s.classList.add('selected-star');
+        else s.classList.remove('selected-star');
+      });
+    }
+
+    function highlightStars(value) {
+      stars.forEach(s => {
+        if (parseInt(s.getAttribute('data-value'), 10) <= value) s.style.color = '#fbbf24';
+        else s.style.color = '';
+      });
+    }
+
+    // ---------------------------
+    // 5) Bugs oui/non + détails
+    // ---------------------------
+    function toggleBugDetails(hasBug, btnElement) {
+      const detailsWrap = document.getElementById('bugDetails');
+      const buttons = document.querySelectorAll('.bug-btn');
+
+      feedbackState.hadBug = hasBug ? 'yes' : 'no';
+      syncStateToHiddenInputs();
+
+      buttons.forEach(b => {
+        b.classList.remove('ring-2', 'ring-indigo-500', 'ring-red-500', 'bg-indigo-50', 'bg-red-50', 'border-indigo-500', 'border-red-500');
+        b.classList.add('border-slate-200');
+      });
+
+      btnElement.classList.remove('border-slate-200');
+
+      if (hasBug) {
+        btnElement.classList.add('ring-2', 'ring-red-500', 'bg-red-50', 'border-red-500');
+        detailsWrap.classList.remove('hidden');
+      } else {
+        btnElement.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'border-indigo-500');
+        detailsWrap.classList.add('hidden');
+
+        // reset bugDetails si "no"
+        feedbackState.bugDetails = "";
+        document.getElementById('bugDetailsText').value = "";
+      }
+    }
+
+    document.getElementById('bugDetailsText').addEventListener('input', (e) => {
+      feedbackState.bugDetails = e.target.value || "";
+    });
+
+    // ---------------------------
+    // 6) NPS (1..10)
+    // ---------------------------
+    const npsContainer = document.getElementById('npsContainer');
+    const npsInput = document.getElementById('npsInput');
+
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = i;
+      btn.id = `nps-btn-${i}`;
+      btn.className = `flex-1 aspect-square sm:aspect-auto sm:h-10 rounded border border-slate-200 hover:bg-emerald-50 hover:border-emerald-500 transition-all text-sm font-medium text-slate-600 focus:outline-none nps-btn`;
+      btn.onclick = () => selectNps(i, btn);
+      npsContainer.appendChild(btn);
+    }
+
+    function selectNps(value, btnElement) {
+      feedbackState.nps = value;
+      npsInput.value = String(value);
+
+      document.querySelectorAll('.nps-btn').forEach(b => {
+        b.classList.remove('bg-emerald-500', 'text-white', 'border-emerald-500');
+        b.classList.add('border-slate-200', 'text-slate-600');
+      });
+
+      if (btnElement) {
+        btnElement.classList.remove('hover:bg-emerald-50', 'text-slate-600', 'border-slate-200');
+        btnElement.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+      }
+    }
+
+    // NPS à 5 par défaut
+    setTimeout(() => {
+      const defaultBtn = document.getElementById('nps-btn-5');
+      if (defaultBtn) selectNps(5, defaultBtn);
+    }, 50);
+
+    // ---------------------------
+    // 7) Feedback texte + permission
+    // ---------------------------
+    feedbackTextarea.addEventListener('input', (e) => {
+      feedbackState.feedback = e.target.value || "";
+    });
+
+    document.getElementById('permissionCheckbox').addEventListener('change', (e) => {
+      feedbackState.permissionTestimonial = !!e.target.checked;
+    });
+
+    // ---------------------------
+    // 8) Submit
+    // ---------------------------
+    async function submitForm() {
+      const btn = document.getElementById('submitBtn');
+
+      if (!feedbackState.jobId) return setError("Invalid link: jobId missing.");
+      if (!feedbackState.rating) return setError("Please choose a rating (stars) before sending &#x1F642;");
+
+      setError(null);
+
+      feedbackState.createdAt = new Date().toISOString();
+      syncStateToHiddenInputs();
+      const payload = buildPayload();
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending...';
+
+      const webhookUrl = "https://n8n.adermio.com/webhook/feedback";
+
+      try {
+        console.log("➡ Sending payload to n8n:", payload);
+
+        const res = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const text = await res.text().catch(() => "");
+        console.log("✅ n8n response:", res.status, text);
+
+        if (!res.ok) throw new Error(`Webhook error: ${res.status} ${text}`);
+
+        // UI success
+        document.getElementById('feedbackForm').style.display = 'none';
+        document.querySelector('.bg-indigo-600').style.display = 'none';
+
+        // ✅ Message unique pour tout le monde (Google supprimé)
+        document.getElementById('successMessage').classList.remove('hidden');
+        document.getElementById('successMessage').classList.add('fade-in');
+
+      } catch (err) {
+        console.error("❌ Submit error:", err);
+        btn.disabled = false;
+        btn.innerHTML = "Send my feedback";
+        setError("Sending error. Open console (F12) and check Network/CORS error.");
+      }
+    }
+
+    // ---------------------------
+    // INIT
+    // ---------------------------
+    initJobId();
+    syncStateToHiddenInputs();
+  </script>
+</body>
+</html>
