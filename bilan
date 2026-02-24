@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Adermio — Bilan Cycle 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: #fafafa; -webkit-font-smoothing: antialiased; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes countUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes insightReveal { 0% { opacity:0; transform: translateY(12px) scale(0.95); } 100% { opacity:1; transform: translateY(0) scale(1); } }
+        @keyframes pulse-soft { 0%,100% { box-shadow: 0 0 0 0 rgba(13,148,136,0.3); } 50% { box-shadow: 0 0 0 12px rgba(13,148,136,0); } }
+
+        .anim-fade-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; }
+        .anim-fade { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+        .anim-count { animation: countUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .ai-loading { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        .anim-reveal { animation: insightReveal 0.6s ease-out forwards; }
+        .pulse-cta { animation: pulse-soft 2s infinite; }
+
+        .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 2.5; }
+        .circle-score { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke: url(#scoreGradient); transition: stroke-dasharray 1.5s ease-out; }
+
+        .compare-slider-container { position: relative; aspect-ratio: 3/4; max-height: 420px; }
+
+        .photo-drop-zone { transition: all 0.2s ease; }
+        .photo-drop-zone:active { transform: scale(0.97); }
+
+        .stat-card { transition: transform 0.2s ease; }
+        .stat-card:active { transform: scale(0.96); }
+
+        .insight-card { transition: all 0.3s ease; }
+
+        textarea, input { font-size: 16px !important; }
+
+        @font-face { font-family: 'Handwritten'; src: local('Caveat'), local('Dancing Script'), local('Pacifico'); }
+        .handwritten { font-family: 'Caveat', 'Dancing Script', 'Pacifico', cursive; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#fafafa]">
+
+<div id="app" class="max-w-lg mx-auto min-h-screen">
+
+    <div id="loading-screen" class="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-teal-400 to-indigo-500 flex items-center justify-center mb-4">
+            <i data-lucide="scan-face" class="w-8 h-8 text-white"></i>
+        </div>
+        <p class="text-sm font-bold text-slate-700">Chargement de votre bilan...</p>
+        <div class="w-48 h-1.5 bg-slate-100 rounded-full mt-3 overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-teal-500 to-indigo-500 rounded-full" style="width:0%; transition: width 1.5s ease" id="loading-bar"></div>
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-teal-600 via-teal-700 to-indigo-700 text-white px-6 pt-12 pb-10 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3"></div>
+        <div class="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4"></div>
+
+        <div class="relative z-10">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                        <i data-lucide="activity" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">Adermio</span>
+                </div>
+                <span class="text-[10px] font-bold bg-white/15 px-3 py-1 rounded-full text-white/80">Cycle 1 — Bilan Final</span>
+            </div>
+
+            <h1 class="text-2xl font-extrabold mb-1 anim-fade-up" id="hero-name">Chargement...</h1>
+            <p class="text-sm text-white/70 font-medium mb-8 anim-fade-up" style="animation-delay:0.1s">Voici le bilan de vos 28 jours de suivi</p>
+
+            <div class="flex justify-center mb-6">
+                <div class="relative w-44 h-44">
+                    <svg viewBox="0 0 36 36" class="w-full h-full">
+                        <defs>
+                            <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#5eead4"/>
+                                <stop offset="100%" stop-color="#a78bfa"/>
+                            </linearGradient>
+                        </defs>
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path id="hero-score-circle" class="circle-score" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-5xl font-black tracking-tight" id="hero-score">0</span>
+                        <span class="text-[10px] font-bold text-white/50 uppercase tracking-widest mt-1">/ 100</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-3 anim-fade-up" style="animation-delay:0.3s">
+                <div class="bg-white/15 backdrop-blur-sm rounded-full px-3.5 py-2 flex items-center gap-1.5">
+                    <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-teal-200"></i>
+                    <span class="text-[11px] font-bold" id="hero-days">0/28j</span>
+                </div>
+                <div class="bg-white/15 backdrop-blur-sm rounded-full px-3.5 py-2 flex items-center gap-1.5">
+                    <i data-lucide="target" class="w-3.5 h-3.5 text-teal-200"></i>
+                    <span class="text-[11px] font-bold" id="hero-obs">0%</span>
+                </div>
+                <div class="bg-white/15 backdrop-blur-sm rounded-full px-3.5 py-2 flex items-center gap-1.5">
+                    <i data-lucide="flame" class="w-3.5 h-3.5 text-orange-300"></i>
+                    <span class="text-[11px] font-bold" id="hero-streak">0j</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-5 space-y-6 -mt-4 relative z-10 pb-8">
+
+        <div class="bg-white rounded-3xl shadow-[0_4px_20px_-10px_rgba(0,0,0,0.08)] border border-slate-100 overflow-hidden anim-fade-up" style="animation-delay:0.2s">
+            <div class="bg-slate-50 px-5 py-4 border-b border-slate-100">
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest flex items-center gap-2">
+                    <i data-lucide="git-compare" class="w-4 h-4 text-teal-600"></i> Avant / Après
+                </h3>
+                <p class="text-[10px] text-slate-400 mt-1">Comparez J1 et J28 pour voir vos progrès</p>
+            </div>
+            <div class="p-5">
+                <div id="compare-empty" class="grid grid-cols-2 gap-3 mb-4">
+                    <div id="zone-j1" class="rounded-2xl border-2 border-dashed border-teal-200 bg-teal-50/30 p-4 flex flex-col items-center justify-center text-center min-h-[200px] cursor-pointer hover:bg-teal-50 transition-colors" onclick="document.getElementById('input-j1').click()">
+                        <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mb-2">
+                            <i data-lucide="camera" class="w-5 h-5 text-teal-500"></i>
+                        </div>
+                        <p class="text-[11px] font-bold text-teal-700">Photo J1</p>
+                        <p class="text-[8px] text-teal-500 mt-1">De face, lumière naturelle</p>
+                    </div>
+                    <div id="zone-j28" class="rounded-2xl border-2 border-dashed border-indigo-200 bg-indigo-50/30 p-4 flex flex-col items-center justify-center text-center min-h-[200px] cursor-pointer hover:bg-indigo-50 transition-colors" onclick="document.getElementById('input-j28').click()">
+                        <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2">
+                            <i data-lucide="camera" class="w-5 h-5 text-indigo-500"></i>
+                        </div>
+                        <p class="text-[11px] font-bold text-indigo-700">Photo J28</p>
+                        <p class="text-[8px] text-indigo-500 mt-1">Même angle, même lumière</p>
+                    </div>
+                </div>
+
+                <div id="compare-slider" class="compare-slider-container rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 mb-4 hidden">
+                    <img id="img-j28" class="absolute inset-0 w-full h-full object-cover" src="" alt="J28">
+                    <div class="absolute inset-0 overflow-hidden" id="clip-j1" style="width:50%;">
+                        <img id="img-j1" class="absolute inset-0 h-full object-cover" style="width:200%; max-width:none;" src="" alt="J1">
+                    </div>
+                    <div id="slider-handle" class="absolute top-0 bottom-0 z-10 cursor-ew-resize" style="left:50%; transform:translateX(-50%);">
+                        <div class="w-0.5 h-full bg-white shadow-lg"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center border border-slate-200">
+                            <i data-lucide="move-horizontal" class="w-4 h-4 text-slate-500"></i>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-3 left-3 z-20 bg-teal-600 text-white px-2.5 py-1 rounded-full text-[9px] font-bold shadow-md">J1 — Avant</div>
+                    <div class="absolute bottom-3 right-3 z-20 bg-indigo-600 text-white px-2.5 py-1 rounded-full text-[9px] font-bold shadow-md">J28 — Après</div>
+                </div>
+
+                <input type="file" id="input-j1" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" class="hidden" onchange="handlePhotoUpload('j1', event)">
+                <input type="file" id="input-j28" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" class="hidden" onchange="handlePhotoUpload('j28', event)">
+
+                <div id="compare-analyze-btn" class="hidden mb-4">
+                    <button onclick="runBilanAnalysis()" class="w-full bg-gradient-to-r from-teal-600 to-indigo-600 text-white py-3.5 rounded-xl text-[12px] font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 active:scale-[0.97]">
+                        <i data-lucide="scan-face" class="w-4 h-4"></i> Analyser l'évolution
+                    </button>
+                </div>
+
+                <div id="photo-insights" class="space-y-3">
+                    <div class="insight-card bg-slate-50 rounded-xl border border-slate-200 p-4" data-idx="0">
+                        <div class="flex items-center gap-2.5 mb-2">
+                            <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0"><i data-lucide="scan-face" class="w-4 h-4 text-slate-300"></i></div>
+                            <p class="text-[11px] font-bold text-slate-400 flex-1">En attente</p>
+                            <span class="text-[9px] font-bold text-slate-300 bg-slate-100 px-2 py-1 rounded-full flex-shrink-0">--</span>
+                        </div>
+                        <p class="text-[9px] text-slate-300 leading-relaxed pl-[42px]">Déposez vos 2 photos pour débloquer</p>
+                    </div>
+                    <div class="insight-card bg-slate-50 rounded-xl border border-slate-200 p-4" data-idx="1">
+                        <div class="flex items-center gap-2.5 mb-2">
+                            <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0"><i data-lucide="scan-face" class="w-4 h-4 text-slate-300"></i></div>
+                            <p class="text-[11px] font-bold text-slate-400 flex-1">En attente</p>
+                            <span class="text-[9px] font-bold text-slate-300 bg-slate-100 px-2 py-1 rounded-full flex-shrink-0">--</span>
+                        </div>
+                        <p class="text-[9px] text-slate-300 leading-relaxed pl-[42px]">Déposez vos 2 photos pour débloquer</p>
+                    </div>
+                    <div class="insight-card bg-slate-50 rounded-xl border border-slate-200 p-4" data-idx="2">
+                        <div class="flex items-center gap-2.5 mb-2">
+                            <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0"><i data-lucide="scan-face" class="w-4 h-4 text-slate-300"></i></div>
+                            <p class="text-[11px] font-bold text-slate-400 flex-1">En attente</p>
+                            <span class="text-[9px] font-bold text-slate-300 bg-slate-100 px-2 py-1 rounded-full flex-shrink-0">--</span>
+                        </div>
+                        <p class="text-[9px] text-slate-300 leading-relaxed pl-[42px]">Déposez vos 2 photos pour débloquer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-[0_4px_20px_-10px_rgba(0,0,0,0.08)] border border-slate-100 overflow-hidden anim-fade-up" style="animation-delay:0.3s">
+            <div class="bg-slate-50 px-5 py-4 border-b border-slate-100">
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest flex items-center gap-2">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4 text-teal-600"></i> Votre Cycle en Chiffres
+                </h3>
+            </div>
+            <div class="p-5">
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="stat-card bg-teal-50 rounded-2xl p-4 border border-teal-100 text-center">
+                        <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="target" class="w-5 h-5 text-teal-600"></i>
+                        </div>
+                        <p class="text-2xl font-extrabold text-teal-700" id="stat-obs">0%</p>
+                        <p class="text-[9px] font-bold text-teal-500 uppercase tracking-wider mt-1">Observance</p>
+                    </div>
+                    <div class="stat-card bg-orange-50 rounded-2xl p-4 border border-orange-100 text-center">
+                        <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
+                        </div>
+                        <p class="text-2xl font-extrabold text-orange-600" id="stat-streak">0j</p>
+                        <p class="text-[9px] font-bold text-orange-400 uppercase tracking-wider mt-1">Streak Max</p>
+                    </div>
+                    <div class="stat-card bg-indigo-50 rounded-2xl p-4 border border-indigo-100 text-center">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="calendar-check" class="w-5 h-5 text-indigo-500"></i>
+                        </div>
+                        <p class="text-2xl font-extrabold text-indigo-600" id="stat-days">0/28</p>
+                        <p class="text-[9px] font-bold text-indigo-400 uppercase tracking-wider mt-1">Jours Validés</p>
+                    </div>
+                    <div class="stat-card bg-purple-50 rounded-2xl p-4 border border-purple-100 text-center">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="trophy" class="w-5 h-5 text-purple-500"></i>
+                        </div>
+                        <p class="text-2xl font-extrabold text-purple-600" id="stat-score">0</p>
+                        <p class="text-[9px] font-bold text-purple-400 uppercase tracking-wider mt-1">Score Final</p>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i> Évolution du Score
+                    </p>
+                    <div class="relative w-full h-[160px]">
+                        <canvas id="scores-chart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                        <i data-lucide="heart" class="w-3 h-3"></i> Ressenti Cutané
+                    </p>
+                    <div class="relative w-full h-[140px]">
+                        <canvas id="skin-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-red-50 rounded-3xl border border-red-200 overflow-hidden anim-fade-up" style="animation-delay:0.35s">
+            <div class="px-5 py-4 flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-[12px] font-extrabold text-red-800 mb-1">Attention : vos résultats sont fragiles</p>
+                    <p class="text-[10px] text-red-700/80 leading-relaxed">À J28, votre peau est encore en phase de stabilisation. <strong>Sans suivi, les progrès obtenus peuvent régresser en 2 à 3 semaines.</strong> Le cycle de renouvellement cutané nécessite au minimum 90 jours pour ancrer les résultats durablement.</p>
+                </div>
+            </div>
+            <div class="bg-red-100/50 px-5 py-3 flex items-center gap-4">
+                <div class="flex-1 h-2 bg-red-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-red-400 to-red-500 rounded-full" style="width:33%"></div>
+                </div>
+                <span class="text-[9px] font-bold text-red-600 whitespace-nowrap">33% du cycle complet</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-[0_4px_20px_-10px_rgba(0,0,0,0.08)] border border-slate-100 overflow-hidden anim-fade-up" style="animation-delay:0.4s">
+            <div class="bg-gradient-to-r from-indigo-50 to-teal-50 px-5 py-4 border-b border-slate-100">
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest flex items-center gap-2">
+                    <i data-lucide="rocket" class="w-4 h-4 text-indigo-500"></i> Continuer ou Arrêter ?
+                </h3>
+                <p class="text-[10px] text-slate-500 mt-1">Voici ce que votre peau deviendrait dans les 2 scénarios</p>
+            </div>
+            <div class="p-5">
+                <div class="relative w-full h-[220px] mb-4">
+                    <canvas id="trajectory-chart"></canvas>
+                </div>
+
+                <div class="flex justify-center gap-5 mb-5">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-teal-500"></div>
+                        <span class="text-[9px] font-bold text-slate-500">Avec Cycle 2</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                        <span class="text-[9px] font-bold text-slate-500">Sans suivi</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                    <div class="bg-red-50 rounded-xl border border-red-200 p-3 text-center">
+                        <i data-lucide="trending-down" class="w-5 h-5 text-red-400 mx-auto mb-1"></i>
+                        <p class="text-[9px] font-bold text-red-400 uppercase mb-1">Sans suivi</p>
+                        <p class="text-xl font-extrabold text-red-500" id="traj-regression">--</p>
+                        <p class="text-[8px] text-red-400 mt-0.5">Estimation J+90</p>
+                    </div>
+                    <div class="bg-teal-50 rounded-xl border border-teal-200 p-3 text-center">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-teal-500 mx-auto mb-1"></i>
+                        <p class="text-[9px] font-bold text-teal-500 uppercase mb-1">Avec Cycle 2</p>
+                        <p class="text-xl font-extrabold text-teal-600" id="traj-j90">--</p>
+                        <p class="text-[8px] text-teal-500 mt-0.5">Estimation J+90</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-5 px-2">
+                    <div class="text-center">
+                        <p class="text-[9px] text-slate-400 font-bold uppercase">Aujourd'hui</p>
+                        <p class="text-lg font-extrabold text-slate-600" id="traj-now">--</p>
+                    </div>
+                    <div class="flex-1 mx-4 border-t-2 border-dashed border-slate-200 relative">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2">
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-slate-300"></i>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-[9px] font-bold uppercase" id="traj-diff-label">--</p>
+                        <p class="text-lg font-extrabold" id="traj-diff-value">--</p>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4" id="cycle2-message-card">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-indigo-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-bold text-slate-700 mb-1">L'avis de notre dermatologue IA</p>
+                            <p class="text-[10px] text-slate-600 leading-relaxed" id="cycle2-message">Les 28 premiers jours posent les fondations. Sans cycle 2, votre peau risque de revenir à son état initial. Continuez pour ancrer les résultats.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-3">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="info" class="w-4 h-4 text-amber-500 flex-shrink-0"></i>
+                        <p class="text-[10px] text-amber-800 leading-relaxed"><strong>Fait dermatologique :</strong> Le renouvellement cellulaire complet prend 90 jours. À J28, seule la première couche a été renouvelée. Les couches profondes nécessitent les cycles 2 et 3.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-[0_4px_20px_-10px_rgba(0,0,0,0.08)] border border-slate-100 overflow-hidden anim-fade-up" style="animation-delay:0.5s">
+            <div class="bg-slate-50 px-5 py-4 border-b border-slate-100">
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest flex items-center gap-2">
+                    <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i> Recommandations Cycle 2
+                </h3>
+            </div>
+            <div class="p-5 space-y-3" id="reco-container">
+                <div class="ai-loading rounded-xl h-20"></div>
+                <div class="ai-loading rounded-xl h-20"></div>
+            </div>
+
+            <div id="actives-section" class="px-5 pb-5 hidden">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                    <i data-lucide="flask-round" class="w-3 h-3"></i> Nouveaux Actifs Suggérés
+                </p>
+                <div id="actives-container" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <div class="rounded-3xl overflow-hidden shadow-xl anim-fade-up" style="animation-delay:0.6s">
+            <div class="bg-red-500 px-5 py-2.5 flex items-center justify-center gap-2">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-white"></i>
+                <p class="text-[10px] font-bold text-white">Vos résultats sont encore instables — ne perdez pas vos progrès</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-teal-600 via-teal-700 to-indigo-700 p-8 text-white text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3"></div>
+                <div class="relative z-10">
+                    <h3 class="text-xl font-extrabold mb-1">Protégez vos résultats</h3>
+                    <p class="text-[11px] text-white/60 mb-5">Ne laissez pas votre peau revenir en arrière</p>
+
+                    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-5 text-left space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-teal-400/30 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-teal-200"></i>
+                            </div>
+                            <p class="text-[11px] text-white/90 font-medium">Routine recalibrée selon vos résultats du Cycle 1</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-teal-400/30 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-teal-200"></i>
+                            </div>
+                            <p class="text-[11px] text-white/90 font-medium">Introduction d'actifs plus puissants (votre peau est prête)</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-teal-400/30 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-teal-200"></i>
+                            </div>
+                            <p class="text-[11px] text-white/90 font-medium">Suivi IA 28 jours + analyse comparative J56</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-full bg-teal-400/30 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-teal-200"></i>
+                            </div>
+                            <p class="text-[11px] text-white/90 font-medium">Vos données du Cycle 1 intégrées automatiquement</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <span class="text-white/40 line-through text-sm">10&euro;</span>
+                            <span class="bg-amber-400 text-amber-900 text-[9px] font-extrabold px-2 py-0.5 rounded-full">-50% CYCLE 2</span>
+                        </div>
+                        <p class="text-3xl font-black">5&euro;</p>
+                        <p class="text-[10px] text-white/50 mt-0.5">soit 0.18&euro;/jour pour transformer votre peau</p>
+                    </div>
+
+                    <button onclick="handleCTA()" class="w-full bg-white text-teal-700 font-extrabold py-4 rounded-2xl text-base shadow-lg hover:shadow-xl transition-all active:scale-[0.97] pulse-cta mb-3">
+                        Lancer mon Cycle 2 maintenant
+                    </button>
+
+                    <div class="flex items-center justify-center gap-2 mb-4">
+                        <div class="flex -space-x-2">
+                            <div class="w-6 h-6 rounded-full bg-teal-300 border-2 border-teal-700 flex items-center justify-center text-[7px] font-bold text-teal-800">S</div>
+                            <div class="w-6 h-6 rounded-full bg-indigo-300 border-2 border-teal-700 flex items-center justify-center text-[7px] font-bold text-indigo-800">M</div>
+                            <div class="w-6 h-6 rounded-full bg-amber-300 border-2 border-teal-700 flex items-center justify-center text-[7px] font-bold text-amber-800">L</div>
+                        </div>
+                        <p class="text-[9px] text-white/50"><strong class="text-white/70" id="social-proof-count">73%</strong> des utilisateurs continuent en Cycle 2</p>
+                    </div>
+
+                    <p class="text-[9px] text-white/40 flex items-center justify-center gap-1">
+                        <i data-lucide="shield-check" class="w-3 h-3"></i>
+                        Paiement sécurisé par Stripe
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5 anim-fade-up" style="animation-delay:0.65s">
+            <div class="flex items-center gap-2 mb-3">
+                <i data-lucide="help-circle" class="w-4 h-4 text-slate-400"></i>
+                <p class="text-[11px] font-bold text-slate-600">Que se passe-t-il si j'arrête maintenant ?</p>
+            </div>
+            <div class="space-y-2.5">
+                <div class="flex items-start gap-2.5">
+                    <div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span class="text-[9px] font-bold text-red-500">1</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-relaxed"><strong class="text-slate-700">Semaine 5-6 :</strong> La peau n'est plus stimulée. Le renouvellement cellulaire ralentit.</p>
+                </div>
+                <div class="flex items-start gap-2.5">
+                    <div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span class="text-[9px] font-bold text-red-500">2</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-relaxed"><strong class="text-slate-700">Semaine 7-8 :</strong> Le sébum se dérégule à nouveau. Les premiers boutons réapparaissent.</p>
+                </div>
+                <div class="flex items-start gap-2.5">
+                    <div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span class="text-[9px] font-bold text-red-500">3</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-relaxed"><strong class="text-slate-700">Semaine 9-12 :</strong> Retour quasi-complet à l'état initial. Les 28 jours d'efforts sont perdus.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-2 mb-16 p-6 bg-[#F8FAFC] rounded-2xl border border-slate-200 relative anim-fade-up" style="animation-delay:0.7s">
+            <i data-lucide="quote" class="w-8 h-8 text-teal-100 absolute top-4 left-4"></i>
+            <p class="relative z-10 text-sm text-slate-600 italic leading-relaxed text-center mb-4" id="closing-quote">Chargement...</p>
+            <div class="text-center"><p class="handwritten text-2xl text-teal-600 transform -rotate-2">L'équipe Adermio</p></div>
+        </div>
+
+    </div></div><div id="sticky-cta" class="fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 translate-y-full">
+    <div class="max-w-lg mx-auto">
+        <div class="bg-white/95 backdrop-blur-md border-t border-slate-200 px-5 py-3 flex items-center gap-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)]">
+            <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-extrabold text-slate-800 truncate">Ne perdez pas vos progrès</p>
+                <p class="text-[9px] text-slate-400">Lancez votre Cycle 2</p>
+            </div>
+            <button onclick="handleCTA()" class="bg-gradient-to-r from-teal-600 to-indigo-600 text-white font-bold text-[11px] px-5 py-2.5 rounded-xl shadow-md active:scale-[0.97] transition-all whitespace-nowrap">
+                Continuer
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const SUPABASE_URL = 'https://zqhmobgjxmyziuwkrkqf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w';
+const STORAGE_BUCKET = 'skin-tracking';
+const BILAN_EDGE_FN = `${SUPABASE_URL}/functions/v1/skin-bilan-j28`;
+const CYCLE_DURATION = 28;
+
+const JOB_ID = new URLSearchParams(window.location.search).get('jobId') || 'demo-test';
+
+let trackingData = null;
+let patientSummary = '';
+let clientName = '';
+
+// ============================================================
+// SUPABASE HELPERS
+// ============================================================
+async function sbGet(table, q='') {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${q}`, { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
+    if (!r.ok) { console.error(`sbGet ${table} error: ${r.status}`); return []; }
+    return r.json();
+}
+async function sbPatch(table, q, data) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${q}`, { method:'PATCH', headers: { 'apikey':SUPABASE_ANON_KEY, 'Authorization':`Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=representation' }, body: JSON.stringify(data) });
+    if (!r.ok) console.error(`sbPatch ${table} error: ${r.status}`);
+    return r.json();
+}
+async function sbUpload(path, file) {
+    const mimeType = file.type || 'image/jpeg';
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${path}`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': mimeType, 'x-upsert': 'true' },
+        body: file
+    });
+    if (!r.ok) throw new Error(`Upload failed: ${r.status}`);
+    return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+}
+
+function escHtml(str) { if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+function safeIcons(scope) { if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons(scope ? { nodes: [scope] } : undefined); }
+function localDateStr(d) { if (!d) d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+// ============================================================
+// CALCULS
+// ============================================================
+function calcObservance(checks, day) { return (!checks || day<=1) ? 0 : Math.round((checks.length / Math.min(day, CYCLE_DURATION))*100); }
+
+function getWeeklyScores() {
+    const checks = trackingData.checks || [];
+    const skin = trackingData.daily_skin || {};
+    const start = new Date(trackingData.cycle_start_date + 'T00:00:00');
+    const day = Math.min(getCurrentDay(), CYCLE_DURATION);
+    const currentWeek = Math.ceil(day / 7);
+    const scores = [];
+    for (let w = 1; w <= Math.min(currentWeek, 4); w++) {
+        const weekStart = (w - 1) * 7 + 1;
+        const weekEnd = Math.min(w * 7, day);
+        if (weekStart > day) break;
+        const weekChecks = [];
+        const weekSkinVals = [];
+        for (let d = weekStart; d <= weekEnd; d++) {
+            const loopDate = new Date(start);
+            loopDate.setDate(loopDate.getDate() + (d - 1));
+            const dateStr = localDateStr(loopDate);
+            if (checks.includes(dateStr)) weekChecks.push(dateStr);
+            if (skin[dateStr] && skin[dateStr].skin_feeling) weekSkinVals.push(skin[dateStr].skin_feeling);
+        }
+        const daysInWeek = weekEnd - weekStart + 1;
+        const obsRate = daysInWeek > 0 ? (weekChecks.length / daysInWeek) * 100 : 0;
+        const avgSkin = weekSkinVals.length > 0 ? weekSkinVals.reduce((a,b)=>a+b,0) / weekSkinVals.length : 3;
+        const skinPct = (avgSkin / 5) * 100;
+        const score = Math.min(100, Math.max(0, Math.round(obsRate * 0.6 + skinPct * 0.4)));
+        scores.push({ week: w, score, obsRate: Math.round(obsRate), skinAvg: avgSkin.toFixed(1) });
+    }
+    return scores;
+}
+
+function getCurrentDay() {
+    if (!trackingData) return 28;
+    const start = new Date(trackingData.cycle_start_date + 'T00:00:00');
+    const today = new Date();
+    const todayM = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const startM = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    return Math.max(1, Math.floor((todayM - startM) / 864e5) + 1);
+}
+
+function projectScores(realScores) {
+    if (realScores.length === 0) return [];
+    const lastScore = realScores[realScores.length - 1].score;
+    const lastWeek = realScores[realScores.length - 1].week;
+    let trend = 0;
+    if (realScores.length >= 2) {
+        trend = (realScores[realScores.length-1].score - realScores[0].score) / (realScores.length - 1);
+    } else { trend = 3; }
+    trend = Math.max(trend, 1.5);
+    const projected = [];
+    for (let w = lastWeek + 1; w <= 13; w++) {
+        const weeksAhead = w - lastWeek;
+        const rawProjected = lastScore + trend * weeksAhead * (1 - (lastScore / 150));
+        projected.push({ week: w, score: Math.min(95, Math.max(lastScore, Math.round(rawProjected))) });
+    }
+    return projected;
+}
+
+// ============================================================
+// SAVE HELPERS
+// ============================================================
+let _saveBatch = {};
+let _saveTimer = null;
+async function saveTracking(updates) {
+    Object.assign(trackingData, updates);
+    Object.assign(_saveBatch, updates);
+    if (_saveTimer) clearTimeout(_saveTimer);
+    _saveTimer = setTimeout(flushSave, 300);
+}
+async function flushSave() {
+    if (Object.keys(_saveBatch).length === 0) return;
+    const batch = { ..._saveBatch };
+    _saveBatch = {};
+    _saveTimer = null;
+    return sbPatch('skin_tracking', `id=eq.${trackingData.id}`, batch);
+}
+
+// ============================================================
+// RENDER HERO
+// ============================================================
+function renderHero() {
+    const checks = trackingData.checks || [];
+    const day = Math.min(getCurrentDay(), CYCLE_DURATION);
+    const obs = calcObservance(checks, day);
+    const score = trackingData.current_score || 0;
+    const maxStreak = trackingData.max_streak || 0;
+
+    document.getElementById('hero-name').textContent = clientName ? `${clientName}, votre Bilan` : 'Votre Bilan';
+    document.getElementById('hero-days').textContent = `${checks.length}/28j`;
+    document.getElementById('hero-obs').textContent = `${obs}%`;
+    document.getElementById('hero-streak').textContent = `${maxStreak}j`;
+
+    // Animate score
+    setTimeout(() => {
+        document.getElementById('hero-score-circle').setAttribute('stroke-dasharray', `${score}, 100`);
+        animateCounter('hero-score', score);
+    }, 500);
+}
+
+function animateCounter(id, target) {
+    const el = document.getElementById(id);
+    let current = 0;
+    const step = Math.max(1, Math.floor(target / 40));
+    const interval = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(interval); }
+        el.textContent = current;
+    }, 30);
+}
+
+// ============================================================
+// RENDER PHOTOS COMPARE
+// ============================================================
+function renderCompare() {
+    const photos = trackingData.compare_photos || {};
+    const hasJ1 = photos.j1 && photos.j1.url;
+    const hasJ28 = photos.j28 && photos.j28.url;
+
+    const emptyState = document.getElementById('compare-empty');
+    const slider = document.getElementById('compare-slider');
+    const analyzeBtn = document.getElementById('compare-analyze-btn');
+
+    if (hasJ1 && hasJ28) {
+        emptyState.classList.add('hidden');
+        slider.classList.remove('hidden');
+        document.getElementById('img-j1').src = photos.j1.url;
+        document.getElementById('img-j28').src = photos.j28.url;
+        initCompareSlider();
+
+        const bilanInsights = trackingData.bilan_j28_insights;
+        if (bilanInsights && bilanInsights.photo_insights && bilanInsights.photo_insights.length >= 3) {
+            analyzeBtn.classList.add('hidden');
+            displayPhotoInsights(bilanInsights.photo_insights);
+        } else {
+            analyzeBtn.classList.remove('hidden');
+        }
+    } else {
+        emptyState.classList.remove('hidden');
+        slider.classList.add('hidden');
+        analyzeBtn.classList.add('hidden');
+
+        if (hasJ1) {
+            const z = document.getElementById('zone-j1');
+            z.innerHTML = `<img src="${escHtml(photos.j1.url)}" class="w-full h-full object-cover rounded-xl absolute inset-0">
+                <div class="absolute bottom-2 left-2 bg-teal-600 text-white px-2 py-0.5 rounded-full text-[8px] font-bold">J1</div>`;
+            z.className = 'rounded-2xl overflow-hidden relative min-h-[200px] border border-slate-200';
+            z.onclick = null;
+        }
+        if (hasJ28) {
+            const z = document.getElementById('zone-j28');
+            z.innerHTML = `<img src="${escHtml(photos.j28.url)}" class="w-full h-full object-cover rounded-xl absolute inset-0">
+                <div class="absolute bottom-2 right-2 bg-indigo-600 text-white px-2 py-0.5 rounded-full text-[8px] font-bold">J28</div>`;
+            z.className = 'rounded-2xl overflow-hidden relative min-h-[200px] border border-slate-200';
+            z.onclick = null;
+        }
+    }
+    safeIcons();
+}
+
+async function handlePhotoUpload(slot, e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { alert('Photo trop volumineuse (5 Mo max)'); return; }
+    try {
+        const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
+        const path = `${JOB_ID}/compare/${slot}.${ext}`;
+        const url = await sbUpload(path, file);
+        const photos = trackingData.compare_photos || {};
+        photos[slot] = { url, uploaded_at: new Date().toISOString() };
+        await saveTracking({ compare_photos: photos });
+        await flushSave();
+        renderCompare();
+    } catch (err) {
+        console.error('Upload error:', err);
+        alert('Erreur lors de l\'upload. Réessayez.');
+    }
+    e.target.value = '';
+}
+
+let _sliderCleanup = null;
+function initCompareSlider() {
+    const container = document.getElementById('compare-slider');
+    const clip = document.getElementById('clip-j1');
+    const handle = document.getElementById('slider-handle');
+    if (!container || !clip || !handle) return;
+    if (_sliderCleanup) { _sliderCleanup(); _sliderCleanup = null; }
+    let isDragging = false;
+    function update(clientX) {
+        const rect = container.getBoundingClientRect();
+        let pct = ((clientX - rect.left) / rect.width) * 100;
+        pct = Math.max(5, Math.min(95, pct));
+        clip.style.width = pct + '%';
+        handle.style.left = pct + '%';
+    }
+    const md = () => { isDragging = true; };
+    const mm = e => { if (isDragging) update(e.clientX); };
+    const mu = () => { isDragging = false; };
+    const ts = () => { isDragging = true; };
+    const tmv = e => { if (isDragging) { e.preventDefault(); update(e.touches[0].clientX); } };
+    const te = () => { isDragging = false; };
+    const cl = e => { if (!e.target.closest('#slider-handle')) update(e.clientX); };
+    handle.addEventListener('mousedown', md);
+    document.addEventListener('mousemove', mm);
+    document.addEventListener('mouseup', mu);
+    handle.addEventListener('touchstart', ts, { passive: true });
+    document.addEventListener('touchmove', tmv, { passive: false });
+    document.addEventListener('touchend', te);
+    container.addEventListener('click', cl);
+    _sliderCleanup = () => {
+        handle.removeEventListener('mousedown', md);
+        document.removeEventListener('mousemove', mm);
+        document.removeEventListener('mouseup', mu);
+        handle.removeEventListener('touchstart', ts);
+        document.removeEventListener('touchmove', tmv);
+        document.removeEventListener('touchend', te);
+        container.removeEventListener('click', cl);
+    };
+}
+
+function displayPhotoInsights(insights) {
+    if (!insights || insights.length < 3) return;
+    const icons = ['sparkles', 'palette', 'heart-pulse'];
+    const colors = [
+        { bg: 'bg-teal-50', border: 'border-teal-200', icon: 'text-teal-500', metric: 'bg-teal-100 text-teal-700' },
+        { bg: 'bg-indigo-50', border: 'border-indigo-200', icon: 'text-indigo-500', metric: 'bg-indigo-100 text-indigo-700' },
+        { bg: 'bg-amber-50', border: 'border-amber-200', icon: 'text-amber-500', metric: 'bg-amber-100 text-amber-700' }
+    ];
+    insights.forEach((insight, idx) => {
+        if (idx >= 3) return;
+        const card = document.querySelector(`.insight-card[data-idx="${idx}"]`);
+        if (!card) return;
+        const c = colors[idx];
+        setTimeout(() => {
+            card.className = `insight-card ${c.bg} rounded-xl border ${c.border} p-4 anim-reveal`;
+            card.innerHTML = `<div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5">
+                    <i data-lucide="${icons[idx]}" class="w-4 h-4 ${c.icon}"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap mb-1.5">
+                        <p class="text-[11px] font-bold text-slate-800">${escHtml(insight.title)}</p>
+                        <span class="text-[8px] font-bold ${c.metric} px-2 py-0.5 rounded-full whitespace-nowrap">${escHtml(insight.metric)}</span>
+                    </div>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">${escHtml(insight.description)}</p>
+                </div>
+            </div>`;
+            safeIcons(card);
+        }, idx * 300);
+    });
+}
+
+// ============================================================
+// RENDER STATS
+// ============================================================
+function renderStats() {
+    const checks = trackingData.checks || [];
+    const day = Math.min(getCurrentDay(), CYCLE_DURATION);
+    const obs = calcObservance(checks, day);
+
+    document.getElementById('stat-obs').textContent = obs + '%';
+    document.getElementById('stat-streak').textContent = (trackingData.max_streak || 0) + 'j';
+    document.getElementById('stat-days').textContent = `${checks.length}/28`;
+    document.getElementById('stat-score').textContent = trackingData.current_score || 0;
+
+    // Weekly scores chart
+    const weeklyScores = getWeeklyScores();
+    const scoresCtx = document.getElementById('scores-chart');
+    if (scoresCtx && weeklyScores.length > 0) {
+        new Chart(scoresCtx, {
+            type: 'line',
+            data: {
+                labels: weeklyScores.map(s => `S${s.week}`),
+                datasets: [{
+                    label: 'Score',
+                    data: weeklyScores.map(s => s.score),
+                    borderColor: '#0d9488',
+                    backgroundColor: 'rgba(13,148,136,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2.5,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#0d9488',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { min: 0, max: 100, ticks: { font: { size: 9, weight: 600 }, color: '#94a3b8' }, grid: { color: '#f1f5f9' } },
+                    x: { ticks: { font: { size: 9, weight: 700 }, color: '#64748b' }, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // Skin feeling chart
+    const skin = trackingData.daily_skin || {};
+    const start = new Date(trackingData.cycle_start_date + 'T00:00:00');
+    const skinLabels = [];
+    const skinValues = [];
+    for (let d = 1; d <= Math.min(day, CYCLE_DURATION); d++) {
+        const loopDate = new Date(start);
+        loopDate.setDate(loopDate.getDate() + (d - 1));
+        const dateStr = localDateStr(loopDate);
+        if (skin[dateStr] && skin[dateStr].skin_feeling) {
+            skinLabels.push(`J${d}`);
+            skinValues.push(skin[dateStr].skin_feeling);
+        }
+    }
+    const skinCtx = document.getElementById('skin-chart');
+    if (skinCtx && skinValues.length > 1) {
+        new Chart(skinCtx, {
+            type: 'line',
+            data: {
+                labels: skinLabels,
+                datasets: [{
+                    label: 'Ressenti',
+                    data: skinValues,
+                    borderColor: '#8b5cf6',
+                    backgroundColor: 'rgba(139,92,246,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#8b5cf6',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1.5,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { min: 0, max: 5, ticks: { stepSize: 1, font: { size: 9, weight: 600 }, color: '#94a3b8', callback: v => ['','Irritée','Sensible','Neutre','Bien','Éclat'][v] || '' }, grid: { color: '#f1f5f9' } },
+                    x: { ticks: { font: { size: 8 }, color: '#94a3b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 7 }, grid: { display: false } }
+                }
+            }
+        });
+    }
+}
+
+// ============================================================
+// RENDER TRAJECTORY (with regression curve)
+// ============================================================
+function regressScores(lastScore, lastWeek) {
+    // Without treatment, skin regresses: fast at first, then plateaus at ~30% of original
+    const regressed = [];
+    for (let w = lastWeek + 1; w <= 13; w++) {
+        const weeksWithout = w - lastWeek;
+        // Exponential decay toward a baseline
+        const baseline = Math.max(15, lastScore * 0.25);
+        const decay = (lastScore - baseline) * Math.exp(-0.2 * weeksWithout);
+        regressed.push({ week: w, score: Math.max(10, Math.round(baseline + decay)) });
+    }
+    return regressed;
+}
+
+function renderTrajectory() {
+    const realScores = getWeeklyScores();
+    const projectedScores = projectScores(realScores);
+    const labels = [];
+    for (let w = 1; w <= 13; w++) labels.push(`S${w}`);
+
+    const realData = new Array(13).fill(null);
+    realScores.forEach(s => { realData[s.week - 1] = s.score; });
+
+    // Progression curve (with cycle 2)
+    const projData = new Array(13).fill(null);
+    if (realScores.length > 0) {
+        projData[realScores[realScores.length-1].week - 1] = realScores[realScores.length-1].score;
+    }
+    projectedScores.forEach(s => { projData[s.week - 1] = s.score; });
+
+    // Regression curve (without treatment)
+    const currentScore = realScores.length > 0 ? realScores[realScores.length-1].score : 0;
+    const lastWeek = realScores.length > 0 ? realScores[realScores.length-1].week : 4;
+    const regressedScores = regressScores(currentScore, lastWeek);
+    const regData = new Array(13).fill(null);
+    if (realScores.length > 0) {
+        regData[lastWeek - 1] = currentScore; // bridge point
+    }
+    regressedScores.forEach(s => { regData[s.week - 1] = s.score; });
+
+    const j90Score = projData[12] || currentScore;
+    const regJ90Score = regData[12] || currentScore;
+    const scoreDiff = j90Score - regJ90Score;
+
+    document.getElementById('traj-now').textContent = currentScore;
+    document.getElementById('traj-j90').textContent = j90Score;
+    document.getElementById('traj-regression').textContent = regJ90Score;
+
+    const diffLabel = document.getElementById('traj-diff-label');
+    const diffValue = document.getElementById('traj-diff-value');
+    if (diffLabel && diffValue) {
+        diffLabel.textContent = 'Écart à J+90';
+        diffLabel.className = 'text-[9px] font-bold uppercase text-red-400';
+        diffValue.textContent = '+' + scoreDiff + ' pts';
+        diffValue.className = 'text-lg font-extrabold text-teal-600';
+    }
+
+    const ctx = document.getElementById('trajectory-chart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Réel',
+                        data: realData,
+                        borderColor: '#0d9488',
+                        backgroundColor: 'rgba(13,148,136,0.08)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2.5,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#0d9488',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        spanGaps: false,
+                    },
+                    {
+                        label: 'Avec Cycle 2',
+                        data: projData,
+                        borderColor: '#0d9488',
+                        borderDash: [6, 4],
+                        backgroundColor: 'rgba(13,148,136,0.04)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#0d9488',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1.5,
+                        spanGaps: false,
+                    },
+                    {
+                        label: 'Sans suivi',
+                        data: regData,
+                        borderColor: '#f87171',
+                        borderDash: [4, 3],
+                        backgroundColor: 'rgba(248,113,113,0.06)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#f87171',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1.5,
+                        spanGaps: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { min: 0, max: 100, ticks: { font: { size: 9, weight: 600 }, color: '#94a3b8' }, grid: { color: '#f1f5f9' } },
+                    x: { ticks: { font: { size: 8, weight: 600 }, color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+    }
+}
+
+// ============================================================
+// AI ANALYSIS (edge function)
+// ============================================================
+async function runBilanAnalysis() {
+    const btn = document.getElementById('compare-analyze-btn');
+    btn.innerHTML = `<div class="flex items-center justify-center gap-2 py-3.5">
+        <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        <span class="text-[12px] font-bold text-slate-500">Analyse en cours...</span>
+    </div>`;
+
+    const photos = trackingData.compare_photos || {};
+    const checks = trackingData.checks || [];
+    const day = Math.min(getCurrentDay(), CYCLE_DURATION);
+
+    const weeklyScores = getWeeklyScores();
+    const reviewsSummary = summarizeReviews();
+    const obsSummary = summarizeObservations();
+
+    const payload = {
+        photo_j1_url: photos.j1 ? photos.j1.url : null,
+        photo_j28_url: photos.j28 ? photos.j28.url : null,
+        job_id: JOB_ID,
+        client_name: clientName,
+        cycle_data: {
+            checks_count: checks.length,
+            total_days: CYCLE_DURATION,
+            observance_pct: calcObservance(checks, day),
+            max_streak: trackingData.max_streak || 0,
+            final_score: trackingData.current_score || 0,
+            weekly_scores: weeklyScores,
+            weekly_reviews_summary: reviewsSummary,
+            observations_summary: obsSummary,
+            patient_summary: patientSummary
+        }
+    };
+
+    try {
+        const response = await fetch(BILAN_EDGE_FN, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+
+        await saveTracking({ bilan_j28_insights: data });
+        await flushSave();
+
+        btn.classList.add('hidden');
+        if (data.photo_insights && data.photo_insights.length >= 3) displayPhotoInsights(data.photo_insights);
+        if (data.cycle2_message) document.getElementById('cycle2-message').textContent = data.cycle2_message;
+        if (data.recommendations) renderRecommendations(data.recommendations);
+        if (data.new_actives) renderNewActives(data.new_actives);
+
+        // Confetti
+        if (typeof confetti === 'function') confetti({ particleCount: 80, spread: 60, origin: { y: 0.5 }, colors: ['#0d9488', '#6366f1', '#f59e0b'] });
+
+    } catch (err) {
+        console.error('Bilan analysis error:', err);
+        btn.classList.add('hidden');
+        generateFallbackAnalysis();
+    }
+}
+
+function generateFallbackAnalysis() {
+    const checks = trackingData.checks || [];
+    const day = Math.min(getCurrentDay(), CYCLE_DURATION);
+    const obs = calcObservance(checks, day);
+    const score = trackingData.current_score || 0;
+    const skin = trackingData.daily_skin || {};
+    const skinVals = Object.values(skin).map(s => s.skin_feeling).filter(Boolean);
+    const avgSkin = skinVals.length > 0 ? (skinVals.reduce((a,b)=>a+b,0)/skinVals.length) : 3;
+
+    const fallbackInsights = [
+        { title: 'Texture', description: obs >= 70 ? `Avec ${obs}% d'observance, votre grain de peau montre des signes d'amélioration. La régularité accélère le renouvellement cellulaire.` : `Votre observance de ${obs}% peut encore progresser. Une routine plus régulière permettrait d'observer des changements de texture plus marqués.`, metric: obs >= 70 ? '+' + Math.round(obs/10) + '% texture' : 'À suivre' },
+        { title: 'Teint', description: avgSkin >= 3.5 ? `Vos ressentis cutanés (${avgSkin.toFixed(1)}/5) suggèrent une amélioration de l'uniformité du teint.` : `Votre peau a traversé une phase d'adaptation (ressenti ${avgSkin.toFixed(1)}/5). Le teint devrait s'uniformiser au cycle 2.`, metric: avgSkin >= 3.5 ? '+' + Math.round((avgSkin-2.5)*5) + '% uniformité' : 'En cours' },
+        { title: 'Éclat', description: score >= 50 ? `Score de ${score}/100 — votre barrière cutanée se renforce. L'hydratation quotidienne porte ses fruits.` : `Score de ${score}/100 — votre peau reconstruit sa barrière protectrice. Continuez pour accélérer la récupération.`, metric: score >= 50 ? '+' + Math.round(score/8) + '% éclat' : 'Patience' }
+    ];
+
+    displayPhotoInsights(fallbackInsights);
+
+    document.getElementById('cycle2-message').textContent = obs >= 70
+        ? `Avec ${obs}% d'observance et un score de ${score}/100, votre peau a bien répondu au premier cycle. Le cycle 2 permettra de consolider ces résultats et d'introduire des actifs plus puissants.`
+        : `Votre premier cycle est un excellent point de départ. Le cycle 2 permettra d'approfondir les résultats et d'ajuster votre routine pour des progrès encore plus visibles.`;
+
+    renderRecommendations([
+        { title: 'Régularité', description: 'Continuez votre routine matin et soir sans interruption. La constance est le facteur n°1 de réussite.', icon: 'repeat' },
+        { title: 'Hydratation', description: 'Renforcez l\'hydratation pour soutenir la barrière cutanée et préparer l\'introduction de nouveaux actifs.', icon: 'droplets' }
+    ]);
+}
+
+// ============================================================
+// RENDER RECOMMENDATIONS
+// ============================================================
+function renderRecommendations(recos) {
+    const container = document.getElementById('reco-container');
+    container.innerHTML = '';
+    const recoColors = [
+        { bg: 'bg-teal-50', border: 'border-teal-100', icon: 'text-teal-500', iconBg: 'bg-teal-100' },
+        { bg: 'bg-indigo-50', border: 'border-indigo-100', icon: 'text-indigo-500', iconBg: 'bg-indigo-100' },
+        { bg: 'bg-amber-50', border: 'border-amber-100', icon: 'text-amber-500', iconBg: 'bg-amber-100' }
+    ];
+    recos.forEach((r, idx) => {
+        const c = recoColors[idx % recoColors.length];
+        const card = document.createElement('div');
+        card.className = `${c.bg} rounded-xl border ${c.border} p-4 anim-reveal`;
+        card.style.animationDelay = (idx * 200) + 'ms';
+        card.innerHTML = `<div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-xl ${c.iconBg} flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i data-lucide="${escHtml(r.icon) || 'lightbulb'}" class="w-4 h-4 ${c.icon}"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-bold text-slate-800 mb-1">${escHtml(r.title)}</p>
+                <p class="text-[10px] text-slate-600 leading-relaxed">${escHtml(r.description)}</p>
+            </div>
+        </div>`;
+        container.appendChild(card);
+    });
+    safeIcons();
+}
+
+function renderNewActives(actives) {
+    if (!actives || actives.length === 0) return;
+    const section = document.getElementById('actives-section');
+    const container = document.getElementById('actives-container');
+    section.classList.remove('hidden');
+    container.innerHTML = '';
+    actives.forEach((a, idx) => {
+        const card = document.createElement('div');
+        card.className = 'bg-purple-50 rounded-xl border border-purple-100 p-4 anim-reveal';
+        card.style.animationDelay = (idx * 200) + 'ms';
+        card.innerHTML = `<div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i data-lucide="flask-round" class="w-4 h-4 text-purple-500"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-bold text-slate-800 mb-0.5">${escHtml(a.name)}</p>
+                <p class="text-[10px] text-slate-600 leading-relaxed mb-1">${escHtml(a.description)}</p>
+                <p class="text-[9px] text-purple-500 font-medium"><i data-lucide="info" class="w-3 h-3 inline mr-0.5"></i>${escHtml(a.reason)}</p>
+            </div>
+        </div>`;
+        container.appendChild(card);
+    });
+    safeIcons();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function summarizeReviews() {
+    const reviews = trackingData.weekly_reviews || {};
+    const parts = [];
+    Object.keys(reviews).sort().forEach(key => {
+        const r = reviews[key];
+        if (!r || !r.submitted) return;
+        const week = key.replace('week_', 'S');
+        const answers = r.answers || {};
+        const ansStr = Object.entries(answers).map(([k,v]) => `${k}:${v}`).join(', ');
+        parts.push(`${week}: ${ansStr}`);
+    });
+    return parts.join(' | ') || '';
+}
+
+function summarizeObservations() {
+    const obs = trackingData.observations || {};
+    return Object.entries(obs).map(([d, t]) => `${d}: ${t}`).slice(-5).join(' | ') || '';
+}
+
+async function handleCTA() {
+    // Disable all CTA buttons during loading
+    document.querySelectorAll('[onclick="handleCTA()"]').forEach(btn => {
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+    });
+
+    try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            },
+            body: JSON.stringify({
+                job_id: JOB_ID,
+                lang: 'fr'
+            })
+        });
+
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+
+        if (data.checkout_url) {
+            window.location.href = data.checkout_url;
+        } else {
+            throw new Error('No checkout URL returned');
+        }
+    } catch (err) {
+        console.error('Checkout error:', err);
+        alert('Erreur lors de la redirection vers le paiement. Veuillez réessayer.');
+        document.querySelectorAll('[onclick="handleCTA()"]').forEach(btn => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        });
+    }
+}
+
+// ============================================================
+// AUTO-TRIGGER AI ANALYSIS
+// ============================================================
+async function autoTriggerAnalysis() {
+    // Si on a deja les insights, les afficher directement
+    const existing = trackingData.bilan_j28_insights;
+    if (existing) {
+        if (existing.photo_insights && existing.photo_insights.length >= 3) displayPhotoInsights(existing.photo_insights);
+        if (existing.cycle2_message) document.getElementById('cycle2-message').textContent = existing.cycle2_message;
+        if (existing.recommendations && existing.recommendations.length > 0) renderRecommendations(existing.recommendations);
+        if (existing.new_actives && existing.new_actives.length > 0) renderNewActives(existing.new_actives);
+        return;
+    }
+
+    // Sinon, lancer l'analyse automatiquement (meme sans photos — on aura les recos)
+    const photos = trackingData.compare_photos || {};
+    const hasJ1 = photos.j1 && photos.j1.url;
+    const hasJ28 = photos.j28 && photos.j28.url;
+
+    // Si on a les 2 photos, le bouton "Analyser" est visible — on ne lance pas auto
+    if (hasJ1 && hasJ28) return;
+
+    // Lancer l'analyse texte seule (sans photos)
+    const checks = trackingData.checks || [];
+    const day = Math.min(getCurrentDay(), CYCLE_DURATION);
+    const payload = {
+        job_id: JOB_ID,
+        client_name: clientName,
+        cycle_data: {
+            checks_count: checks.length,
+            total_days: CYCLE_DURATION,
+            observance_pct: calcObservance(checks, day),
+            max_streak: trackingData.max_streak || 0,
+            final_score: trackingData.current_score || 0,
+            weekly_scores: getWeeklyScores(),
+            weekly_reviews_summary: summarizeReviews(),
+            observations_summary: summarizeObservations(),
+            patient_summary: patientSummary
+        }
+    };
+
+    try {
+        const response = await fetch(BILAN_EDGE_FN, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+        await saveTracking({ bilan_j28_insights: data });
+        await flushSave();
+        if (data.cycle2_message) document.getElementById('cycle2-message').textContent = data.cycle2_message;
+        if (data.recommendations) renderRecommendations(data.recommendations);
+        if (data.new_actives) renderNewActives(data.new_actives);
+    } catch (err) {
+        console.error('Auto analysis error:', err);
+        generateFallbackAnalysis();
+    }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+async function init() {
+    const loadingBar = document.getElementById('loading-bar');
+    loadingBar.style.width = '30%';
+
+    try {
+        // Load tracking data
+        const rows = await sbGet('skin_tracking', `job_id=eq.${JOB_ID}&cycle_number=eq.1&limit=1`);
+        if (rows.length === 0) {
+            document.getElementById('hero-name').textContent = 'Bilan non disponible';
+            document.getElementById('loading-screen').style.display = 'none';
+            return;
+        }
+        trackingData = rows[0];
+        loadingBar.style.width = '60%';
+
+        // Load patient summary + name
+        const reports = await sbGet('paid_reports', `job_id=eq.${JOB_ID}&select=patient_summary_json,lang&limit=1`);
+        if (reports.length > 0) {
+            const report = reports[0];
+            let summaryRaw = report.patient_summary_json || '';
+            patientSummary = typeof summaryRaw === 'string' ? summaryRaw : JSON.stringify(summaryRaw);
+
+            // Try parsing as JSON first
+            let summaryObj = null;
+            if (typeof summaryRaw === 'string') {
+                try { summaryObj = JSON.parse(summaryRaw); } catch(e) { summaryObj = null; }
+            } else { summaryObj = summaryRaw; }
+
+            if (summaryObj && typeof summaryObj === 'object') {
+                clientName = summaryObj.prenom || summaryObj.nom || summaryObj.name || '';
+            }
+
+            // If no name from JSON, extract from routine text (pattern: "Prénom, ..." at start of routine)
+            if (!clientName && typeof summaryRaw === 'string') {
+                const routineMatch = summaryRaw.match(/Routine donnée au patient\s*:\s*\n([A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+)/);
+                if (routineMatch) clientName = routineMatch[1];
+            }
+        }
+        if (!clientName) clientName = '';
+
+        loadingBar.style.width = '80%';
+
+        // Render all sections
+        renderHero();
+        renderCompare();
+        renderStats();
+        renderTrajectory();
+
+        // Closing quote
+        const nameForQuote = clientName || 'Cher(e) patient(e)';
+        document.getElementById('closing-quote').textContent = `"${nameForQuote}, cette analyse n'est qu'un point de départ. Votre peau évolue chaque jour, et son équilibre se construit avec le temps. Adermio est là pour vous accompagner à chaque étape."`;
+
+        loadingBar.style.width = '100%';
+
+        // Remove loading screen
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.opacity = '0';
+            document.getElementById('loading-screen').style.transition = 'opacity 0.5s ease';
+            setTimeout(() => document.getElementById('loading-screen').style.display = 'none', 500);
+
+            // Confetti on page load
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.3 }, colors: ['#0d9488', '#6366f1', '#f59e0b', '#a78bfa'] });
+            }
+        }, 300);
+
+        // Auto-trigger AI analysis
+        autoTriggerAnalysis();
+
+    } catch (err) {
+        console.error('Init error:', err);
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('hero-name').textContent = 'Erreur de chargement';
+    }
+}
+
+// ============================================================
+// STICKY CTA
+// ============================================================
+(function() {
+    const stickyCta = document.getElementById('sticky-cta');
+    let shown = false;
+    window.addEventListener('scroll', function() {
+        const scrollY = window.scrollY || window.pageYOffset;
+        // Show after scrolling 600px
+        if (scrollY > 600 && !shown) {
+            stickyCta.classList.remove('translate-y-full');
+            stickyCta.classList.add('translate-y-0');
+            shown = true;
+        } else if (scrollY <= 600 && shown) {
+            stickyCta.classList.add('translate-y-full');
+            stickyCta.classList.remove('translate-y-0');
+            shown = false;
+        }
+    });
+})();
+
+safeIcons();
+init();
+</script>
+
+</body>
+</html>
