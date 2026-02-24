@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Analysis in Progress - Adermio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',   
+                            dark: '#0F3D39',   
+                            primary: '#14B8A6',
+                            text: '#334155',   
+                            muted: '#94A3B8',  
+                            surface: '#FFFFFF' 
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                        manrope: ['"Manrope"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        a, a:visited, a:hover, a:active {
+            color: inherit; 
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+
+    <style>
+      @keyframes fadeIn { from {opacity:0;transform:translateY(10px);} to {opacity:1;transform:translateY(0);} }
+      #status-title, #status-subtitle { animation:fadeIn 0.6s ease forwards; }
+      
+      #access-btn:hover { transform: scale(1.05); }
+      #access-btn:active { transform: scale(0.98); }
+
+      .force-link {
+        background: none;
+        border: none;
+        color: #6b7280;
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 15px;
+        padding: 5px;
+        font-family: 'Manrope', sans-serif;
+        transition: color 0.2s;
+      }
+      .force-link:hover { color: #1f2937; }
+    </style>
+
+    <style>
+        @keyframes smooth-flow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(250%); }
+        }
+
+        .animate-smooth-flow {
+            width: 40%; 
+            height: 100%;
+            background: #3b82f6;
+            position: absolute;
+            top: 0;
+            left: 0;
+            will-change: transform;
+            animation: smooth-flow 1.5s infinite linear;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="https://adermio.com" class="flex items-center gap-2">
+                 <img src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+                        <img src="https://flagcdn.com/us.svg" width="16" alt="EN" class="rounded-sm shadow-sm">
+                        <span class="font-sans font-medium text-sm">EN</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+                    </button>
+                    
+                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-36 bg-white rounded-xl shadow-luxury border border-adermio-dark/5 overflow-hidden z-[80]">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                            <img src="https://flagcdn.com/us.svg" width="20" alt="English" class="rounded-sm shadow-sm">
+                            <span>English</span>
+                        </a>
+                        <a href="https://adermio.com/analyse-en-cours" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/fr.svg" width="20" alt="Français" class="rounded-sm shadow-sm">
+                            <span>Français</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="https://adermio.com" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Home</a>
+            <a href="https://adermio.com/en/form" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Start Analysis</a>
+            <a href="https://adermio.com/en/about" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">About Us</a>
+            <a href="https://adermio.com/en/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Contact Us</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2025</span>
+        </div>
+    </div>
+
+    <main class="pt-20">
+        <section style="font-family:'Manrope',sans-serif;text-align:center;padding:40px 0 0 0;background:#f8fafc;min-height:80vh;display:flex;flex-direction:column;">
+          <div id="status-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding: 20px;">
+            
+            <h1 id="status-title" style="font-size:26px;font-weight:700;margin-bottom:12px;color:#1f2937;transition:all 0.4s ease;">
+              &#8987; Your analysis is in progress...
+            </h1>
+            
+            <p id="status-subtitle" style="color:#64748b;font-size:15px;line-height:1.5;max-width:400px;margin:0 auto 40px auto; min-height: 45px; transition: opacity 0.3s;">
+              Initializing AI...
+            </p>
+
+            <div style="position:relative;width:220px;height:220px;margin:0 auto 30px auto;">
+              <svg viewBox="0 0 100 100" style="transform:rotate(-90deg);width:100%;height:100%;">
+                <circle cx="50" cy="50" r="45" stroke="#e2e8f0" stroke-width="8" fill="none" />
+                <circle id="progress-circle" cx="50" cy="50" r="45" stroke="#2563eb" stroke-width="8"
+                        fill="none" stroke-linecap="round"
+                        stroke-dasharray="282.6" stroke-dashoffset="282.6"
+                        style="transition: stroke-dashoffset 1s linear;" />
+              </svg>
+              <div id="progress-text"
+                   style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+                          font-size:24px;font-weight:700;color:#0f172a;">
+                0%
+              </div>
+            </div>
+
+            <div id="delayed-container" style="display:none; opacity:0; transition: opacity 0.5s ease; max-width: 380px; margin: 0 auto 30px auto;">
+                <div id="delay-wait-content">
+                    <p style="color:#d97706; background: #fffbeb; border: 1px solid #fcd34d; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.4; margin-bottom: 12px;">
+                        &#9888; <b>High demand currently</b><br>
+                        Attempting to finalize ...
+                    </p>
+                    <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; position: relative;">
+                        <div id="timeout-bar" style="width: 0%; height: 100%; background: #d97706; transition: width 0.2s linear;"></div>
+                    </div>
+                </div>
+                
+                <div id="delay-fail-content" style="display:none; animation: fadeIn 0.5s forwards;">
+                      <p style="color:#b91c1c; background: #fef2f2; border: 1px solid #fecaca; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.4; margin-bottom: 15px;">
+                        &#10060; <b>Timeout</b><br>
+                        The analysis could not be processed due to high demand. Please try again.
+                    </p>
+                    <a href="https://adermio.com/en/form" 
+                       style="display:inline-block; border: none; background: #ef4444; color: white; padding: 12px 28px; border-radius: 50px; text-decoration: none; font-size: 15px; font-weight: 700; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); transition: transform 0.2s;">
+                        &#8634; Restart Analysis
+                    </a>
+                    <p style="margin-top: 12px; font-size: 13px; color: #64748b; font-style: italic;">
+                        &#129310; Hopefully this time works!
+                    </p>
+                </div>
+            </div>
+
+            <div id="success-btn-container" style="display:none; opacity:0; transform:translateY(10px); transition:all 0.5s ease;">
+                <p style="color:#059669; font-weight:700; margin-bottom:16px;">&#9989; Analysis completed successfully!</p>
+                <a id="access-btn" href="#" 
+                   style="background-color:#00897b; color:white; padding:16px 32px; border-radius:50px; 
+                          text-decoration:none; font-weight:700; font-size:16px; 
+                          box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3); display:inline-block;
+                          transition: transform 0.2s;">
+                   Open my analysis
+                </a>
+            </div>
+
+          </div>
+
+          <div id="face-error-popup" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:99999;">
+            <div style="background:white;padding:30px;border-radius:14px;width:90%;max-width:360px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+              <h2 style="margin-bottom:10px;font-size:22px;font-weight:700;color:#1f2937;">&#9888; No face detected</h2>
+              <p style="color:#4b5563;font-size:15px;line-height:1.5;margin-bottom:22px;">
+                Please take a clear photo of your face and restart your analysis.
+              </p>
+              <a href="https://adermio.com/en/form" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#00897b;color:white;font-weight:600;text-decoration:none;font-size:15px;">Restart</a>
+            </div>
+          </div>
+
+          <div id="quality-error-popup" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:99999;">
+            <div style="background:white;padding:35px 30px;border-radius:16px;width:90%;max-width:380px;text-align:center;box-shadow:0 15px 40px rgba(0,0,0,0.2);">
+              <h2 style="margin-bottom:12px;font-size:20px;font-weight:700;color:#b45309;">
+                &#10024; Verification advised
+              </h2>
+              <p style="color:#4b5563;font-size:15px;line-height:1.6;margin-bottom:25px;">
+                Our AI detected <b>few imperfections</b> on this photo. <br><br>
+                This is possible if you have perfect skin (congrats!), but often happens if the photo is <b>blurry</b> or has poor <b>lighting</b>.
+                <br><br>
+                To ensure a reliable routine, we recommend retaking the photo.
+              </p>
+              <a href="https://adermio.com/en/form" style="display:block;width:100%;padding:14px 0;border-radius:50px;background:#00897b;color:white;font-weight:700;text-decoration:none;font-size:16px;margin-bottom:12px;box-shadow: 0 4px 10px rgba(0, 137, 123, 0.2);">
+                Retake photo
+              </a>
+              <button onclick="window.resumeAnalysis()" class="force-link">
+                I confirm, this is my skin <span style="font-size:12px;">&#8594;</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div class="adermio-container w-full bg-slate-50 text-slate-800 flex flex-col items-center justify-center py-8 px-4 sm:px-6">
+          <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative overflow-hidden flex flex-col justify-between h-full min-h-[240px]">
+              <div class="absolute top-0 right-0 p-4 opacity-10">
+                <i data-lucide="lightbulb" class="w-24 h-24 text-amber-400"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 mb-4">
+                  <div class="bg-amber-100 p-2 rounded-lg">
+                    <i data-lucide="lightbulb" class="w-5 h-5 text-amber-600"></i>
+                  </div>
+                  <h3 class="font-semibold text-slate-900 m-0">Did you know?</h3>
+                </div>
+                <div class="relative h-32" id="facts-container"></div>
+              </div>
+              <div class="flex gap-2 mt-4" id="dots-container"></div>
+            </div>
+
+            <div class="flex flex-col gap-6 h-full">
+              <div class="bg-blue-50/50 rounded-2xl p-4 border border-blue-100 flex items-start gap-4">
+                <div class="bg-white p-2 rounded-xl shadow-sm text-blue-600 shrink-0">
+                  <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-sm text-slate-900 mb-1 m-0">Data protected</h3>
+                  <p class="text-xs text-slate-600 leading-snug m-0">
+                    Your photo is analyzed by AI and then <span class="font-medium text-blue-700">anonymized</span>. Your identity remains 100% confidential.
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex-1 flex flex-col relative overflow-hidden group">
+                <div class="flex items-center justify-between mb-4 border-b border-slate-50 pb-3">
+                  <div class="flex items-center gap-2">
+                      <div class="flex items-center bg-green-50 px-2 py-1 rounded-full border border-green-100">
+                        <i data-lucide="star" class="w-3.5 h-3.5 fill-current text-green-600 mr-1"></i>
+                        <span class="text-xs font-bold text-green-700">Excellent 4.4/5</span>
+                      </div>
+                      <span class="text-slate-400 text-[11px] font-medium hidden sm:inline-block">• Based on +2000 reviews</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400 block sm:hidden">+2000 reviews</span>
+                </div>
+
+                <div class="relative flex-1 min-h-[140px]">
+                    <div id="reviews-track" class="absolute top-0 left-0 w-full h-full transition-opacity duration-300"></div>
+                </div>
+
+                <div class="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                    <button onclick="prevReview()" class="p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors shadow-sm">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="nextReview()" class="p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors shadow-sm">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full max-w-5xl">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="steps-container"></div>
+          </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="https://static.tildacdn.com/tild6132-3466-4462-b065-666134646636/logo_3.png" 
+                     alt="Adermio Logo" 
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                Dermatology reinvented by artificial intelligence.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="https://adermio.com" class="hover:text-teal-600 transition-colors !text-adermio-dark">Home</a>
+                <a href="https://adermio.com/en/form" class="hover:text-teal-600 transition-colors !text-adermio-dark">Start Analysis</a>
+                <a href="https://adermio.com/en/about" class="hover:text-teal-600 transition-colors !text-adermio-dark">About Us</a>
+                <a href="https://adermio.com/en/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Contact Us</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="https://adermio.com/en/conditions" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Terms of Service</a>
+                <a href="https://adermio.com/en/legal-notice" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Legal Notice</a>
+                <a href="https://adermio.com/en/confidentialite" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Privacy Policy</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2025 Adermio Lab. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+
+        const params = new URLSearchParams(window.location.search);
+        const jobId = params.get("jobId");
+
+        // --- CONFIGURATION ---
+        const POLL_URL = "https://n8n.adermio.com/webhook/polling_en?jobId="; 
+        const MAX_WAIT_TIME = 30 * 1000; 
+        const POLL_INTERVAL = 3000;
+        const TIMEOUT_DURATION = 30000; 
+
+        // --- LOADING MESSAGES ---
+        const loadingSteps = [
+            { pct: 0,  text: "Secure connection to AI..." },
+            { pct: 15, text: "Processing your photo..." },
+            { pct: 30, text: "Scanning imperfections and skin texture..." },
+            { pct: 50, text: "Dermatological analysis of areas..." },
+            { pct: 70, text: "Calculating severity score..." },
+            { pct: 85, text: "Generating personalized routine..." },
+            { pct: 95, text: "Finalizing report..." }
+        ];
+
+        let startTime = Date.now();
+        const progressCircle = document.getElementById("progress-circle");
+        const progressText   = document.getElementById("progress-text");
+        const circumference  = 2 * Math.PI * 45;
+        
+        // DOM Elements
+        const btnContainer   = document.getElementById("success-btn-container");
+        const accessBtn      = document.getElementById("access-btn");
+        const title          = document.getElementById("status-title");
+        const subtitle       = document.getElementById("status-subtitle");
+        
+        // Timeout Elements
+        const delayedContainer = document.getElementById("delayed-container");
+        const delayWaitContent = document.getElementById("delay-wait-content");
+        const delayFailContent = document.getElementById("delay-fail-content");
+        const timeoutBar       = document.getElementById("timeout-bar");
+
+        let progressInterval = null;
+        let pollInterval = null;
+        let timeoutInterval = null; 
+        let isHighDemandActive = false;
+        let isTimeoutDead = false; 
+        let userForced = false;
+
+        // Stop utilities
+        function stopPollingAll() {
+          if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+          if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
+          if (timeoutInterval) { clearInterval(timeoutInterval); timeoutInterval = null; }
+        }
+
+        function startN8nPolling() {
+          if (pollInterval) clearInterval(pollInterval);
+          pollInterval = setInterval(checkStatus, POLL_INTERVAL);
+        }
+
+        // A. Progress Animation
+        function animateProgress() {
+          if (progressInterval) clearInterval(progressInterval);
+          
+          progressInterval = setInterval(() => {
+            if(isTimeoutDead) { clearInterval(progressInterval); return; }
+            if(btnContainer.style.display === "block") return;
+
+            const elapsed  = Date.now() - startTime;
+            let p = Math.min((elapsed / MAX_WAIT_TIME) * 100, 99);
+            
+            // --- 99% LOGIC ---
+            if (p >= 99) {
+                p = 99; 
+                if (!isHighDemandActive) {
+                    isHighDemandActive = true;
+                    triggerHighDemandMode();
+                }
+            }
+
+            const offset = circumference - (p / 100) * circumference;
+            if(progressCircle) progressCircle.style.strokeDashoffset = offset.toFixed(2);
+            if(progressText) progressText.textContent = Math.floor(p) + "%";
+
+            if (!isHighDemandActive) {
+                const currentStep = loadingSteps.slice().reverse().find(step => p >= step.pct);
+                if (currentStep && subtitle && subtitle.innerText !== currentStep.text) {
+                     subtitle.style.opacity = 0; 
+                     setTimeout(() => {
+                         subtitle.innerText = currentStep.text;
+                         subtitle.style.opacity = 1;
+                     }, 150);
+                }
+            }
+
+          }, 1000);
+        }
+
+        // A2. Triggered at 99%
+        function triggerHighDemandMode() {
+            if(subtitle) {
+                 subtitle.style.color = "#d97706"; 
+                 subtitle.innerText = "Extended processing in progress...";
+            }
+
+            delayedContainer.style.display = "block";
+            setTimeout(() => { delayedContainer.style.opacity = "1"; }, 50);
+
+            if (timeoutInterval) clearInterval(timeoutInterval);
+            if (timeoutBar) timeoutBar.style.width = "0%";
+            delayWaitContent.style.display = "block";
+            delayFailContent.style.display = "none";
+
+            let timeoutElapsed = 0;
+            const tick = 100; 
+            
+            timeoutInterval = setInterval(() => {
+                if(btnContainer.style.display === "block") {
+                    clearInterval(timeoutInterval);
+                    return;
+                }
+
+                timeoutElapsed += tick;
+                const pct = Math.min((timeoutElapsed / TIMEOUT_DURATION) * 100, 100);
+                if(timeoutBar) timeoutBar.style.width = pct + "%";
+
+                if (timeoutElapsed >= TIMEOUT_DURATION) {
+                    clearInterval(timeoutInterval);
+                    handleTimeoutFailure();
+                }
+            }, tick);
+        }
+
+        // A3. Timeout Failure
+        function handleTimeoutFailure() {
+            isTimeoutDead = true; 
+            stopPollingAll(); 
+
+            delayWaitContent.style.display = "none";
+            delayFailContent.style.display = "block";
+            
+            if(subtitle) subtitle.style.display = "none";
+            if(title) title.innerHTML = "Oops!";
+        }
+
+        // B. Show Success
+        function showSuccess(url) {
+            isTimeoutDead = false; 
+            stopPollingAll(); 
+            delayedContainer.style.display = "none";
+
+            if(progressText) progressText.textContent = "100%";
+            if(progressCircle) {
+                progressCircle.style.strokeDashoffset = 0;
+                progressCircle.style.stroke = "#10b981"; 
+            }
+
+            if(title) {
+                title.innerHTML = "Your Analysis is ready!"; 
+                title.style.marginBottom = "40px"; 
+            }
+            
+            if(subtitle) subtitle.style.display = "none";
+            
+            // Redirects to the iframe page
+            accessBtn.href = url;
+            accessBtn.setAttribute("target", "_self");
+
+            btnContainer.style.display = "block";
+            setTimeout(() => {
+                btnContainer.style.opacity = "1";
+                btnContainer.style.transform = "translateY(0)";
+            }, 50);
+        }
+
+        // C. Polling Check Status
+        async function checkStatus() {
+          if (!jobId || isTimeoutDead) return; 
+
+          try {
+            const res = await fetch(POLL_URL + encodeURIComponent(jobId), { method: "GET", cache: "no-store" });
+            const data = await res.json();
+
+            if (!data) return;
+            const record = Array.isArray(data) ? data[0] : data;
+
+            const status = record.analysis_status || record.status || "processing";
+            const downloadUrl = record.downloadUrl;
+
+            // --- CASE 1: FATAL ERROR (No Face) ---
+            if (status === 'NO_FACE' || record.face_detected === false) {
+              stopPollingAll();
+              document.getElementById("face-error-popup").style.display = "flex";
+              return;
+            }
+
+            // --- CASE 2: QUALITY CHECK ---
+            if (status === 'RETRY_NEEDED' && userForced === false) {
+               stopPollingAll(); 
+               document.getElementById("quality-error-popup").style.display = "flex";
+               return;
+            }
+
+            // --- CASE 3: SUCCESS ---
+            const isSuccess = (status === 'SUCCESS' || status === 'ready');
+            const isForcedSuccess = (status === 'RETRY_NEEDED' && userForced === true);
+
+            if ((isSuccess || isForcedSuccess) && downloadUrl) {
+              // Redirect to universal iframe page with English language param
+              let finalUrl = `/free-analysis?jobId=${encodeURIComponent(jobId)}&lang=en`;
+              if (userForced) {
+                 finalUrl += "&force=true";
+              }
+              showSuccess(finalUrl);
+            }
+            
+          } catch (e) {
+            console.error("N8N Error:", e);
+          }
+        }
+
+        // D. Resume (Force)
+        window.resumeAnalysis = function() {
+            document.getElementById('quality-error-popup').style.display = 'none';
+            userForced = true;
+            isTimeoutDead = false;
+            isHighDemandActive = false;
+            startTime = Date.now();
+
+            if (subtitle) {
+                subtitle.innerText = "Resuming analysis...";
+                subtitle.style.color = "#14B8A6";
+            }
+
+            stopPollingAll();
+            animateProgress();
+            checkStatus(); // Immediate check
+            startN8nPolling();
+        };
+
+        // Initialize
+        animateProgress();
+        setTimeout(checkStatus, 2000);
+        setTimeout(startN8nPolling, 4500);
+
+        window.addEventListener('beforeunload', () => stopPollingAll());
+      });
+    </script>
+
+    <script>
+      const skinFacts = [
+        { title: "Pores and hydration", text: "Visible pores aren't necessarily dirty. Good hydration helps tighten their appearance by regulating sebum." },
+        { title: "The 28-day cycle", text: "Your skin renews itself entirely about every 28 days. Patience and consistency are key." },
+        { title: "The 'too clean' myth", text: "Cleaning your skin too often destroys the skin barrier and can paradoxically cause more acne." },
+        { title: "The impact of stress", text: "Cortisol (stress hormone) stimulates sebum production. Relaxation is an integral part of skincare." }
+      ];
+
+      const reviews = [
+        { name: "Camille D.", age: 24, text: "Great, thanks! My skin is starting to get better and better !", rating: 5 },
+        { name: "Thomas L.", age: 31, text: "It's really inexpensive", rating: 4 },
+        { name: "Sarah B.", age: 19, text: "very happy with my routine", rating: 5 },
+        { name: "Nassim K.", age: 27, text: "Practical if you don't have time for a derm (and much cheaper).", rating: 4 },
+        { name: "Julie P.", age: 35, text: "i was skeptical about photo analysis, but the diagnosis matches my case exactly, thanks", rating: 5 },
+        { name: "Léa R.", age: 22, text: "Finally a routine that matches my acne, my skin is doing much better!!", rating: 5 },
+        { name: "Marc A.", age: 29, text: "Clear PDF. Recommendations are available in pharmacies.", rating: 4 },
+        { name: "Sophie T.", age: 17, text: "Accurate and useful, going much better now.", rating: 5 },
+        { name: "Élise M.", age: 42, text: "", rating: 5 },
+        { name: "Chloé V.", age: 18, text: "I recommend it", rating: 5 }
+      ];
+
+      const stepsData = [
+        { label: "Secure Receipt", threshold: 0, icon: "upload-cloud" },
+        { label: "AI Dermatological Scan", threshold: 25, icon: "scan-face" },
+        { label: "Imperfection Analysis", threshold: 50, icon: "microscope" },
+        { label: "Report Generation", threshold: 75, icon: "file-text" },
+      ];
+
+      let progress = 0;
+      let currentFactIdx = 0;
+      let currentReviewIdx = 0;
+      let reviewInterval;
+      let lastRenderedStateHash = "";
+      
+      function generateStars(rating) {
+        let starsHtml = '';
+        for (let i = 0; i < rating; i++) starsHtml += `<i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i>`;
+        for (let i = rating; i < 5; i++) starsHtml += `<i data-lucide="star" class="w-3 h-3 text-slate-200"></i>`;
+        return starsHtml;
+      }
+
+      function renderCurrentReview() {
+        const track = document.getElementById('reviews-track');
+        const r = reviews[currentReviewIdx];
+        if (!track) return;
+        
+        track.style.opacity = '0';
+        setTimeout(() => {
+            const stars = generateStars(r.rating);
+            track.innerHTML = `
+                <div class="flex flex-col h-full justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex items-center gap-3">
+                                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 flex items-center justify-center text-sm font-bold border border-blue-200 shadow-sm shrink-0">
+                                    ${r.name.charAt(0)}
+                                 </div>
+                                 <div>
+                                    <div class="font-bold text-slate-900 text-sm leading-tight">${r.name}</div>
+                                    <div class="flex gap-0.5 mt-1">${stars}</div>
+                                 </div>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-[13px] md:text-[14px] leading-relaxed mt-3">${r.text}</p>
+                    </div>
+                    <div class="flex justify-between items-end mt-2">
+                         <span class="text-[10px] text-slate-400">${r.age} years old</span>
+                         <div class="text-[10px] text-slate-300 font-mono">Review #${currentReviewIdx + 1}/10</div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            track.style.opacity = '1';
+        }, 200); 
+      }
+
+      function nextReview() { currentReviewIdx = (currentReviewIdx + 1) % reviews.length; renderCurrentReview(); resetReviewTimer(); }
+      function prevReview() { currentReviewIdx = (currentReviewIdx - 1 + reviews.length) % reviews.length; renderCurrentReview(); resetReviewTimer(); }
+      function startReviewTimer() { reviewInterval = setInterval(() => nextReview(), 6000); }
+      function resetReviewTimer() { clearInterval(reviewInterval); startReviewTimer(); }
+
+      window.nextReview = nextReview;
+      window.prevReview = prevReview;
+
+      const reviewContainer = document.querySelector('.group');
+      if(reviewContainer) {
+          reviewContainer.addEventListener('mouseenter', () => clearInterval(reviewInterval));
+          reviewContainer.addEventListener('mouseleave', () => startReviewTimer());
+      }
+
+      function renderFacts() {
+        const container = document.getElementById('facts-container');
+        if (!container) return;
+        container.innerHTML = skinFacts.map((fact, idx) => `
+          <div id="fact-${idx}" class="absolute top-0 left-0 w-full transition-all duration-700 transform ${idx === 0 ? 'opacity-100 translate-y-0 z-10' : 'opacity-0 translate-y-4 z-0'}">
+            <h4 class="font-bold text-lg text-slate-800 mb-2 m-0">${fact.title}</h4>
+            <p class="text-slate-600 leading-relaxed text-sm m-0">${fact.text}</p>
+          </div>
+        `).join('');
+        renderDots();
+      }
+
+      function renderDots() {
+          const container = document.getElementById('dots-container');
+          if (!container) return;
+          container.innerHTML = skinFacts.map((_, idx) => `
+            <div class="h-1.5 rounded-full transition-all duration-300 ${idx === currentFactIdx ? 'w-6 bg-amber-500' : 'w-1.5 bg-slate-200'}"></div>
+          `).join('');
+      }
+
+      function rotateFact() {
+        const current = document.getElementById(`fact-${currentFactIdx}`);
+        if (!current) return;
+
+        current.classList.replace('opacity-100', 'opacity-0');
+        current.classList.replace('translate-y-0', '-translate-y-4');
+        current.classList.replace('z-10', 'z-0');
+
+        currentFactIdx = (currentFactIdx + 1) % skinFacts.length;
+        const next = document.getElementById(`fact-${currentFactIdx}`);
+        if (!next) return;
+
+        next.classList.remove('-translate-y-4'); 
+        next.classList.add('translate-y-4');
+        void next.offsetWidth; 
+
+        next.classList.replace('opacity-0', 'opacity-100');
+        next.classList.replace('translate-y-4', 'translate-y-0');
+        next.classList.replace('z-0', 'z-10');
+
+        renderDots();
+      }
+
+      function renderSteps() {
+        const currentStates = stepsData.map((step, index) => {
+            const isCompleted = index < stepsData.length - 1 ? progress >= stepsData[index + 1].threshold : progress >= 100;
+            const isActive = !isCompleted && progress >= step.threshold;
+            return isCompleted ? 'done' : (isActive ? 'active' : 'waiting');
+        });
+
+        const stateHash = currentStates.join('-');
+        if (stateHash === lastRenderedStateHash) return;
+        lastRenderedStateHash = stateHash;
+
+        const container = document.getElementById('steps-container');
+        if (!container) return;
+
+        container.innerHTML = stepsData.map((step, index) => {
+            const status = currentStates[index];
+            const isCompleted = status === 'done';
+            const isActive = status === 'active';
+            
+            let bgClass = isActive ? 'bg-white border-blue-500 shadow-md scale-[1.02] z-10' : 
+                                  (isCompleted ? 'bg-blue-50 border-blue-100 opacity-90' : 'bg-slate-50 border-slate-200 opacity-60');
+            let iconColor = isActive ? 'text-blue-600' : (isCompleted ? 'text-green-600' : 'text-slate-400');
+            
+            let iconHtml = '';
+            if (isCompleted) iconHtml = `<div class="bg-green-100 p-2 rounded-full"><i data-lucide="check" class="w-5 h-5 text-green-600"></i></div>`;
+            else if (isActive) iconHtml = `<div class="bg-blue-50 p-2 rounded-full"><i data-lucide="${step.icon}" class="w-5 h-5 animate-bounce"></i></div>`;
+            else iconHtml = `<i data-lucide="${step.icon}" class="w-5 h-5"></i>`;
+
+            return `
+             <div class="relative flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-500 ${bgClass}">
+                <div class="mb-3 transition-colors duration-300 ${iconColor}">${iconHtml}</div>
+                <span class="text-xs sm:text-sm font-semibold text-center ${isActive ? 'text-slate-900' : 'text-slate-500'}">
+                    ${step.label}
+                </span>
+                ${isActive ? '<div class="absolute bottom-0 left-0 w-full h-1 bg-slate-100 rounded-b-xl overflow-hidden"><div class="animate-smooth-flow"></div></div>' : ''}
+             </div>
+            `;
+        }).join('');
+        lucide.createIcons();
+      }
+
+      renderFacts();
+      renderCurrentReview();
+      startReviewTimer();
+      renderSteps();
+      lucide.createIcons();
+
+      const stepDuration = 7000;
+      const totalVisualSteps = 4;
+      const totalDuration = stepDuration * totalVisualSteps; 
+      const intervalDelay = 100;
+      const increment = 100 / (totalDuration / intervalDelay);
+
+      const progressTimer = setInterval(() => {
+        if (progress >= 100) { clearInterval(progressTimer); progress = 100; } 
+        else { progress = Math.min(progress + increment, 100); }
+        renderSteps(); 
+      }, intervalDelay);
+
+      setInterval(() => rotateFact(), 5000);
+
+    </script>
+</body>
+</html>
