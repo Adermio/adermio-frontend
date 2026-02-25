@@ -3,16 +3,6 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/",
-      "destination": "/accueil",
-      "statusCode": 302
-    },
-    {
-      "source": "/index.html",
-      "destination": "/accueil",
-      "statusCode": 301
-    },
-    {
       "source": "/en",
       "destination": "/en/home",
       "statusCode": 302
@@ -45,6 +35,11 @@
     {
       "source": "/en/terms",
       "destination": "/en/conditions",
+      "statusCode": 301
+    },
+    {
+      "source": "/accueil",
+      "destination": "/",
       "statusCode": 301
     }
   ],

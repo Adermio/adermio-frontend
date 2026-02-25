@@ -4,10 +4,10 @@
   
   <!-- FR: Pages principales -->
   <url>
-    <loc>https://adermio.com/accueil</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/accueil"/>
+    <loc>https://adermio.com/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/accueil"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/"/>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -82,8 +82,8 @@
   <url>
     <loc>https://adermio.com/en/home</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/accueil"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/accueil"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/"/>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
