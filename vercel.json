@@ -2,38 +2,103 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/", "destination": "/accueil", "statusCode": 302 },
-    { "source": "/index.html", "destination": "/accueil", "statusCode": 301 },
-    { "source": "/en", "destination": "/en/home", "statusCode": 302 },
-    { "source": "/en/", "destination": "/en/home", "statusCode": 302 }
+    {
+      "source": "/",
+      "destination": "/accueil",
+      "statusCode": 302
+    },
+    {
+      "source": "/index.html",
+      "destination": "/accueil",
+      "statusCode": 301
+    },
+    {
+      "source": "/en",
+      "destination": "/en/home",
+      "statusCode": 302
+    },
+    {
+      "source": "/en/",
+      "destination": "/en/home",
+      "statusCode": 302
+    },
+    {
+      "source": "/finalisation",
+      "destination": "/success",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/finalisation",
+      "destination": "/en/success",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/formulaire",
+      "destination": "/en/form",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/privacy",
+      "destination": "/en/confidentialite",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/terms",
+      "destination": "/en/conditions",
+      "statusCode": 301
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     },
     {
       "source": "/favicon.ico",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        }
       ]
     },
     {
       "source": "/(.*).png",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        }
       ]
     },
     {
       "source": "/sitemap.xml",
       "headers": [
-        { "key": "Content-Type", "value": "application/xml" },
-        { "key": "Cache-Control", "value": "public, max-age=86400" }
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
       ]
     }
   ]
