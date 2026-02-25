@@ -3,7 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adermio - AI Dermatological Diagnosis</title>
+
+    <title>Adermio — AI-Powered Skin Analysis & Acne Diagnosis</title>
+    <meta name="description" content="Adermio uses artificial intelligence to analyze your skin and diagnose acne. Get a personalized diagnosis, product recommendations, and 28-day tracking. Free trial available.">
+    <link rel="canonical" href="https://adermio.com/en/home">
+    <link rel="alternate" hreflang="en" href="https://adermio.com/en/home">
+    <link rel="alternate" hreflang="fr" href="https://adermio.com/accueil">
+    <link rel="alternate" hreflang="x-default" href="https://adermio.com/accueil">
+    <meta property="og:title" content="Adermio — AI-Powered Skin Analysis & Acne Diagnosis">
+    <meta property="og:description" content="Adermio uses artificial intelligence to analyze your skin and diagnose acne. Get a personalized diagnosis, product recommendations, and 28-day tracking. Free trial available.">
+    <meta property="og:url" content="https://adermio.com/en/home">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://adermio.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Adermio">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Adermio — AI-Powered Skin Analysis & Acne Diagnosis">
+    <meta name="twitter:description" content="Adermio uses artificial intelligence to analyze your skin and diagnose acne. Get a personalized diagnosis, product recommendations, and 28-day tracking. Free trial available.">
+    <meta name="twitter:image" content="https://adermio.com/og-image.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0F3D39">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://adermio.com/#organization",
+          "name": "Adermio",
+          "url": "https://adermio.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://adermio.com/logo_Adermio.png",
+            "width": 1024,
+            "height": 1024
+          },
+          "description": "Adermio is an AI-powered dermatological analysis application specializing in acne diagnosis and tracking.",
+          "sameAs": [
+            "https://www.instagram.com/adermio_lab/",
+            "https://www.tiktok.com/@adermio"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": "contact@adermio.com",
+            "availableLanguage": ["French", "English"]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://adermio.com/#website",
+          "url": "https://adermio.com",
+          "name": "Adermio",
+          "description": "AI-powered dermatological analysis",
+          "publisher": { "@id": "https://adermio.com/#organization" },
+          "inLanguage": ["en", "fr"]
+        },
+        {
+          "@type": "WebApplication",
+          "name": "Adermio",
+          "url": "https://adermio.com",
+          "applicationCategory": "HealthApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "description": "Free skin analysis"
+          },
+          "description": "AI-powered skin analysis web application. Acne diagnosis, product recommendations and 28-day evolution tracking.",
+          "publisher": { "@id": "https://adermio.com/#organization" }
+        }
+      ]
+    }
+    </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

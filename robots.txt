@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://adermio.com/sitemap.xml

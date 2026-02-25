@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- FR: Pages principales -->
+  <url>
+    <loc>https://adermio.com/accueil</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/accueil"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/accueil"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/about</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/about"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/formulaire</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/formulaire"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/form"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/premium</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/premium"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/premium"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/second-cycle</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/second-cycle"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/second-cycle"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/recommandations</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/contact</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/contact"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/conditions</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/conditions"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/conditions"/>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/confidentialite</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/mentions-legales</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- EN: Pages principales -->
+  <url>
+    <loc>https://adermio.com/en/home</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/accueil"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/accueil"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/about"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/form</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/form"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/formulaire"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/premium</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/premium"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/premium"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/second-cycle</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/second-cycle"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/second-cycle"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/contact"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/conditions</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/confidentialite</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/legal-notice</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

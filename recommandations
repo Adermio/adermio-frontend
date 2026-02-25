@@ -3,7 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nos Recommandations Produits - Adermio</title>
+
+    <title>Recommandations Produits — Adermio</title>
+    <meta name="description" content="Découvrez les produits recommandés par Adermio pour votre type de peau. Sélection personnalisée basée sur votre diagnostic IA.">
+    <link rel="canonical" href="https://adermio.com/recommandations">
+    <link rel="alternate" hreflang="fr" href="https://adermio.com/recommandations">
+    <meta property="og:title" content="Recommandations Produits — Adermio">
+    <meta property="og:description" content="Découvrez les produits recommandés par Adermio pour votre type de peau. Sélection personnalisée basée sur votre diagnostic IA.">
+    <meta property="og:url" content="https://adermio.com/recommandations">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://adermio.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:site_name" content="Adermio">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Recommandations Produits — Adermio">
+    <meta name="twitter:description" content="Découvrez les produits recommandés par Adermio pour votre type de peau. Sélection personnalisée basée sur votre diagnostic IA.">
+    <meta name="twitter:image" content="https://adermio.com/og-image.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0F3D39">
     <meta name="description" content="Découvrez une sélection de produits dermatologiques (nettoyants, hydratants, solaires) recommandés pour une routine de soin équilibrée.">
     
     <meta property="og:type" content="website">
