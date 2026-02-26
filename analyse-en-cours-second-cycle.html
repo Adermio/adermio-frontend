@@ -748,7 +748,7 @@
               if (isSuccess) return;
 
               const res = await fetch(
-                SUPABASE_URL + "/rest/v1/cycle2_intake?job_id=eq." + encodeURIComponent(jobId) + "&select=status,downloadUrl,access_token&limit=1",
+                SUPABASE_URL + "/rest/v1/cycle2_intake?job_id=eq." + encodeURIComponent(jobId) + "&select=status,report_html_url,downloadUrl,access_token&limit=1",
                 {
                   method: "GET",
                   headers: {
@@ -763,10 +763,19 @@
 
               const record = data[0];
 
-              if (record && record.downloadUrl && record.downloadUrl.length > 10) {
+              // Priorité : report_html_url (fichier S3), sinon downloadUrl
+              const reportUrl = record.report_html_url || record.downloadUrl;
+              const isReady = record.status === "ready" || (reportUrl && reportUrl.length > 10);
+
+              if (record && isReady && reportUrl) {
                 isSuccess = true;
                 stopPolling();
-                showSuccess(record.downloadUrl);
+                // Si on a le token, on redirige vers la page premium-second-cycle
+                if (record.access_token) {
+                  showSuccess("/premium-second-cycle?token=" + record.access_token);
+                } else {
+                  showSuccess(reportUrl);
+                }
               }
             } catch (e) { console.error("Polling...", e); }
           }
