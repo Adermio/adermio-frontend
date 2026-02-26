@@ -664,8 +664,9 @@
               return; 
           }
        
-          // --- CONFIGURATION ---
-          const POLL_URL = "https://n8n.adermio.com/webhook/aae2ff2f-cd35-48d0-b0d2-f56d2341452a?jobId="; 
+          // --- CONFIGURATION SUPABASE ---
+          const SUPABASE_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+          const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
           
           // 1. Durée chargement normal : 90 secondes
           const MAIN_LOAD_TIME = 90 * 1000; 
@@ -790,24 +791,34 @@
               timeoutModal.classList.add('active');
           }
        
-          // E. Polling
+          // E. Polling (Supabase)
           async function checkStatus() {
             try {
               if (isSuccess) return;
 
-              const res = await fetch(POLL_URL + encodeURIComponent(jobId), { method: "GET", cache: "no-store" });
+              const res = await fetch(
+                SUPABASE_URL + "/rest/v1/premium_analysis?jobId=eq." + encodeURIComponent(jobId) + "&select=downloadUrl&limit=1",
+                {
+                  method: "GET",
+                  headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY
+                  },
+                  cache: "no-store"
+                }
+              );
               const data = await res.json();
-              if (!data) return;
-              
-              const record = Array.isArray(data) ? data[0] : data;
-       
+              if (!data || !Array.isArray(data) || data.length === 0) return;
+
+              const record = data[0];
+
               // Condition "ROBUSTE"
               if (record && record.downloadUrl && record.downloadUrl.length > 10) {
                 isSuccess = true;
                 stopPolling();
                 showSuccess(record.downloadUrl);
               }
-            } catch (e) { console.error("Polling...", e); }
+            } catch (e) { console.error("Polling error:", e); }
           }
        
           // F. Succès
