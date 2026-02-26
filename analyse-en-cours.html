@@ -426,8 +426,8 @@
       const jobId = params.get("jobId");
 
       // --- CONFIG ---
-      // L'URL du webhook qui vérifie le statut en base de données
-      const POLL_URL = "https://n8n.adermio.com/webhook/job-status?jobId=";
+      const SUPABASE_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
       const MAX_WAIT_TIME = 30 * 1000;
       const POLL_INTERVAL = 3000;
       const TIMEOUT_DURATION = 30000; // 30s supplémentaires pour la High Demand
@@ -474,7 +474,7 @@
         if (timeoutInterval) { clearInterval(timeoutInterval); timeoutInterval = null; }
       }
 
-      function startN8nPolling() {
+      function startPolling() {
         if (pollInterval) clearInterval(pollInterval);
         pollInterval = setInterval(checkStatus, POLL_INTERVAL);
       }
@@ -594,22 +594,29 @@
         }, 50);
       }
 
-      // --- 4. Polling principal N8N ---
+      // --- 4. Polling Supabase ---
       async function checkStatus() {
         if (!jobId || isTimeoutDead) return;
 
         try {
-          const res = await fetch(POLL_URL + encodeURIComponent(jobId), { method: "GET", cache: "no-store" });
+          const res = await fetch(
+            SUPABASE_URL + "/rest/v1/free_analysis?jobId=eq." + encodeURIComponent(jobId) + "&select=status,analysis_status,downloadUrl,face_detected&limit=1",
+            {
+              method: "GET",
+              headers: {
+                "apikey": SUPABASE_KEY,
+                "Authorization": "Bearer " + SUPABASE_KEY
+              },
+              cache: "no-store"
+            }
+          );
           const data = await res.json();
+          if (!data || !Array.isArray(data) || data.length === 0) return;
 
-          if (!data) return;
-          const record = Array.isArray(data) ? data[0] : data;
+          const record = data[0];
 
           // On vérifie le statut
           const status = record.analysis_status || record.status || "processing";
-          
-          // LA CLÉ EST ICI : On s'assure que le fichier HTML existe sur S3 
-          // (Ton Supabase renvoie sûrement cette URL quand le job est vraiment fini)
           const downloadUrl = record.downloadUrl;
 
           // CAS ERREUR : Pas de visage
@@ -627,22 +634,22 @@
           }
 
           // CAS SUCCÈS
-          const isSuccess = (status === "SUCCESS" || status === "ready");
+          const isReady = (status === "SUCCESS" || status === "ready");
           const isForcedSuccess = (status === "RETRY_NEEDED" && userForced === true);
 
-          // On n'affiche le bouton QUE si c'est un succès ET qu'on a bien l'URL de téléchargement (preuve que le fichier S3 est là)
-          if ((isSuccess || isForcedSuccess) && downloadUrl) {
-            
-            // On construit l'URL vers TA page iframe
+          // On n'affiche le bouton QUE si c'est un succès ET qu'on a bien l'URL de téléchargement
+          if ((isReady || isForcedSuccess) && downloadUrl) {
+
+            // On construit l'URL vers la page iframe /free-analysis
             let finalUrl = `/free-analysis?jobId=${encodeURIComponent(jobId)}`;
             if (userForced) {
               finalUrl += "&force=true";
             }
-            
+
             showSuccess(finalUrl);
           }
         } catch (e) {
-          console.error("Erreur N8N:", e);
+          console.error("Polling error:", e);
         }
       }
 
@@ -659,16 +666,16 @@
             subtitle.style.color = "#14B8A6";
         }
         
-        stopPollingAll(); 
-        animateProgress(); 
+        stopPollingAll();
+        animateProgress();
         checkStatus(); // Force un appel immédiat
-        startN8nPolling(); 
+        startPolling();
       };
 
       // Démarrage initial
       animateProgress();
       setTimeout(checkStatus, 2000);
-      setTimeout(startN8nPolling, 4500);
+      setTimeout(startPolling, 4500);
 
       window.addEventListener("beforeunload", () => stopPollingAll());
     });
