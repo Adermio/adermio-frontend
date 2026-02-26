@@ -442,8 +442,9 @@
         const params = new URLSearchParams(window.location.search);
         const jobId = params.get("jobId");
 
-        // --- CONFIGURATION ---
-        const POLL_URL = "https://n8n.adermio.com/webhook/polling_en?jobId="; 
+        // --- CONFIGURATION SUPABASE ---
+        const SUPABASE_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
         const MAX_WAIT_TIME = 30 * 1000; 
         const POLL_INTERVAL = 3000;
         const TIMEOUT_DURATION = 30000; 
@@ -490,7 +491,7 @@
           if (timeoutInterval) { clearInterval(timeoutInterval); timeoutInterval = null; }
         }
 
-        function startN8nPolling() {
+        function startPolling() {
           if (pollInterval) clearInterval(pollInterval);
           pollInterval = setInterval(checkStatus, POLL_INTERVAL);
         }
@@ -610,16 +611,26 @@
             }, 50);
         }
 
-        // C. Polling Check Status
+        // C. Polling Check Status (Supabase)
         async function checkStatus() {
-          if (!jobId || isTimeoutDead) return; 
+          if (!jobId || isTimeoutDead) return;
 
           try {
-            const res = await fetch(POLL_URL + encodeURIComponent(jobId), { method: "GET", cache: "no-store" });
+            const res = await fetch(
+              SUPABASE_URL + "/rest/v1/free_analysis?jobId=eq." + encodeURIComponent(jobId) + "&select=status,analysis_status,downloadUrl,face_detected&limit=1",
+              {
+                method: "GET",
+                headers: {
+                  "apikey": SUPABASE_KEY,
+                  "Authorization": "Bearer " + SUPABASE_KEY
+                },
+                cache: "no-store"
+              }
+            );
             const data = await res.json();
 
-            if (!data) return;
-            const record = Array.isArray(data) ? data[0] : data;
+            if (!data || !Array.isArray(data) || data.length === 0) return;
+            const record = data[0];
 
             const status = record.analysis_status || record.status || "processing";
             const downloadUrl = record.downloadUrl;
@@ -633,7 +644,7 @@
 
             // --- CASE 2: QUALITY CHECK ---
             if (status === 'RETRY_NEEDED' && userForced === false) {
-               stopPollingAll(); 
+               stopPollingAll();
                document.getElementById("quality-error-popup").style.display = "flex";
                return;
             }
@@ -650,9 +661,9 @@
               }
               showSuccess(finalUrl);
             }
-            
+
           } catch (e) {
-            console.error("N8N Error:", e);
+            console.error("Polling error:", e);
           }
         }
 
@@ -672,13 +683,13 @@
             stopPollingAll();
             animateProgress();
             checkStatus(); // Immediate check
-            startN8nPolling();
+            startPolling();
         };
 
         // Initialize
         animateProgress();
         setTimeout(checkStatus, 2000);
-        setTimeout(startN8nPolling, 4500);
+        setTimeout(startPolling, 4500);
 
         window.addEventListener('beforeunload', () => stopPollingAll());
       });
