@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorphoIA | Analyse Physique par Intelligence Artificielle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#1e293b',
+                            accent: '#3b82f6',
+                            glow: '#8b5cf6'
+                        }
+                    },
+                    animation: {
+                        'scan': 'scan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%, 100%': { transform: 'translateY(-100%)' },
+                            '50%': { transform: 'translateY(400%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-white font-sans antialiased overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass-panel transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                    <span class="font-bold text-2xl tracking-tight">Morpho<span class="text-gradient">IA</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#accueil" class="hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Accueil</a>
+                        <a href="#comment-ca-marche" class="hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Comment ça marche</a>
+                        <a href="#technologie" class="hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Technologie</a>
+                        <a href="#tarifs" class="hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tarifs</a>
+                    </div>
+                </div>
+                <div>
+                    <button class="hidden md:inline-flex items-center justify-center px-6 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-white/10 hover:bg-white/20 transition-all border-white/20">
+                        Se connecter
+                    </button>
+                    <button class="md:hidden text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="accueil" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <!-- Background decoration -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-50 animate-pulse-slow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-50 animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-sm text-blue-300 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                        Modèle IA v2.4 maintenant disponible
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+                        Comprenez votre corps.<br>
+                        <span class="text-gradient">Optimisez vos résultats.</span>
+                    </h1>
+                    <p class="text-lg text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0">
+                        Téléchargez une simple photo et laissez notre intelligence artificielle de pointe analyser votre masse musculaire, votre taux de graisse et votre symétrie avec une précision clinique.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <button onclick="document.getElementById('upload-section').scrollIntoView({behavior: 'smooth'})" class="px-8 py-4 rounded-full text-white font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 transform hover:scale-105 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)] flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Faire mon analyse gratuite
+                        </button>
+                        <button class="px-8 py-4 rounded-full text-white font-semibold glass-panel hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                            Voir un exemple
+                        </button>
+                    </div>
+                    <div class="mt-8 flex items-center justify-center lg:justify-start gap-4 text-sm text-gray-500">
+                        <div class="flex -space-x-2">
+                            <div class="w-8 h-8 rounded-full bg-gray-600 border-2 border-brand-dark flex items-center justify-center text-xs">👤</div>
+                            <div class="w-8 h-8 rounded-full bg-gray-500 border-2 border-brand-dark flex items-center justify-center text-xs">👤</div>
+                            <div class="w-8 h-8 rounded-full bg-gray-400 border-2 border-brand-dark flex items-center justify-center text-xs">👤</div>
+                        </div>
+                        <p>Rejoint par plus de <strong>15 000</strong> sportifs.</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Visual / Scanner -->
+                <div class="relative mx-auto w-full max-w-md" id="upload-section">
+                    <div class="glass-panel rounded-3xl p-2 relative overflow-hidden group border border-blue-500/30 shadow-[0_0_40px_rgba(59,130,246,0.2)]">
+                        <!-- Simulated App UI -->
+                        <div class="bg-brand-dark/80 rounded-2xl h-[500px] relative overflow-hidden border border-white/5 flex flex-col items-center justify-center" id="scanner-container">
+                            
+                            <!-- Initial State -->
+                            <div id="upload-state" class="text-center p-8 w-full transition-opacity duration-500">
+                                <div class="w-20 h-20 mx-auto bg-blue-500/10 rounded-full flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform cursor-pointer border border-blue-500/30" onclick="startScan()">
+                                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">Uploadez une photo</h3>
+                                <p class="text-sm text-gray-400 mb-6">De face, en sous-vêtements ou tenue de sport près du corps pour une précision maximale.</p>
+                                <button onclick="startScan()" class="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-colors text-sm font-medium">
+                                    Parcourir les fichiers
+                                </button>
+                                <p class="text-xs text-gray-500 mt-4 flex items-center justify-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    100% sécurisé. Aucune photo n'est sauvegardée.
+                                </p>
+                            </div>
+
+                            <!-- Scanning State (Hidden initially) -->
+                            <div id="scanning-state" class="absolute inset-0 bg-brand-dark/90 hidden flex-col items-center justify-center z-20">
+                                <div class="relative w-48 h-64 border-2 border-blue-500/30 rounded-lg overflow-hidden flex items-center justify-center">
+                                    <svg class="w-24 h-24 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    <!-- Scan Line -->
+                                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent shadow-[0_0_15px_rgba(59,130,246,1)] animate-scan"></div>
+                                </div>
+                                <h3 class="mt-6 text-lg font-bold text-blue-400 animate-pulse">Analyse biométrique en cours...</h3>
+                                <div class="w-48 h-1 bg-gray-800 rounded-full mt-4 overflow-hidden">
+                                    <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 w-0 transition-all duration-[3000ms] ease-out"></div>
+                                </div>
+                                <ul class="mt-4 text-xs text-gray-400 space-y-2 text-center" id="scan-steps">
+                                    <li class="text-white">Détection des points nodaux...</li>
+                                    <li class="opacity-50">Calcul du volume musculaire...</li>
+                                    <li class="opacity-50">Estimation de la masse grasse...</li>
+                                </ul>
+                            </div>
+
+                            <!-- Results State (Hidden initially) -->
+                            <div id="results-state" class="absolute inset-0 bg-brand-dark hidden flex-col z-30 p-6 overflow-y-auto">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-xl font-bold">Rapport d'Analyse</h3>
+                                    <button onclick="resetScan()" class="text-gray-400 hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-3 mb-4">
+                                    <div class="glass-panel p-3 rounded-xl border border-green-500/20">
+                                        <p class="text-xs text-gray-400">Body Fat (Est.)</p>
+                                        <p class="text-2xl font-bold text-green-400">14.2%</p>
+                                    </div>
+                                    <div class="glass-panel p-3 rounded-xl border border-blue-500/20">
+                                        <p class="text-xs text-gray-400">Symétrie G/D</p>
+                                        <p class="text-2xl font-bold text-blue-400">92%</p>
+                                    </div>
+                                </div>
+
+                                <div class="glass-panel p-4 rounded-xl mb-4 text-sm">
+                                    <h4 class="font-semibold text-white mb-2 flex items-center gap-2"><svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Points forts</h4>
+                                    <p class="text-gray-300">Excellent développement des deltoïdes. La structure en V (ratio épaules/taille) est supérieure à la moyenne (1.61).</p>
+                                </div>
+
+                                <div class="glass-panel p-4 rounded-xl mb-4 text-sm">
+                                    <h4 class="font-semibold text-white mb-2 flex items-center gap-2"><svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> À cibler</h4>
+                                    <p class="text-gray-300">Léger retard pectoral inférieur. Posture légèrement cyphotique (épaules en avant).</p>
+                                </div>
+
+                                <button class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-medium transition-colors mt-auto">
+                                    Créer mon programme
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="comment-ca-marche" class="py-20 bg-brand-light relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Comment fonctionne l'IA ?</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Notre modèle a été entraîné sur plus de 100 000 scans DEXA et photos pour vous offrir la précision d'un laboratoire dans votre poche.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="glass-panel p-8 rounded-2xl text-center relative">
+                    <div class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-400 rotate-3">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                    </div>
+                    <div class="absolute top-8 right-8 text-5xl font-extrabold text-white/5">1</div>
+                    <h3 class="text-xl font-semibold mb-3">Prenez une photo</h3>
+                    <p class="text-gray-400 text-sm">Une simple photo de face depuis votre smartphone. Tout est traité localement puis crypté.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="glass-panel p-8 rounded-2xl text-center relative">
+                    <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-purple-400 -rotate-3">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="absolute top-8 right-8 text-5xl font-extrabold text-white/5">2</div>
+                    <h3 class="text-xl font-semibold mb-3">L'IA analyse</h3>
+                    <p class="text-gray-400 text-sm">Notre algorithme identifie 120 points nodaux pour calculer vos proportions et estimer votre masse corporelle.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="glass-panel p-8 rounded-2xl text-center relative">
+                    <div class="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-green-400 rotate-3">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <div class="absolute top-8 right-8 text-5xl font-extrabold text-white/5">3</div>
+                    <h3 class="text-xl font-semibold mb-3">Recevez le rapport</h3>
+                    <p class="text-gray-400 text-sm">Obtenez instantanément vos métriques détaillées, vos points forts et les groupes musculaires à travailler.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="technologie" class="py-20 bg-brand-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Une vision à 360° de votre progression physique</h2>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold mb-1">Estimation du Taux de Graisse (Body Fat)</h4>
+                                <p class="text-gray-400 text-sm">Fini les pinces peu fiables. L'IA compare vos volumes avec une base de données de scans DEXA réels.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold mb-1">Analyse de Symétrie</h4>
+                                <p class="text-gray-400 text-sm">Détectez les déséquilibres musculaires entre votre côté gauche et droit pour prévenir les blessures.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 border border-green-500/20">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold mb-1">Suivi Visuel Évolutif</h4>
+                                <p class="text-gray-400 text-sm">Superposez vos photos mois après mois pour visualiser précisément où vous avez pris du muscle ou perdu du gras.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <!-- Abstract representation of AI processing a body -->
+                    <div class="glass-panel rounded-3xl p-8 border border-white/10 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-blue-500 opacity-20 blur-3xl rounded-full"></div>
+                        <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-purple-500 opacity-20 blur-3xl rounded-full"></div>
+                        
+                        <div class="relative z-10 flex flex-col gap-4">
+                            <div class="h-12 w-full bg-gray-800/50 rounded-lg flex items-center px-4 gap-4 border border-white/5">
+                                <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                                <span class="text-sm font-mono text-gray-300">Analyse_deltoïdes : OK (Volume +2% vs M-1)</span>
+                            </div>
+                            <div class="h-12 w-full bg-gray-800/50 rounded-lg flex items-center px-4 gap-4 border border-white/5">
+                                <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                                <span class="text-sm font-mono text-gray-300">Analyse_pectoraux : AVERTISSEMENT (Asymétrie 8%)</span>
+                            </div>
+                            <div class="h-12 w-full bg-gray-800/50 rounded-lg flex items-center px-4 gap-4 border border-white/5">
+                                <span class="w-3 h-3 rounded-full bg-blue-400 animate-pulse"></span>
+                                <span class="text-sm font-mono text-gray-300">Génération_recommandations : EN_COURS...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-brand-dark to-blue-900/20"></div>
+        <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+            <h2 class="text-4xl font-bold mb-6">Prêt à hacker votre progression ?</h2>
+            <p class="text-xl text-gray-400 mb-10">Rejoignez des milliers d'utilisateurs qui ont arrêté de deviner et commencé à mesurer.</p>
+            <button onclick="document.getElementById('upload-section').scrollIntoView({behavior: 'smooth'})" class="px-10 py-5 rounded-full text-lg text-white font-bold bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all shadow-xl hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                Démarrer mon analyse gratuitement
+            </button>
+            <p class="mt-6 text-sm text-gray-500">Pas de carte bancaire requise pour le premier scan.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark border-t border-white/10 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                        <span class="font-bold text-xl tracking-tight">MorphoIA</span>
+                    </div>
+                    <p class="text-gray-400 text-sm max-w-xs">La première intelligence artificielle conçue pour l'analyse biométrique et l'optimisation physique.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Produit</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Fonctionnalités</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Précision de l'IA</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Tarifs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Légal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Confidentialité (Photos)</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">CGV</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2024 MorphoIA. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script for interactive demo -->
+    <script>
+        function startScan() {
+            const uploadState = document.getElementById('upload-state');
+            const scanningState = document.getElementById('scanning-state');
+            const resultsState = document.getElementById('results-state');
+            const progressBar = document.getElementById('progress-bar');
+            const stepsList = document.querySelectorAll('#scan-steps li');
+            
+            // Hide upload, show scanning
+            uploadState.classList.add('hidden');
+            scanningState.classList.remove('hidden');
+            scanningState.classList.add('flex');
+
+            // Animate progress bar
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 100);
+
+            // Step animations
+            setTimeout(() => {
+                stepsList[0].classList.replace('text-white', 'opacity-50');
+                stepsList[1].classList.replace('opacity-50', 'text-white');
+            }, 1000);
+
+            setTimeout(() => {
+                stepsList[1].classList.replace('text-white', 'opacity-50');
+                stepsList[2].classList.replace('opacity-50', 'text-white');
+            }, 2000);
+
+            // Finish scan and show results
+            setTimeout(() => {
+                scanningState.classList.remove('flex');
+                scanningState.classList.add('hidden');
+                resultsState.classList.remove('hidden');
+                resultsState.classList.add('flex');
+            }, 3000);
+        }
+
+        function resetScan() {
+            document.getElementById('results-state').classList.replace('flex', 'hidden');
+            document.getElementById('upload-state').classList.remove('hidden');
+            document.getElementById('progress-bar').style.width = '0';
+            
+            // Reset step opacities
+            const stepsList = document.querySelectorAll('#scan-steps li');
+            stepsList[0].className = 'text-white';
+            stepsList[1].className = 'opacity-50';
+            stepsList[2].className = 'opacity-50';
+        }
+
+        // Change navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-lg');
+                nav.style.background = 'rgba(15, 23, 42, 0.9)';
+            } else {
+                nav.classList.remove('shadow-lg');
+                nav.style.background = 'rgba(30, 41, 59, 0.7)';
+            }
+        });
+    </script>
+</body>
+</html>
