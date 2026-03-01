@@ -5,12 +5,12 @@
     {
       "source": "/en",
       "destination": "/en/home",
-      "statusCode": 302
+      "statusCode": 301
     },
     {
       "source": "/en/",
       "destination": "/en/home",
-      "statusCode": 302
+      "statusCode": 301
     },
     {
       "source": "/finalisation",
