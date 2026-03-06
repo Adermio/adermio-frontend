@@ -724,6 +724,10 @@
       }
   };
   // --- 4. FORM LOGIC ---
+  function fixEncoding(str) {
+    try { return decodeURIComponent(escape(str)); }
+    catch(e) { return str; }
+  }
   function initForm() {
     const container = document.getElementById('routine-rows');
     if(container) {
@@ -739,8 +743,8 @@
         const hideButtons = item.id === "0" ? 'style="display:none;"' : '';
         el.innerHTML = `
           <div class="prod-info">
-            <div class="prod-cat">${item.type}</div>
-            <div class="prod-name">${item.name}</div>
+            <div class="prod-cat">${fixEncoding(item.type)}</div>
+            <div class="prod-name">${fixEncoding(item.name)}</div>
           </div>
           <div class="toggle-group" data-choice="replace" ${hideButtons}>
             <button type="button" class="toggle-opt active-replace" onclick="setProductState(this, 'replace')">Remplacer</button>
