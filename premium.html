@@ -478,6 +478,36 @@
 
         <div class="section">
           <div class="section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>
+            Préférence de Texture
+          </div>
+          <div class="budget-row">
+            <label class="budget-item">
+              <input type="radio" name="texture" value="light">
+              <div class="budget-tile">
+                <span class="b-title">Légère</span>
+                <span class="b-range">Gel, fluide, eau</span>
+              </div>
+            </label>
+            <label class="budget-item">
+              <input type="radio" name="texture" value="rich">
+              <div class="budget-tile">
+                <span class="b-title">Riche</span>
+                <span class="b-range">Crème, baume</span>
+              </div>
+            </label>
+            <label class="budget-item">
+              <input type="radio" name="texture" value="trust" checked>
+              <div class="budget-tile">
+                <span class="b-title">Confiance</span>
+                <span class="b-range">Je vous fais confiance</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
             Préférences Marques
           </div>
@@ -829,6 +859,7 @@
         ts: Date.now(),
         intensity: document.querySelector('input[name="intensity"]:checked')?.value || 'complete',
         budget: document.querySelector('input[name="budget"]:checked')?.value || 'mid',
+        texture_preference: document.querySelector('input[name="texture"]:checked')?.value || 'trust',
         current_routine_status: routineItems,
         text_current_products: document.getElementById('current-products-text')?.value || '',
         text_keep_products: document.getElementById('keep-products-text')?.value || '',
