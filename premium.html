@@ -499,7 +499,7 @@
             <label class="budget-item">
               <input type="radio" name="texture" value="trust" checked>
               <div class="budget-tile">
-                <span class="b-title">Confiance</span>
+                <span class="b-title">Au choix</span>
                 <span class="b-range">Je vous fais confiance</span>
               </div>
             </label>
@@ -582,6 +582,30 @@
               </div>
             </div>
             <div id="tags-hate" class="selected-tags-container"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Vigilance Médicale
+          </div>
+          <div class="vigilance-container">
+            <div class="med-grid">
+              <div class="med-box">
+                <label class="alert">Allergies connues</label>
+                <textarea id="allergies-text" class="text-area-sm" placeholder="Ex : parfum, huiles essentielles..."></textarea>
+              </div>
+              <div class="med-box">
+                <label>Traitements en cours</label>
+                <textarea id="meds-text" class="text-area-sm" placeholder="Ex : isotrétinoïne, corticoïdes..."></textarea>
+              </div>
+            </div>
+            <label class="preg-toggle">
+              <input type="checkbox" id="pregnancy-status">
+              <span class="toggle-switch"></span>
+              <span class="preg-label">Grossesse ou allaitement en cours</span>
+            </label>
           </div>
         </div>
 
