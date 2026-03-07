@@ -41,6 +41,46 @@
       "source": "/accueil",
       "destination": "/",
       "statusCode": 301
+    },
+    {
+      "source": "/merci",
+      "destination": "/success",
+      "statusCode": 301
+    },
+    {
+      "source": "/1",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/2",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/3",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/null",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/-/empty/",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/css/fonts-tildasans",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/static3.tildacdn.com/:path*",
+      "destination": "/",
+      "statusCode": 301
     }
   ],
   "headers": [
