@@ -61,6 +61,20 @@
     <priority>0.3</priority>
   </url>
 
+  <!-- Blog -->
+  <url>
+    <loc>https://adermio.com/blog</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/blog/comment-connaitre-son-type-de-peau</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- EN: Pages principales -->
   <url>
     <loc>https://adermio.com/en/home</loc>
