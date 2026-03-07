@@ -68,6 +68,11 @@
       "statusCode": 301
     },
     {
+      "source": "/-/empty",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
       "source": "/-/empty/",
       "destination": "/",
       "statusCode": 301
