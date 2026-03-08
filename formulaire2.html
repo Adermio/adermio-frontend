@@ -210,6 +210,49 @@
 </head>
 <body class="bg-brand-cream text-brand-dark font-sans min-h-screen flex flex-col selection:bg-brand-primary/20">
 
+    <!-- In-app browser detection (TikTok, Instagram) -->
+    <div id="inapp-browser-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,61,57,0.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:24px;">
+        <div style="background:white; border-radius:24px; padding:32px 24px; max-width:360px; width:100%; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.3); animation:fadeIn 0.4s ease-out;">
+            <div style="width:56px; height:56px; border-radius:16px; background:linear-gradient(135deg,#F0FDFA,#CCFBF1); display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </div>
+            <h2 style="font-family:'DM Sans',sans-serif; font-size:18px; font-weight:700; color:#0F3D39; margin:0 0 8px;">Ouvrez dans votre navigateur</h2>
+            <p style="font-family:'DM Sans',sans-serif; font-size:13px; color:#57534E; line-height:1.5; margin:0 0 20px;">Pour que le formulaire fonctionne correctement, veuillez ouvrir cette page dans Safari ou Chrome.</p>
+            <div style="background:#F5F5F4; border-radius:14px; padding:14px 16px; margin-bottom:16px;">
+                <p style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:#0F3D39; margin:0 0 10px;">Comment faire :</p>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                    <span style="width:24px; height:24px; border-radius:50%; background:#14B8A6; color:white; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</span>
+                    <span style="font-family:'DM Sans',sans-serif; font-size:12px; color:#44403C; text-align:left;">Appuyez sur <strong id="inapp-menu-icon">⋯</strong> ou <strong>⫶</strong> en haut de l'&eacute;cran</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="width:24px; height:24px; border-radius:50%; background:#14B8A6; color:white; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">2</span>
+                    <span style="font-family:'DM Sans',sans-serif; font-size:12px; color:#44403C; text-align:left;" id="inapp-instruction">Choisissez <strong>&laquo; Ouvrir dans le navigateur &raquo;</strong></span>
+                </div>
+            </div>
+            <button onclick="navigator.clipboard.writeText(window.location.href).then(function(){var b=document.getElementById('inapp-copy-btn');b.textContent='Lien copi\u00e9 \u2705';setTimeout(function(){b.textContent='Copier le lien';},2000);})" id="inapp-copy-btn" style="font-family:'DM Sans',sans-serif; width:100%; padding:13px; border:1.5px solid #E7E5E4; border-radius:14px; background:white; color:#0F3D39; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">Copier le lien</button>
+        </div>
+    </div>
+    <script>
+    (function(){
+        var ua = navigator.userAgent || navigator.vendor || '';
+        var isInApp = /Instagram|FBAN|FBAV|musical_ly|BytedanceWebview|TikTok/i.test(ua);
+        if (!isInApp) return;
+        var modal = document.getElementById('inapp-browser-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        // Adapt instructions per app
+        var isTikTok = /musical_ly|BytedanceWebview|TikTok/i.test(ua);
+        var instrEl = document.getElementById('inapp-instruction');
+        var menuEl = document.getElementById('inapp-menu-icon');
+        if (isTikTok && instrEl) {
+            instrEl.innerHTML = 'Choisissez <strong>\u00ab Ouvrir dans le navigateur \u00bb</strong>';
+            if (menuEl) menuEl.textContent = '\u22ef';
+        }
+    })();
+    </script>
+
     <div id="loading-overlay" class="fixed inset-0 z-[120] bg-brand-cream/80 hidden items-center justify-center flex-col">
         <div class="w-12 h-12 border-4 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin mb-4"></div>
         <p class="font-serif text-brand-dark animate-pulse">Envoi de vos donn&eacute;es...</p>
