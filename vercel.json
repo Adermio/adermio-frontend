@@ -83,6 +83,11 @@
       "statusCode": 301
     },
     {
+      "source": "/en-savoir-plus",
+      "destination": "/about",
+      "statusCode": 301
+    },
+    {
       "source": "/static3.tildacdn.com/:path*",
       "destination": "/",
       "statusCode": 301
