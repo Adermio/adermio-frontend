@@ -944,6 +944,9 @@
       console.log("✅ Clic détecté ! Ouverture de la modale...");
       openAdjustModal();
     }
+    if (event.data.type === "OPEN_STRIPE" && event.data.url) {
+      window.location.href = event.data.url;
+    }
   });
   window.addEventListener('beforeunload', () => stopPolling());
   // START

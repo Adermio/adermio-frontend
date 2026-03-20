@@ -1026,6 +1026,9 @@
       console.log("✅ Click detected! Opening modal...");
       openAdjustModal();
     }
+    if (event.data.type === "OPEN_STRIPE" && event.data.url) {
+      window.location.href = event.data.url;
+    }
   });
 
   window.addEventListener('beforeunload', () => stopPolling());
