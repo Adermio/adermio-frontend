@@ -643,11 +643,33 @@
   let userContext = { products: [], allergies: "", meds: "", note: "", keep_text: "" };
   let GLOBAL_TOKEN = null;
 
+  // --- SUPABASE CONFIG (for upgrade polling) ---
+  const SB_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+  const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
+
+  async function waitForUpgrade(jobId) {
+    const endpoint = SB_URL + '/rest/v1/premium_analysis?jobId=eq.' + encodeURIComponent(jobId) + '&select=product_type';
+    const headers = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+    const maxAttempts = 120;
+    for (let i = 0; i < maxAttempts; i++) {
+      try {
+        const res = await fetch(endpoint, { headers, cache: 'no-store' });
+        if (res.ok) {
+          const rows = await res.json();
+          if (rows && rows[0] && rows[0].product_type === 'complet') return true;
+        }
+      } catch(e) { /* retry */ }
+      await new Promise(r => setTimeout(r, 5000));
+    }
+    return false;
+  }
+
   // --- 1. INITIALIZATION & IFRAME ---
   async function init() {
     try {
       const params = new URLSearchParams(window.location.search);
       GLOBAL_TOKEN = params.get("token");
+      const upgradeVersion = params.get("v");
 
       const loadingEl = document.getElementById("premium-loading");
       const errorEl = document.getElementById("premium-error");
@@ -658,6 +680,17 @@
         if(loadingEl) loadingEl.style.display = "none";
         if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Invalid link: missing token."; }
         return;
+      }
+
+      // If upgrade to "complet", wait for workflow to finish before loading report
+      if (upgradeVersion === "complet") {
+        if(loadingEl) loadingEl.innerHTML = '<div style="text-align:center"><div style="margin-bottom:16px;font-size:24px">\u23F3</div><div style="font-weight:600;color:#0f766e;margin-bottom:8px">Preparing your complete report...</div><div style="font-size:12px;color:#94a3b8">This may take a few minutes</div></div>';
+        const ready = await waitForUpgrade(GLOBAL_TOKEN);
+        if (!ready) {
+          if(loadingEl) loadingEl.style.display = "none";
+          if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Your complete report is not ready yet. Please reload the page in a few minutes."; }
+          return;
+        }
       }
 
       // Fetch Report

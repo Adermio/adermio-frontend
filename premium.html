@@ -601,10 +601,32 @@
   let userContext = { products: [], allergies: "", meds: "", note: "", keep_text: "" };
   let GLOBAL_TOKEN = null;
   // --- 1. INITIALISATION & IFRAME ---
+  // --- SUPABASE CONFIG (for upgrade polling) ---
+  const SB_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+  const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
+
+  async function waitForUpgrade(jobId) {
+    const endpoint = SB_URL + '/rest/v1/premium_analysis?jobId=eq.' + encodeURIComponent(jobId) + '&select=product_type';
+    const headers = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+    const maxAttempts = 120; // 10 min max
+    for (let i = 0; i < maxAttempts; i++) {
+      try {
+        const res = await fetch(endpoint, { headers, cache: 'no-store' });
+        if (res.ok) {
+          const rows = await res.json();
+          if (rows && rows[0] && rows[0].product_type === 'complet') return true;
+        }
+      } catch(e) { /* retry */ }
+      await new Promise(r => setTimeout(r, 5000)); // poll every 5s
+    }
+    return false;
+  }
+
   async function init() {
     try {
       const params = new URLSearchParams(window.location.search);
       GLOBAL_TOKEN = params.get("token");
+      const upgradeVersion = params.get("v");
       const loadingEl = document.getElementById("premium-loading");
       const errorEl = document.getElementById("premium-error");
       const containerEl = document.getElementById("premium-container");
@@ -614,13 +636,23 @@
         if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Lien invalide : token manquant."; }
         return;
       }
+      // If upgrade to "complet", wait for workflow to finish before loading report
+      if (upgradeVersion === "complet") {
+        if(loadingEl) loadingEl.innerHTML = '<div style="text-align:center"><div style="margin-bottom:16px;font-size:24px">⏳</div><div style="font-weight:600;color:#0f766e;margin-bottom:8px">Pr\u00e9paration de votre dossier complet...</div><div style="font-size:12px;color:#94a3b8">Cela peut prendre quelques minutes</div></div>';
+        const ready = await waitForUpgrade(GLOBAL_TOKEN);
+        if (!ready) {
+          if(loadingEl) loadingEl.style.display = "none";
+          if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Le dossier complet n'est pas encore pr\u00eat. Rechargez la page dans quelques minutes."; }
+          return;
+        }
+      }
       // Fetch Report
       const resp = await fetch("https://ai.adermio.com/api/get_report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: GLOBAL_TOKEN })
       });
-      if (!resp.ok) throw new Error("Accès refusé ou lien expiré");
+      if (!resp.ok) throw new Error("Acc\u00e8s refus\u00e9 ou lien expir\u00e9");
       const data = await resp.json();
       if (!data.report_html_url) throw new Error("URL rapport manquante");
       iframeEl.src = data.report_html_url;
