@@ -998,9 +998,11 @@
   function startPolling() {
     if (pollIntervalId) clearInterval(pollIntervalId);
     pollStartTime = Date.now();
-    // Immediate call then interval
-    checkRoutineStatus();
-    pollIntervalId = setInterval(checkRoutineStatus, POLL_INTERVAL);
+    // First poll after 8s, then every 3s
+    setTimeout(() => {
+      checkRoutineStatus();
+      pollIntervalId = setInterval(checkRoutineStatus, POLL_INTERVAL);
+    }, 8000);
   }
 
   function stopPolling() {

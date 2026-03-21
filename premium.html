@@ -920,9 +920,11 @@
   function startPolling() {
     if (pollIntervalId) clearInterval(pollIntervalId);
     pollStartTime = Date.now();
-    // Appel immédiat puis intervalle
-    checkRoutineStatus();
-    pollIntervalId = setInterval(checkRoutineStatus, POLL_INTERVAL);
+    // Premier poll après 8s, puis toutes les 3s
+    setTimeout(() => {
+      checkRoutineStatus();
+      pollIntervalId = setInterval(checkRoutineStatus, POLL_INTERVAL);
+    }, 8000);
   }
   function stopPolling() {
     if (pollIntervalId) { clearInterval(pollIntervalId); pollIntervalId = null; }
