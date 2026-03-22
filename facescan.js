@@ -81,23 +81,23 @@
   // ─── CONSTANTS / THRESHOLDS ────────────────────────────────
   const THRESHOLDS = {
     // Inter-pupillary distance in normalized coords (0-1 range relative to video width)
-    pupilDistMin: 0.12,   // too far
-    pupilDistMax: 0.32,   // too close
+    pupilDistMin: 0.08,   // too far (lowered for profiles where apparent distance shrinks)
+    pupilDistMax: 0.35,   // too close
     // Face centering — max offset from oval center (normalized)
-    centerMaxOffset: 0.12,
+    centerMaxOffset: 0.15,
     // Yaw angles (degrees)
-    faceYawMax: 10,
-    profileYawMin: 25,
-    profileYawMax: 45,
+    faceYawMax: 12,
+    profileYawMin: 12,    // lowered — the ratio*120 formula underestimates real angles
+    profileYawMax: 55,    // widened range to be more forgiving
     // Pitch (degrees)
-    pitchMax: 12,
+    pitchMax: 15,
     // Brightness (0-255)
-    brightnessMin: 60,
-    brightnessMax: 220,
+    brightnessMin: 45,
+    brightnessMax: 230,
     // Stability — max average landmark movement between frames (normalized)
-    stabilityMaxDelta: 0.006,
+    stabilityMaxDelta: 0.012,  // doubled — turning head naturally involves movement
     // Number of consecutive "good" frames before auto-capture
-    goodFramesNeeded: 8,
+    goodFramesNeeded: 5,  // reduced from 8 — faster capture
     // No face timeout (ms)
     noFaceTimeout: 10000,
     // Capture JPEG quality
@@ -694,10 +694,12 @@
     const step = scanState.captureStep; // 0=face, 1=left, 2=right
     let instruction = "";
     let allGood = true;
+    const isProfile = step > 0;
 
-    // 1. Distance check
+    // 1. Distance check (relaxed for profiles since apparent pupil distance shrinks when turning)
     const pupilDist = computePupilDistance(landmarks);
-    if (pupilDist < THRESHOLDS.pupilDistMin) {
+    const minDist = isProfile ? THRESHOLDS.pupilDistMin * 0.5 : THRESHOLDS.pupilDistMin;
+    if (pupilDist < minDist) {
       instruction = t("moveCloser");
       allGood = false;
     } else if (pupilDist > THRESHOLDS.pupilDistMax) {
@@ -705,12 +707,12 @@
       allGood = false;
     }
 
-    // 2. Centering check (only for face step)
+    // 2. Centering check (only for face step — skip for profiles)
     if (allGood && step === 0) {
       const nose = computeNoseCenter(landmarks);
       if (nose) {
         const offsetX = Math.abs(nose.x - 0.5);
-        const offsetY = Math.abs(nose.y - 0.42); // oval center is at ~42% height
+        const offsetY = Math.abs(nose.y - 0.42);
         if (offsetX > THRESHOLDS.centerMaxOffset || offsetY > THRESHOLDS.centerMaxOffset) {
           instruction = t("centerFace");
           allGood = false;
@@ -719,37 +721,47 @@
     }
 
     // 3. Yaw check
+    // IMPORTANT: Video is mirrored (scaleX(-1)), but landmarks follow raw video coords.
+    // So we need to check: when user physically turns right → left cheek visible → yaw sign depends on raw coords.
+    // We use absolute yaw value and just check magnitude for profiles.
     if (allGood) {
       const yaw = computeYaw(landmarks);
+      const absYaw = Math.abs(yaw);
+
+      // Debug logging (temporary — helps calibrate thresholds)
+      if (step > 0 && Math.random() < 0.05) {
+        console.log(`[FaceScan] step=${step} yaw=${yaw.toFixed(1)} absYaw=${absYaw.toFixed(1)} pupil=${pupilDist.toFixed(3)}`);
+      }
 
       if (step === 0) {
         // Face: need straight ahead
-        if (Math.abs(yaw) > THRESHOLDS.faceYawMax) {
+        if (absYaw > THRESHOLDS.faceYawMax) {
           instruction = t("instructionFace");
           allGood = false;
         }
       } else if (step === 1) {
-        // Left profile: user turns head right, showing left side
-        // Positive yaw = turned right (left side visible)
-        if (yaw < THRESHOLDS.profileYawMin || yaw > THRESHOLDS.profileYawMax) {
+        // Left profile: user turns head to the right physically
+        // Accept any sufficient yaw in either direction since mirror may flip the sign
+        if (absYaw < THRESHOLDS.profileYawMin || absYaw > THRESHOLDS.profileYawMax) {
           instruction = t("instructionLeft");
           allGood = false;
         }
       } else if (step === 2) {
-        // Right profile: user turns head left, showing right side
-        // Negative yaw = turned left (right side visible)
-        if (yaw > -THRESHOLDS.profileYawMin || yaw < -THRESHOLDS.profileYawMax) {
+        // Right profile: user turns head to the left physically
+        // Same approach: accept sufficient yaw magnitude
+        if (absYaw < THRESHOLDS.profileYawMin || absYaw > THRESHOLDS.profileYawMax) {
           instruction = t("instructionRight");
           allGood = false;
         }
       }
     }
 
-    // 4. Pitch check
+    // 4. Pitch check (relaxed for profiles)
     if (allGood) {
       const pitch = computePitch(landmarks);
-      if (Math.abs(pitch) > THRESHOLDS.pitchMax) {
-        instruction = step === 0 ? t("instructionFace") : instruction;
+      const maxPitch = isProfile ? THRESHOLDS.pitchMax * 1.5 : THRESHOLDS.pitchMax;
+      if (Math.abs(pitch) > maxPitch) {
+        instruction = step === 0 ? t("instructionFace") : (step === 1 ? t("instructionLeft") : t("instructionRight"));
         allGood = false;
       }
     }
@@ -766,10 +778,11 @@
       }
     }
 
-    // 6. Stability check
+    // 6. Stability check (relaxed for profiles — head is naturally moving more)
     if (allGood) {
       const stability = computeStability(landmarks, scanState.prevLandmarks);
-      if (stability > THRESHOLDS.stabilityMaxDelta) {
+      const maxDelta = isProfile ? THRESHOLDS.stabilityMaxDelta * 2 : THRESHOLDS.stabilityMaxDelta;
+      if (stability > maxDelta) {
         instruction = t("holdStill");
         allGood = false;
       }
@@ -779,7 +792,6 @@
     if (allGood) {
       instruction = t("holdStill");
     } else if (!instruction) {
-      // Fallback instruction per step
       const fallbacks = [t("instructionFace"), t("instructionLeft"), t("instructionRight")];
       instruction = fallbacks[step];
     }
