@@ -1,319 +1,215 @@
 /**
- * Adermio Face Scan — Guided face capture using MediaPipe Face Mesh
- * Replaces manual photo upload with real-time guided scanning.
- *
- * Dependencies (loaded via CDN in HTML):
- *   - @mediapipe/face_mesh
- *   - @mediapipe/camera_utils
+ * Adermio Face Scan v3 — Premium guided face capture
+ * Uses MediaPipe Face Mesh 3D landmarks for precise head pose estimation.
+ * Time-based hold with visual countdown + real-time status indicators.
  */
-
 (function () {
   "use strict";
 
   // ─── TRANSLATIONS ──────────────────────────────────────────
   const T = {
     fr: {
-      startScan: "Scanner ma peau",
-      switchToUpload: "Importer manuellement",
-      switchToScan: "Utiliser le scan guidé",
-      cameraPermTitle: "Accès à la caméra",
-      cameraPermDesc: "Nous avons besoin de votre caméra pour capturer les photos de votre visage. Aucune vidéo n'est enregistrée ni transmise — seules les photos finales sont utilisées pour l'analyse.",
-      cameraPermBtn: "Autoriser la caméra",
+      cameraPermTitle: "Scan intelligent",
+      cameraPermDesc: "Notre IA va guider la prise de vos 3 photos. Aucune vidéo n'est enregistrée — seules les captures finales sont utilisées.",
+      cameraPermBtn: "Activer la caméra",
       cameraDenied: "Accès à la caméra refusé. Vous pouvez importer vos photos manuellement.",
-      cameraNotSupported: "Votre navigateur ne supporte pas l'accès à la caméra. Utilisez l'import manuel.",
-      noCameraDevice: "Aucune caméra frontale détectée. Utilisez l'import manuel.",
-      loading: "Chargement du scan facial...",
+      cameraNotSupported: "Votre navigateur ne supporte pas la caméra. Utilisez l'import manuel.",
+      noCameraDevice: "Aucune caméra frontale détectée.",
+      loading: "Initialisation du scan...",
       stepFace: "Face",
-      stepLeft: "Profil gauche",
-      stepRight: "Profil droit",
-      instructionFace: "Placez votre visage dans l'oval",
-      instructionLeft: "Tournez doucement la tête vers la droite",
-      instructionRight: "Tournez doucement la tête vers la gauche",
-      moveCloser: "Rapprochez-vous",
-      moveBack: "Reculez un peu",
-      centerFace: "Centrez votre visage dans l'oval",
-      moreLightNeeded: "Cherchez un endroit plus lumineux",
-      tooMuchLight: "Trop de lumière directe, décalez-vous",
-      holdStill: "Ne bougez plus...",
-      capturing: "Capture...",
-      captureSuccess: "Capturé !",
+      stepLeft: "Gauche",
+      stepRight: "Droite",
+      instructionFace: "Regardez droit vers la caméra",
+      instructionLeft: "Tournez la tête vers la droite",
+      instructionRight: "Tournez la tête vers la gauche",
+      moveCloser: "Rapprochez-vous de la caméra",
+      moveBack: "Vous êtes trop près, reculez légèrement",
+      centerFace: "Centrez votre visage",
+      moreLightNeeded: "Trouvez un endroit mieux éclairé",
+      tooMuchLight: "Lumière trop forte, décalez-vous",
+      holdStill: "Restez immobile",
+      capturing: "Capture en cours...",
+      captureSuccess: "Parfait !",
       noFaceDetected: "Aucun visage détecté",
-      noFaceHint: "Assurez-vous que votre visage est visible et bien éclairé",
-      previewTitle: "Vos photos",
+      noFaceHint: "Vérifiez que votre visage est bien visible et éclairé",
+      previewTitle: "Vérifiez vos photos",
       retake: "Reprendre",
-      validatePhotos: "Valider les photos",
-      scanAnother: "Recommencer le scan",
+      validatePhotos: "Valider et continuer",
+      scanAnother: "Recommencer",
+      stepComplete: "Excellent !",
+      nextStep: "Photo suivante dans",
+      badgeDistance: "Distance",
+      badgeLight: "Lumière",
+      badgeAngle: "Angle",
+      badgeStability: "Stabilité",
+      statusOk: "OK",
+      statusBad: "Ajuster",
+      tipFace: "Visage dégagé, sans lunettes",
+      tipProfile: "Tournez franchement la tête",
     },
     en: {
-      startScan: "Scan my skin",
-      switchToUpload: "Upload manually",
-      switchToScan: "Use guided scan",
-      cameraPermTitle: "Camera access",
-      cameraPermDesc: "We need your camera to capture photos of your face. No video is recorded or transmitted — only the final photos are used for analysis.",
-      cameraPermBtn: "Allow camera",
+      cameraPermTitle: "Smart scan",
+      cameraPermDesc: "Our AI will guide you through 3 photo captures. No video is recorded — only the final captures are used.",
+      cameraPermBtn: "Enable camera",
       cameraDenied: "Camera access denied. You can upload your photos manually.",
       cameraNotSupported: "Your browser does not support camera access. Use manual upload.",
-      noCameraDevice: "No front camera detected. Use manual upload.",
-      loading: "Loading face scan...",
-      stepFace: "Face",
-      stepLeft: "Left profile",
-      stepRight: "Right profile",
-      instructionFace: "Place your face in the oval",
-      instructionLeft: "Slowly turn your head to the right",
-      instructionRight: "Slowly turn your head to the left",
-      moveCloser: "Move closer",
-      moveBack: "Move back a little",
-      centerFace: "Center your face in the oval",
+      noCameraDevice: "No front camera detected.",
+      loading: "Initializing scan...",
+      stepFace: "Front",
+      stepLeft: "Left",
+      stepRight: "Right",
+      instructionFace: "Look straight at the camera",
+      instructionLeft: "Turn your head to the right",
+      instructionRight: "Turn your head to the left",
+      moveCloser: "Move closer to the camera",
+      moveBack: "Too close, move back slightly",
+      centerFace: "Center your face",
       moreLightNeeded: "Find a brighter spot",
-      tooMuchLight: "Too much direct light, move aside",
-      holdStill: "Hold still...",
+      tooMuchLight: "Too much light, move aside",
+      holdStill: "Hold still",
       capturing: "Capturing...",
-      captureSuccess: "Captured!",
+      captureSuccess: "Perfect!",
       noFaceDetected: "No face detected",
       noFaceHint: "Make sure your face is visible and well-lit",
-      previewTitle: "Your photos",
+      previewTitle: "Review your photos",
       retake: "Retake",
-      validatePhotos: "Validate photos",
-      scanAnother: "Restart scan",
+      validatePhotos: "Validate and continue",
+      scanAnother: "Start over",
+      stepComplete: "Great!",
+      nextStep: "Next photo in",
+      badgeDistance: "Distance",
+      badgeLight: "Light",
+      badgeAngle: "Angle",
+      badgeStability: "Stability",
+      statusOk: "OK",
+      statusBad: "Adjust",
+      tipFace: "Face clear, no glasses",
+      tipProfile: "Turn your head fully",
     },
   };
 
-  // ─── CONSTANTS / THRESHOLDS ────────────────────────────────
-  const THRESHOLDS = {
-    // Inter-pupillary distance in normalized coords (0-1 range relative to video width)
+  // ─── CONSTANTS ─────────────────────────────────────────────
+  const CFG = {
     pupilDistMin: 0.08,
     pupilDistMax: 0.35,
-    // Face centering — max offset from oval center (normalized)
     centerMaxOffset: 0.15,
-    // Yaw angles (degrees) — computed from 3D face normal vector
-    faceYawMax: 10,       // face must be within ±10° of straight
-    profileYawMin: 28,    // must turn at least 28° for a profile
-    profileYawMax: 60,    // don't want full 90° side view
-    // Pitch (degrees)
+    faceYawMax: 10,
+    profileYawMin: 28,
+    profileYawMax: 60,
     pitchMax: 15,
-    // Brightness (0-255)
-    brightnessMin: 45,
-    brightnessMax: 230,
-    // Stability — max average landmark movement between frames (normalized)
+    brightnessMin: 50,
+    brightnessMax: 225,
     stabilityMaxDelta: 0.008,
-    // Time-based capture: conditions must hold for this many ms continuously
-    holdDurationMs: 1500,
-    // Pause after capture before starting next step (ms)
-    captureCooldown: 2000,
-    // No face timeout (ms)
-    noFaceTimeout: 10000,
-    // Capture JPEG quality
+    holdDurationMs: 1800,
+    captureCooldown: 2200,
+    noFaceTimeout: 8000,
     jpegQuality: 0.92,
   };
 
-  // Key landmark indices for 3D pose estimation
   const LM = {
-    noseTip: 1,
-    noseBridge: 6,        // top of nose bridge — good for plane computation
-    leftEyeOuter: 33,
-    rightEyeOuter: 263,
-    leftCheek: 234,
-    rightCheek: 454,
-    chin: 152,
-    forehead: 10,
+    noseTip: 1, noseBridge: 6, leftEyeOuter: 33, rightEyeOuter: 263,
+    leftCheek: 234, rightCheek: 454, chin: 152, forehead: 10,
   };
 
   // ─── STATE ─────────────────────────────────────────────────
   let lang = "fr";
-  let scanState = {
-    phase: "idle",          // idle | permission | loading | scanning | preview
-    captureStep: 0,         // 0=face, 1=left, 2=right
-    captures: [null, null, null],
-    captureBlobs: [null, null, null],
-    holdStartTime: null,    // timestamp when conditions first became good
-    lastLandmarks: null,
-    prevLandmarks: null,
-    noFaceTimer: null,
-    showNoFaceHint: false,
-    currentInstruction: "",
-    ovalColor: "white",     // white | yellow | green
-    isCapturing: false,
-    faceMesh: null,
-    camera: null,
-    videoStream: null,
-    animFrameId: null,
-  };
+  let S = resetState();
 
-  // DOM refs (set during init)
-  let containerEl = null;
-  let videoEl = null;
-  let canvasEl = null;
-  let overlayCanvasEl = null;
-  let ctx = null;
-  let overlayCtx = null;
+  function resetState() {
+    return {
+      phase: "idle", captureStep: 0,
+      captures: [null, null, null], captureBlobs: [null, null, null],
+      holdStartTime: null, lastLandmarks: null, prevLandmarks: null,
+      noFaceTimer: null, isCapturing: false,
+      faceMesh: null, camera: null, videoStream: null, animFrameId: null,
+      // Real-time status for UI badges
+      status: { distance: null, light: null, angle: null, stability: null },
+    };
+  }
 
-  // Callbacks
-  let onScanComplete = null;  // (captures: {face: Blob, left: Blob, right: Blob}) => void
-  let onFallbackToUpload = null;
+  let containerEl, videoEl, overlayCanvasEl, overlayCtx;
+  let onScanComplete = null, onFallbackToUpload = null;
 
   // ─── HELPERS ───────────────────────────────────────────────
-  function t(key) {
-    return (T[lang] && T[lang][key]) || T.fr[key] || key;
+  function t(k) { return T[lang]?.[k] || T.fr[k] || k; }
+  function detectLang() { lang = (document.documentElement.lang || "fr").startsWith("en") ? "en" : "fr"; }
+
+  // ─── 3D HEAD POSE ─────────────────────────────────────────
+  function lm(landmarks, idx) {
+    const p = landmarks?.[idx];
+    return p ? { x: p.x, y: p.y, z: p.z || 0 } : null;
   }
 
-  function detectLang() {
-    const htmlLang = document.documentElement.lang || "fr";
-    lang = htmlLang.startsWith("en") ? "en" : "fr";
-  }
+  function dist2D(a, b) { return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2); }
 
-  // ─── FACE GEOMETRY UTILS ───────────────────────────────────
+  function headPose(landmarks) {
+    const lc = lm(landmarks, LM.leftCheek), rc = lm(landmarks, LM.rightCheek);
+    const fh = lm(landmarks, LM.forehead), ch = lm(landmarks, LM.chin);
+    if (!lc || !rc || !fh || !ch) return { yaw: 0, pitch: 0 };
 
-  function getLandmark(landmarks, idx) {
-    if (!landmarks || !landmarks[idx]) return null;
-    return { x: landmarks[idx].x, y: landmarks[idx].y, z: landmarks[idx].z || 0 };
-  }
-
-  function distance2D(a, b) {
-    return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
-  }
-
-  function computePupilDistance(landmarks) {
-    const left = getLandmark(landmarks, LM.leftEyeOuter);
-    const right = getLandmark(landmarks, LM.rightEyeOuter);
-    if (!left || !right) return 0;
-    return distance2D(left, right);
-  }
-
-  function computeNoseCenter(landmarks) {
-    return getLandmark(landmarks, LM.noseTip);
-  }
-
-  /**
-   * Compute yaw and pitch using the 3D face normal vector.
-   * MediaPipe provides z-coordinates for each landmark — we use 3 points
-   * (nose bridge, left cheek, right cheek) to define the face plane,
-   * then compute its normal via cross product. The normal direction
-   * directly gives us yaw and pitch in real degrees.
-   */
-  function computeHeadPose(landmarks) {
-    const noseBridge = getLandmark(landmarks, LM.noseBridge);
-    const leftCheek = getLandmark(landmarks, LM.leftCheek);
-    const rightCheek = getLandmark(landmarks, LM.rightCheek);
-    const forehead = getLandmark(landmarks, LM.forehead);
-    const chin = getLandmark(landmarks, LM.chin);
-
-    if (!noseBridge || !leftCheek || !rightCheek || !forehead || !chin) {
-      return { yaw: 0, pitch: 0 };
-    }
-
-    // Vector from right cheek to left cheek (horizontal face axis)
-    const hx = leftCheek.x - rightCheek.x;
-    const hy = leftCheek.y - rightCheek.y;
-    const hz = leftCheek.z - rightCheek.z;
-
-    // Vector from chin to forehead (vertical face axis)
-    const vx = forehead.x - chin.x;
-    const vy = forehead.y - chin.y;
-    const vz = forehead.z - chin.z;
-
-    // Normal = cross product of horizontal × vertical
-    const nx = hy * vz - hz * vy;
-    const ny = hz * vx - hx * vz;
-    const nz = hx * vy - hy * vx;
-
-    // Yaw = rotation around vertical axis = atan2(nx, nz)
-    // When facing camera: nx ≈ 0, nz > 0 → yaw ≈ 0
-    // When turned right: nx > 0 → positive yaw
-    const yaw = Math.atan2(nx, nz) * (180 / Math.PI);
-
-    // Pitch = rotation around horizontal axis = atan2(ny, nz)
+    const hx = lc.x - rc.x, hy = lc.y - rc.y, hz = lc.z - rc.z;
+    const vx = fh.x - ch.x, vy = fh.y - ch.y, vz = fh.z - ch.z;
+    const nx = hy * vz - hz * vy, ny = hz * vx - hx * vz, nz = hx * vy - hy * vx;
     const nLen = Math.sqrt(nx * nx + ny * ny + nz * nz);
-    const pitch = nLen > 0 ? Math.asin(-ny / nLen) * (180 / Math.PI) : 0;
 
-    return { yaw, pitch };
+    return {
+      yaw: Math.atan2(nx, nz) * (180 / Math.PI),
+      pitch: nLen > 0 ? Math.asin(-ny / nLen) * (180 / Math.PI) : 0,
+    };
   }
 
-  function computeStability(currentLandmarks, previousLandmarks) {
-    if (!previousLandmarks || !currentLandmarks) return 999;
-
-    const indices = [LM.noseTip, LM.leftEyeOuter, LM.rightEyeOuter, LM.chin, LM.forehead];
-    let totalDelta = 0;
-    let count = 0;
-
-    for (const idx of indices) {
-      const curr = getLandmark(currentLandmarks, idx);
-      const prev = getLandmark(previousLandmarks, idx);
-      if (curr && prev) {
-        totalDelta += distance2D(curr, prev);
-        count++;
-      }
-    }
-
-    return count > 0 ? totalDelta / count : 999;
+  function pupilDist(landmarks) {
+    const l = lm(landmarks, LM.leftEyeOuter), r = lm(landmarks, LM.rightEyeOuter);
+    return l && r ? dist2D(l, r) : 0;
   }
 
-  // ─── BRIGHTNESS ANALYSIS ──────────────────────────────────
-
-  function analyzeBrightness(videoElement, canvas) {
-    const w = 160;
-    const h = 120;
-    const tmpCanvas = document.createElement("canvas");
-    tmpCanvas.width = w;
-    tmpCanvas.height = h;
-    const tmpCtx = tmpCanvas.getContext("2d", { willReadFrequently: true });
-    tmpCtx.drawImage(videoElement, 0, 0, w, h);
-
-    const imageData = tmpCtx.getImageData(0, 0, w, h);
-    const data = imageData.data;
-
-    let totalLum = 0;
-    const step = 16; // sample every 16th pixel for performance
-    let count = 0;
-
-    for (let i = 0; i < data.length; i += 4 * step) {
-      const r = data[i];
-      const g = data[i + 1];
-      const b = data[i + 2];
-      // Perceived luminance
-      totalLum += 0.299 * r + 0.587 * g + 0.114 * b;
-      count++;
+  function stability(curr, prev) {
+    if (!prev || !curr) return 999;
+    const ids = [LM.noseTip, LM.leftEyeOuter, LM.rightEyeOuter, LM.chin, LM.forehead];
+    let sum = 0, n = 0;
+    for (const i of ids) {
+      const a = lm(curr, i), b = lm(prev, i);
+      if (a && b) { sum += dist2D(a, b); n++; }
     }
+    return n > 0 ? sum / n : 999;
+  }
 
-    return count > 0 ? totalLum / count : 128;
+  function brightness(video) {
+    const c = document.createElement("canvas");
+    c.width = 120; c.height = 90;
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(video, 0, 0, 120, 90);
+    const d = ctx.getImageData(0, 0, 120, 90).data;
+    let sum = 0, n = 0;
+    for (let i = 0; i < d.length; i += 64) { sum += 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; n++; }
+    return n > 0 ? sum / n : 128;
   }
 
   // ─── CAPTURE ──────────────────────────────────────────────
-
-  function captureFrame(videoElement) {
-    const captureCanvas = document.createElement("canvas");
-    captureCanvas.width = videoElement.videoWidth;
-    captureCanvas.height = videoElement.videoHeight;
-    const captureCtx = captureCanvas.getContext("2d");
-    captureCtx.drawImage(videoElement, 0, 0);
-
-    return new Promise((resolve) => {
-      captureCanvas.toBlob(
-        (blob) => resolve(blob),
-        "image/jpeg",
-        THRESHOLDS.jpegQuality
-      );
-    });
+  function captureFrame(video) {
+    const c = document.createElement("canvas");
+    c.width = video.videoWidth; c.height = video.videoHeight;
+    c.getContext("2d").drawImage(video, 0, 0);
+    return new Promise(r => c.toBlob(r, "image/jpeg", CFG.jpegQuality));
   }
 
-  // ─── OVAL OVERLAY DRAWING ─────────────────────────────────
+  function haptic() {
+    try { navigator.vibrate?.(50); } catch (_) {}
+  }
 
-  function drawOverlay(ovalColor, instruction, progress) {
+  // ─── OVERLAY DRAWING ─────────────────────────────────────
+  function drawOverlay(color, progress, step) {
     if (!overlayCtx || !overlayCanvasEl) return;
-
-    const w = overlayCanvasEl.width;
-    const h = overlayCanvasEl.height;
+    const w = overlayCanvasEl.width, h = overlayCanvasEl.height;
     overlayCtx.clearRect(0, 0, w, h);
 
-    // Semi-transparent background outside oval
-    overlayCtx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    // Dark vignette outside oval
+    overlayCtx.fillStyle = "rgba(0,0,0,0.55)";
     overlayCtx.fillRect(0, 0, w, h);
 
-    // Oval cutout
-    const cx = w / 2;
-    const cy = h * 0.42;
-    const rx = w * 0.35;
-    const ry = h * 0.32;
+    const cx = w / 2, cy = h * 0.40, rx = w * 0.34, ry = h * 0.30;
 
+    // Cut out oval
     overlayCtx.save();
     overlayCtx.globalCompositeOperation = "destination-out";
     overlayCtx.beginPath();
@@ -321,554 +217,501 @@
     overlayCtx.fill();
     overlayCtx.restore();
 
-    // Oval border — base (dim)
-    const colors = {
-      white: "rgba(255, 255, 255, 0.4)",
-      yellow: "rgba(250, 204, 21, 0.6)",
-      green: "rgba(20, 184, 166, 0.3)",
-    };
-    overlayCtx.strokeStyle = colors[ovalColor] || colors.white;
-    overlayCtx.lineWidth = 2.5;
+    // Base oval border
+    const borderColors = { white: "rgba(255,255,255,0.3)", yellow: "rgba(250,204,21,0.5)", green: "rgba(20,184,166,0.25)" };
+    overlayCtx.strokeStyle = borderColors[color] || borderColors.white;
+    overlayCtx.lineWidth = 2;
     overlayCtx.beginPath();
     overlayCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
     overlayCtx.stroke();
 
-    // Progress arc when green — fills the oval border as countdown progresses
-    if (ovalColor === "green" && progress > 0) {
-      const startAngle = -Math.PI / 2; // top of oval
-      const endAngle = startAngle + (Math.PI * 2 * progress);
-
-      // Bright green progress arc
-      overlayCtx.strokeStyle = "rgba(20, 184, 166, 1)";
-      overlayCtx.lineWidth = 5;
+    // Yellow pulsing border
+    if (color === "yellow") {
+      overlayCtx.strokeStyle = "rgba(250,204,21,0.7)";
+      overlayCtx.lineWidth = 3;
       overlayCtx.beginPath();
-      overlayCtx.ellipse(cx, cy, rx, ry, 0, startAngle, endAngle);
+      overlayCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      overlayCtx.stroke();
+    }
+
+    // Green progress arc
+    if (color === "green" && progress > 0) {
+      const start = -Math.PI / 2;
+      const end = start + Math.PI * 2 * progress;
+
+      // Glow
+      overlayCtx.strokeStyle = "rgba(20,184,166,0.2)";
+      overlayCtx.lineWidth = 16;
+      overlayCtx.beginPath();
+      overlayCtx.ellipse(cx, cy, rx + 2, ry + 2, 0, start, end);
       overlayCtx.stroke();
 
-      // Glow behind progress arc
-      overlayCtx.strokeStyle = "rgba(20, 184, 166, 0.25)";
-      overlayCtx.lineWidth = 14;
+      // Main arc
+      overlayCtx.strokeStyle = "rgba(20,184,166,1)";
+      overlayCtx.lineWidth = 4;
+      overlayCtx.lineCap = "round";
       overlayCtx.beginPath();
-      overlayCtx.ellipse(cx, cy, rx + 2, ry + 2, 0, startAngle, endAngle);
+      overlayCtx.ellipse(cx, cy, rx, ry, 0, start, end);
       overlayCtx.stroke();
+      overlayCtx.lineCap = "butt";
+    }
+
+    // Draw profile guide arrow for step 1 & 2
+    if (color !== "green" && (step === 1 || step === 2)) {
+      const arrowX = step === 1 ? cx + rx + 30 : cx - rx - 30;
+      const dir = step === 1 ? 1 : -1;
+      overlayCtx.save();
+      overlayCtx.strokeStyle = "rgba(255,255,255,0.4)";
+      overlayCtx.lineWidth = 2;
+      overlayCtx.beginPath();
+      // Arrow shaft
+      overlayCtx.moveTo(arrowX, cy - 20);
+      overlayCtx.lineTo(arrowX, cy + 20);
+      // Arrow head
+      overlayCtx.moveTo(arrowX - 8 * dir, cy - 12);
+      overlayCtx.lineTo(arrowX, cy - 20);
+      overlayCtx.lineTo(arrowX + 8 * dir, cy - 12);
+      overlayCtx.stroke();
+      // Curved arrow showing rotation direction
+      overlayCtx.beginPath();
+      overlayCtx.arc(cx, cy, rx + 20, step === 1 ? -0.3 : Math.PI - 0.3, step === 1 ? 0.3 : Math.PI + 0.3);
+      overlayCtx.stroke();
+      overlayCtx.restore();
+    }
+
+    // Status badges at bottom of overlay
+    drawStatusBadges(w, h);
+  }
+
+  function drawStatusBadges(w, h) {
+    const badges = [
+      { key: "distance", icon: "↔", label: t("badgeDistance") },
+      { key: "light", icon: "☀", label: t("badgeLight") },
+      { key: "angle", icon: "◐", label: t("badgeAngle") },
+      { key: "stability", icon: "⊙", label: t("badgeStability") },
+    ];
+
+    const badgeW = 58, badgeH = 26, gap = 6;
+    const totalW = badges.length * badgeW + (badges.length - 1) * gap;
+    let x = (w - totalW) / 2;
+    const y = h - 50;
+
+    for (const b of badges) {
+      const status = S.status[b.key]; // true = ok, false = bad, null = unknown
+      const bgColor = status === true ? "rgba(20,184,166,0.7)" : status === false ? "rgba(239,68,68,0.6)" : "rgba(255,255,255,0.15)";
+      const textColor = status === null ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.95)";
+
+      // Badge background
+      overlayCtx.fillStyle = bgColor;
+      overlayCtx.beginPath();
+      const r = 6;
+      // roundRect polyfill for older Safari
+      if (overlayCtx.roundRect) { overlayCtx.roundRect(x, y, badgeW, badgeH, r); }
+      else { overlayCtx.moveTo(x+r,y); overlayCtx.arcTo(x+badgeW,y,x+badgeW,y+badgeH,r); overlayCtx.arcTo(x+badgeW,y+badgeH,x,y+badgeH,r); overlayCtx.arcTo(x,y+badgeH,x,y,r); overlayCtx.arcTo(x,y,x+badgeW,y,r); overlayCtx.closePath(); }
+      overlayCtx.fill();
+
+      // Icon
+      overlayCtx.fillStyle = textColor;
+      overlayCtx.font = "bold 10px system-ui, sans-serif";
+      overlayCtx.textAlign = "center";
+      overlayCtx.fillText(b.icon, x + 12, y + 17);
+
+      // Label
+      overlayCtx.font = "9px system-ui, sans-serif";
+      overlayCtx.fillText(b.label, x + 38, y + 17);
+
+      x += badgeW + gap;
     }
   }
 
-  // ─── UI RENDERING ─────────────────────────────────────────
-
+  // ─── UI BUILD ─────────────────────────────────────────────
   function buildScanUI() {
-    const html = `
-      <div id="facescan-root" class="relative w-full max-w-md mx-auto" style="touch-action: manipulation;">
-
-        <!-- Permission screen -->
-        <div id="fs-permission" class="hidden text-center py-8 px-4 space-y-5 animate-fade-in">
-          <div class="w-16 h-16 mx-auto rounded-full bg-brand-primary/10 flex items-center justify-center">
-            <svg class="w-8 h-8 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+    return `
+      <div id="facescan-root" class="relative w-full max-w-md mx-auto" style="touch-action:manipulation;">
+        <div id="fs-permission" class="hidden text-center py-8 px-4 space-y-5">
+          <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-brand-primary/20 to-brand-primary/5 flex items-center justify-center">
+            <svg class="w-10 h-10 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
             </svg>
           </div>
-          <h3 class="font-serif text-xl text-brand-dark" id="fs-perm-title"></h3>
+          <h3 class="font-serif text-2xl text-brand-dark" id="fs-perm-title"></h3>
           <p class="text-sm text-stone-500 leading-relaxed max-w-xs mx-auto" id="fs-perm-desc"></p>
-          <button type="button" id="fs-perm-btn" class="w-full py-3.5 rounded-2xl bg-brand-primary text-white font-bold text-sm tracking-wide hover:bg-brand-primary/90 transition-all"></button>
+          <div class="flex items-center justify-center gap-4 text-[10px] text-stone-400 uppercase tracking-wider pt-1">
+            <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z"/></svg> Aucun enregistrement</span>
+            <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg> 100% privé</span>
+          </div>
+          <button type="button" id="fs-perm-btn" class="w-full py-4 rounded-2xl bg-brand-primary text-white font-bold text-sm tracking-wide hover:bg-brand-primary/90 transition-all shadow-lg shadow-brand-primary/20"></button>
         </div>
 
-        <!-- Loading screen -->
-        <div id="fs-loading" class="hidden text-center py-12 space-y-4 animate-fade-in">
-          <div class="w-10 h-10 mx-auto border-2 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
+        <div id="fs-loading" class="hidden text-center py-16 space-y-4">
+          <div class="w-12 h-12 mx-auto border-2 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
           <p class="text-sm text-stone-500" id="fs-loading-text"></p>
         </div>
 
-        <!-- Scan screen -->
-        <div id="fs-scan" class="hidden animate-fade-in">
-          <!-- Progress bar -->
-          <div class="flex items-center justify-center gap-2 mb-4 px-2" id="fs-progress">
-            <div class="flex items-center gap-1.5" id="fs-prog-0">
-              <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center text-[10px] font-bold" id="fs-prog-dot-0">1</div>
-              <span class="text-xs font-medium" id="fs-prog-label-0"></span>
+        <div id="fs-scan" class="hidden">
+          <div class="flex items-center justify-center gap-3 mb-4" id="fs-progress"></div>
+          <div class="relative w-full rounded-[2rem] overflow-hidden bg-black shadow-2xl" style="aspect-ratio:3/4;">
+            <video id="fs-video" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover" style="transform:scaleX(-1);"></video>
+            <canvas id="fs-overlay" class="absolute inset-0 w-full h-full pointer-events-none" style="transform:scaleX(-1);"></canvas>
+            <div class="absolute top-0 left-0 right-0 p-3 pointer-events-none">
+              <div id="fs-tip" class="text-center">
+                <span class="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[10px] text-white/70 uppercase tracking-wider font-medium"></span>
+              </div>
             </div>
-            <div class="w-6 h-px bg-stone-300"></div>
-            <div class="flex items-center gap-1.5" id="fs-prog-1">
-              <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center text-[10px] font-bold" id="fs-prog-dot-1">2</div>
-              <span class="text-xs font-medium" id="fs-prog-label-1"></span>
-            </div>
-            <div class="w-6 h-px bg-stone-300"></div>
-            <div class="flex items-center gap-1.5" id="fs-prog-2">
-              <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center text-[10px] font-bold" id="fs-prog-dot-2">3</div>
-              <span class="text-xs font-medium" id="fs-prog-label-2"></span>
-            </div>
-          </div>
-
-          <!-- Video container -->
-          <div class="relative w-full rounded-[2rem] overflow-hidden bg-black shadow-xl" style="aspect-ratio: 3/4;">
-            <video id="fs-video" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);"></video>
-            <canvas id="fs-overlay" class="absolute inset-0 w-full h-full pointer-events-none" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);"></canvas>
-
-            <!-- Instruction text overlay -->
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center pointer-events-none">
-              <div id="fs-instruction" class="inline-block px-4 py-2 rounded-full bg-black/60 backdrop-blur-sm text-white text-sm font-medium transition-all duration-300"></div>
+              <div id="fs-instruction" class="inline-block px-5 py-2.5 rounded-2xl bg-black/60 backdrop-blur-md text-white text-sm font-medium transition-all duration-300 shadow-lg"></div>
             </div>
-
-            <!-- Capture flash -->
-            <div id="fs-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 transition-opacity duration-150" style="z-index:20;"></div>
+            <div id="fs-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:20;"></div>
+            <div id="fs-success-overlay" class="absolute inset-0 bg-brand-primary/20 backdrop-blur-[2px] pointer-events-none opacity-0 transition-opacity duration-500 flex items-center justify-center" style="z-index:15;">
+              <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-brand-primary flex items-center justify-center shadow-lg">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                </div>
+                <p id="fs-success-text" class="text-white font-serif text-xl font-semibold drop-shadow-lg"></p>
+                <p id="fs-success-next" class="text-white/70 text-xs mt-1 font-medium"></p>
+              </div>
+            </div>
           </div>
-
-          <!-- No face hint -->
           <div id="fs-noface-hint" class="hidden mt-3 text-center">
             <p class="text-xs text-amber-600 bg-amber-50 rounded-xl px-3 py-2 inline-block"></p>
           </div>
         </div>
 
-        <!-- Preview screen -->
-        <div id="fs-preview" class="hidden animate-fade-in space-y-4">
+        <div id="fs-preview" class="hidden space-y-5">
           <h3 class="font-serif text-xl text-brand-dark text-center" id="fs-preview-title"></h3>
-
           <div class="grid grid-cols-3 gap-3" id="fs-preview-grid">
+            ${[0,1,2].map(i => `
             <div class="space-y-2 text-center">
-              <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-stone-900 shadow-md">
-                <img id="fs-prev-0" class="w-full h-full object-cover" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
+              <div class="relative aspect-[3/4] rounded-2xl overflow-hidden bg-stone-900 shadow-lg ring-1 ring-white/10">
+                <img id="fs-prev-${i}" class="w-full h-full object-cover" style="transform:scaleX(-1);">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-2">
+                  <span class="text-[9px] font-bold uppercase tracking-wider text-white/80" id="fs-prev-label-${i}"></span>
+                </div>
               </div>
-              <span class="text-[10px] font-bold uppercase tracking-wide text-stone-400" id="fs-prev-label-0"></span>
-              <button type="button" class="text-[10px] text-brand-primary font-bold uppercase tracking-wider hover:underline" data-retake="0" id="fs-retake-0"></button>
-            </div>
-            <div class="space-y-2 text-center">
-              <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-stone-900 shadow-md">
-                <img id="fs-prev-1" class="w-full h-full object-cover" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
-              </div>
-              <span class="text-[10px] font-bold uppercase tracking-wide text-stone-400" id="fs-prev-label-1"></span>
-              <button type="button" class="text-[10px] text-brand-primary font-bold uppercase tracking-wider hover:underline" data-retake="1" id="fs-retake-1"></button>
-            </div>
-            <div class="space-y-2 text-center">
-              <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-stone-900 shadow-md">
-                <img id="fs-prev-2" class="w-full h-full object-cover" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
-              </div>
-              <span class="text-[10px] font-bold uppercase tracking-wide text-stone-400" id="fs-prev-label-2"></span>
-              <button type="button" class="text-[10px] text-brand-primary font-bold uppercase tracking-wider hover:underline" data-retake="2" id="fs-retake-2"></button>
-            </div>
+              <button type="button" class="text-[10px] text-brand-primary font-bold uppercase tracking-wider hover:underline" data-retake="${i}" id="fs-retake-${i}"></button>
+            </div>`).join("")}
           </div>
-
-          <button type="button" id="fs-validate-btn" class="w-full py-3.5 rounded-2xl bg-brand-primary text-white font-bold text-sm tracking-wide hover:bg-brand-primary/90 transition-all shadow-lg"></button>
-          <button type="button" id="fs-restart-btn" class="w-full py-2.5 rounded-2xl border border-stone-200 text-stone-500 text-xs font-bold tracking-wide hover:border-brand-primary hover:text-brand-primary transition-all"></button>
+          <button type="button" id="fs-validate-btn" class="w-full py-4 rounded-2xl bg-brand-primary text-white font-bold text-sm tracking-wide hover:bg-brand-primary/90 transition-all shadow-lg shadow-brand-primary/20"></button>
+          <button type="button" id="fs-restart-btn" class="w-full py-2.5 rounded-2xl border border-stone-200 text-stone-400 text-[11px] font-bold tracking-wide hover:border-brand-primary hover:text-brand-primary transition-all"></button>
         </div>
 
-        <!-- Error/fallback message -->
-        <div id="fs-error" class="hidden text-center py-6 px-4 space-y-3 animate-fade-in">
-          <div class="w-12 h-12 mx-auto rounded-full bg-amber-50 flex items-center justify-center">
-            <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <div id="fs-error" class="hidden text-center py-8 px-4 space-y-4">
+          <div class="w-14 h-14 mx-auto rounded-full bg-amber-50 flex items-center justify-center">
+            <svg class="w-7 h-7 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
             </svg>
           </div>
-          <p class="text-sm text-stone-600" id="fs-error-text"></p>
+          <p class="text-sm text-stone-600 leading-relaxed" id="fs-error-text"></p>
         </div>
-      </div>
-    `;
-    return html;
+      </div>`;
   }
 
-  function updateProgressUI() {
-    const steps = [t("stepFace"), t("stepLeft"), t("stepRight")];
+  // ─── PROGRESS BAR ─────────────────────────────────────────
+  function updateProgress() {
+    const el = document.getElementById("fs-progress");
+    if (!el) return;
+    const labels = [t("stepFace"), t("stepLeft"), t("stepRight")];
+    let html = "";
     for (let i = 0; i < 3; i++) {
-      const dot = document.getElementById(`fs-prog-dot-${i}`);
-      const label = document.getElementById(`fs-prog-label-${i}`);
-      if (label) label.textContent = steps[i];
+      const done = !!S.captures[i];
+      const active = i === S.captureStep && !done;
+      const dotClass = done
+        ? "w-7 h-7 rounded-full bg-brand-primary text-white flex items-center justify-center shadow-md shadow-brand-primary/30"
+        : active
+          ? "w-7 h-7 rounded-full border-2 border-brand-primary text-brand-primary flex items-center justify-center"
+          : "w-7 h-7 rounded-full border-2 border-stone-300 text-stone-400 flex items-center justify-center";
+      const labelClass = done || active ? "text-[10px] font-bold text-brand-dark" : "text-[10px] font-medium text-stone-400";
+      const inner = done
+        ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>'
+        : `<span class="text-[10px] font-bold">${i + 1}</span>`;
 
-      if (!dot) continue;
-
-      if (scanState.captures[i]) {
-        // Completed
-        dot.className = "w-5 h-5 rounded-full border-2 flex items-center justify-center text-[10px] font-bold bg-brand-primary border-brand-primary text-white";
-        dot.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>';
-      } else if (i === scanState.captureStep) {
-        // Current
-        dot.className = "w-5 h-5 rounded-full border-2 flex items-center justify-center text-[10px] font-bold border-brand-primary text-brand-primary";
-        dot.textContent = String(i + 1);
-      } else {
-        // Upcoming
-        dot.className = "w-5 h-5 rounded-full border-2 flex items-center justify-center text-[10px] font-bold border-stone-300 text-stone-400";
-        dot.textContent = String(i + 1);
-      }
+      if (i > 0) html += '<div class="w-8 h-px ' + (S.captures[i - 1] ? "bg-brand-primary" : "bg-stone-300") + '"></div>';
+      html += `<div class="flex flex-col items-center gap-1"><div class="${dotClass}">${inner}</div><span class="${labelClass}">${labels[i]}</span></div>`;
     }
+    el.innerHTML = html;
   }
 
-  function updateInstructionUI(text) {
+  function updateInstruction(text) {
     const el = document.getElementById("fs-instruction");
-    if (el && el.textContent !== text) {
-      el.textContent = text;
-    }
+    if (el && el.textContent !== text) el.textContent = text;
   }
 
-  function showScreen(screen) {
-    const screens = ["fs-permission", "fs-loading", "fs-scan", "fs-preview", "fs-error"];
-    screens.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.classList.toggle("hidden", id !== screen);
+  function updateTip(text) {
+    const el = document.getElementById("fs-tip");
+    if (el) el.querySelector("span").textContent = text;
+  }
+
+  function showScreen(id) {
+    ["fs-permission", "fs-loading", "fs-scan", "fs-preview", "fs-error"].forEach(s => {
+      const el = document.getElementById(s);
+      if (el) el.classList.toggle("hidden", s !== id);
     });
   }
 
-  // ─── CAMERA & MEDIAPIPE SETUP ─────────────────────────────
-
+  // ─── CAMERA & MEDIAPIPE ───────────────────────────────────
   async function requestCamera() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      showError(t("cameraNotSupported"));
-      return false;
-    }
-
+    if (!navigator.mediaDevices?.getUserMedia) { showError(t("cameraNotSupported")); return false; }
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: "user",
-          width: { ideal: 1280 },
-          height: { ideal: 960 },
-        },
-        audio: false,
+      S.videoStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false,
       });
-      scanState.videoStream = stream;
       return true;
     } catch (err) {
-      console.warn("Camera access denied:", err);
-      if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-        showError(t("cameraDenied"));
-      } else if (err.name === "NotFoundError") {
-        showError(t("noCameraDevice"));
-      } else {
-        showError(t("cameraDenied"));
-      }
+      showError(err.name === "NotFoundError" ? t("noCameraDevice") : t("cameraDenied"));
       return false;
     }
   }
 
   async function initFaceMesh() {
-    if (!window.FaceMesh) {
-      console.error("MediaPipe FaceMesh not loaded");
-      showError(t("cameraNotSupported"));
-      return false;
-    }
-
-    const faceMesh = new window.FaceMesh({
-      locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-      },
-    });
-
-    faceMesh.setOptions({
-      maxNumFaces: 1,
-      refineLandmarks: true,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
-    });
-
-    faceMesh.onResults(onFaceMeshResults);
-
-    scanState.faceMesh = faceMesh;
+    if (!window.FaceMesh) { showError(t("cameraNotSupported")); return false; }
+    const fm = new window.FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
+    fm.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+    fm.onResults(onResults);
+    S.faceMesh = fm;
     return true;
   }
 
   function startCamera() {
-    if (!videoEl || !scanState.videoStream) return;
-
-    videoEl.srcObject = scanState.videoStream;
+    if (!videoEl || !S.videoStream) return;
+    videoEl.srcObject = S.videoStream;
     videoEl.play().catch(() => {});
-
-    // Resize overlay canvas to match video
     videoEl.addEventListener("loadedmetadata", () => {
-      if (overlayCanvasEl) {
-        overlayCanvasEl.width = videoEl.videoWidth;
-        overlayCanvasEl.height = videoEl.videoHeight;
-      }
+      if (overlayCanvasEl) { overlayCanvasEl.width = videoEl.videoWidth; overlayCanvasEl.height = videoEl.videoHeight; }
     });
 
-    // Start sending frames to FaceMesh
-    if (window.Camera && scanState.faceMesh) {
-      const camera = new window.Camera(videoEl, {
-        onFrame: async () => {
-          if (scanState.phase === "scanning" && scanState.faceMesh) {
-            await scanState.faceMesh.send({ image: videoEl });
-          }
-        },
-        width: 1280,
-        height: 960,
+    if (window.Camera && S.faceMesh) {
+      const cam = new window.Camera(videoEl, {
+        onFrame: async () => { if (S.phase === "scanning" && S.faceMesh) await S.faceMesh.send({ image: videoEl }); },
+        width: 1280, height: 960,
       });
-      camera.start();
-      scanState.camera = camera;
+      cam.start();
+      S.camera = cam;
     } else {
-      // Fallback: manual frame sending via requestAnimationFrame
-      function sendFrame() {
-        if (scanState.phase !== "scanning") return;
-        if (scanState.faceMesh && videoEl.readyState >= 2) {
-          scanState.faceMesh.send({ image: videoEl }).then(() => {
-            scanState.animFrameId = requestAnimationFrame(sendFrame);
-          });
-        } else {
-          scanState.animFrameId = requestAnimationFrame(sendFrame);
-        }
-      }
-      scanState.animFrameId = requestAnimationFrame(sendFrame);
+      (function loop() {
+        if (S.phase !== "scanning") return;
+        if (S.faceMesh && videoEl.readyState >= 2) S.faceMesh.send({ image: videoEl }).then(() => { S.animFrameId = requestAnimationFrame(loop); });
+        else S.animFrameId = requestAnimationFrame(loop);
+      })();
     }
-
-    // Start no-face timeout
     resetNoFaceTimer();
   }
 
   function stopCamera() {
-    if (scanState.camera) {
-      try { scanState.camera.stop(); } catch (_) {}
-      scanState.camera = null;
-    }
-    if (scanState.animFrameId) {
-      cancelAnimationFrame(scanState.animFrameId);
-      scanState.animFrameId = null;
-    }
-    if (scanState.videoStream) {
-      scanState.videoStream.getTracks().forEach((track) => track.stop());
-      scanState.videoStream = null;
-    }
-    if (videoEl) {
-      videoEl.srcObject = null;
-    }
+    if (S.camera) { try { S.camera.stop(); } catch (_) {} S.camera = null; }
+    if (S.animFrameId) { cancelAnimationFrame(S.animFrameId); S.animFrameId = null; }
+    if (S.videoStream) { S.videoStream.getTracks().forEach(t => t.stop()); S.videoStream = null; }
+    if (videoEl) videoEl.srcObject = null;
     clearNoFaceTimer();
   }
-
-  // ─── NO FACE TIMEOUT ─────────────────────────────────────
 
   function resetNoFaceTimer() {
     clearNoFaceTimer();
-    scanState.showNoFaceHint = false;
     const hint = document.getElementById("fs-noface-hint");
     if (hint) hint.classList.add("hidden");
-
-    scanState.noFaceTimer = setTimeout(() => {
-      scanState.showNoFaceHint = true;
+    S.noFaceTimer = setTimeout(() => {
       const hint = document.getElementById("fs-noface-hint");
-      if (hint) {
-        hint.classList.remove("hidden");
-        hint.querySelector("p").textContent = t("noFaceHint");
-      }
-    }, THRESHOLDS.noFaceTimeout);
+      if (hint) { hint.classList.remove("hidden"); hint.querySelector("p").textContent = t("noFaceHint"); }
+    }, CFG.noFaceTimeout);
   }
 
-  function clearNoFaceTimer() {
-    if (scanState.noFaceTimer) {
-      clearTimeout(scanState.noFaceTimer);
-      scanState.noFaceTimer = null;
-    }
-  }
+  function clearNoFaceTimer() { if (S.noFaceTimer) { clearTimeout(S.noFaceTimer); S.noFaceTimer = null; } }
 
-  // ─── FACE MESH RESULTS HANDLER ────────────────────────────
+  // ─── FACE MESH CALLBACK ──────────────────────────────────
+  function onResults(results) {
+    if (S.phase !== "scanning" || S.isCapturing) return;
+    const marks = results.multiFaceLandmarks?.[0];
 
-  function onFaceMeshResults(results) {
-    if (scanState.phase !== "scanning" || scanState.isCapturing) return;
-
-    const landmarks = results.multiFaceLandmarks && results.multiFaceLandmarks[0];
-
-    if (!landmarks || landmarks.length < 468) {
-      // No face detected
-      scanState.holdStartTime = null;
-      scanState.ovalColor = "white";
-      drawOverlay("white", "");
-      updateInstructionUI(t("noFaceDetected"));
+    if (!marks || marks.length < 468) {
+      S.holdStartTime = null;
+      S.status = { distance: null, light: null, angle: null, stability: null };
+      drawOverlay("white", 0, S.captureStep);
+      updateInstruction(t("noFaceDetected"));
       return;
     }
 
-    // Face detected — reset no-face timer
     resetNoFaceTimer();
+    S.prevLandmarks = S.lastLandmarks;
+    S.lastLandmarks = marks;
 
-    // Save landmarks for stability check
-    scanState.prevLandmarks = scanState.lastLandmarks;
-    scanState.lastLandmarks = landmarks;
+    const check = evaluate(marks);
 
-    // Run all checks
-    const checks = evaluateConditions(landmarks);
-
-    if (checks.allGood) {
+    if (check.allGood) {
       const now = Date.now();
+      if (!S.holdStartTime) S.holdStartTime = now;
+      const held = now - S.holdStartTime;
+      const progress = Math.min(held / CFG.holdDurationMs, 1);
 
-      // Start hold timer if not already started
-      if (!scanState.holdStartTime) {
-        scanState.holdStartTime = now;
-      }
-
-      const heldMs = now - scanState.holdStartTime;
-      const progress = Math.min(heldMs / THRESHOLDS.holdDurationMs, 1);
-
-      scanState.ovalColor = "green";
-
-      if (heldMs >= THRESHOLDS.holdDurationMs) {
-        // Held long enough — capture!
-        scanState.holdStartTime = null;
+      if (held >= CFG.holdDurationMs) {
+        S.holdStartTime = null;
         performCapture();
         return;
       }
 
-      // Show countdown progress
-      const remaining = Math.ceil((THRESHOLDS.holdDurationMs - heldMs) / 1000);
-      updateInstructionUI(t("holdStill") + ` (${remaining}s)`);
-      drawOverlay("green", "", progress);
+      const remaining = ((CFG.holdDurationMs - held) / 1000).toFixed(1);
+      updateInstruction(`${t("holdStill")} (${remaining}s)`);
+      drawOverlay("green", progress, S.captureStep);
     } else {
-      // Conditions broken — reset hold timer
-      scanState.holdStartTime = null;
-      scanState.ovalColor = checks.faceDetected ? "yellow" : "white";
-      updateInstructionUI(checks.instruction);
-      drawOverlay(scanState.ovalColor, "", 0);
+      S.holdStartTime = null;
+      drawOverlay(check.faceDetected ? "yellow" : "white", 0, S.captureStep);
+      updateInstruction(check.instruction);
     }
   }
 
-  function evaluateConditions(landmarks) {
-    const step = scanState.captureStep; // 0=face, 1=left, 2=right
+  // ─── CONDITION EVALUATION ─────────────────────────────────
+  function evaluate(marks) {
+    const step = S.captureStep;
+    const isProfile = step > 0;
     let instruction = "";
     let allGood = true;
-    const isProfile = step > 0;
 
-    // 1. Distance check (skip for profiles — pupil distance is unreliable when turned)
+    // Reset statuses
+    S.status = { distance: true, light: true, angle: true, stability: true };
+
+    // 1. Distance (skip for profiles)
     if (!isProfile) {
-      const pupilDist = computePupilDistance(landmarks);
-      if (pupilDist < THRESHOLDS.pupilDistMin) {
+      const pd = pupilDist(marks);
+      if (pd < CFG.pupilDistMin) {
         instruction = t("moveCloser");
+        S.status.distance = false;
         allGood = false;
-      } else if (pupilDist > THRESHOLDS.pupilDistMax) {
+      } else if (pd > CFG.pupilDistMax) {
         instruction = t("moveBack");
+        S.status.distance = false;
         allGood = false;
       }
     }
 
-    // 2. Centering check (only for face step)
+    // 2. Centering (face only)
     if (allGood && step === 0) {
-      const nose = computeNoseCenter(landmarks);
+      const nose = lm(marks, LM.noseTip);
       if (nose) {
-        const offsetX = Math.abs(nose.x - 0.5);
-        const offsetY = Math.abs(nose.y - 0.42);
-        if (offsetX > THRESHOLDS.centerMaxOffset || offsetY > THRESHOLDS.centerMaxOffset) {
+        if (Math.abs(nose.x - 0.5) > CFG.centerMaxOffset || Math.abs(nose.y - 0.40) > CFG.centerMaxOffset) {
           instruction = t("centerFace");
+          S.status.distance = false;
           allGood = false;
         }
       }
     }
 
-    // 3. Head pose check — using 3D face normal vector (reliable yaw/pitch)
+    // 3. Head pose (3D)
+    const pose = headPose(marks);
+    const absYaw = Math.abs(pose.yaw);
+
     if (allGood) {
-      const pose = computeHeadPose(landmarks);
-      const absYaw = Math.abs(pose.yaw);
-
-      // Debug logging (5% of frames) — check console to calibrate
-      if (Math.random() < 0.03) {
-        console.log(`[FaceScan] step=${step} yaw=${pose.yaw.toFixed(1)}° pitch=${pose.pitch.toFixed(1)}° absYaw=${absYaw.toFixed(1)}°`);
-      }
-
       if (step === 0) {
-        // Face: must look straight at camera
-        if (absYaw > THRESHOLDS.faceYawMax) {
-          instruction = t("instructionFace");
-          allGood = false;
-        }
-        if (allGood && Math.abs(pose.pitch) > THRESHOLDS.pitchMax) {
-          instruction = t("instructionFace");
-          allGood = false;
-        }
+        if (absYaw > CFG.faceYawMax) { instruction = t("instructionFace"); S.status.angle = false; allGood = false; }
+        if (allGood && Math.abs(pose.pitch) > CFG.pitchMax) { instruction = t("instructionFace"); S.status.angle = false; allGood = false; }
       } else {
-        // Profiles: need significant head turn
-        if (absYaw < THRESHOLDS.profileYawMin) {
+        if (absYaw < CFG.profileYawMin) {
           instruction = step === 1 ? t("instructionLeft") : t("instructionRight");
+          S.status.angle = false;
           allGood = false;
-        } else if (absYaw > THRESHOLDS.profileYawMax) {
+        } else if (absYaw > CFG.profileYawMax) {
           instruction = step === 1 ? t("instructionLeft") : t("instructionRight");
-          allGood = false;
-        }
-        // Relaxed pitch for profiles
-        if (allGood && Math.abs(pose.pitch) > THRESHOLDS.pitchMax * 2) {
-          instruction = step === 1 ? t("instructionLeft") : t("instructionRight");
+          S.status.angle = false;
           allGood = false;
         }
+        if (allGood && Math.abs(pose.pitch) > CFG.pitchMax * 2) { S.status.angle = false; allGood = false; }
       }
     }
 
-    // 4. Brightness check
+    // 4. Brightness
     if (allGood && videoEl) {
-      const brightness = analyzeBrightness(videoEl);
-      if (brightness < THRESHOLDS.brightnessMin) {
-        instruction = t("moreLightNeeded");
-        allGood = false;
-      } else if (brightness > THRESHOLDS.brightnessMax) {
-        instruction = t("tooMuchLight");
-        allGood = false;
-      }
+      const br = brightness(videoEl);
+      if (br < CFG.brightnessMin) { instruction = t("moreLightNeeded"); S.status.light = false; allGood = false; }
+      else if (br > CFG.brightnessMax) { instruction = t("tooMuchLight"); S.status.light = false; allGood = false; }
     }
 
-    // 5. Stability check
+    // 5. Stability
     if (allGood) {
-      const stability = computeStability(landmarks, scanState.prevLandmarks);
-      const maxDelta = isProfile ? THRESHOLDS.stabilityMaxDelta * 1.5 : THRESHOLDS.stabilityMaxDelta;
-      if (stability > maxDelta) {
-        instruction = t("holdStill");
-        allGood = false;
-      }
+      const stab = stability(marks, S.prevLandmarks);
+      const maxD = isProfile ? CFG.stabilityMaxDelta * 1.5 : CFG.stabilityMaxDelta;
+      if (stab > maxD) { instruction = t("holdStill"); S.status.stability = false; allGood = false; }
     }
 
-    // Default instruction
-    if (allGood) {
-      instruction = t("holdStill");
-    } else if (!instruction) {
-      const fallbacks = [t("instructionFace"), t("instructionLeft"), t("instructionRight")];
-      instruction = fallbacks[step];
+    if (!allGood && !instruction) {
+      instruction = [t("instructionFace"), t("instructionLeft"), t("instructionRight")][step];
+    }
+
+    // Debug (3% of frames)
+    if (Math.random() < 0.03) {
+      console.log(`[Scan] step=${step} yaw=${pose.yaw.toFixed(1)}° pitch=${pose.pitch.toFixed(1)}° all=${allGood}`);
     }
 
     return { allGood, instruction, faceDetected: true };
   }
 
-  // ─── CAPTURE LOGIC ────────────────────────────────────────
-
+  // ─── CAPTURE ──────────────────────────────────────────────
   async function performCapture() {
-    if (scanState.isCapturing) return;
-    scanState.isCapturing = true;
+    if (S.isCapturing) return;
+    S.isCapturing = true;
 
-    updateInstructionUI(t("capturing"));
+    haptic();
+    updateInstruction(t("capturing"));
 
-    // Flash effect
+    // Flash
     const flash = document.getElementById("fs-flash");
-    if (flash) {
-      flash.style.opacity = "0.7";
-      setTimeout(() => { flash.style.opacity = "0"; }, 200);
-    }
+    if (flash) { flash.style.opacity = "0.8"; setTimeout(() => flash.style.opacity = "0", 250); }
 
     try {
       const blob = await captureFrame(videoEl);
-      const step = scanState.captureStep;
+      const step = S.captureStep;
+      S.captureBlobs[step] = blob;
+      S.captures[step] = URL.createObjectURL(blob);
+      updateProgress();
 
-      scanState.captureBlobs[step] = blob;
-      scanState.captures[step] = URL.createObjectURL(blob);
+      // Show success overlay
+      const overlay = document.getElementById("fs-success-overlay");
+      const successText = document.getElementById("fs-success-text");
+      const nextText = document.getElementById("fs-success-next");
 
-      updateInstructionUI(t("captureSuccess"));
-      updateProgressUI();
+      if (overlay && successText) {
+        successText.textContent = t("captureSuccess");
+        overlay.style.opacity = "1";
 
-      // Move to next step or finish — with cooldown to prevent chain-firing
-      await new Promise((r) => setTimeout(r, THRESHOLDS.captureCooldown));
+        if (step < 2 && nextText) {
+          // Countdown display
+          let countdown = Math.ceil(CFG.captureCooldown / 1000);
+          nextText.textContent = `${t("nextStep")} ${countdown}s...`;
+          const interval = setInterval(() => {
+            countdown--;
+            if (countdown > 0) nextText.textContent = `${t("nextStep")} ${countdown}s...`;
+            else { clearInterval(interval); nextText.textContent = ""; }
+          }, 1000);
+        } else if (nextText) {
+          nextText.textContent = "";
+        }
+      }
+
+      await new Promise(r => setTimeout(r, CFG.captureCooldown));
+
+      if (overlay) overlay.style.opacity = "0";
 
       if (step < 2) {
-        scanState.captureStep = step + 1;
-        scanState.holdStartTime = null;
-        scanState.isCapturing = false;
-        // Reset landmarks so stability check doesn't carry over
-        scanState.prevLandmarks = null;
-        scanState.lastLandmarks = null;
-        updateProgressUI();
-        // Show new instruction
-        const instructions = [t("instructionFace"), t("instructionLeft"), t("instructionRight")];
-        updateInstructionUI(instructions[scanState.captureStep]);
+        S.captureStep = step + 1;
+        S.holdStartTime = null;
+        S.isCapturing = false;
+        S.prevLandmarks = null;
+        S.lastLandmarks = null;
+        updateProgress();
+        updateInstruction([t("instructionFace"), t("instructionLeft"), t("instructionRight")][S.captureStep]);
+        updateTip(t("tipProfile"));
       } else {
-        // All 3 captured — show preview
-        scanState.isCapturing = false;
+        S.isCapturing = false;
         showPreview();
       }
     } catch (err) {
       console.error("Capture failed:", err);
-      scanState.isCapturing = false;
-      scanState.holdStartTime = null;
+      S.isCapturing = false;
+      S.holdStartTime = null;
     }
   }
 
-  // ─── PREVIEW SCREEN ──────────────────────────────────────
-
+  // ─── PREVIEW ──────────────────────────────────────────────
   function showPreview() {
     stopCamera();
-    scanState.phase = "preview";
+    S.phase = "preview";
     showScreen("fs-preview");
 
     const labels = [t("stepFace"), t("stepLeft"), t("stepRight")];
@@ -876,8 +719,7 @@
       const img = document.getElementById(`fs-prev-${i}`);
       const label = document.getElementById(`fs-prev-label-${i}`);
       const retake = document.getElementById(`fs-retake-${i}`);
-
-      if (img) img.src = scanState.captures[i] || "";
+      if (img) img.src = S.captures[i] || "";
       if (label) label.textContent = labels[i];
       if (retake) retake.textContent = t("retake");
     }
@@ -886,304 +728,147 @@
     document.getElementById("fs-validate-btn").textContent = t("validatePhotos");
     document.getElementById("fs-restart-btn").textContent = t("scanAnother");
 
-    // Retake handlers
-    document.querySelectorAll("[data-retake]").forEach((btn) => {
-      btn.onclick = () => {
-        const idx = parseInt(btn.dataset.retake, 10);
-        retakeCapture(idx);
-      };
+    document.querySelectorAll("[data-retake]").forEach(btn => {
+      btn.onclick = () => retakeCapture(parseInt(btn.dataset.retake, 10));
     });
-
-    // Validate handler
     document.getElementById("fs-validate-btn").onclick = validateAndUpload;
-
-    // Restart handler
     document.getElementById("fs-restart-btn").onclick = restartScan;
   }
 
-  async function retakeCapture(stepIndex) {
-    // Revoke old URL
-    if (scanState.captures[stepIndex]) {
-      URL.revokeObjectURL(scanState.captures[stepIndex]);
-    }
-    scanState.captures[stepIndex] = null;
-    scanState.captureBlobs[stepIndex] = null;
-
-    // Restart scan at that step
-    scanState.captureStep = stepIndex;
-    scanState.holdStartTime = null;
-    scanState.phase = "scanning";
-
+  async function retakeCapture(idx) {
+    if (S.captures[idx]) URL.revokeObjectURL(S.captures[idx]);
+    S.captures[idx] = null;
+    S.captureBlobs[idx] = null;
+    S.captureStep = idx;
+    S.holdStartTime = null;
+    S.phase = "scanning";
     showScreen("fs-scan");
-    updateProgressUI();
-
+    updateProgress();
     const ok = await requestCamera();
-    if (!ok) return;
-    startCamera();
+    if (ok) startCamera();
   }
 
   function restartScan() {
-    // Clean up old captures
-    for (let i = 0; i < 3; i++) {
-      if (scanState.captures[i]) {
-        URL.revokeObjectURL(scanState.captures[i]);
-      }
-      scanState.captures[i] = null;
-      scanState.captureBlobs[i] = null;
-    }
-    scanState.captureStep = 0;
-    scanState.holdStartTime = null;
-
+    for (let i = 0; i < 3; i++) { if (S.captures[i]) URL.revokeObjectURL(S.captures[i]); S.captures[i] = null; S.captureBlobs[i] = null; }
+    S.captureStep = 0;
+    S.holdStartTime = null;
     startScanFlow();
   }
 
-  // ─── VALIDATE & UPLOAD TO S3 (reusing existing presign flow) ──
-
+  // ─── UPLOAD ───────────────────────────────────────────────
   async function validateAndUpload() {
-    const validateBtn = document.getElementById("fs-validate-btn");
-    if (validateBtn) {
-      validateBtn.disabled = true;
-      validateBtn.textContent = "...";
-    }
+    const btn = document.getElementById("fs-validate-btn");
+    if (btn) { btn.disabled = true; btn.textContent = "..."; }
 
     try {
       const types = ["face", "left", "right"];
-
       for (let i = 0; i < 3; i++) {
-        const blob = scanState.captureBlobs[i];
+        const blob = S.captureBlobs[i];
         if (!blob) continue;
+        const file = new File([blob], `scan_${types[i]}_${Date.now()}.jpg`, { type: "image/jpeg" });
 
-        // Create a File object from the blob for compatibility with existing upload function
-        const fileName = `scan_${types[i]}_${Date.now()}.jpg`;
-        const file = new File([blob], fileName, { type: "image/jpeg" });
-
-        // Use the existing uploadToS3Presigned function from formulaire2
         if (typeof window.uploadToS3Presigned === "function") {
-          const { key, getUrl } = await window.uploadToS3Presigned({
-            file,
-            jobId: window.formState ? window.formState.jobId : "",
-            type: types[i],
-          });
-
-          // Store in formState (same structure as manual upload)
-          if (window.formState) {
-            window.formState.photos[types[i]] = { key, getUrl };
-          }
-        } else if (typeof uploadToS3Presigned === "function") {
-          const { key, getUrl } = await uploadToS3Presigned({
-            file,
-            jobId: formState.jobId,
-            type: types[i],
-          });
-          formState.photos[types[i]] = { key, getUrl };
+          const { key, getUrl } = await window.uploadToS3Presigned({ file, jobId: window.formState?.jobId || "", type: types[i] });
+          if (window.formState) window.formState.photos[types[i]] = { key, getUrl };
         }
       }
 
-      // Mark face as uploaded for validation
-      if (window.validationState) {
-        window.validationState.facePhotoUploaded = true;
-      } else if (typeof validationState !== "undefined") {
-        validationState.facePhotoUploaded = true;
-      }
+      if (window.validationState) window.validationState.facePhotoUploaded = true;
+      updateManualPreviews();
+      if (onScanComplete) onScanComplete({ face: S.captureBlobs[0], left: S.captureBlobs[1], right: S.captureBlobs[2] });
 
-      // Update preview images in the manual upload section too (for consistency)
-      updateManualUploadPreviews();
+      if (btn) { btn.textContent = "✓"; btn.className = btn.className.replace("bg-brand-primary", "bg-green-500"); }
 
-      // Notify completion
-      if (onScanComplete) {
-        onScanComplete({
-          face: scanState.captureBlobs[0],
-          left: scanState.captureBlobs[1],
-          right: scanState.captureBlobs[2],
-        });
-      }
-
-      // Show success state on validate button
-      if (validateBtn) {
-        validateBtn.textContent = "✓";
-        validateBtn.classList.add("bg-green-500");
-        validateBtn.classList.remove("bg-brand-primary");
-      }
-
-      // Auto-hide scan UI after short delay and show the manual upload section with previews
       setTimeout(() => {
-        // Switch to showing the upload section with the captured photos
-        const scanContainer = document.getElementById("facescan-container");
-        const uploadContainer = document.getElementById("manual-upload-container");
-        if (scanContainer) scanContainer.classList.add("hidden");
-        if (uploadContainer) uploadContainer.classList.remove("hidden");
-
-        // Show switch-to-scan button
-        const switchBtn = document.getElementById("switch-to-scan-btn");
-        if (switchBtn) switchBtn.classList.remove("hidden");
+        const sc = document.getElementById("facescan-container");
+        const uc = document.getElementById("manual-upload-container");
+        if (sc) sc.classList.add("hidden");
+        if (uc) uc.classList.remove("hidden");
+        const sb = document.getElementById("switch-to-scan-btn");
+        if (sb) sb.classList.remove("hidden");
       }, 800);
-
     } catch (err) {
       console.error("Upload failed:", err);
-      if (validateBtn) {
-        validateBtn.disabled = false;
-        validateBtn.textContent = t("validatePhotos");
-      }
-      alert(lang === "fr"
-        ? "Erreur lors de l'envoi des photos. Vérifiez votre connexion."
-        : "Error uploading photos. Check your connection.");
+      if (btn) { btn.disabled = false; btn.textContent = t("validatePhotos"); }
+      alert(lang === "fr" ? "Erreur lors de l'envoi. Vérifiez votre connexion." : "Upload error. Check your connection.");
     }
   }
 
-  function updateManualUploadPreviews() {
-    // Update the original upload preview images with scan captures
-    const mapping = [
-      { idx: 0, previewId: "preview-face", emptyId: "empty-face" },
-      { idx: 1, previewId: "preview-left", emptyId: "empty-left" },
-      { idx: 2, previewId: "preview-right", emptyId: "empty-right" },
-    ];
-
-    for (const { idx, previewId, emptyId } of mapping) {
-      if (!scanState.captures[idx]) continue;
-      const img = document.getElementById(previewId);
-      const empty = document.getElementById(emptyId);
-      if (img) {
-        img.src = scanState.captures[idx];
-        img.classList.remove("hidden");
-      }
-      if (empty) {
-        empty.classList.add("hidden");
-      }
-    }
+  function updateManualPreviews() {
+    [["preview-face", "empty-face", 0], ["preview-left", "empty-left", 1], ["preview-right", "empty-right", 2]].forEach(([pid, eid, i]) => {
+      if (!S.captures[i]) return;
+      const img = document.getElementById(pid), empty = document.getElementById(eid);
+      if (img) { img.src = S.captures[i]; img.classList.remove("hidden"); }
+      if (empty) empty.classList.add("hidden");
+    });
   }
 
-  // ─── ERROR / FALLBACK ─────────────────────────────────────
-
-  function showError(message) {
+  // ─── ERROR ────────────────────────────────────────────────
+  function showError(msg) {
     showScreen("fs-error");
     const el = document.getElementById("fs-error-text");
-    if (el) el.textContent = message;
-
-    // Show manual upload as fallback
+    if (el) el.textContent = msg;
     setTimeout(() => {
-      const scanContainer = document.getElementById("facescan-container");
-      const uploadContainer = document.getElementById("manual-upload-container");
-      if (scanContainer) scanContainer.classList.add("hidden");
-      if (uploadContainer) uploadContainer.classList.remove("hidden");
-
-      const switchBtn = document.getElementById("switch-to-scan-btn");
-      if (switchBtn) switchBtn.classList.remove("hidden");
+      const sc = document.getElementById("facescan-container"), uc = document.getElementById("manual-upload-container");
+      if (sc) sc.classList.add("hidden");
+      if (uc) uc.classList.remove("hidden");
+      const sb = document.getElementById("switch-to-scan-btn");
+      if (sb) sb.classList.remove("hidden");
     }, 2000);
-
     if (onFallbackToUpload) onFallbackToUpload();
   }
 
   // ─── MAIN FLOW ────────────────────────────────────────────
-
   async function startScanFlow() {
-    scanState.phase = "permission";
+    S.phase = "permission";
     showScreen("fs-permission");
-
-    // Fill permission screen text
     document.getElementById("fs-perm-title").textContent = t("cameraPermTitle");
     document.getElementById("fs-perm-desc").textContent = t("cameraPermDesc");
     document.getElementById("fs-perm-btn").textContent = t("cameraPermBtn");
 
     document.getElementById("fs-perm-btn").onclick = async () => {
-      scanState.phase = "loading";
+      S.phase = "loading";
       showScreen("fs-loading");
       document.getElementById("fs-loading-text").textContent = t("loading");
 
-      const cameraOk = await requestCamera();
-      if (!cameraOk) return;
-
+      const camOk = await requestCamera();
+      if (!camOk) return;
       const meshOk = await initFaceMesh();
-      if (!meshOk) {
-        stopCamera();
-        return;
-      }
+      if (!meshOk) { stopCamera(); return; }
 
-      // Start scanning
-      scanState.phase = "scanning";
-      scanState.captureStep = 0;
-      scanState.holdStartTime = null;
+      S.phase = "scanning";
+      S.captureStep = 0;
+      S.holdStartTime = null;
       showScreen("fs-scan");
-      updateProgressUI();
-      updateInstructionUI(t("instructionFace"));
+      updateProgress();
+      updateInstruction(t("instructionFace"));
+      updateTip(t("tipFace"));
 
-      // Get video/canvas refs
       videoEl = document.getElementById("fs-video");
       overlayCanvasEl = document.getElementById("fs-overlay");
-      if (overlayCanvasEl) {
-        overlayCtx = overlayCanvasEl.getContext("2d");
-      }
-
+      if (overlayCanvasEl) overlayCtx = overlayCanvasEl.getContext("2d");
       startCamera();
     };
   }
 
   // ─── PUBLIC API ───────────────────────────────────────────
-
   window.AdermioFaceScan = {
-    /**
-     * Initialize the face scan UI inside a container element.
-     * @param {string} containerId - ID of the container element
-     * @param {object} options
-     * @param {function} options.onComplete - Called with {face, left, right} blobs after validation
-     * @param {function} options.onFallback - Called when falling back to manual upload
-     */
-    init: function (containerId, options) {
+    init(containerId, options) {
       detectLang();
       containerEl = document.getElementById(containerId);
-      if (!containerEl) {
-        console.error("FaceScan: container not found:", containerId);
-        return;
-      }
-
+      if (!containerEl) return;
       onScanComplete = options?.onComplete || null;
       onFallbackToUpload = options?.onFallback || null;
-
       containerEl.innerHTML = buildScanUI();
-
-      // Check if camera API is available at all
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        showError(t("cameraNotSupported"));
-        return;
-      }
-
+      if (!navigator.mediaDevices?.getUserMedia) { showError(t("cameraNotSupported")); return; }
       startScanFlow();
     },
-
-    /**
-     * Clean up resources (call when leaving the page/step).
-     */
-    destroy: function () {
+    destroy() {
       stopCamera();
-      if (scanState.faceMesh) {
-        try { scanState.faceMesh.close(); } catch (_) {}
-        scanState.faceMesh = null;
-      }
-      for (let i = 0; i < 3; i++) {
-        if (scanState.captures[i]) {
-          URL.revokeObjectURL(scanState.captures[i]);
-        }
-      }
-      scanState = {
-        phase: "idle",
-        captureStep: 0,
-        captures: [null, null, null],
-        captureBlobs: [null, null, null],
-        holdStartTime: null,
-        lastLandmarks: null,
-        prevLandmarks: null,
-        noFaceTimer: null,
-        showNoFaceHint: false,
-        currentInstruction: "",
-        ovalColor: "white",
-        isCapturing: false,
-        faceMesh: null,
-        camera: null,
-        videoStream: null,
-        animFrameId: null,
-      };
+      if (S.faceMesh) { try { S.faceMesh.close(); } catch (_) {} }
+      for (let i = 0; i < 3; i++) if (S.captures[i]) URL.revokeObjectURL(S.captures[i]);
+      S = resetState();
     },
-
-    /** Restart the scan from scratch */
     restart: restartScan,
   };
 })();
