@@ -87,17 +87,19 @@
     centerMaxOffset: 0.15,
     // Yaw angles (degrees)
     faceYawMax: 12,
-    profileYawMin: 12,    // lowered — the ratio*120 formula underestimates real angles
-    profileYawMax: 55,    // widened range to be more forgiving
+    profileYawMin: 20,    // must actually turn head ~20° before capture triggers
+    profileYawMax: 55,
     // Pitch (degrees)
     pitchMax: 15,
     // Brightness (0-255)
     brightnessMin: 45,
     brightnessMax: 230,
     // Stability — max average landmark movement between frames (normalized)
-    stabilityMaxDelta: 0.012,  // doubled — turning head naturally involves movement
+    stabilityMaxDelta: 0.012,
     // Number of consecutive "good" frames before auto-capture
-    goodFramesNeeded: 5,  // reduced from 8 — faster capture
+    goodFramesNeeded: 12,  // need to hold position ~0.5s before capture
+    // Pause between captures (ms) — prevents chain-firing
+    captureCooldown: 1500,
     // No face timeout (ms)
     noFaceTimeout: 10000,
     // Capture JPEG quality
@@ -824,13 +826,16 @@
       updateInstructionUI(t("captureSuccess"));
       updateProgressUI();
 
-      // Move to next step or finish
-      await new Promise((r) => setTimeout(r, 600));
+      // Move to next step or finish — with cooldown to prevent chain-firing
+      await new Promise((r) => setTimeout(r, THRESHOLDS.captureCooldown));
 
       if (step < 2) {
         scanState.captureStep = step + 1;
         scanState.goodFrameCount = 0;
         scanState.isCapturing = false;
+        // Reset landmarks so stability check doesn't carry over
+        scanState.prevLandmarks = null;
+        scanState.lastLandmarks = null;
         updateProgressUI();
         // Show new instruction
         const instructions = [t("instructionFace"), t("instructionLeft"), t("instructionRight")];
