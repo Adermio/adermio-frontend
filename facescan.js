@@ -81,46 +81,41 @@
   // ─── CONSTANTS / THRESHOLDS ────────────────────────────────
   const THRESHOLDS = {
     // Inter-pupillary distance in normalized coords (0-1 range relative to video width)
-    pupilDistMin: 0.08,   // too far (lowered for profiles where apparent distance shrinks)
-    pupilDistMax: 0.35,   // too close
+    pupilDistMin: 0.08,
+    pupilDistMax: 0.35,
     // Face centering — max offset from oval center (normalized)
     centerMaxOffset: 0.15,
-    // Yaw angles (degrees)
-    faceYawMax: 12,
-    profileYawMin: 20,    // must actually turn head ~20° before capture triggers
-    profileYawMax: 55,
+    // Yaw angles (degrees) — computed from 3D face normal vector
+    faceYawMax: 10,       // face must be within ±10° of straight
+    profileYawMin: 28,    // must turn at least 28° for a profile
+    profileYawMax: 60,    // don't want full 90° side view
     // Pitch (degrees)
     pitchMax: 15,
     // Brightness (0-255)
     brightnessMin: 45,
     brightnessMax: 230,
     // Stability — max average landmark movement between frames (normalized)
-    stabilityMaxDelta: 0.012,
-    // Number of consecutive "good" frames before auto-capture
-    goodFramesNeeded: 12,  // need to hold position ~0.5s before capture
-    // Pause between captures (ms) — prevents chain-firing
-    captureCooldown: 1500,
+    stabilityMaxDelta: 0.008,
+    // Time-based capture: conditions must hold for this many ms continuously
+    holdDurationMs: 1500,
+    // Pause after capture before starting next step (ms)
+    captureCooldown: 2000,
     // No face timeout (ms)
     noFaceTimeout: 10000,
     // Capture JPEG quality
     jpegQuality: 0.92,
   };
 
-  // Key landmark indices
+  // Key landmark indices for 3D pose estimation
   const LM = {
     noseTip: 1,
-    leftIris: 468,     // MediaPipe iris landmarks (if available)
-    rightIris: 473,
-    leftEyeInner: 133,
-    rightEyeInner: 362,
+    noseBridge: 6,        // top of nose bridge — good for plane computation
     leftEyeOuter: 33,
     rightEyeOuter: 263,
     leftCheek: 234,
     rightCheek: 454,
     chin: 152,
     forehead: 10,
-    leftJaw: 172,
-    rightJaw: 397,
   };
 
   // ─── STATE ─────────────────────────────────────────────────
@@ -130,7 +125,7 @@
     captureStep: 0,         // 0=face, 1=left, 2=right
     captures: [null, null, null],
     captureBlobs: [null, null, null],
-    goodFrameCount: 0,
+    holdStartTime: null,    // timestamp when conditions first became good
     lastLandmarks: null,
     prevLandmarks: null,
     noFaceTimer: null,
@@ -178,7 +173,6 @@
   }
 
   function computePupilDistance(landmarks) {
-    // Use eye outer corners as reliable proxy (iris landmarks may not always be available)
     const left = getLandmark(landmarks, LM.leftEyeOuter);
     const right = getLandmark(landmarks, LM.rightEyeOuter);
     if (!left || !right) return 0;
@@ -186,56 +180,57 @@
   }
 
   function computeNoseCenter(landmarks) {
-    const nose = getLandmark(landmarks, LM.noseTip);
-    return nose;
+    return getLandmark(landmarks, LM.noseTip);
   }
 
-  function computeYaw(landmarks) {
-    // Yaw = horizontal rotation
-    // Compare distance from nose to left cheek vs nose to right cheek
-    const nose = getLandmark(landmarks, LM.noseTip);
+  /**
+   * Compute yaw and pitch using the 3D face normal vector.
+   * MediaPipe provides z-coordinates for each landmark — we use 3 points
+   * (nose bridge, left cheek, right cheek) to define the face plane,
+   * then compute its normal via cross product. The normal direction
+   * directly gives us yaw and pitch in real degrees.
+   */
+  function computeHeadPose(landmarks) {
+    const noseBridge = getLandmark(landmarks, LM.noseBridge);
     const leftCheek = getLandmark(landmarks, LM.leftCheek);
     const rightCheek = getLandmark(landmarks, LM.rightCheek);
-    if (!nose || !leftCheek || !rightCheek) return 0;
-
-    const dLeft = distance2D(nose, leftCheek);
-    const dRight = distance2D(nose, rightCheek);
-
-    // Ratio approach: when facing straight, dLeft ≈ dRight
-    // When turned left (showing right profile), dLeft > dRight
-    // When turned right (showing left profile), dLeft < dRight
-    const ratio = (dLeft - dRight) / (dLeft + dRight);
-
-    // Convert to approximate degrees (empirical mapping)
-    // ratio of ~0.35 corresponds to roughly 40-45 degrees
-    const yawDeg = ratio * 120;
-
-    return yawDeg;
-  }
-
-  function computePitch(landmarks) {
-    // Pitch = vertical tilt
-    // Compare vertical position of nose relative to eyes and chin
-    const nose = getLandmark(landmarks, LM.noseTip);
     const forehead = getLandmark(landmarks, LM.forehead);
     const chin = getLandmark(landmarks, LM.chin);
-    if (!nose || !forehead || !chin) return 0;
 
-    const faceHeight = chin.y - forehead.y;
-    if (faceHeight <= 0) return 0;
+    if (!noseBridge || !leftCheek || !rightCheek || !forehead || !chin) {
+      return { yaw: 0, pitch: 0 };
+    }
 
-    // Expected nose position is roughly 60% down from forehead to chin
-    const expectedNoseY = forehead.y + faceHeight * 0.6;
-    const deviation = (nose.y - expectedNoseY) / faceHeight;
+    // Vector from right cheek to left cheek (horizontal face axis)
+    const hx = leftCheek.x - rightCheek.x;
+    const hy = leftCheek.y - rightCheek.y;
+    const hz = leftCheek.z - rightCheek.z;
 
-    // Convert to approximate degrees
-    return deviation * 80;
+    // Vector from chin to forehead (vertical face axis)
+    const vx = forehead.x - chin.x;
+    const vy = forehead.y - chin.y;
+    const vz = forehead.z - chin.z;
+
+    // Normal = cross product of horizontal × vertical
+    const nx = hy * vz - hz * vy;
+    const ny = hz * vx - hx * vz;
+    const nz = hx * vy - hy * vx;
+
+    // Yaw = rotation around vertical axis = atan2(nx, nz)
+    // When facing camera: nx ≈ 0, nz > 0 → yaw ≈ 0
+    // When turned right: nx > 0 → positive yaw
+    const yaw = Math.atan2(nx, nz) * (180 / Math.PI);
+
+    // Pitch = rotation around horizontal axis = atan2(ny, nz)
+    const nLen = Math.sqrt(nx * nx + ny * ny + nz * nz);
+    const pitch = nLen > 0 ? Math.asin(-ny / nLen) * (180 / Math.PI) : 0;
+
+    return { yaw, pitch };
   }
 
   function computeStability(currentLandmarks, previousLandmarks) {
     if (!previousLandmarks || !currentLandmarks) return 999;
 
-    // Sample a few key landmarks for stability check
     const indices = [LM.noseTip, LM.leftEyeOuter, LM.rightEyeOuter, LM.chin, LM.forehead];
     let totalDelta = 0;
     let count = 0;
@@ -302,7 +297,7 @@
 
   // ─── OVAL OVERLAY DRAWING ─────────────────────────────────
 
-  function drawOverlay(ovalColor, instruction, captureStep) {
+  function drawOverlay(ovalColor, instruction, progress) {
     if (!overlayCtx || !overlayCanvasEl) return;
 
     const w = overlayCanvasEl.width;
@@ -326,24 +321,35 @@
     overlayCtx.fill();
     overlayCtx.restore();
 
-    // Oval border
+    // Oval border — base (dim)
     const colors = {
-      white: "rgba(255, 255, 255, 0.6)",
-      yellow: "rgba(250, 204, 21, 0.8)",
-      green: "rgba(20, 184, 166, 1)",
+      white: "rgba(255, 255, 255, 0.4)",
+      yellow: "rgba(250, 204, 21, 0.6)",
+      green: "rgba(20, 184, 166, 0.3)",
     };
     overlayCtx.strokeStyle = colors[ovalColor] || colors.white;
-    overlayCtx.lineWidth = ovalColor === "green" ? 4 : 2.5;
+    overlayCtx.lineWidth = 2.5;
     overlayCtx.beginPath();
     overlayCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
     overlayCtx.stroke();
 
-    // Glow effect when green
-    if (ovalColor === "green") {
-      overlayCtx.strokeStyle = "rgba(20, 184, 166, 0.3)";
-      overlayCtx.lineWidth = 12;
+    // Progress arc when green — fills the oval border as countdown progresses
+    if (ovalColor === "green" && progress > 0) {
+      const startAngle = -Math.PI / 2; // top of oval
+      const endAngle = startAngle + (Math.PI * 2 * progress);
+
+      // Bright green progress arc
+      overlayCtx.strokeStyle = "rgba(20, 184, 166, 1)";
+      overlayCtx.lineWidth = 5;
       overlayCtx.beginPath();
-      overlayCtx.ellipse(cx, cy, rx + 4, ry + 4, 0, 0, Math.PI * 2);
+      overlayCtx.ellipse(cx, cy, rx, ry, 0, startAngle, endAngle);
+      overlayCtx.stroke();
+
+      // Glow behind progress arc
+      overlayCtx.strokeStyle = "rgba(20, 184, 166, 0.25)";
+      overlayCtx.lineWidth = 14;
+      overlayCtx.beginPath();
+      overlayCtx.ellipse(cx, cy, rx + 2, ry + 2, 0, startAngle, endAngle);
       overlayCtx.stroke();
     }
   }
@@ -656,7 +662,7 @@
 
     if (!landmarks || landmarks.length < 468) {
       // No face detected
-      scanState.goodFrameCount = 0;
+      scanState.holdStartTime = null;
       scanState.ovalColor = "white";
       drawOverlay("white", "");
       updateInstructionUI(t("noFaceDetected"));
@@ -674,22 +680,36 @@
     const checks = evaluateConditions(landmarks);
 
     if (checks.allGood) {
-      scanState.goodFrameCount++;
+      const now = Date.now();
+
+      // Start hold timer if not already started
+      if (!scanState.holdStartTime) {
+        scanState.holdStartTime = now;
+      }
+
+      const heldMs = now - scanState.holdStartTime;
+      const progress = Math.min(heldMs / THRESHOLDS.holdDurationMs, 1);
+
       scanState.ovalColor = "green";
 
-      if (scanState.goodFrameCount >= THRESHOLDS.goodFramesNeeded) {
-        // Auto-capture!
+      if (heldMs >= THRESHOLDS.holdDurationMs) {
+        // Held long enough — capture!
+        scanState.holdStartTime = null;
         performCapture();
         return;
       }
-      updateInstructionUI(t("holdStill"));
+
+      // Show countdown progress
+      const remaining = Math.ceil((THRESHOLDS.holdDurationMs - heldMs) / 1000);
+      updateInstructionUI(t("holdStill") + ` (${remaining}s)`);
+      drawOverlay("green", "", progress);
     } else {
-      scanState.goodFrameCount = 0;
+      // Conditions broken — reset hold timer
+      scanState.holdStartTime = null;
       scanState.ovalColor = checks.faceDetected ? "yellow" : "white";
       updateInstructionUI(checks.instruction);
+      drawOverlay(scanState.ovalColor, "", 0);
     }
-
-    drawOverlay(scanState.ovalColor, "");
   }
 
   function evaluateConditions(landmarks) {
@@ -698,18 +718,19 @@
     let allGood = true;
     const isProfile = step > 0;
 
-    // 1. Distance check (relaxed for profiles since apparent pupil distance shrinks when turning)
-    const pupilDist = computePupilDistance(landmarks);
-    const minDist = isProfile ? THRESHOLDS.pupilDistMin * 0.5 : THRESHOLDS.pupilDistMin;
-    if (pupilDist < minDist) {
-      instruction = t("moveCloser");
-      allGood = false;
-    } else if (pupilDist > THRESHOLDS.pupilDistMax) {
-      instruction = t("moveBack");
-      allGood = false;
+    // 1. Distance check (skip for profiles — pupil distance is unreliable when turned)
+    if (!isProfile) {
+      const pupilDist = computePupilDistance(landmarks);
+      if (pupilDist < THRESHOLDS.pupilDistMin) {
+        instruction = t("moveCloser");
+        allGood = false;
+      } else if (pupilDist > THRESHOLDS.pupilDistMax) {
+        instruction = t("moveBack");
+        allGood = false;
+      }
     }
 
-    // 2. Centering check (only for face step — skip for profiles)
+    // 2. Centering check (only for face step)
     if (allGood && step === 0) {
       const nose = computeNoseCenter(landmarks);
       if (nose) {
@@ -722,53 +743,44 @@
       }
     }
 
-    // 3. Yaw check
-    // IMPORTANT: Video is mirrored (scaleX(-1)), but landmarks follow raw video coords.
-    // So we need to check: when user physically turns right → left cheek visible → yaw sign depends on raw coords.
-    // We use absolute yaw value and just check magnitude for profiles.
+    // 3. Head pose check — using 3D face normal vector (reliable yaw/pitch)
     if (allGood) {
-      const yaw = computeYaw(landmarks);
-      const absYaw = Math.abs(yaw);
+      const pose = computeHeadPose(landmarks);
+      const absYaw = Math.abs(pose.yaw);
 
-      // Debug logging (temporary — helps calibrate thresholds)
-      if (step > 0 && Math.random() < 0.05) {
-        console.log(`[FaceScan] step=${step} yaw=${yaw.toFixed(1)} absYaw=${absYaw.toFixed(1)} pupil=${pupilDist.toFixed(3)}`);
+      // Debug logging (5% of frames) — check console to calibrate
+      if (Math.random() < 0.03) {
+        console.log(`[FaceScan] step=${step} yaw=${pose.yaw.toFixed(1)}° pitch=${pose.pitch.toFixed(1)}° absYaw=${absYaw.toFixed(1)}°`);
       }
 
       if (step === 0) {
-        // Face: need straight ahead
+        // Face: must look straight at camera
         if (absYaw > THRESHOLDS.faceYawMax) {
           instruction = t("instructionFace");
           allGood = false;
         }
-      } else if (step === 1) {
-        // Left profile: user turns head to the right physically
-        // Accept any sufficient yaw in either direction since mirror may flip the sign
-        if (absYaw < THRESHOLDS.profileYawMin || absYaw > THRESHOLDS.profileYawMax) {
-          instruction = t("instructionLeft");
+        if (allGood && Math.abs(pose.pitch) > THRESHOLDS.pitchMax) {
+          instruction = t("instructionFace");
           allGood = false;
         }
-      } else if (step === 2) {
-        // Right profile: user turns head to the left physically
-        // Same approach: accept sufficient yaw magnitude
-        if (absYaw < THRESHOLDS.profileYawMin || absYaw > THRESHOLDS.profileYawMax) {
-          instruction = t("instructionRight");
+      } else {
+        // Profiles: need significant head turn
+        if (absYaw < THRESHOLDS.profileYawMin) {
+          instruction = step === 1 ? t("instructionLeft") : t("instructionRight");
+          allGood = false;
+        } else if (absYaw > THRESHOLDS.profileYawMax) {
+          instruction = step === 1 ? t("instructionLeft") : t("instructionRight");
+          allGood = false;
+        }
+        // Relaxed pitch for profiles
+        if (allGood && Math.abs(pose.pitch) > THRESHOLDS.pitchMax * 2) {
+          instruction = step === 1 ? t("instructionLeft") : t("instructionRight");
           allGood = false;
         }
       }
     }
 
-    // 4. Pitch check (relaxed for profiles)
-    if (allGood) {
-      const pitch = computePitch(landmarks);
-      const maxPitch = isProfile ? THRESHOLDS.pitchMax * 1.5 : THRESHOLDS.pitchMax;
-      if (Math.abs(pitch) > maxPitch) {
-        instruction = step === 0 ? t("instructionFace") : (step === 1 ? t("instructionLeft") : t("instructionRight"));
-        allGood = false;
-      }
-    }
-
-    // 5. Brightness check
+    // 4. Brightness check
     if (allGood && videoEl) {
       const brightness = analyzeBrightness(videoEl);
       if (brightness < THRESHOLDS.brightnessMin) {
@@ -780,17 +792,17 @@
       }
     }
 
-    // 6. Stability check (relaxed for profiles — head is naturally moving more)
+    // 5. Stability check
     if (allGood) {
       const stability = computeStability(landmarks, scanState.prevLandmarks);
-      const maxDelta = isProfile ? THRESHOLDS.stabilityMaxDelta * 2 : THRESHOLDS.stabilityMaxDelta;
+      const maxDelta = isProfile ? THRESHOLDS.stabilityMaxDelta * 1.5 : THRESHOLDS.stabilityMaxDelta;
       if (stability > maxDelta) {
         instruction = t("holdStill");
         allGood = false;
       }
     }
 
-    // Default instruction if all good
+    // Default instruction
     if (allGood) {
       instruction = t("holdStill");
     } else if (!instruction) {
@@ -831,7 +843,7 @@
 
       if (step < 2) {
         scanState.captureStep = step + 1;
-        scanState.goodFrameCount = 0;
+        scanState.holdStartTime = null;
         scanState.isCapturing = false;
         // Reset landmarks so stability check doesn't carry over
         scanState.prevLandmarks = null;
@@ -848,7 +860,7 @@
     } catch (err) {
       console.error("Capture failed:", err);
       scanState.isCapturing = false;
-      scanState.goodFrameCount = 0;
+      scanState.holdStartTime = null;
     }
   }
 
@@ -899,7 +911,7 @@
 
     // Restart scan at that step
     scanState.captureStep = stepIndex;
-    scanState.goodFrameCount = 0;
+    scanState.holdStartTime = null;
     scanState.phase = "scanning";
 
     showScreen("fs-scan");
@@ -920,7 +932,7 @@
       scanState.captureBlobs[i] = null;
     }
     scanState.captureStep = 0;
-    scanState.goodFrameCount = 0;
+    scanState.holdStartTime = null;
 
     startScanFlow();
   }
@@ -1089,7 +1101,7 @@
       // Start scanning
       scanState.phase = "scanning";
       scanState.captureStep = 0;
-      scanState.goodFrameCount = 0;
+      scanState.holdStartTime = null;
       showScreen("fs-scan");
       updateProgressUI();
       updateInstructionUI(t("instructionFace"));
@@ -1156,7 +1168,7 @@
         captureStep: 0,
         captures: [null, null, null],
         captureBlobs: [null, null, null],
-        goodFrameCount: 0,
+        holdStartTime: null,
         lastLandmarks: null,
         prevLandmarks: null,
         noFaceTimer: null,
