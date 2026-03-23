@@ -59,6 +59,9 @@
       retake: "Refaire", validate: "Valider et continuer",
       restart: "Recommencer le scan", uploading: "Envoi en cours\u2026",
       uploadFail: "Erreur d'envoi, r\u00e9essayez",
+      zoomBtn: "Ajouter un gros plan",
+      zoomSub: "Photo d'une zone sp\u00e9cifique (optionnel)",
+      zoomAdded: "Gros plan ajout\u00e9",
     },
     en: {
       permTitle: "Smart face scan",
@@ -100,6 +103,9 @@
       retake: "Retake", validate: "Validate and continue",
       restart: "Restart scan", uploading: "Uploading\u2026",
       uploadFail: "Upload error, try again",
+      zoomBtn: "Add a close-up",
+      zoomSub: "Photo of a specific area (optional)",
+      zoomAdded: "Close-up added",
     },
   };
 
@@ -314,7 +320,23 @@
 
   <div id="fs-prev" style="display:none;padding:28px 20px;background:linear-gradient(160deg,#0F3D39 0%,#1a5249 100%);color:#fff;">
     <h3 style="font-family:'Playfair Display',serif;font-size:19px;font-weight:600;margin:0 0 20px;text-align:center;">${t.previewTitle}</h3>
-    <div id="fs-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px;"></div>
+    <div id="fs-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;"></div>
+    <div id="fs-zoom-wrap" style="margin-bottom:20px;">
+      <input type="file" id="fs-zoom-input" accept="image/*" capture="environment" style="display:none;"/>
+      <button id="fs-zoom-btn" style="width:100%;padding:14px;border:1px dashed rgba(20,184,166,.3);border-radius:12px;background:rgba(20,184,166,.04);color:rgba(255,255,255,.7);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .15s;">
+        <svg width="18" height="18" fill="none" stroke="#14B8A6" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+        <span>
+          <span style="display:block;font-size:13px;">${t.zoomBtn}</span>
+          <span style="display:block;font-size:10px;color:rgba(255,255,255,.35);font-weight:400;margin-top:2px;">${t.zoomSub}</span>
+        </span>
+      </button>
+      <div id="fs-zoom-preview" style="display:none;margin-top:10px;position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(20,184,166,.2);">
+        <img id="fs-zoom-img" style="width:100%;max-height:180px;object-fit:cover;display:block;"/>
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(transparent,rgba(0,0,0,.6));text-align:center;">
+          <span style="font-size:10px;color:#5eead4;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">${t.zoomAdded}</span>
+        </div>
+      </div>
+    </div>
     <button id="fs-ok" style="width:100%;padding:16px;border:none;border-radius:2rem;background:#14B8A6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .15s;" onmouseenter="this.style.background='#0d9488'" onmouseleave="this.style.background='#14B8A6'">${t.validate}</button>
     <button id="fs-re" style="width:100%;padding:13px;margin-top:10px;border:1px solid rgba(255,255,255,.1);border-radius:2rem;background:transparent;color:rgba(255,255,255,.4);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;">${t.restart}</button>
   </div>
@@ -731,6 +753,17 @@
         { key: "left", label: t.binLeft },
       ].forEach(({ key, label }) => grid.appendChild(makeCard(picks[key], label)));
 
+      // Zoom close-up
+      const $zBtn = $("#fs-zoom-btn"), $zIn = $("#fs-zoom-input"), $zPrev = $("#fs-zoom-preview"), $zImg = $("#fs-zoom-img");
+      $zBtn.onclick = () => $zIn.click();
+      $zIn.onchange = (e) => {
+        const f = e.target.files?.[0]; if (!f) return;
+        S.zoomFile = f;
+        const reader = new FileReader();
+        reader.onload = (ev) => { $zImg.src = ev.target.result; $zPrev.style.display = ""; $zBtn.style.borderColor = "rgba(20,184,166,.5)"; $zBtn.style.background = "rgba(20,184,166,.08)"; };
+        reader.readAsDataURL(f);
+      };
+
       $("#fs-ok").onclick = () => doUpload();
       $("#fs-re").onclick = () => { if (window.AdermioFaceScan) window.AdermioFaceScan.restart(); };
     }
@@ -790,6 +823,15 @@
             uploadCount++;
           } catch (ue) { console.warn(`[Adermio] Upload ${type} failed:`, ue); }
         }
+      }
+
+      // Upload zoom close-up if provided
+      if (S.zoomFile && typeof window.uploadToS3Presigned === "function") {
+        try {
+          const { key, getUrl } = await window.uploadToS3Presigned({ file: S.zoomFile, jobId: window.formState?.jobId || "", type: "zoom" });
+          if (window.formState) window.formState.photos.zoom = { key, getUrl };
+          uploadCount++;
+        } catch (ue) { console.warn("[Adermio] Upload zoom failed:", ue); }
       }
 
       // At least face must have uploaded
