@@ -739,19 +739,22 @@
     async function upload() {
       const $btn = $("#fs-ok"); $btn.textContent = t.uploading; $btn.disabled = true; $btn.style.opacity = ".5";
       try {
-        const map = [
-          { bin: "face", s3: "face", fk: "face" },
-          { bin: "semi_right", s3: "semi_right", fk: null },
-          { bin: "right", s3: "right", fk: "right" },
-          { bin: "semi_left", s3: "semi_left", fk: null },
-          { bin: "left", s3: "left", fk: "left" },
-        ];
-        for (const { bin, s3, fk } of map) {
-          const best = S.bins[bin][0]; if (!best) continue;
-          const file = new File([best.blob], `scan_${s3}_${Date.now()}.jpg`, { type: "image/jpeg" });
+        // Map 5 bins to 3 S3 types the backend understands
+        // Pick best available for each: face, right profile, left profile
+        const picks = {
+          face: S.bins.face[0] || S.bins.semi_right[0] || S.bins.semi_left[0] || null,
+          right: S.bins.right[0] || S.bins.semi_right[0] || null,
+          left: S.bins.left[0] || S.bins.semi_left[0] || null,
+        };
+        for (const [type, best] of Object.entries(picks)) {
+          if (!best) continue;
+          const file = new File([best.blob], `scan_${type}_${Date.now()}.jpg`, { type: "image/jpeg" });
           if (typeof window.uploadToS3Presigned === "function") {
-            const { key, getUrl } = await window.uploadToS3Presigned({ file, jobId: window.formState?.jobId || "", type: s3 });
-            if (fk && window.formState) window.formState.photos[fk] = { key, getUrl };
+            try {
+              const { key, getUrl } = await window.uploadToS3Presigned({ file, jobId: window.formState?.jobId || "", type });
+              if (window.formState) window.formState.photos[type] = { key, getUrl };
+              console.log(`[Adermio] Uploaded ${type} to S3`);
+            } catch (ue) { console.warn(`[Adermio] Upload ${type} failed:`, ue); }
           }
         }
         if (window.validationState) window.validationState.facePhotoUploaded = true;
