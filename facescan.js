@@ -1,13 +1,14 @@
 /**
- * Adermio Face Scan v5 — Continuous Video Scan + Intelligent Frame Extraction
+ * Adermio Face Scan v5.1 — Continuous Video Scan + Intelligent Frame Extraction
  *
- * Architecture:
- *  Phase 1: Calibration — check lighting, distance, centering before scan
- *  Phase 2: Continuous scan — guided head rotation, real-time frame collection
- *  Phase 3: Validation — show 5 best frames, allow selective retake
- *
- * Captures 5 angles: face, semi-right, right, semi-left, left
- * Each frame scored by composite: sharpness(35%) + brightness(25%) + stability(20%) + angle(20%)
+ * Bug fixes from v5.0:
+ *  - Fixed yaw/mirror inversion (CSS scaleX(-1) vs raw landmarks)
+ *  - Relaxed stability during scan (score penalty, not hard gate)
+ *  - Reduced calibration hold to 800ms, relaxed blur in calibration
+ *  - Lowered blur threshold for mobile cameras
+ *  - Cached capture canvas (no per-frame allocation)
+ *  - Fixed restart() re-init through public API
+ *  - Better visual feedback: progress ring, pulse animations, larger bin dots
  *
  * Dependencies: @mediapipe/face_mesh, @mediapipe/camera_utils (CDN)
  */
@@ -32,27 +33,26 @@
 
       // Calibration
       calibTitle: "Préparation du scan",
-      calibReady: "Conditions optimales — scan imminent",
+      calibReady: "C'est parti !",
       moveCloser: "Rapprochez-vous",
       moveBack: "Reculez légèrement",
-      centerFace: "Centrez votre visage",
+      centerFace: "Centrez votre visage dans l'ovale",
       moreLightNeeded: "Luminosité insuffisante",
       tooMuchLight: "Lumière trop forte",
       backlight: "Contre-jour détecté",
-      holdStill: "Restez immobile",
-      blurry: "Image floue",
+      holdStill: "Restez immobile un instant",
+      blurry: "Image floue, stabilisez-vous",
       noFaceDetected: "Aucun visage détecté",
       noFaceHint: "Vérifiez que votre visage est bien visible",
 
       // Scanning
       scanTitle: "Scan en cours",
-      scanInstruction: "Tournez lentement la tête",
-      scanPhaseRight: "Tournez vers la droite",
-      scanPhaseCenter: "Revenez face caméra",
-      scanPhaseLeft: "Tournez vers la gauche",
-      scanPhaseFinish: "Revenez face caméra",
+      scanPhaseRight: "↪ Tournez lentement vers la droite",
+      scanPhaseCenter1: "↩ Revenez face caméra",
+      scanPhaseLeft: "↩ Tournez lentement vers la gauche",
+      scanPhaseCenter2: "↪ Revenez face caméra",
       scanComplete: "Scan terminé !",
-      scanTimeout: "Temps écoulé",
+      scanAlmostDone: "Presque fini...",
 
       // Bins
       binFace: "Face",
@@ -68,15 +68,15 @@
       badgeStability: "Stabilité",
 
       // Preview
-      previewTitle: "Vos photos de scan",
+      previewTitle: "Vos captures",
+      previewSubtitle: "Vérifiez la qualité avant d'envoyer",
       qualityExcellent: "Excellent",
       qualityGood: "Bon",
-      qualityAcceptable: "Acceptable",
+      qualityAcceptable: "OK",
       qualityMissing: "Manquant",
-      retake: "Reprendre",
-      retakeAngle: "Refaire cet angle",
+      retakeAngle: "Refaire",
       validatePhotos: "Valider et continuer",
-      scanAnother: "Recommencer",
+      scanAnother: "Recommencer le scan",
       uploadingPhotos: "Envoi en cours...",
     },
     en: {
@@ -92,26 +92,25 @@
       loading: "Initializing scan...",
 
       calibTitle: "Preparing scan",
-      calibReady: "Optimal conditions — scan starting",
+      calibReady: "Let's go!",
       moveCloser: "Move closer",
       moveBack: "Move back slightly",
-      centerFace: "Center your face",
+      centerFace: "Center your face in the oval",
       moreLightNeeded: "Not enough light",
       tooMuchLight: "Too much light",
       backlight: "Backlight detected",
-      holdStill: "Hold still",
-      blurry: "Image is blurry",
+      holdStill: "Hold still a moment",
+      blurry: "Image is blurry, hold steady",
       noFaceDetected: "No face detected",
       noFaceHint: "Make sure your face is visible",
 
       scanTitle: "Scanning",
-      scanInstruction: "Slowly turn your head",
-      scanPhaseRight: "Turn to the right",
-      scanPhaseCenter: "Come back to center",
-      scanPhaseLeft: "Turn to the left",
-      scanPhaseFinish: "Come back to center",
+      scanPhaseRight: "↪ Slowly turn to the right",
+      scanPhaseCenter1: "↩ Come back to center",
+      scanPhaseLeft: "↩ Slowly turn to the left",
+      scanPhaseCenter2: "↪ Come back to center",
       scanComplete: "Scan complete!",
-      scanTimeout: "Time's up",
+      scanAlmostDone: "Almost done...",
 
       binFace: "Front",
       binSemiRight: "Semi R",
@@ -124,15 +123,15 @@
       badgeAngle: "Angle",
       badgeStability: "Stability",
 
-      previewTitle: "Your scan photos",
+      previewTitle: "Your captures",
+      previewSubtitle: "Check quality before sending",
       qualityExcellent: "Excellent",
       qualityGood: "Good",
-      qualityAcceptable: "Acceptable",
+      qualityAcceptable: "OK",
       qualityMissing: "Missing",
-      retake: "Retake",
-      retakeAngle: "Retake this angle",
+      retakeAngle: "Retake",
       validatePhotos: "Validate and continue",
-      scanAnother: "Start over",
+      scanAnother: "Restart scan",
       uploadingPhotos: "Uploading...",
     },
   };
@@ -142,33 +141,33 @@
      ═══════════════════════════════════════════════════════════ */
   const CFG = {
     // Face size (forehead→chin as fraction of frame height)
-    faceSizeMin: 0.22,
-    faceSizeMax: 0.55,
+    faceSizeMin: 0.20,
+    faceSizeMax: 0.58,
     faceSizeIdeal: 0.35,
-    centerMaxOffset: 0.14,
+    centerMaxOffset: 0.16,
 
-    // Angles (degrees)
-    faceYawMax: 10,
-    semiProfileYawMin: 15,
-    semiProfileYawMax: 30,
-    profileYawMin: 30,
-    profileYawMax: 55,
-    pitchMax: 15,
+    // Angles (degrees) — these are ABSOLUTE values, sign handled separately
+    faceYawMax: 12,
+    semiProfileYawMin: 14,
+    semiProfileYawMax: 32,
+    profileYawMin: 28,
+    profileYawMax: 58,
+    pitchMax: 18,
 
-    // Quality
-    brightnessMin: 55,
-    brightnessMax: 220,
+    // Quality thresholds
+    brightnessMin: 45,
+    brightnessMax: 230,
     brightnessIdeal: 130,
-    backlightRatio: 0.65,
-    blurThreshold: 15,
-    blurIdeal: 60,
-    stabilityMaxPerSec: 0.15,
+    backlightRatio: 0.55,
+    blurThreshold: 8, // lowered for mobile selfie cams
+    blurIdeal: 50,
+    stabilityMaxPerSec: 0.18,
 
     // Timing
-    calibHoldMs: 1500, // conditions must be green for 1.5s
-    captureIntervalMs: 200, // sample a candidate every 200ms
-    scanTimeoutMs: 20000, // max scan duration
-    noFaceTimeoutMs: 8000,
+    calibHoldMs: 800, // reduced from 1500 — less frustrating
+    captureIntervalMs: 180,
+    scanTimeoutMs: 25000,
+    noFaceTimeoutMs: 10000,
 
     // Bins: top candidates per bin
     binTopN: 3,
@@ -177,18 +176,32 @@
     jpegQuality: 0.92,
 
     // Throttle
-    expensiveCheckInterval: 5,
+    expensiveCheckInterval: 4,
   };
 
   /* ═══════════════════════════════════════════════════════════
      BINS DEFINITION
+     ═══════════════════════════════════════════════════════════
+
+     IMPORTANT: The video is CSS-mirrored (scaleX(-1)).
+     MediaPipe landmarks are in RAW coordinates (un-mirrored).
+     When the user turns their head RIGHT (as they see it in the mirror),
+     the raw yaw is NEGATIVE. So:
+       User turns right → raw yaw < 0 → we label this "right profile"
+       User turns left  → raw yaw > 0 → we label this "left profile"
+
+     The bins use raw yaw ranges but have display labels matching
+     what the USER sees (their perspective in the mirror).
      ═══════════════════════════════════════════════════════════ */
   const BINS = [
+    // Face: small absolute yaw
     { id: "face", yawMin: -CFG.faceYawMax, yawMax: CFG.faceYawMax, idealYaw: 0, labelKey: "binFace" },
-    { id: "semi_right", yawMin: CFG.semiProfileYawMin, yawMax: CFG.semiProfileYawMax, idealYaw: 22, labelKey: "binSemiRight" },
-    { id: "right", yawMin: CFG.profileYawMin, yawMax: CFG.profileYawMax, idealYaw: 42, labelKey: "binRight" },
-    { id: "semi_left", yawMin: -CFG.semiProfileYawMax, yawMax: -CFG.semiProfileYawMin, idealYaw: -22, labelKey: "binSemiLeft" },
-    { id: "left", yawMin: -CFG.profileYawMax, yawMax: -CFG.profileYawMin, idealYaw: -42, labelKey: "binLeft" },
+    // User turns right → raw yaw negative
+    { id: "semi_right", yawMin: -CFG.semiProfileYawMax, yawMax: -CFG.semiProfileYawMin, idealYaw: -22, labelKey: "binSemiRight" },
+    { id: "right", yawMin: -CFG.profileYawMax, yawMax: -CFG.profileYawMin, idealYaw: -42, labelKey: "binRight" },
+    // User turns left → raw yaw positive
+    { id: "semi_left", yawMin: CFG.semiProfileYawMin, yawMax: CFG.semiProfileYawMax, idealYaw: 22, labelKey: "binSemiLeft" },
+    { id: "left", yawMin: CFG.profileYawMin, yawMax: CFG.profileYawMax, idealYaw: 42, labelKey: "binLeft" },
   ];
 
   /* ═══════════════════════════════════════════════════════════
@@ -270,6 +283,7 @@
      ═══════════════════════════════════════════════════════════ */
   let _brightCanvas = null, _brightCtx = null;
   let _blurCanvas = null, _blurCtx = null;
+  let _captureCanvas = null, _captureCtx = null;
 
   function analyzeBrightness(video, marks) {
     if (!_brightCanvas) {
@@ -320,7 +334,7 @@
     const sx = fb.xMin * vw, sy = fb.yMin * vh;
     const sw = (fb.xMax - fb.xMin) * vw, sh = (fb.yMax - fb.yMin) * vh;
     if (sw < 10 || sh < 10) return { score: 0, ok: false };
-    const cw = 200, ch = 200;
+    const cw = 150, ch = 150;
     _blurCanvas.width = cw;
     _blurCanvas.height = ch;
     _blurCtx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch);
@@ -350,29 +364,20 @@
      SCORING
      ═══════════════════════════════════════════════════════════ */
   function computeScore(brightnessData, blurData, stability, yaw, idealYaw) {
-    // Brightness: 0-1, best at ideal
     const bFace = brightnessData.face;
-    const bScore = 1 - Math.min(1, Math.abs(bFace - CFG.brightnessIdeal) / (CFG.brightnessIdeal - CFG.brightnessMin));
-
-    // Sharpness: 0-1, normalized by ideal
+    const bScore = Math.max(0, 1 - Math.abs(bFace - CFG.brightnessIdeal) / 80);
     const sScore = Math.min(1, blurData.score / CFG.blurIdeal);
-
-    // Stability: 0-1, inverse of movement
-    const stScore = Math.max(0, 1 - stability / (CFG.stabilityMaxPerSec * 3));
-
-    // Angle precision: 0-1, distance from ideal yaw
-    const maxYawDev = 15;
-    const aScore = Math.max(0, 1 - Math.abs(yaw - idealYaw) / maxYawDev);
-
+    const stScore = Math.max(0, 1 - stability / (CFG.stabilityMaxPerSec * 5));
+    const aScore = Math.max(0, 1 - Math.abs(yaw - idealYaw) / 20);
     return bScore * 0.25 + sScore * 0.35 + stScore * 0.20 + aScore * 0.20;
   }
 
   function qualityLabel(score, lang) {
-    const t = T[lang] || T.fr;
-    if (score >= 0.75) return { label: t.qualityExcellent, color: "#22c55e" };
-    if (score >= 0.5) return { label: t.qualityGood, color: "#eab308" };
-    if (score > 0) return { label: t.qualityAcceptable, color: "#f97316" };
-    return { label: t.qualityMissing, color: "#ef4444" };
+    const tl = T[lang] || T.fr;
+    if (score >= 0.65) return { label: tl.qualityExcellent, color: "#22c55e" };
+    if (score >= 0.4) return { label: tl.qualityGood, color: "#eab308" };
+    if (score > 0) return { label: tl.qualityAcceptable, color: "#f97316" };
+    return { label: tl.qualityMissing, color: "#ef4444" };
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -380,15 +385,14 @@
      ═══════════════════════════════════════════════════════════ */
   function mkState() {
     const bins = {};
-    for (const b of BINS) bins[b.id] = []; // each: { blob, url, score, yaw }
+    for (const b of BINS) bins[b.id] = [];
     return {
-      phase: "idle", // idle | permission | loading | calibrating | scanning | preview
+      phase: "idle",
       bins,
       calibReadySince: null,
       scanStartTime: null,
-      scanPhase: 0, // 0=right, 1=center1, 2=left, 3=center2
+      scanPhase: 0,
       lastCaptureTime: 0,
-      lastLandmarks: null,
       prevLandmarks: null,
       prevTimestamp: null,
       noFaceTimer: null,
@@ -401,7 +405,8 @@
       videoStream: null,
       animFrameId: null,
       metadataHandler: null,
-      retakeBinId: null, // if retaking a specific bin
+      retakeBinId: null,
+      isCapturing: false,
     };
   }
 
@@ -430,57 +435,60 @@
      ═══════════════════════════════════════════════════════════ */
   function buildUI(t) {
     return `
-      <div id="fs-root" style="position:relative;width:100%;max-width:400px;margin:0 auto;border-radius:16px;overflow:hidden;background:#000;">
+      <div id="fs-root" style="position:relative;width:100%;max-width:400px;margin:0 auto;border-radius:20px;overflow:hidden;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.4);">
 
         <!-- Permission screen -->
-        <div id="fs-permission" style="padding:32px 20px;text-align:center;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;">
-          <div style="width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:rgba(99,102,241,.15);display:flex;align-items:center;justify-content:center;">
-            <svg width="28" height="28" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round"><path d="M12 22c5.523 0 10-4.477 10-10V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6c0 5.523 4.477 10 10 10z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div id="fs-permission" style="padding:36px 24px;text-align:center;background:linear-gradient(160deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);color:#fff;">
+          <div style="width:72px;height:72px;margin:0 auto 20px;border-radius:50%;background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(139,92,246,.2));display:flex;align-items:center;justify-content:center;border:1px solid rgba(99,102,241,.3);">
+            <svg width="32" height="32" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round">
+              <path d="M16 28c7.18 0 13-5.82 13-13V7.5A2.5 2.5 0 0 0 26.5 5h-21A2.5 2.5 0 0 0 3 7.5V15c0 7.18 5.82 13 13 13z"/>
+              <circle cx="16" cy="13" r="3.5"/>
+              <path d="M10 20c0-3.31 2.69-6 6-6s6 2.69 6 6" opacity=".3"/>
+            </svg>
           </div>
-          <h3 style="font-size:18px;font-weight:700;margin:0 0 8px;">${t.cameraPermTitle}</h3>
-          <p style="font-size:13px;color:#94a3b8;margin:0 0 20px;line-height:1.5;">${t.cameraPermDesc}</p>
-          <button id="fs-perm-btn" style="width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;font-size:15px;font-weight:600;cursor:pointer;">${t.cameraPermBtn}</button>
+          <h3 style="font-size:20px;font-weight:800;margin:0 0 8px;letter-spacing:-.3px;">${t.cameraPermTitle}</h3>
+          <p style="font-size:13px;color:#94a3b8;margin:0 0 24px;line-height:1.6;">${t.cameraPermDesc}</p>
+          <button id="fs-perm-btn" style="width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.3px;box-shadow:0 4px 20px rgba(99,102,241,.4);transition:transform .15s,box-shadow .15s;" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''">${t.cameraPermBtn}</button>
         </div>
 
         <!-- Loading screen -->
-        <div id="fs-loading" style="display:none;padding:48px 20px;text-align:center;background:#0f172a;color:#fff;">
-          <div style="width:40px;height:40px;margin:0 auto 16px;border:3px solid rgba(255,255,255,.1);border-top-color:#818cf8;border-radius:50%;animation:fsSpin 1s linear infinite;"></div>
-          <p style="font-size:14px;color:#94a3b8;">${t.loading}</p>
+        <div id="fs-loading" style="display:none;padding:60px 24px;text-align:center;background:linear-gradient(160deg,#0f172a,#1e293b);color:#fff;">
+          <div style="width:48px;height:48px;margin:0 auto 20px;border:3px solid rgba(255,255,255,.08);border-top-color:#a78bfa;border-radius:50%;animation:fsSpin .8s linear infinite;"></div>
+          <p style="font-size:14px;color:#94a3b8;font-weight:500;">${t.loading}</p>
         </div>
 
-        <!-- Scan screen (calibration + scanning) -->
+        <!-- Scan screen -->
         <div id="fs-scan" style="display:none;position:relative;aspect-ratio:3/4;background:#000;">
           <video id="fs-video" playsinline autoplay muted style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"></video>
           <canvas id="fs-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
-          <!-- Success flash -->
-          <div id="fs-flash" style="display:none;position:absolute;inset:0;background:rgba(34,197,94,.2);pointer-events:none;z-index:5;"></div>
-          <!-- Instruction bar -->
-          <div id="fs-instr" style="position:absolute;bottom:0;left:0;right:0;padding:12px 16px;background:linear-gradient(transparent,rgba(0,0,0,.8));text-align:center;z-index:4;">
-            <p id="fs-instr-text" style="color:#fff;font-size:14px;font-weight:600;margin:0;"></p>
-            <p id="fs-instr-sub" style="color:#94a3b8;font-size:12px;margin:4px 0 0;"></p>
+          <div id="fs-flash" style="display:none;position:absolute;inset:0;background:rgba(34,197,94,.25);pointer-events:none;z-index:5;transition:opacity .3s;"></div>
+          <div id="fs-instr" style="position:absolute;bottom:0;left:0;right:0;padding:16px 20px 20px;background:linear-gradient(transparent,rgba(0,0,0,.85));text-align:center;z-index:4;">
+            <p id="fs-instr-text" style="color:#fff;font-size:15px;font-weight:700;margin:0;letter-spacing:.2px;text-shadow:0 1px 4px rgba(0,0,0,.5);"></p>
+            <p id="fs-instr-sub" style="color:rgba(255,255,255,.6);font-size:12px;margin:6px 0 0;font-weight:500;"></p>
           </div>
         </div>
 
         <!-- Preview screen -->
-        <div id="fs-preview" style="display:none;padding:20px;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;">
-          <h3 style="font-size:16px;font-weight:700;margin:0 0 16px;text-align:center;">${t.previewTitle}</h3>
+        <div id="fs-preview" style="display:none;padding:24px;background:linear-gradient(160deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);color:#fff;">
+          <h3 style="font-size:18px;font-weight:800;margin:0 0 4px;text-align:center;letter-spacing:-.3px;">${t.previewTitle}</h3>
+          <p style="font-size:12px;color:#64748b;margin:0 0 16px;text-align:center;">${t.previewSubtitle}</p>
           <div id="fs-preview-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;"></div>
-          <div id="fs-preview-grid2" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px;"></div>
-          <button id="fs-validate-btn" style="width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:15px;font-weight:600;cursor:pointer;">${t.validatePhotos}</button>
-          <button id="fs-restart-btn" style="width:100%;padding:10px;margin-top:8px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:transparent;color:#94a3b8;font-size:13px;cursor:pointer;">${t.scanAnother}</button>
+          <div id="fs-preview-grid2" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px;"></div>
+          <button id="fs-validate-btn" style="width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(34,197,94,.3);transition:transform .15s;" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">${t.validatePhotos}</button>
+          <button id="fs-restart-btn" style="width:100%;padding:12px;margin-top:10px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:transparent;color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;transition:border-color .2s;" onmouseenter="this.style.borderColor='rgba(255,255,255,.3)'" onmouseleave="this.style.borderColor='rgba(255,255,255,.1)'">${t.scanAnother}</button>
         </div>
 
         <!-- Error screen -->
-        <div id="fs-error" style="display:none;padding:32px 20px;text-align:center;background:#0f172a;color:#fff;">
-          <div style="width:48px;height:48px;margin:0 auto 12px;border-radius:50%;background:rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;">
+        <div id="fs-error" style="display:none;padding:40px 24px;text-align:center;background:linear-gradient(160deg,#0f172a,#1e293b);color:#fff;">
+          <div style="width:56px;height:56px;margin:0 auto 16px;border-radius:50%;background:rgba(239,68,68,.1);display:flex;align-items:center;justify-content:center;border:1px solid rgba(239,68,68,.2);">
             <svg width="24" height="24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
           </div>
-          <p id="fs-error-msg" style="font-size:14px;color:#f87171;margin:0;"></p>
+          <p id="fs-error-msg" style="font-size:14px;color:#f87171;margin:0;font-weight:500;"></p>
         </div>
       </div>
       <style>
         @keyframes fsSpin { to { transform: rotate(360deg); } }
-        @keyframes fsPulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }
+        @keyframes fsBinPop { 0% { transform:scale(1); } 50% { transform:scale(1.4); } 100% { transform:scale(1); } }
       </style>
     `;
   }
@@ -492,34 +500,56 @@
     const t = T[lang] || T.fr;
     ctx.clearRect(0, 0, w, h);
 
-    if (S.phase === "calibrating" || S.phase === "scanning") {
-      // Dim outside oval
-      const cx = w / 2, cy = h * 0.42;
-      const rx = w * 0.34, ry = h * 0.3;
-      ctx.fillStyle = "rgba(0,0,0,.55)";
-      ctx.beginPath();
-      ctx.rect(0, 0, w, h);
-      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2, true);
-      ctx.fill("evenodd");
+    if (S.phase !== "calibrating" && S.phase !== "scanning") return;
 
-      // Oval border
-      const allGood = S.status.distance && S.status.light && S.status.stability;
-      const color = S.phase === "scanning"
-        ? (allGood ? "#22c55e" : "#eab308")
-        : (allGood ? "#22c55e" : "#ffffff");
-      ctx.strokeStyle = color;
+    const cx = w / 2, cy = h * 0.42;
+    const rx = w * 0.35, ry = h * 0.3;
+
+    // Dim outside oval
+    ctx.fillStyle = "rgba(0,0,0,.5)";
+    ctx.beginPath();
+    ctx.rect(0, 0, w, h);
+    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2, true);
+    ctx.fill("evenodd");
+
+    // Oval border — animated glow during scan
+    const allGood = S.status.distance && S.status.light;
+    let borderColor;
+    if (S.phase === "scanning") {
+      borderColor = allGood ? "#22c55e" : "#f59e0b";
+    } else {
+      borderColor = allGood ? "#22c55e" : "rgba(255,255,255,.6)";
+    }
+
+    // Glow effect
+    if (S.phase === "scanning") {
+      ctx.shadowColor = borderColor;
+      ctx.shadowBlur = 12;
+    }
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Progress ring during scan
+    if (S.phase === "scanning" && S.scanStartTime) {
+      const elapsed = performance.now() - S.scanStartTime;
+      const progress = Math.min(1, elapsed / CFG.scanTimeoutMs);
+      ctx.strokeStyle = "rgba(139,92,246,.6)";
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, rx + 6, ry + 6, 0, -Math.PI / 2, -Math.PI / 2 + progress * Math.PI * 2);
       ctx.stroke();
+    }
 
-      // Draw status badges
-      drawBadges(ctx, w, h, S.status, t);
+    // Status badges
+    drawBadges(ctx, w, h, S.status, t);
 
-      // Draw bin indicators during scan
-      if (S.phase === "scanning") {
-        drawBinIndicators(ctx, w, h, S, t);
-      }
+    // Bin indicators during scan
+    if (S.phase === "scanning") {
+      drawBinIndicators(ctx, w, h, S, t);
     }
   }
 
@@ -527,32 +557,36 @@
     const badges = [
       { key: "distance", label: t.badgeDistance, icon: "↕" },
       { key: "light", label: t.badgeLight, icon: "☀" },
-      { key: "angle", label: t.badgeAngle, icon: "↻" },
       { key: "stability", label: t.badgeStability, icon: "◎" },
     ];
-    const bw = 72, bh = 26, gap = 6;
+    const bw = 80, bh = 28, gap = 8;
     const totalW = badges.length * bw + (badges.length - 1) * gap;
     let bx = (w - totalW) / 2;
-    const by = h * 0.78;
+    const by = h * 0.80;
 
     for (const b of badges) {
       const val = status[b.key];
       const bg =
-        val === true ? "rgba(34,197,94,.25)" :
-        val === false ? "rgba(239,68,68,.25)" :
-        "rgba(255,255,255,.1)";
+        val === true ? "rgba(34,197,94,.2)" :
+        val === false ? "rgba(239,68,68,.2)" :
+        "rgba(255,255,255,.08)";
       const fg =
-        val === true ? "#22c55e" :
-        val === false ? "#ef4444" :
-        "#94a3b8";
+        val === true ? "#4ade80" :
+        val === false ? "#f87171" :
+        "#64748b";
 
       ctx.fillStyle = bg;
       ctx.beginPath();
-      ctx.roundRect(bx, by, bw, bh, 6);
+      ctx.roundRect(bx, by, bw, bh, 8);
       ctx.fill();
 
+      // Subtle border
+      ctx.strokeStyle = val === true ? "rgba(34,197,94,.3)" : val === false ? "rgba(239,68,68,.2)" : "rgba(255,255,255,.05)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
       ctx.fillStyle = fg;
-      ctx.font = "bold 10px -apple-system,sans-serif";
+      ctx.font = "600 10px -apple-system,system-ui,sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(`${b.icon} ${b.label}`, bx + bw / 2, by + bh / 2);
@@ -562,61 +596,93 @@
   }
 
   function drawBinIndicators(ctx, w, h, S, t) {
-    // 5 dots in an arc at the top showing bin completion
-    const labels = BINS.map((b) => t[b.labelKey]);
-    const cx = w / 2, cy = h * 0.08;
-    const radius = w * 0.35;
-    const totalAngle = Math.PI * 0.6;
-    const startAngle = Math.PI + (Math.PI - totalAngle) / 2;
+    // 5 indicators across the top
+    const binOrder = ["left", "semi_left", "face", "semi_right", "right"];
+    const labels = binOrder.map((id) => {
+      const b = BINS.find((x) => x.id === id);
+      return t[b.labelKey];
+    });
 
-    for (let i = 0; i < BINS.length; i++) {
-      const angle = startAngle + (totalAngle * i) / (BINS.length - 1);
-      const dx = cx + radius * Math.cos(angle);
-      const dy = cy - radius * Math.sin(angle) + radius;
-      const hasCandidates = S.bins[BINS[i].id].length > 0;
+    const totalW = w * 0.85;
+    const startX = (w - totalW) / 2;
+    const y = h * 0.06;
+    const spacing = totalW / (binOrder.length - 1);
+    const dotR = 10;
 
-      // Dot
+    // Connecting line
+    ctx.strokeStyle = "rgba(255,255,255,.1)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(startX, y);
+    ctx.lineTo(startX + totalW, y);
+    ctx.stroke();
+
+    // Filled segment
+    const filled = binOrder.filter((id) => S.bins[id].length > 0);
+    if (filled.length > 0) {
+      ctx.strokeStyle = "rgba(34,197,94,.4)";
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(dx, dy, 8, 0, Math.PI * 2);
-      ctx.fillStyle = hasCandidates ? "#22c55e" : "rgba(255,255,255,.2)";
-      ctx.fill();
-
-      if (hasCandidates) {
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 8px -apple-system,sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("✓", dx, dy);
-      }
-
-      // Label below dot
-      ctx.fillStyle = hasCandidates ? "#22c55e" : "rgba(255,255,255,.5)";
-      ctx.font = "9px -apple-system,sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(labels[i], dx, dy + 16);
+      const firstFilled = binOrder.indexOf(filled[0]);
+      const lastFilled = binOrder.indexOf(filled[filled.length - 1]);
+      ctx.moveTo(startX + firstFilled * spacing, y);
+      ctx.lineTo(startX + lastFilled * spacing, y);
+      ctx.stroke();
     }
 
-    // Filled count
-    const filled = BINS.filter((b) => S.bins[b.id].length > 0).length;
+    for (let i = 0; i < binOrder.length; i++) {
+      const dx = startX + i * spacing;
+      const hasCandidates = S.bins[binOrder[i]].length > 0;
+
+      // Dot background
+      ctx.beginPath();
+      ctx.arc(dx, y, dotR, 0, Math.PI * 2);
+      if (hasCandidates) {
+        ctx.fillStyle = "#22c55e";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(34,197,94,.5)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = "rgba(255,255,255,.08)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,.15)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // Check mark or dot
+      if (hasCandidates) {
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 10px -apple-system,system-ui,sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("✓", dx, y);
+      }
+
+      // Label
+      ctx.fillStyle = hasCandidates ? "#4ade80" : "rgba(255,255,255,.4)";
+      ctx.font = "500 8px -apple-system,system-ui,sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(labels[i], dx, y + dotR + 10);
+    }
+
+    // Counter
+    const count = BINS.filter((b) => S.bins[b.id].length > 0).length;
     ctx.fillStyle = "#fff";
-    ctx.font = "bold 12px -apple-system,sans-serif";
+    ctx.font = "bold 13px -apple-system,system-ui,sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText(`${filled}/5`, cx, cy + 4);
+    ctx.fillText(`${count}/5`, w / 2, y + dotR + 26);
   }
 
   /* ═══════════════════════════════════════════════════════════
      CAMERA & MEDIAPIPE
      ═══════════════════════════════════════════════════════════ */
   async function requestCamera() {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user",
-        width: { ideal: 1280 },
-        height: { ideal: 960 },
-      },
+    return navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 960 } },
       audio: false,
     });
-    return stream;
   }
 
   function initFaceMesh(onResults) {
@@ -636,9 +702,7 @@
 
   function startCamera(video, faceMesh) {
     const cam = new window.Camera(video, {
-      onFrame: async () => {
-        await faceMesh.send({ image: video });
-      },
+      onFrame: async () => { await faceMesh.send({ image: video }); },
       width: 1280,
       height: 960,
     });
@@ -650,26 +714,27 @@
     if (S.camera) { try { S.camera.stop(); } catch (_) {} S.camera = null; }
     if (S.animFrameId) { cancelAnimationFrame(S.animFrameId); S.animFrameId = null; }
     if (S.videoStream) {
-      S.videoStream.getTracks().forEach((t) => t.stop());
+      S.videoStream.getTracks().forEach((tr) => tr.stop());
       S.videoStream = null;
     }
     if (S.noFaceTimer) { clearTimeout(S.noFaceTimer); S.noFaceTimer = null; }
   }
 
   /* ═══════════════════════════════════════════════════════════
-     FRAME CAPTURE
+     FRAME CAPTURE (cached canvas)
      ═══════════════════════════════════════════════════════════ */
   function captureFrame(video) {
     return new Promise((resolve) => {
-      const c = document.createElement("canvas");
-      c.width = video.videoWidth || 1280;
-      c.height = video.videoHeight || 960;
-      c.getContext("2d").drawImage(video, 0, 0);
-      c.toBlob(
-        (blob) => resolve(blob),
-        "image/jpeg",
-        CFG.jpegQuality
-      );
+      const vw = video.videoWidth || 1280;
+      const vh = video.videoHeight || 960;
+      if (!_captureCanvas) {
+        _captureCanvas = document.createElement("canvas");
+        _captureCtx = _captureCanvas.getContext("2d");
+      }
+      _captureCanvas.width = vw;
+      _captureCanvas.height = vh;
+      _captureCtx.drawImage(video, 0, 0, vw, vh);
+      _captureCanvas.toBlob((blob) => resolve(blob), "image/jpeg", CFG.jpegQuality);
     });
   }
 
@@ -677,27 +742,26 @@
      SCAN PHASE INSTRUCTIONS
      ═══════════════════════════════════════════════════════════ */
   function getScanPhaseInstruction(elapsed, t) {
-    // Timeline: 0-3s right, 3-5s center, 5-8s left, 8-10s center
-    if (elapsed < 3000) return { phase: 0, text: t.scanPhaseRight };
-    if (elapsed < 5000) return { phase: 1, text: t.scanPhaseCenter };
-    if (elapsed < 8000) return { phase: 2, text: t.scanPhaseLeft };
-    return { phase: 3, text: t.scanPhaseFinish };
+    if (elapsed < 4000) return { phase: 0, text: t.scanPhaseRight };
+    if (elapsed < 6500) return { phase: 1, text: t.scanPhaseCenter1 };
+    if (elapsed < 10500) return { phase: 2, text: t.scanPhaseLeft };
+    if (elapsed < 13000) return { phase: 3, text: t.scanPhaseCenter2 };
+    return { phase: 4, text: t.scanAlmostDone };
   }
 
   /* ═══════════════════════════════════════════════════════════
      MAIN MODULE
      ═══════════════════════════════════════════════════════════ */
   function createScanner(container, opts) {
-    const lang =
-      opts.lang ||
-      (document.documentElement.lang || "").substring(0, 2) === "en"
-        ? "en"
-        : "fr";
+    // Language detection — explicit parentheses to avoid precedence issues
+    const detectedLang = ((document.documentElement.lang || "").substring(0, 2) === "en") ? "en" : "fr";
+    const lang = opts.lang || detectedLang;
     const t = T[lang] || T.fr;
     const onScanComplete = opts.onComplete || null;
     const onFallback = opts.onFallback || null;
 
     let S = mkState();
+    let destroyed = false;
 
     // Inject UI
     container.innerHTML = buildUI(t);
@@ -720,13 +784,7 @@
       [$permission, $loading, $scan, $preview, $error].forEach(
         (el) => (el.style.display = "none")
       );
-      const map = {
-        permission: $permission,
-        loading: $loading,
-        scan: $scan,
-        preview: $preview,
-        error: $error,
-      };
+      const map = { permission: $permission, loading: $loading, scan: $scan, preview: $preview, error: $error };
       if (map[name]) map[name].style.display = "";
     }
 
@@ -734,12 +792,14 @@
       $errorMsg.textContent = msg;
       showScreen("error");
       S.phase = "idle";
-      setTimeout(() => { if (onFallback) onFallback(); }, 2500);
+      setTimeout(() => { if (onFallback && !destroyed) onFallback(); }, 2500);
     }
 
     function flashGreen() {
       $flash.style.display = "";
-      setTimeout(() => ($flash.style.display = "none"), 300);
+      $flash.style.opacity = "1";
+      setTimeout(() => { $flash.style.opacity = "0"; }, 200);
+      setTimeout(() => { $flash.style.display = "none"; }, 400);
     }
 
     // ── Permission ──────────────────────────────────────
@@ -754,27 +814,20 @@
           showError(t.cameraNotSupported);
           return;
         }
-
         S.videoStream = await requestCamera();
         $video.srcObject = S.videoStream;
-
-        // Wait for video metadata
         await new Promise((resolve, reject) => {
-          const handler = () => resolve();
-          S.metadataHandler = handler;
-          $video.addEventListener("loadedmetadata", handler, { once: true });
+          S.metadataHandler = resolve;
+          $video.addEventListener("loadedmetadata", resolve, { once: true });
           setTimeout(() => reject(new Error("Video timeout")), 10000);
         });
-
         S.faceMesh = initFaceMesh(onResults);
         S.camera = startCamera($video, S.faceMesh);
-
-        // Enter calibration
         S.phase = "calibrating";
         showScreen("scan");
         resizeOverlay();
         $instrText.textContent = t.calibTitle;
-        $instrSub.textContent = "";
+        $instrSub.textContent = t.centerFace;
       } catch (err) {
         console.error("Camera init error:", err);
         if (err.name === "NotAllowedError") showError(t.cameraDenied);
@@ -783,37 +836,31 @@
       }
     });
 
-    // ── Overlay resize ──────────────────────────────────
     function resizeOverlay() {
       const rect = $scan.getBoundingClientRect();
-      $overlay.width = rect.width * (window.devicePixelRatio || 1);
-      $overlay.height = rect.height * (window.devicePixelRatio || 1);
-      overlayCtx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+      const dpr = window.devicePixelRatio || 1;
+      $overlay.width = rect.width * dpr;
+      $overlay.height = rect.height * dpr;
+      overlayCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    // ── MediaPipe callback ──────────────────────────────
+    /* ── MediaPipe callback ───────────────────────────── */
     function onResults(results) {
+      if (destroyed) return;
       if (S.phase !== "calibrating" && S.phase !== "scanning") return;
 
       const now = performance.now();
-      const marks =
-        results.multiFaceLandmarks && results.multiFaceLandmarks[0];
+      const marks = results.multiFaceLandmarks && results.multiFaceLandmarks[0];
 
       if (!marks || marks.length < 468) {
-        handleNoFace(now);
+        handleNoFace();
         return;
       }
 
-      // Clear no-face timer
-      if (S.noFaceTimer) {
-        clearTimeout(S.noFaceTimer);
-        S.noFaceTimer = null;
-      }
+      if (S.noFaceTimer) { clearTimeout(S.noFaceTimer); S.noFaceTimer = null; }
 
       S.frameCount++;
       const dtMs = S.prevTimestamp ? now - S.prevTimestamp : 33;
-
-      // Compute all metrics
       const pose = headPose(marks);
       const size = faceSize(marks);
       const stab = stabilityPerSec(marks, S.prevLandmarks, dtMs);
@@ -828,68 +875,67 @@
       const bright = S.cachedBrightness || { ok: true, face: 128, bg: 128, tooDark: false, tooLight: false, backlight: false };
       const blur = S.cachedBlur || { ok: true, score: 30 };
 
-      // Update status badges
+      // Status badges
       const distOk = size >= CFG.faceSizeMin && size <= CFG.faceSizeMax;
       S.status.distance = distOk;
       S.status.light = bright.ok;
       S.status.stability = stab <= CFG.stabilityMaxPerSec;
       S.status.angle = Math.abs(pose.pitch) <= CFG.pitchMax;
 
-      // Update prev
       S.prevLandmarks = marks;
       S.prevTimestamp = now;
 
-      // Update instruction text
-      updateInstruction(pose, size, bright, blur, stab, centered, now);
-
-      // ─── CALIBRATION PHASE ───
+      // ─── CALIBRATION ───
       if (S.phase === "calibrating") {
-        const allGreen = distOk && bright.ok && blur.ok && S.status.stability && centered;
-        if (allGreen) {
+        updateCalibInstruction(size, bright, blur, stab, centered);
+
+        // Calibration requires: distance OK, brightness OK, centered
+        // Blur and stability are softer checks — we just warn but don't block
+        const calibOk = distOk && bright.ok && centered;
+        if (calibOk) {
           if (!S.calibReadySince) S.calibReadySince = now;
-          const elapsed = now - S.calibReadySince;
-          if (elapsed >= CFG.calibHoldMs) {
-            // Transition to scanning
+          if (now - S.calibReadySince >= CFG.calibHoldMs) {
             S.phase = "scanning";
             S.scanStartTime = now;
             S.scanPhase = 0;
             $instrText.textContent = t.scanTitle;
             $instrSub.textContent = t.scanPhaseRight;
-            // Haptic feedback
-            if (navigator.vibrate) navigator.vibrate(100);
+            if (navigator.vibrate) navigator.vibrate(80);
           } else {
             $instrText.textContent = t.calibReady;
-            $instrSub.textContent = `${((CFG.calibHoldMs - elapsed) / 1000).toFixed(1)}s`;
+            const remaining = ((CFG.calibHoldMs - (now - S.calibReadySince)) / 1000).toFixed(1);
+            $instrSub.textContent = remaining + "s";
           }
         } else {
           S.calibReadySince = null;
         }
       }
 
-      // ─── SCANNING PHASE ───
+      // ─── SCANNING ───
       if (S.phase === "scanning") {
         const elapsed = now - S.scanStartTime;
-
-        // Update guided instruction
         const phaseInfo = getScanPhaseInstruction(elapsed, t);
         S.scanPhase = phaseInfo.phase;
         $instrText.textContent = t.scanTitle;
         $instrSub.textContent = phaseInfo.text;
 
-        // Check timeout
-        if (elapsed > CFG.scanTimeoutMs) {
+        if (elapsed > CFG.scanTimeoutMs) { finishScan(); return; }
+
+        // Capture candidates — NO hard stability gate during scan
+        // Stability only affects the score, not whether we capture
+        if (now - S.lastCaptureTime >= CFG.captureIntervalMs && !S.isCapturing) {
+          tryCapture(marks, pose, bright, blur, stab, now);
+        }
+
+        // Auto-finish when all bins filled and user is front-facing
+        const filledCount = BINS.filter((b) => S.bins[b.id].length > 0).length;
+        if (filledCount >= 5 && elapsed > 4000 && Math.abs(pose.yaw) < CFG.faceYawMax) {
           finishScan();
           return;
         }
 
-        // Try to capture a candidate frame
-        if (now - S.lastCaptureTime >= CFG.captureIntervalMs) {
-          tryCapture(marks, pose, bright, blur, stab, now);
-        }
-
-        // Auto-finish: all 5 bins have candidates AND user is facing front
-        const allFilled = BINS.every((b) => S.bins[b.id].length > 0);
-        if (allFilled && elapsed > 5000 && Math.abs(pose.yaw) < CFG.faceYawMax) {
+        // Also auto-finish if 3+ bins filled and we're past 15s
+        if (filledCount >= 3 && elapsed > 15000 && Math.abs(pose.yaw) < CFG.faceYawMax) {
           finishScan();
           return;
         }
@@ -900,213 +946,157 @@
       drawOverlay(overlayCtx, rect.width, rect.height, S, lang);
     }
 
-    function handleNoFace(now) {
+    function handleNoFace() {
       $instrText.textContent = t.noFaceDetected;
       $instrSub.textContent = t.noFaceHint;
       S.status = { distance: null, light: null, angle: null, stability: null };
       S.calibReadySince = null;
-
       if (!S.noFaceTimer) {
         S.noFaceTimer = setTimeout(() => {
-          if (S.phase === "calibrating" || S.phase === "scanning") {
+          if ((S.phase === "calibrating" || S.phase === "scanning") && !destroyed) {
             showError(t.noFaceDetected);
           }
         }, CFG.noFaceTimeoutMs);
       }
-
       const rect = $scan.getBoundingClientRect();
       drawOverlay(overlayCtx, rect.width, rect.height, S, lang);
     }
 
-    function updateInstruction(pose, size, bright, blur, stab, centered, now) {
-      if (S.phase !== "calibrating") return;
-
-      // Priority messages for calibration
-      if (size < CFG.faceSizeMin) {
-        $instrText.textContent = t.moveCloser;
-        $instrSub.textContent = "";
-      } else if (size > CFG.faceSizeMax) {
-        $instrText.textContent = t.moveBack;
-        $instrSub.textContent = "";
-      } else if (bright.tooDark) {
-        $instrText.textContent = t.moreLightNeeded;
-        $instrSub.textContent = "";
-      } else if (bright.tooLight) {
-        $instrText.textContent = t.tooMuchLight;
-        $instrSub.textContent = "";
-      } else if (bright.backlight) {
-        $instrText.textContent = t.backlight;
-        $instrSub.textContent = "";
-      } else if (!blur.ok) {
-        $instrText.textContent = t.blurry;
-        $instrSub.textContent = "";
-      } else if (stab > CFG.stabilityMaxPerSec) {
-        $instrText.textContent = t.holdStill;
-        $instrSub.textContent = "";
-      } else if (!centered) {
-        $instrText.textContent = t.centerFace;
-        $instrSub.textContent = "";
-      } else {
-        $instrText.textContent = t.calibTitle;
-        $instrSub.textContent = "";
-      }
+    function updateCalibInstruction(size, bright, blur, stab, centered) {
+      if (size < CFG.faceSizeMin) { $instrText.textContent = t.moveCloser; $instrSub.textContent = ""; }
+      else if (size > CFG.faceSizeMax) { $instrText.textContent = t.moveBack; $instrSub.textContent = ""; }
+      else if (bright.tooDark) { $instrText.textContent = t.moreLightNeeded; $instrSub.textContent = ""; }
+      else if (bright.tooLight) { $instrText.textContent = t.tooMuchLight; $instrSub.textContent = ""; }
+      else if (bright.backlight) { $instrText.textContent = t.backlight; $instrSub.textContent = ""; }
+      else if (!centered) { $instrText.textContent = t.centerFace; $instrSub.textContent = ""; }
+      else if (stab > CFG.stabilityMaxPerSec * 2) { $instrText.textContent = t.holdStill; $instrSub.textContent = ""; }
+      else { $instrText.textContent = t.calibTitle; $instrSub.textContent = t.centerFace; }
     }
 
-    // ── Frame capture into bins ─────────────────────────
+    /* ── Frame capture into bins ──────────────────────── */
     async function tryCapture(marks, pose, bright, blur, stab, now) {
-      // Basic quality gate: must pass brightness, blur, pitch, stability
-      if (!bright.ok || !blur.ok || Math.abs(pose.pitch) > CFG.pitchMax) return;
-      // Stability tolerance: profiles get 2x tolerance
-      const stabThreshold =
-        Math.abs(pose.yaw) > CFG.semiProfileYawMin
-          ? CFG.stabilityMaxPerSec * 2
-          : CFG.stabilityMaxPerSec;
-      if (stab > stabThreshold) return;
+      // During scan: only require brightness OK and pitch OK
+      // Blur and stability contribute to SCORE but don't block capture
+      if (!bright.ok) return;
+      if (Math.abs(pose.pitch) > CFG.pitchMax + 5) return; // slightly relaxed
 
-      // Determine which bin this yaw belongs to
       const yaw = pose.yaw;
       let targetBin = null;
 
-      // If retaking a specific bin, only accept that bin
       if (S.retakeBinId) {
         const binDef = BINS.find((b) => b.id === S.retakeBinId);
-        if (binDef && yaw >= binDef.yawMin && yaw <= binDef.yawMax) {
-          targetBin = binDef;
-        }
+        if (binDef && yaw >= binDef.yawMin && yaw <= binDef.yawMax) targetBin = binDef;
       } else {
         for (const b of BINS) {
-          if (yaw >= b.yawMin && yaw <= b.yawMax) {
-            targetBin = b;
-            break;
-          }
+          if (yaw >= b.yawMin && yaw <= b.yawMax) { targetBin = b; break; }
         }
       }
-
       if (!targetBin) return;
 
-      // Compute score
       const score = computeScore(bright, blur, stab, yaw, targetBin.idealYaw);
-
-      // Check if this improves the bin
       const bin = S.bins[targetBin.id];
       if (bin.length >= CFG.binTopN && score <= bin[bin.length - 1].score) return;
 
-      // Capture frame
+      // Capture
+      S.isCapturing = true;
       S.lastCaptureTime = now;
-      const blob = await captureFrame($video);
-      if (!blob) return;
+      try {
+        const blob = await captureFrame($video);
+        if (!blob || destroyed) { S.isCapturing = false; return; }
 
-      const wasEmpty = bin.length === 0;
+        const wasEmpty = bin.length === 0;
+        const entry = { blob, url: URL.createObjectURL(blob), score, yaw };
+        bin.push(entry);
+        bin.sort((a, b) => b.score - a.score);
+        while (bin.length > CFG.binTopN) {
+          const removed = bin.pop();
+          URL.revokeObjectURL(removed.url);
+        }
 
-      // Insert sorted (highest score first)
-      const entry = { blob, url: URL.createObjectURL(blob), score, yaw };
-      bin.push(entry);
-      bin.sort((a, b) => b.score - a.score);
-
-      // Trim to top N, revoke old URLs
-      while (bin.length > CFG.binTopN) {
-        const removed = bin.pop();
-        URL.revokeObjectURL(removed.url);
+        if (wasEmpty) {
+          flashGreen();
+          if (navigator.vibrate) navigator.vibrate(40);
+        }
+      } catch (e) {
+        console.warn("Capture failed:", e);
       }
-
-      // Flash green if first candidate in this bin
-      if (wasEmpty) {
-        flashGreen();
-        if (navigator.vibrate) navigator.vibrate(50);
-      }
+      S.isCapturing = false;
     }
 
-    // ── Finish scan ─────────────────────────────────────
+    /* ── Finish scan ──────────────────────────────────── */
     function finishScan() {
+      if (S.phase === "preview") return;
       S.phase = "preview";
       stopCamera(S);
-      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+      if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
       showPreview();
     }
 
-    // ── Preview ─────────────────────────────────────────
+    /* ── Preview ──────────────────────────────────────── */
     function showPreview() {
       showScreen("preview");
-
       const $grid1 = container.querySelector("#fs-preview-grid");
       const $grid2 = container.querySelector("#fs-preview-grid2");
       $grid1.innerHTML = "";
       $grid2.innerHTML = "";
 
-      // Row 1: face, semi_right, right (3 cols)
-      const row1Bins = ["face", "semi_right", "right"];
-      // Row 2: semi_left, left (2 cols)
-      const row2Bins = ["semi_left", "left"];
-
-      for (const binId of row1Bins) {
+      for (const binId of ["face", "semi_right", "right"]) {
         $grid1.appendChild(createPreviewCard(binId));
       }
-      for (const binId of row2Bins) {
+      for (const binId of ["semi_left", "left"]) {
         $grid2.appendChild(createPreviewCard(binId));
       }
 
-      // Validate button
       container.querySelector("#fs-validate-btn").onclick = () => upload();
-      container.querySelector("#fs-restart-btn").onclick = () => restart();
+      container.querySelector("#fs-restart-btn").onclick = () => {
+        if (window.AdermioFaceScan) window.AdermioFaceScan.restart();
+      };
     }
 
     function createPreviewCard(binId) {
       const binDef = BINS.find((b) => b.id === binId);
-      const candidates = S.bins[binId];
-      const best = candidates[0] || null;
-      const q = best
-        ? qualityLabel(best.score, lang)
-        : qualityLabel(0, lang);
+      const best = S.bins[binId][0] || null;
+      const q = best ? qualityLabel(best.score, lang) : qualityLabel(0, lang);
 
       const card = document.createElement("div");
-      card.style.cssText =
-        "border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);text-align:center;";
+      card.style.cssText = "border-radius:12px;overflow:hidden;background:rgba(255,255,255,.04);text-align:center;border:1px solid rgba(255,255,255,.06);";
 
       if (best) {
         card.innerHTML = `
           <img src="${best.url}" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;" />
-          <div style="padding:6px;">
-            <span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;background:${q.color}22;color:${q.color};">${q.label}</span>
-            <p style="font-size:10px;color:#94a3b8;margin:4px 0 0;">${t[binDef.labelKey]}</p>
-          </div>
-        `;
+          <div style="padding:8px 4px;">
+            <span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;background:${q.color}18;color:${q.color};border:1px solid ${q.color}30;">${q.label}</span>
+            <p style="font-size:9px;color:#64748b;margin:4px 0 0;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">${t[binDef.labelKey]}</p>
+          </div>`;
       } else {
         card.innerHTML = `
-          <div style="width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);">
-            <span style="font-size:24px;opacity:.3;">?</span>
+          <div style="width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);">
+            <svg width="24" height="24" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
           </div>
-          <div style="padding:6px;">
-            <span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;background:${q.color}22;color:${q.color};">${q.label}</span>
-            <p style="font-size:10px;color:#94a3b8;margin:4px 0 0;">${t[binDef.labelKey]}</p>
-            <button class="fs-retake-btn" data-bin="${binId}" style="margin-top:4px;padding:4px 10px;border:1px solid rgba(255,255,255,.2);border-radius:6px;background:transparent;color:#818cf8;font-size:10px;cursor:pointer;">${t.retakeAngle}</button>
-          </div>
-        `;
+          <div style="padding:8px 4px;">
+            <span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;background:${q.color}18;color:${q.color};border:1px solid ${q.color}30;">${q.label}</span>
+            <p style="font-size:9px;color:#64748b;margin:4px 0 0;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">${t[binDef.labelKey]}</p>
+            <button class="fs-retake-btn" data-bin="${binId}" style="margin-top:6px;padding:4px 12px;border:1px solid rgba(139,92,246,.3);border-radius:8px;background:rgba(139,92,246,.1);color:#a78bfa;font-size:10px;font-weight:600;cursor:pointer;">${t.retakeAngle}</button>
+          </div>`;
       }
 
-      // Retake button for missing bins
       card.querySelectorAll(".fs-retake-btn").forEach((btn) => {
         btn.addEventListener("click", () => retakeBin(btn.dataset.bin));
       });
-
       return card;
     }
 
-    // ── Retake specific bin ─────────────────────────────
+    /* ── Retake specific bin ──────────────────────────── */
     async function retakeBin(binId) {
-      // Clear this bin
       S.bins[binId].forEach((e) => URL.revokeObjectURL(e.url));
       S.bins[binId] = [];
       S.retakeBinId = binId;
 
-      // Restart camera for this bin only
       showScreen("scan");
-      S.phase = "loading";
       try {
         S.videoStream = await requestCamera();
         $video.srcObject = S.videoStream;
-        await new Promise((resolve) => {
-          $video.addEventListener("loadedmetadata", resolve, { once: true });
-        });
+        await new Promise((res) => $video.addEventListener("loadedmetadata", res, { once: true }));
         S.faceMesh = initFaceMesh(onResults);
         S.camera = startCamera($video, S.faceMesh);
         S.phase = "scanning";
@@ -1116,28 +1106,26 @@
         S.prevTimestamp = null;
         S.cachedBrightness = null;
         S.cachedBlur = null;
+        S.isCapturing = false;
         resizeOverlay();
 
         const binDef = BINS.find((b) => b.id === binId);
         $instrText.textContent = t.retakeAngle;
         $instrSub.textContent = t[binDef.labelKey];
 
-        // Auto-stop after 8 seconds or when bin has a candidate
         const retakeCheck = setInterval(() => {
-          if (S.bins[binId].length > 0) {
+          if (S.bins[binId].length > 0 || destroyed) {
             clearInterval(retakeCheck);
             S.retakeBinId = null;
-            finishScan();
+            if (!destroyed) finishScan();
           }
-        }, 500);
+        }, 400);
 
         setTimeout(() => {
           clearInterval(retakeCheck);
-          if (S.phase === "scanning") {
-            S.retakeBinId = null;
-            finishScan();
-          }
-        }, 8000);
+          S.retakeBinId = null;
+          if (S.phase === "scanning" && !destroyed) finishScan();
+        }, 10000);
       } catch (err) {
         console.error("Retake error:", err);
         S.retakeBinId = null;
@@ -1145,7 +1133,7 @@
       }
     }
 
-    // ── Upload ──────────────────────────────────────────
+    /* ── Upload ───────────────────────────────────────── */
     async function upload() {
       const $btn = container.querySelector("#fs-validate-btn");
       $btn.textContent = t.uploadingPhotos;
@@ -1153,9 +1141,6 @@
       $btn.style.opacity = "0.6";
 
       try {
-        // Map bin IDs to S3 upload types
-        // Backend currently expects: face, left, right
-        // We upload all 5 but map to formState only the 3 main ones
         const uploadMap = [
           { binId: "face", s3Type: "face", formKey: "face" },
           { binId: "semi_right", s3Type: "semi_right", formKey: null },
@@ -1167,45 +1152,21 @@
         for (const { binId, s3Type, formKey } of uploadMap) {
           const best = S.bins[binId][0];
           if (!best) continue;
-
-          const file = new File(
-            [best.blob],
-            `scan_${s3Type}_${Date.now()}.jpg`,
-            { type: "image/jpeg" }
-          );
-
+          const file = new File([best.blob], `scan_${s3Type}_${Date.now()}.jpg`, { type: "image/jpeg" });
           if (typeof window.uploadToS3Presigned === "function") {
             const { key, getUrl } = await window.uploadToS3Presigned({
-              file,
-              jobId: window.formState?.jobId || "",
-              type: s3Type,
+              file, jobId: window.formState?.jobId || "", type: s3Type,
             });
-
-            // Update formState for backend-compatible types
             if (formKey && window.formState) {
               window.formState.photos[formKey] = { key, getUrl };
             }
           }
         }
 
-        // Mark validation
-        if (window.validationState) {
-          window.validationState.facePhotoUploaded = true;
-        }
-
-        // Sync manual upload previews if they exist
+        if (window.validationState) window.validationState.facePhotoUploaded = true;
         syncManualPreviews();
+        if (onScanComplete) onScanComplete({ bins: Object.fromEntries(BINS.map((b) => [b.id, S.bins[b.id].length > 0])) });
 
-        // Callback
-        if (onScanComplete) {
-          onScanComplete({
-            bins: Object.fromEntries(
-              BINS.map((b) => [b.id, S.bins[b.id].length > 0])
-            ),
-          });
-        }
-
-        // Switch to manual upload container (shows success)
         const manualContainer = document.getElementById("manual-upload-container");
         const scanContainer = document.getElementById("facescan-container");
         if (manualContainer && scanContainer) {
@@ -1221,49 +1182,29 @@
     }
 
     function syncManualPreviews() {
-      const typeMap = { face: "face", right: "left", left: "right" };
-      for (const [binId, previewType] of Object.entries(typeMap)) {
+      const map = { face: "face", right: "left", left: "right" };
+      for (const [binId, previewType] of Object.entries(map)) {
         const best = S.bins[binId]?.[0];
         if (!best) continue;
         const previewEl = document.getElementById(`preview-${previewType}`);
         const emptyEl = document.getElementById(`empty-${previewType}`);
-        if (previewEl) {
-          previewEl.src = best.url;
-          previewEl.classList.remove("hidden");
-        }
+        if (previewEl) { previewEl.src = best.url; previewEl.classList.remove("hidden"); }
         if (emptyEl) emptyEl.classList.add("hidden");
       }
     }
 
-    // ── Restart ─────────────────────────────────────────
-    function restart() {
-      // Cleanup bins
-      for (const b of BINS) {
-        S.bins[b.id].forEach((e) => URL.revokeObjectURL(e.url));
-        S.bins[b.id] = [];
-      }
-      stopCamera(S);
-      S = mkState();
-      // Re-init
-      container.innerHTML = buildUI(t);
-      createScanner.__lastInstance = createScanner(container, opts);
-    }
-
-    // ── Destroy ─────────────────────────────────────────
+    /* ── Destroy ──────────────────────────────────────── */
     function destroy() {
+      destroyed = true;
       stopCamera(S);
       for (const b of BINS) {
         S.bins[b.id].forEach((e) => URL.revokeObjectURL(e.url));
         S.bins[b.id] = [];
       }
       S.phase = "idle";
-      _brightCanvas = null;
-      _brightCtx = null;
-      _blurCanvas = null;
-      _blurCtx = null;
     }
 
-    return { destroy, restart };
+    return { destroy };
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -1271,26 +1212,31 @@
      ═══════════════════════════════════════════════════════════ */
   window.AdermioFaceScan = {
     _instance: null,
+    _container: null,
+    _opts: null,
 
     init(containerId, opts = {}) {
       const el = document.getElementById(containerId);
-      if (!el) {
-        console.error("AdermioFaceScan: container not found:", containerId);
-        return;
-      }
+      if (!el) { console.error("AdermioFaceScan: container not found:", containerId); return; }
       if (this._instance) this._instance.destroy();
+      this._container = el;
+      this._opts = opts;
       this._instance = createScanner(el, opts);
     },
 
     destroy() {
-      if (this._instance) {
-        this._instance.destroy();
-        this._instance = null;
-      }
+      if (this._instance) { this._instance.destroy(); this._instance = null; }
     },
 
     restart() {
-      if (this._instance) this._instance.restart();
+      if (this._container && this._opts) {
+        if (this._instance) this._instance.destroy();
+        // Reset cached canvases
+        _brightCanvas = null; _brightCtx = null;
+        _blurCanvas = null; _blurCtx = null;
+        _captureCanvas = null; _captureCtx = null;
+        this._instance = createScanner(this._container, this._opts);
+      }
     },
   };
 })();
