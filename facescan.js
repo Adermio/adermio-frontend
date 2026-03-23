@@ -466,8 +466,17 @@
     fm.onResults(cb); return fm;
   }
   function startCam(v, fm) {
-    const c = new window.Camera(v, { onFrame: async () => { await fm.send({ image: v }); }, width: 1280, height: 960 });
-    c.start(); return c;
+    // Manual rAF loop instead of MediaPipe Camera utility (broken on iOS/WebKit)
+    let running = true;
+    async function tick() {
+      if (!running) return;
+      if (v.readyState >= 2) {
+        try { await fm.send({ image: v }); } catch (_) {}
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    return { stop() { running = false; } };
   }
   function stopCam(S) {
     if (S.cam) { try { S.cam.stop(); } catch (_) {} S.cam = null; }
