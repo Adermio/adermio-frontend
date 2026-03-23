@@ -196,7 +196,7 @@
     const nx = hy * vz - hz * vy, ny = hz * vx - hx * vz, nz = hx * vy - hy * vx;
     const nLen = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1e-9;
     return {
-      yaw: (Math.atan2(nx, nz) * 180) / Math.PI,
+      yaw: (Math.atan2(nx, -nz) * 180) / Math.PI,
       pitch: (Math.asin(Math.max(-1, Math.min(1, -ny / nLen))) * 180) / Math.PI,
     };
   }
