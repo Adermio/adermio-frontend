@@ -31,6 +31,8 @@
       calibTitle: "Positionnez votre visage",
       calibSub: "Placez votre visage dans l'ovale",
       calibReady: "Parfait, ne bougez pas",
+      countdown3: "3", countdown2: "2", countdown1: "1",
+      countdownSub: "Pr\u00e9parez-vous, le scan va commencer",
       moveCloser: "Rapprochez-vous de la cam\u00e9ra",
       moveBack: "Reculez l\u00e9g\u00e8rement",
       centerFace: "Centrez votre visage dans l'ovale",
@@ -75,6 +77,8 @@
       calibTitle: "Position your face",
       calibSub: "Place your face inside the oval",
       calibReady: "Perfect, hold still",
+      countdown3: "3", countdown2: "2", countdown1: "1",
+      countdownSub: "Get ready, scan is about to start",
       moveCloser: "Move closer to the camera",
       moveBack: "Move back slightly",
       centerFace: "Center your face in the oval",
@@ -113,9 +117,9 @@
      CONFIG
      ═══════════════════════════════════════════════════════════ */
   const CFG = {
-    faceSizeMin: 0.18,
-    faceSizeMax: 0.60,
-    centerMaxOff: 0.18,
+    faceSizeMin: 0.26,
+    faceSizeMax: 0.58,
+    centerMaxOff: 0.15,
     faceYawMax: 12,
     semiYawMin: 13,
     profYawMin: 27,
@@ -264,7 +268,7 @@
     const bins = {}; for (const id of BIN_IDS) bins[id] = [];
     return {
       phase: "idle", bins, calibSince: null,
-      scanStart: null, lastCapt: 0,
+      countdownStart: null, scanStart: null, lastCapt: 0,
       prev: null, prevT: null,
       noFaceT: null, fc: 0,
       cBr: null, cBl: null,
@@ -356,7 +360,7 @@
      ═══════════════════════════════════════════════════════════ */
   function drawOverlay(ctx, w, h, S, t) {
     ctx.clearRect(0, 0, w, h);
-    if (S.phase !== "calibrating" && S.phase !== "scanning") return;
+    if (S.phase !== "calibrating" && S.phase !== "scanning" && S.phase !== "countdown") return;
 
     const cx = w / 2, cy = h * 0.42, rx = w * 0.34, ry = h * 0.29;
 
@@ -459,24 +463,16 @@
   /* ═══════════════════════════════════════════════════════════
      ADAPTIVE INSTRUCTIONS (based on bins, not timer)
      ═══════════════════════════════════════════════════════════ */
-  function adaptiveGuide(S, t) {
+  function adaptiveGuide(S, t, absYaw) {
     const has = (id) => S.bins[id].length > 0;
-    const hasFace = has("face");
-    // Require FULL profile (not just semi) before switching sides
-    const rightDone = has("right");
-    const leftDone = has("left");
-    const rightStarted = has("semi_right") || has("right");
-    const leftStarted = has("semi_left") || has("left");
 
-    // Step 1: face
-    if (!hasFace) return { t1: t.scanFace, t2: t.scanFaceSub };
-    // Step 2: keep turning right until full profile captured
-    if (!rightDone) return { t1: t.scanRight, t2: t.scanRightSub };
-    // Step 3: come back to center before going left
-    if (rightDone && !leftStarted) return { t1: t.scanCenter, t2: t.scanCenterSub };
-    // Step 4: keep turning left until full profile captured
-    if (!leftDone) return { t1: t.scanLeft, t2: t.scanLeftSub };
-    // All done
+    // Step 1: face — wait for front photo
+    if (!has("face")) return { t1: t.scanFace, t2: t.scanFaceSub };
+    // Step 2: right — keep turning until full right profile
+    if (!has("right")) return { t1: t.scanRight, t2: t.scanRightSub };
+    // Step 3: left — go directly to left (user passes through center naturally)
+    if (!has("left")) return { t1: t.scanLeft, t2: t.scanLeftSub };
+    // Done
     return { t1: t.scanDone, t2: t.scanDoneSub };
   }
 
@@ -608,7 +604,7 @@
 
     /* ── MediaPipe results callback ────────── */
     function onRes(results) {
-      if (dead || (S.phase !== "calibrating" && S.phase !== "scanning")) return;
+      if (dead || (S.phase !== "calibrating" && S.phase !== "scanning" && S.phase !== "countdown")) return;
       const now = performance.now();
       const marks = results.multiFaceLandmarks?.[0];
 
@@ -654,14 +650,32 @@
         if (calibOk) {
           if (!S.calibSince) S.calibSince = now;
           if (now - S.calibSince >= CFG.calibMs) {
-            S.phase = "scanning"; S.scanStart = now;
-            const g = adaptiveGuide(S, t);
-            $t1.textContent = g.t1; $t2.textContent = g.t2;
-            if (navigator.vibrate) navigator.vibrate(60);
+            // Start countdown
+            S.phase = "countdown"; S.countdownStart = now;
+            $t2.textContent = t.countdownSub;
+            if (navigator.vibrate) navigator.vibrate(40);
           } else {
             $t1.textContent = t.calibReady; $t2.textContent = "";
           }
         } else { S.calibSince = null; }
+      }
+
+      // ── COUNTDOWN (3-2-1) ──
+      if (S.phase === "countdown") {
+        const elapsed = now - S.countdownStart;
+        const sec = Math.ceil(3 - elapsed / 1000);
+        if (sec >= 1) {
+          $t1.textContent = sec.toString();
+          $t1.style.fontSize = "42px";
+          $t2.textContent = t.countdownSub;
+        }
+        if (elapsed >= 3000) {
+          $t1.style.fontSize = "";
+          S.phase = "scanning"; S.scanStart = now;
+          const g = adaptiveGuide(S, t, absYaw);
+          $t1.textContent = g.t1; $t2.textContent = g.t2;
+          if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
+        }
       }
 
       // ── SCANNING ──
@@ -669,7 +683,7 @@
         const elapsed = now - S.scanStart;
 
         // Adaptive instructions
-        const g = adaptiveGuide(S, t);
+        const g = adaptiveGuide(S, t, absYaw);
         $t1.textContent = g.t1; $t2.textContent = g.t2;
 
         // Timeout
