@@ -467,13 +467,16 @@
   }
   function startCam(v, fm) {
     // Manual rAF loop instead of MediaPipe Camera utility (broken on iOS/WebKit)
-    let running = true;
-    async function tick() {
+    let running = true, processing = false;
+    function tick() {
       if (!running) return;
-      if (v.readyState >= 2) {
-        try { await fm.send({ image: v }); } catch (_) {}
+      requestAnimationFrame(tick);              // schedule next BEFORE processing
+      if (v.readyState >= 2 && !processing) {
+        processing = true;
+        fm.send({ image: v })
+          .catch((e) => console.warn("[Adermio] fm.send error:", e))
+          .finally(() => { processing = false; });
       }
-      requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
     return { stop() { running = false; } };
@@ -540,6 +543,7 @@
         S.stream = await reqCam();
         $v.srcObject = S.stream;
         await new Promise((ok, no) => { $v.addEventListener("loadedmetadata", ok, { once: true }); setTimeout(() => no(new Error("timeout")), 10000); });
+        try { await $v.play(); } catch (_) {}   // explicit play() required on iOS
         S.fm = initFM(onRes);
         S.cam = startCam($v, S.fm);
         S.phase = "calibrating"; show("scan"); resize();
