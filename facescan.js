@@ -440,18 +440,22 @@
   function adaptiveGuide(S, t) {
     const has = (id) => S.bins[id].length > 0;
     const hasFace = has("face");
-    const hasRight = has("right") || has("semi_right");
-    const hasLeft = has("left") || has("semi_left");
+    // Require FULL profile (not just semi) before switching sides
+    const rightDone = has("right");
+    const leftDone = has("left");
+    const rightStarted = has("semi_right") || has("right");
+    const leftStarted = has("semi_left") || has("left");
 
-    // Priority: face first, then right, then left
+    // Step 1: face
     if (!hasFace) return { t1: t.scanFace, t2: t.scanFaceSub };
-    if (!hasRight) return { t1: t.scanRight, t2: t.scanRightSub };
-    if (hasRight && !hasLeft) return { t1: t.scanLeft, t2: t.scanLeftSub };
-
-    // All essential bins filled — ask to come back center for any remaining
-    const filled = BIN_IDS.filter((id) => has(id)).length;
-    if (filled >= 5) return { t1: t.scanDone, t2: t.scanDoneSub };
-    return { t1: t.scanCenter, t2: t.scanCenterSub };
+    // Step 2: keep turning right until full profile captured
+    if (!rightDone) return { t1: t.scanRight, t2: t.scanRightSub };
+    // Step 3: come back to center before going left
+    if (rightDone && !leftStarted) return { t1: t.scanCenter, t2: t.scanCenterSub };
+    // Step 4: keep turning left until full profile captured
+    if (!leftDone) return { t1: t.scanLeft, t2: t.scanLeftSub };
+    // All done
+    return { t1: t.scanDone, t2: t.scanDoneSub };
   }
 
   /* ═══════════════════════════════════════════════════════════
