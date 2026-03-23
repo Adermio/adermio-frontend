@@ -117,7 +117,7 @@
      CONFIG
      ═══════════════════════════════════════════════════════════ */
   const CFG = {
-    faceSizeMin: 0.26,
+    faceSizeMin: 0.33,
     faceSizeMax: 0.58,
     centerMaxOff: 0.15,
     faceYawMax: 12,
@@ -682,9 +682,21 @@
       if (S.phase === "scanning") {
         const elapsed = now - S.scanStart;
 
-        // Adaptive instructions
-        const g = adaptiveGuide(S, t, absYaw);
-        $t1.textContent = g.t1; $t2.textContent = g.t2;
+        // Show warnings when a factor is bad, otherwise show adaptive guide
+        if (!distOk && sz < CFG.faceSizeMin) {
+          $t1.textContent = t.moveCloser; $t2.textContent = "";
+        } else if (!distOk && sz > CFG.faceSizeMax) {
+          $t1.textContent = t.moveBack; $t2.textContent = "";
+        } else if (br.dark) {
+          $t1.textContent = t.lowLight; $t2.textContent = "";
+        } else if (br.bright) {
+          $t1.textContent = t.strongLight; $t2.textContent = "";
+        } else if (br.bl) {
+          $t1.textContent = t.backlight; $t2.textContent = "";
+        } else {
+          const g = adaptiveGuide(S, t, absYaw);
+          $t1.textContent = g.t1; $t2.textContent = g.t2;
+        }
 
         // Timeout
         if (elapsed > CFG.timeoutMs) { finish(); return; }
