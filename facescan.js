@@ -757,8 +757,15 @@
         if (window.validationState) window.validationState.facePhotoUploaded = true;
         syncPrev();
         if (onDone) onDone({ bins: Object.fromEntries(BIN_IDS.map((id) => [id, S.bins[id].length > 0])) });
-        const mc = document.getElementById("manual-upload-container"), sc = document.getElementById("facescan-container");
-        if (mc && sc) { sc.classList.add("hidden"); mc.classList.remove("hidden"); }
+        console.log("[Adermio] Upload complete, advancing to next step");
+        // Advance to next form step
+        if (typeof window.goToStep === "function" && typeof window.currentStep === "number") {
+          window.goToStep(window.currentStep + 1);
+        } else {
+          // Fallback: click the main continue button
+          const btn = document.getElementById("btn-next") || document.querySelector('[data-action="next"]');
+          if (btn) btn.click();
+        }
       } catch (e) { console.error("[Adermio] Upload error:", e); $btn.textContent = t.validate; $btn.disabled = false; $btn.style.opacity = "1"; }
     }
 

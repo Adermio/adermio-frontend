@@ -865,6 +865,7 @@
         // --- GLOBAL STATE ---
         const totalSteps = 7;
         let currentStep = 1;
+        Object.defineProperty(window, 'currentStep', { get() { return currentStep; } });
 
         // Anti double submit
         let isSubmitting = false;
@@ -965,6 +966,7 @@
             }
         }
 
+        window.goToStep = goToStep;
         function goToStep(step) {
             const currentEl = document.getElementById(`step-${currentStep}`);
             if(!currentEl) return;
