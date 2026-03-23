@@ -1,8 +1,8 @@
 /**
- * Adermio Face Scan v6.0 — Production Release
+ * Adermio Face Scan v7.0 — Production Release
  *
- * Captures 5 angles (face, semi-right, right, semi-left, left) via guided
- * video scan using MediaPipe Face Mesh. Sends best 3 photos to S3.
+ * Captures 7 angles via guided video scan using MediaPipe Face Mesh.
+ * Sends best 3 photos (face + 2 profiles) to S3.
  *
  * v6 fixes: mirrored captures, adaptive instructions, upload validation,
  * face-only fallback guard, resize listener, FaceMesh reuse & cleanup,
@@ -45,16 +45,20 @@
       scanFace: "Regardez la cam\u00e9ra",
       scanFaceSub: "Restez bien de face",
       scanRight: "Tournez la t\u00eate vers la droite",
-      scanRightSub: "Doucement, jusqu'\u00e0 voir votre oreille",
+      scanRightSub: "Doucement, montrez votre profil",
+      scanWideRight: "Continuez de tourner \u00e0 droite",
+      scanWideRightSub: "Un peu plus, montrez votre oreille",
       scanLeft: "Tournez la t\u00eate vers la gauche",
-      scanLeftSub: "Doucement, m\u00eame chose de l'autre c\u00f4t\u00e9",
+      scanLeftSub: "Doucement, montrez votre profil",
+      scanWideLeft: "Continuez de tourner \u00e0 gauche",
+      scanWideLeftSub: "Un peu plus, montrez votre oreille",
       scanCenter: "Revenez face cam\u00e9ra",
       scanCenterSub: "Regardez droit devant vous",
       scanDone: "Scan termin\u00e9",
       scanDoneSub: "Analyse de vos captures\u2026",
       captured: "Captur\u00e9",
-      binFace: "Face", binSemiR: "Semi D", binRight: "Profil D",
-      binSemiL: "Semi G", binLeft: "Profil G",
+      binFace: "Face", binSemiR: "Semi D", binRight: "Profil D", binWideR: "Large D",
+      binSemiL: "Semi G", binLeft: "Profil G", binWideL: "Large G",
       distance: "Distance", light: "Lumi\u00e8re", stability: "Stabilit\u00e9",
       previewTitle: "Vos captures",
       excellent: "Excellent", good: "Bon", ok: "Correct", missing: "Manquant",
@@ -91,16 +95,20 @@
       scanFace: "Look at the camera",
       scanFaceSub: "Stay facing forward",
       scanRight: "Turn your head to the right",
-      scanRightSub: "Slowly, until you can see your ear",
+      scanRightSub: "Slowly, show your profile",
+      scanWideRight: "Keep turning right",
+      scanWideRightSub: "A bit more, show your ear",
       scanLeft: "Turn your head to the left",
-      scanLeftSub: "Slowly, same thing on the other side",
+      scanLeftSub: "Slowly, show your profile",
+      scanWideLeft: "Keep turning left",
+      scanWideLeftSub: "A bit more, show your ear",
       scanCenter: "Come back to center",
       scanCenterSub: "Look straight ahead",
       scanDone: "Scan complete",
       scanDoneSub: "Analyzing your captures\u2026",
       captured: "Captured",
-      binFace: "Front", binSemiR: "Semi R", binRight: "Profile R",
-      binSemiL: "Semi L", binLeft: "Profile L",
+      binFace: "Front", binSemiR: "Semi R", binRight: "Profile R", binWideR: "Wide R",
+      binSemiL: "Semi L", binLeft: "Profile L", binWideL: "Wide L",
       distance: "Distance", light: "Light", stability: "Stability",
       previewTitle: "Your captures",
       excellent: "Excellent", good: "Good", ok: "Fair", missing: "Missing",
@@ -122,8 +130,11 @@
     centerMaxOff: 0.15,
     faceYawMax: 12,
     semiYawMin: 13,
-    profYawMin: 27,
-    profYawMax: 60,
+    semiYawMax: 28,
+    profYawMin: 28,
+    profYawMax: 48,
+    wideYawMin: 48,
+    wideYawMax: 70,
     pitchMax: 20,
     brightMin: 40,
     brightMax: 235,
@@ -133,7 +144,7 @@
     stabMax: 0.20,
     calibMs: 700,
     captureMs: 150,
-    timeoutMs: 30000,
+    timeoutMs: 40000,
     wasmTimeoutMs: 15000,
     noFaceMs: 12000,
     binTopN: 3,
@@ -144,18 +155,19 @@
   /* ═══════════════════════════════════════════════════════════
      BIN SYSTEM
      ═══════════════════════════════════════════════════════════ */
-  const BIN_IDS = ["face", "semi_right", "right", "semi_left", "left"];
+  const BIN_IDS = ["face", "semi_right", "right", "wide_right", "semi_left", "left", "wide_left"];
   const BIN_LABELS = {
-    face: "binFace", semi_right: "binSemiR", right: "binRight",
-    semi_left: "binSemiL", left: "binLeft",
+    face: "binFace", semi_right: "binSemiR", right: "binRight", wide_right: "binWideR",
+    semi_left: "binSemiL", left: "binLeft", wide_left: "binWideL",
   };
-  const BIN_IDEAL_YAW = { face: 0, semi_right: 22, right: 42, semi_left: 22, left: 42 };
+  const BIN_IDEAL_YAW = { face: 0, semi_right: 20, right: 38, wide_right: 55, semi_left: 20, left: 38, wide_left: 55 };
 
   function classifyBin(absYaw, noseX) {
     const right = noseX < 0.5;
     if (absYaw < CFG.faceYawMax) return "face";
-    if (absYaw >= CFG.semiYawMin && absYaw < CFG.profYawMin) return right ? "semi_right" : "semi_left";
-    if (absYaw >= CFG.profYawMin && absYaw <= CFG.profYawMax) return right ? "right" : "left";
+    if (absYaw >= CFG.semiYawMin && absYaw < CFG.semiYawMax) return right ? "semi_right" : "semi_left";
+    if (absYaw >= CFG.profYawMin && absYaw < CFG.wideYawMin) return right ? "right" : "left";
+    if (absYaw >= CFG.wideYawMin && absYaw <= CFG.wideYawMax) return right ? "wide_right" : "wide_left";
     return null;
   }
 
@@ -426,12 +438,12 @@
   }
 
   function drawBinDots(ctx, w, h, S, t) {
-    // Show as small indicators at top of scan area
-    const order = ["left", "semi_left", "face", "semi_right", "right"];
-    const labels = order.map((id) => t[BIN_LABELS[id]]);
-    const total = w * 0.75, sx = (w - total) / 2, y = h * 0.06;
-    const sp = total / (order.length - 1), r = 7;
+    // 7 dots at top: wide_left, left, semi_left, face, semi_right, right, wide_right
+    const order = ["wide_left", "left", "semi_left", "face", "semi_right", "right", "wide_right"];
+    const total = w * 0.85, sx = (w - total) / 2, y = h * 0.055;
+    const sp = total / (order.length - 1), r = 6;
 
+    // Connecting line
     ctx.strokeStyle = "rgba(255,255,255,.06)"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(sx, y); ctx.lineTo(sx + total, y); ctx.stroke();
 
@@ -449,15 +461,11 @@
         ctx.textAlign = "center"; ctx.textBaseline = "middle";
         ctx.fillText("\u2713", dx, y + 0.5);
       }
-
-      ctx.fillStyle = has ? "rgba(20,184,166,.7)" : "rgba(255,255,255,.2)";
-      ctx.font = "500 7px 'DM Sans',sans-serif"; ctx.textAlign = "center";
-      ctx.fillText(labels[i], dx, y + r + 10);
     }
 
     const count = BIN_IDS.filter((id) => S.bins[id].length > 0).length;
     ctx.fillStyle = "rgba(255,255,255,.5)"; ctx.font = "600 11px 'DM Sans',sans-serif";
-    ctx.textAlign = "center"; ctx.fillText(count + "/5", w / 2, y + r + 24);
+    ctx.textAlign = "center"; ctx.fillText(count + "/7", w / 2, y + r + 14);
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -466,13 +474,16 @@
   function adaptiveGuide(S, t, absYaw) {
     const has = (id) => S.bins[id].length > 0;
 
-    // Step 1: face — wait for front photo
+    // Sequential: face → semi_right → right → wide_right → center → semi_left → left → wide_left
     if (!has("face")) return { t1: t.scanFace, t2: t.scanFaceSub };
-    // Step 2: right — keep turning until full right profile
+    if (!has("semi_right")) return { t1: t.scanRight, t2: t.scanRightSub };
     if (!has("right")) return { t1: t.scanRight, t2: t.scanRightSub };
-    // Step 3: left — go directly to left (user passes through center naturally)
+    if (!has("wide_right")) return { t1: t.scanWideRight, t2: t.scanWideRightSub };
+    // Right side done — guide back to center then left
+    if (!has("semi_left")) return { t1: t.scanLeft, t2: t.scanLeftSub };
     if (!has("left")) return { t1: t.scanLeft, t2: t.scanLeftSub };
-    // Done
+    if (!has("wide_left")) return { t1: t.scanWideLeft, t2: t.scanWideLeftSub };
+    // All 7 captured
     return { t1: t.scanDone, t2: t.scanDoneSub };
   }
 
@@ -698,22 +709,16 @@
           $t1.textContent = g.t1; $t2.textContent = g.t2;
         }
 
-        // Timeout
-        if (elapsed > CFG.timeoutMs) { finish(); return; }
-
         // Capture (only gate: face size OK)
         if (now - S.lastCapt >= CFG.captureMs && !S.capturing && distOk) {
           tryCapture(marks, pose, br, bl, stab, absYaw, nose.x, now);
         }
 
-        // Auto-finish: all 5 filled OR essential 3 (face+right+left) after 12s
+        // Auto-finish: all 7 filled, or safety timeout
         const filled = BIN_IDS.filter((id) => S.bins[id].length > 0).length;
-        const hasEssential = S.bins.face.length > 0
-          && (S.bins.right.length > 0 || S.bins.semi_right.length > 0)
-          && (S.bins.left.length > 0 || S.bins.semi_left.length > 0);
-        if (filled >= 5 && elapsed > 5000 && absYaw < CFG.faceYawMax) { finish(); return; }
-        if (hasEssential && filled >= 4 && elapsed > 14000) { finish(); return; }
-        if (hasEssential && elapsed > 20000) { finish(); return; }
+        if (filled >= 7) { finish(); return; }
+        // Safety timeout — take what we have
+        if (elapsed > CFG.timeoutMs) { finish(); return; }
       }
 
       const rect = $scan.getBoundingClientRect();
@@ -751,8 +756,7 @@
         bin.sort((a, b) => b.score - a.score);
         while (bin.length > CFG.binTopN) { const rm = bin.pop(); URL.revokeObjectURL(rm.url); }
         if (wasEmpty) {
-          flash();
-          if (navigator.vibrate) navigator.vibrate(30);
+          if (navigator.vibrate) navigator.vibrate(25);
           if (DEBUG) console.log(`[Adermio] Bin "${binId}" captured, score=${sc.toFixed(3)}`);
         }
       } catch (e) { if (DEBUG) console.warn("[Adermio] Capture error:", e); }
@@ -795,10 +799,16 @@
     }
 
     function getBestPicks() {
+      // Pick best from each side: prefer wide > profile > semi (wider = more skin visible)
+      const pickBest = (...binIds) => {
+        const all = binIds.flatMap((id) => S.bins[id] || []);
+        all.sort((a, b) => b.score - a.score);
+        return all[0] || null;
+      };
       return {
         face: S.bins.face[0] || null,
-        right: S.bins.right[0] || S.bins.semi_right[0] || null,
-        left: S.bins.left[0] || S.bins.semi_left[0] || null,
+        right: pickBest("wide_right", "right", "semi_right"),
+        left: pickBest("wide_left", "left", "semi_left"),
       };
     }
 
