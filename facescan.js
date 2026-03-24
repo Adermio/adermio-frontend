@@ -839,27 +839,28 @@
       const $btn = $("#fs-ok");
       $btn.textContent = t.uploading; $btn.disabled = true; $btn.style.opacity = ".5";
 
-      const picks = getBestPicks();
-
       // Guard: face photo is mandatory
-      if (!picks.face) {
+      if (!S.bins.face[0]) {
         $btn.textContent = t.validate; $btn.disabled = false; $btn.style.opacity = "1";
         if (window.AdermioFaceScan) window.AdermioFaceScan.restart();
         return;
       }
 
+      // Upload ALL 7 bins (best frame from each)
       let uploadCount = 0;
-      for (const [type, entry] of Object.entries(picks)) {
-        if (!entry) continue;
-        const file = new File([entry.blob], `scan_${type}_${Date.now()}.jpg`, { type: "image/jpeg" });
+      for (const binId of BIN_IDS) {
+        const best = S.bins[binId][0];
+        if (!best) continue;
+        const file = new File([best.blob], `scan_${binId}_${Date.now()}.jpg`, { type: "image/jpeg" });
         if (typeof window.uploadToS3Presigned === "function") {
           try {
-            const { key, getUrl } = await window.uploadToS3Presigned({ file, jobId: window.formState?.jobId || "", type });
-            if (window.formState) window.formState.photos[type] = { key, getUrl };
+            const { key, getUrl } = await window.uploadToS3Presigned({ file, jobId: window.formState?.jobId || "", type: binId });
+            if (window.formState) window.formState.photos[binId] = { key, getUrl };
             uploadCount++;
-          } catch (ue) { console.warn(`[Adermio] Upload ${type} failed:`, ue); }
+          } catch (ue) { console.warn(`[Adermio] Upload ${binId} failed:`, ue); }
         }
       }
+
 
       // Upload zoom close-up if provided
       if (S.zoomFile && typeof window.uploadToS3Presigned === "function") {
