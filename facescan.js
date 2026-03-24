@@ -336,7 +336,7 @@
 
   <div id="fs-prev" style="display:none;padding:28px 20px;background:linear-gradient(160deg,#0F3D39 0%,#1a5249 100%);color:#fff;">
     <h3 style="font-family:'Playfair Display',serif;font-size:19px;font-weight:600;margin:0 0 20px;text-align:center;">${t.previewTitle}</h3>
-    <div id="fs-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;"></div>
+    <div id="fs-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px;"></div>
     <div id="fs-zoom-wrap" style="margin-bottom:20px;">
       <input type="file" id="fs-zoom-input" accept="image/*" capture="environment" style="display:none;"/>
       <button id="fs-zoom-btn" style="width:100%;padding:14px;border:1px dashed rgba(20,184,166,.3);border-radius:12px;background:rgba(20,184,166,.04);color:rgba(255,255,255,.7);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .15s;">
@@ -775,13 +775,18 @@
       show("prev");
       const grid = $("#fs-grid");
       grid.innerHTML = "";
-      // Show 3 photos that will be sent: face, right, left
+      // Show all 7 captures
       const picks = getBestPicks();
-      [
-        { key: "face", label: t.binFace },
-        { key: "right", label: t.binRight },
+      const showOrder = [
+        { key: "wide_left", label: t.binWideL },
         { key: "left", label: t.binLeft },
-      ].forEach(({ key, label }) => grid.appendChild(makeCard(picks[key], label)));
+        { key: "semi_left", label: t.binSemiL },
+        { key: "face", label: t.binFace },
+        { key: "semi_right", label: t.binSemiR },
+        { key: "right", label: t.binRight },
+        { key: "wide_right", label: t.binWideR },
+      ];
+      showOrder.forEach(({ key, label }) => grid.appendChild(makeCard(picks[key], label)));
 
       // Zoom close-up
       const $zBtn = $("#fs-zoom-btn"), $zIn = $("#fs-zoom-input"), $zPrev = $("#fs-zoom-preview"), $zImg = $("#fs-zoom-img");
@@ -799,17 +804,12 @@
     }
 
     function getBestPicks() {
-      // Pick best from each side: prefer wide > profile > semi (wider = more skin visible)
-      const pickBest = (...binIds) => {
-        const all = binIds.flatMap((id) => S.bins[id] || []);
-        all.sort((a, b) => b.score - a.score);
-        return all[0] || null;
-      };
-      return {
-        face: S.bins.face[0] || null,
-        right: pickBest("wide_right", "right", "semi_right"),
-        left: pickBest("wide_left", "left", "semi_left"),
-      };
+      // Return best frame from each of the 7 bins
+      const result = {};
+      for (const id of BIN_IDS) {
+        result[id] = S.bins[id][0] || null;
+      }
+      return result;
     }
 
     function makeCard(entry, label) {

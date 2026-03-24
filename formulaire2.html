@@ -890,6 +890,10 @@
                 face: { key: null, getUrl: null },
                 left: { key: null, getUrl: null },
                 right: { key: null, getUrl: null },
+                semi_right: { key: null, getUrl: null },
+                wide_right: { key: null, getUrl: null },
+                semi_left: { key: null, getUrl: null },
+                wide_left: { key: null, getUrl: null },
                 zoom: { key: null, getUrl: null }
             },
             goal: 'correction',
@@ -1641,11 +1645,19 @@ async function submitFormData() {
   const file_face = formState.photos.face.getUrl || "";
   const file_left = formState.photos.left.getUrl || "";
   const file_right = formState.photos.right.getUrl || "";
+  const file_semi_right = formState.photos.semi_right.getUrl || "";
+  const file_wide_right = formState.photos.wide_right.getUrl || "";
+  const file_semi_left = formState.photos.semi_left.getUrl || "";
+  const file_wide_left = formState.photos.wide_left.getUrl || "";
   const file_zoom = formState.photos.zoom.getUrl || "";
 
   const sourceKey_face = formState.photos.face.key || "";
   const sourceKey_left = formState.photos.left.key || "";
   const sourceKey_right = formState.photos.right.key || "";
+  const sourceKey_semi_right = formState.photos.semi_right.key || "";
+  const sourceKey_wide_right = formState.photos.wide_right.key || "";
+  const sourceKey_semi_left = formState.photos.semi_left.key || "";
+  const sourceKey_wide_left = formState.photos.wide_left.key || "";
   const sourceKey_zoom = formState.photos.zoom.key || "";
 
   const emailInput = document.getElementById("email");
@@ -1685,10 +1697,18 @@ async function submitFormData() {
   params.append("file_face", file_face);
   params.append("file_left", file_left);
   params.append("file_right", file_right);
+  params.append("file_semi_right", file_semi_right);
+  params.append("file_wide_right", file_wide_right);
+  params.append("file_semi_left", file_semi_left);
+  params.append("file_wide_left", file_wide_left);
   params.append("file_zoom", file_zoom);
   params.append("sourceKey_face", sourceKey_face);
   params.append("sourceKey_left", sourceKey_left);
   params.append("sourceKey_right", sourceKey_right);
+  params.append("sourceKey_semi_right", sourceKey_semi_right);
+  params.append("sourceKey_wide_right", sourceKey_wide_right);
+  params.append("sourceKey_semi_left", sourceKey_semi_left);
+  params.append("sourceKey_wide_left", sourceKey_wide_left);
   params.append("sourceKey_zoom", sourceKey_zoom);
 
   if (formState.goal === 'correction') {
