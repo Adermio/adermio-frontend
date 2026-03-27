@@ -502,7 +502,7 @@
      ═══════════════════════════════════════════════════════════ */
   async function reqCam() {
     return navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false,
+      video: { facingMode: "user", width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 960 } }, audio: false,
     });
   }
 
@@ -510,7 +510,7 @@
     const fm = new window.FaceMesh({
       locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`,
     });
-    fm.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+    fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
     fm.onResults(cb);
     return fm;
   }
@@ -540,7 +540,10 @@
   /** Capture a MIRRORED frame (matches what user sees) */
   function capFrame(video) {
     return new Promise((res) => {
-      const vw = video.videoWidth || 1280, vh = video.videoHeight || 960;
+      const rawW = video.videoWidth || 640, rawH = video.videoHeight || 480;
+      // Cap at 960px wide to save memory on older devices
+      const scale = rawW > 960 ? 960 / rawW : 1;
+      const vw = Math.round(rawW * scale), vh = Math.round(rawH * scale);
       if (!_cc) { _cc = document.createElement("canvas"); _cx = _cc.getContext("2d"); }
       _cc.width = vw; _cc.height = vh;
       // Mirror horizontally to match CSS scaleX(-1) display
