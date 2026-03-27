@@ -899,6 +899,8 @@
             setTimeout(function () { $btn.textContent = t.validate; }, 2500);
             return;
           }
+          // Reset button state before advancing
+          $btn.textContent = t.validate; $btn.disabled = false; $btn.style.opacity = "1";
           if (window.validationState) window.validationState.facePhotoUploaded = true;
           syncManualPreviews();
           if (onDone) onDone({ uploaded: uploadCount });
