@@ -227,13 +227,12 @@
   /* ═══════════════════════════════════════════════════════════
      IMAGE ANALYSIS (cached canvases)
      ═══════════════════════════════════════════════════════════ */
-  var _bc = null, _bx = null, _lc = null, _lx = null, _cc = null, _cx = null;
+  var _bc = null, _bx = null, _lc = null, _lx = null, _cc = null, _cx = null, _blurBuf = null;
 
   function analyzeBright(video, m) {
     if (!_bc) { _bc = document.createElement("canvas"); _bx = _bc.getContext("2d", { willReadFrequently: true }); }
     var sw = 120, sh = 90; _bc.width = sw; _bc.height = sh;
-    try { _bx.drawImage(video, 0, 0, sw, sh); } catch (e) { return { face: 128, bg: 128, r: 1, ok: true, dark: false, bright: false, bl: false }; }
-    var d = _bx.getImageData(0, 0, sw, sh).data;
+    try { _bx.drawImage(video, 0, 0, sw, sh); var d = _bx.getImageData(0, 0, sw, sh).data; } catch (e) { return { face: 128, bg: 128, r: 1, ok: true, dark: false, bright: false, bl: false }; }
     var fb = faceBounds(m);
     var fs = 0, fp = 0, bs = 0, bp = 0;
     for (var y = 0; y < sh; y++) for (var x = 0; x < sw; x++) {
@@ -258,9 +257,9 @@
     var sx = fb.x0 * vw, sy = fb.y0 * vh, sw = (fb.x1 - fb.x0) * vw, sh = (fb.y1 - fb.y0) * vh;
     if (sw < 10 || sh < 10) return { s: 0 };
     var cw = 120, ch = 120; _lc.width = cw; _lc.height = ch;
-    try { _lx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch); } catch (e) { return { s: 0 }; }
-    var d = _lx.getImageData(0, 0, cw, ch).data;
-    var g = new Float32Array(cw * ch);
+    try { _lx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch); var d = _lx.getImageData(0, 0, cw, ch).data; } catch (e) { return { s: 0 }; }
+    if (!_blurBuf || _blurBuf.length !== cw * ch) _blurBuf = new Float32Array(cw * ch);
+    var g = _blurBuf;
     for (var i = 0; i < g.length; i++) g[i] = d[i * 4] * 0.299 + d[i * 4 + 1] * 0.587 + d[i * 4 + 2] * 0.114;
     var sum = 0, n = 0;
     for (var y = 1; y < ch - 1; y++) for (var x = 1; x < cw - 1; x++) {
@@ -507,7 +506,7 @@
 
   function initFM(cb) {
     var fm = new window.FaceMesh({
-      locateFile: function (f) { return "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/" + f; },
+      locateFile: function (f) { return "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/" + f; },
     });
     fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
     fm.onResults(cb);
@@ -618,6 +617,10 @@
         });
       }).then(function () {
         try { $v.play(); } catch (e) {}
+        // Adapt thresholds if camera is 16:9 (some Android front cameras)
+        var vw = $v.videoWidth || CAM_W, vh = $v.videoHeight || CAM_H;
+        var ratio = vw / vh;
+        if (ratio > 1.5) { CFG.faceSizeMin = 0.28; CFG.faceSizeMax = 0.62; }
         S.fm = initFM(onRes);
         S.cam = startLoop($v, S.fm);
         clearTimeout(wasmTimeout);
@@ -856,8 +859,19 @@
       }
       if (S.zoomFile) uploadQueue.push({ binId: "zoom", blob: S.zoomFile });
 
-      function uploadNext(idx) {
-        if (idx >= uploadQueue.length) {
+      function uploadOne(item) {
+        var file = new File([item.blob], "scan_" + item.binId + "_" + Date.now() + ".jpg", { type: "image/jpeg" });
+        if (typeof window.uploadToS3Presigned !== "function") return Promise.resolve(null);
+        return window.uploadToS3Presigned({ file: file, jobId: (window.formState && window.formState.jobId) || "", type: item.binId })
+          .then(function (result) {
+            if (window.formState) window.formState.photos[item.binId] = { key: result.key, getUrl: result.getUrl };
+            uploadCount++;
+          })
+          .catch(function () {});
+      }
+
+      function uploadBatch(startIdx) {
+        if (startIdx >= uploadQueue.length) {
           if (uploadCount === 0) {
             $btn.textContent = t.uploadFail; $btn.disabled = false; $btn.style.opacity = "1";
             setTimeout(function () { $btn.textContent = t.validate; }, 2500);
@@ -874,21 +888,12 @@
           }
           return;
         }
-        var item = uploadQueue[idx];
-        var file = new File([item.blob], "scan_" + item.binId + "_" + Date.now() + ".jpg", { type: "image/jpeg" });
-        if (typeof window.uploadToS3Presigned === "function") {
-          window.uploadToS3Presigned({ file: file, jobId: (window.formState && window.formState.jobId) || "", type: item.binId })
-            .then(function (result) {
-              if (window.formState) window.formState.photos[item.binId] = { key: result.key, getUrl: result.getUrl };
-              uploadCount++;
-              uploadNext(idx + 1);
-            })
-            .catch(function () { uploadNext(idx + 1); });
-        } else {
-          uploadNext(idx + 1);
-        }
+        var batch = uploadQueue.slice(startIdx, startIdx + 3);
+        var promises = [];
+        for (var b = 0; b < batch.length; b++) promises.push(uploadOne(batch[b]));
+        Promise.all(promises).then(function () { uploadBatch(startIdx + 3); });
       }
-      uploadNext(0);
+      uploadBatch(0);
     }
 
     function syncManualPreviews() {
@@ -936,7 +941,7 @@
     restart: function () {
       if (this._el && this._o) {
         if (this._i) this._i.destroy();
-        _bc = null; _bx = null; _lc = null; _lx = null; _cc = null; _cx = null;
+        _bc = null; _bx = null; _lc = null; _lx = null; _cc = null; _cx = null; _blurBuf = null;
         this._i = createScanner(this._el, this._o);
       }
     },
