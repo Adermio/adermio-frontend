@@ -632,6 +632,13 @@
         S.cam = startLoop($v, S.fm);
         clearTimeout(wasmTimeout);
         S.phase = "calibrating"; show("scan"); resize();
+        // Draw oval immediately and keep drawing until MediaPipe takes over
+        let idleDraw = setInterval(() => {
+          if (S.fc > 0 || dead) { clearInterval(idleDraw); return; }
+          resize();
+          const rect = $scan.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) drawOverlay(ctx, rect.width, rect.height, S, t);
+        }, 100);
         $t1.textContent = t.calibTitle; $t2.textContent = t.calibSub;
         if (DEBUG) console.log("[Adermio] Scan initialized");
       } catch (e) {
