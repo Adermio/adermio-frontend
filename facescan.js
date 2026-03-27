@@ -291,7 +291,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════
-     POLYFILL
+     POLYFILLS (roundRect + ellipse)
      ═══════════════════════════════════════════════════════════ */
   if (typeof CanvasRenderingContext2D !== "undefined" && !CanvasRenderingContext2D.prototype.roundRect) {
     CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
@@ -300,6 +300,16 @@
       this.arcTo(x + w, y, x + w, y + h, rad); this.arcTo(x + w, y + h, x, y + h, rad);
       this.arcTo(x, y + h, x, y, rad); this.arcTo(x, y, x + w, y, rad);
       this.closePath(); return this;
+    };
+  }
+  if (typeof CanvasRenderingContext2D !== "undefined" && !CanvasRenderingContext2D.prototype.ellipse) {
+    CanvasRenderingContext2D.prototype.ellipse = function (cx, cy, rx, ry, rot, sa, ea, ccw) {
+      this.save();
+      this.translate(cx, cy);
+      this.rotate(rot || 0);
+      this.scale(1, ry / rx);
+      this.arc(0, 0, rx, sa, ea, ccw);
+      this.restore();
     };
   }
 
@@ -324,8 +334,8 @@
     <p style="font-size:13px;color:rgba(255,255,255,.45);font-weight:400;">${t.loading}</p>
   </div>
 
-  <div id="fs-scan" style="display:none;position:relative;aspect-ratio:3/4;background:#000;">
-    <video id="fs-v" playsinline autoplay muted style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"></video>
+  <div id="fs-scan" style="display:none;position:relative;aspect-ratio:3/4;min-height:400px;background:#000;overflow:hidden;">
+    <video id="fs-v" playsinline autoplay muted style="width:100%;height:100%;min-height:300px;object-fit:cover;transform:scaleX(-1);position:absolute;top:0;left:0;"></video>
     <canvas id="fs-ov" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
     <div id="fs-fl" style="display:none;position:absolute;inset:0;background:rgba(20,184,166,.12);pointer-events:none;z-index:5;transition:opacity .2s;"></div>
     <div id="fs-guide" style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px 28px;background:linear-gradient(0deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.4) 70%,transparent 100%);text-align:center;z-index:4;">
@@ -566,16 +576,36 @@
     function showErr(msg) { $em.textContent = msg; show("err"); S.phase = "idle"; setTimeout(() => { if (onFall && !dead) onFall(); }, 3000); }
     function flash() { $fl.style.display = ""; $fl.style.opacity = "1"; setTimeout(() => { $fl.style.opacity = "0"; }, 180); setTimeout(() => { $fl.style.display = "none"; }, 350); }
 
+    function fixAspectRatio() {
+      // Fallback for browsers that don't support aspect-ratio CSS
+      if ($scan.offsetHeight === 0 && $scan.offsetWidth > 0) {
+        $scan.style.height = ($scan.offsetWidth * 4 / 3) + "px";
+      }
+    }
+
     function resize() {
+      fixAspectRatio();
       const r = $scan.getBoundingClientRect();
-      if (r.width === 0 || r.height === 0) return;
+      if (r.width === 0 || r.height === 0) {
+        // Retry after a short delay (element might not be rendered yet)
+        setTimeout(() => {
+          fixAspectRatio();
+          const r2 = $scan.getBoundingClientRect();
+          if (r2.width > 0 && r2.height > 0) {
+            const dpr = window.devicePixelRatio || 1;
+            $ov.width = r2.width * dpr; $ov.height = r2.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          }
+        }, 100);
+        return;
+      }
       const dpr = window.devicePixelRatio || 1;
       $ov.width = r.width * dpr; $ov.height = r.height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     // Resize listener
-    const resizeHandler = () => { if (S.phase === "calibrating" || S.phase === "scanning") resize(); };
+    const resizeHandler = () => { if (S.phase === "calibrating" || S.phase === "scanning" || S.phase === "countdown") resize(); };
     window.addEventListener("resize", resizeHandler);
 
     show("perm"); S.phase = "perm";
