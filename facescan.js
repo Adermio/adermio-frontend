@@ -357,6 +357,7 @@
     + '<video id="fs-v" playsinline autoplay muted style="width:100%;display:block;object-fit:cover;transform:scaleX(-1);"></video>'
     + '<canvas id="fs-ov" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>'
     + '<div id="fs-fl" style="display:none;position:absolute;inset:0;background:rgba(20,184,166,.12);pointer-events:none;z-index:5;transition:opacity .2s;"></div>'
+    + '<button id="fs-cancel" style="position:absolute;top:12px;right:12px;z-index:10;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,.4);color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);">&times;</button>'
     + '<div id="fs-guide" style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px 28px;background:linear-gradient(0deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.4) 70%,transparent 100%);text-align:center;z-index:4;">'
     + '<p id="fs-t1" style="color:#fff;font-size:17px;font-weight:600;margin:0 0 4px;font-family:\'DM Sans\',sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.5);"></p>'
     + '<p id="fs-t2" style="color:rgba(255,255,255,.55);font-size:12px;margin:0;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);"></p>'
@@ -600,6 +601,14 @@
 
     show("perm"); S.phase = "perm";
 
+    /* ── Cancel button (during scan) ────────── */
+    $("#fs-cancel").addEventListener("click", function () {
+      stopCam(S);
+      S.phase = "idle";
+      if (onFall && !dead) onFall();
+      else show("perm");
+    });
+
     /* ── Start button ──────────────────────── */
     $("#fs-go").addEventListener("click", function () {
       show("load"); S.phase = "load";
@@ -620,7 +629,11 @@
         // Adapt thresholds if camera is 16:9 (some Android front cameras)
         var vw = $v.videoWidth || CAM_W, vh = $v.videoHeight || CAM_H;
         var ratio = vw / vh;
-        if (ratio > 1.5) { CFG.faceSizeMin = 0.28; CFG.faceSizeMax = 0.62; }
+        if (ratio > 1.5) {
+          S._origFaceSizeMin = CFG.faceSizeMin;
+          S._origFaceSizeMax = CFG.faceSizeMax;
+          CFG.faceSizeMin = 0.28; CFG.faceSizeMax = 0.62;
+        }
         S.fm = initFM(onRes);
         S.cam = startLoop($v, S.fm);
         clearTimeout(wasmTimeout);
@@ -737,6 +750,11 @@
         var filled = 0;
         for (var fi = 0; fi < BIN_IDS.length; fi++) { if (S.bins[BIN_IDS[fi]].length > 0) filled++; }
         if (filled >= 7) { finish(); return; }
+        // Early finish: 3+ essential bins after 20s
+        var hasEssential = S.bins.face.length > 0
+          && (S.bins.right.length > 0 || S.bins.semi_right.length > 0 || S.bins.wide_right.length > 0)
+          && (S.bins.left.length > 0 || S.bins.semi_left.length > 0 || S.bins.wide_left.length > 0);
+        if (hasEssential && filled >= 3 && scanElapsed > 20000) { finish(); return; }
         if (scanElapsed > CFG.timeoutMs) { finish(); return; }
       }
 
@@ -912,6 +930,8 @@
       dead = true;
       stopCam(S);
       if (S.fm) { try { S.fm.close(); } catch (e) {} S.fm = null; }
+      // Restore original thresholds if they were modified for 16:9
+      if (S._origFaceSizeMin != null) { CFG.faceSizeMin = S._origFaceSizeMin; CFG.faceSizeMax = S._origFaceSizeMax; }
       for (var i = 0; i < BIN_IDS.length; i++) {
         var arr = S.bins[BIN_IDS[i]];
         for (var j = 0; j < arr.length; j++) URL.revokeObjectURL(arr[j].url);
