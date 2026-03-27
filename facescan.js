@@ -610,7 +610,10 @@
     });
 
     /* ── Start button ──────────────────────── */
+    var startClicked = false;
     $("#fs-go").addEventListener("click", function () {
+      if (startClicked) return;
+      startClicked = true;
       show("load"); S.phase = "load";
 
       var wasmTimeout = setTimeout(function () {
@@ -648,6 +651,7 @@
         $t1.textContent = t.calibTitle; $t2.textContent = t.calibSub;
       }).catch(function (e) {
         clearTimeout(wasmTimeout);
+        startClicked = false;
         if (e.name === "NotAllowedError") showErr(t.denied);
         else if (e.name === "NotFoundError") showErr(t.noDevice);
         else showErr(t.denied);
