@@ -205,7 +205,7 @@
   <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
     <nav class="flex flex-col items-center gap-8 md:gap-10">
       <a href="/" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Accueil</a>
-      <a href="https://adermio.com/formulaire2" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Faire l'analyse</a>
+      <a href="https://adermio.com/formulaire" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Faire l'analyse</a>
       <a href="https://adermio.com/about" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">À Propos</a>
       <a href="https://adermio.com/blog" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Blog</a>
       <a href="https://adermio.com/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Nous Contacter</a>
@@ -258,7 +258,7 @@
               <b>Délai dépassé</b><br>
               L'analyse n'a pas pu être traitée en raison d'une trop forte demande. Merci de réessayer.
             </p>
-            <a href="https://adermio.com/formulaire2"
+            <a href="https://adermio.com/formulaire"
               style="display:inline-block; border: none; background: #0F3D39; color: white; padding: 12px 28px; border-radius: 50px; text-decoration: none; font-size: 15px; font-weight: 700; box-shadow: 0 4px 10px rgba(15, 61, 57, 0.2); transition: transform 0.2s;">
               Recommencer l'analyse
             </a>
@@ -287,7 +287,7 @@
           <p style="color:#4b5563;font-size:15px;line-height:1.5;margin-bottom:22px;">
             Veuillez prendre une photo nette de votre visage et recommencer votre analyse.
           </p>
-          <a href="https://adermio.com/formulaire2" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#00897b;color:white;font-weight:600;text-decoration:none;font-size:15px;">Recommencer</a>
+          <a href="https://adermio.com/formulaire" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#00897b;color:white;font-weight:600;text-decoration:none;font-size:15px;">Recommencer</a>
         </div>
       </div>
 
@@ -302,7 +302,7 @@
             <br><br>
             Pour garantir la fiabilité de votre routine, nous vous conseillons de reprendre une photo.
           </p>
-          <a href="https://adermio.com/formulaire2" style="display:block;width:100%;padding:14px 0;border-radius:50px;background:#00897b;color:white;font-weight:700;text-decoration:none;font-size:16px;margin-bottom:12px;box-shadow: 0 4px 10px rgba(0, 137, 123, 0.2);">
+          <a href="https://adermio.com/formulaire" style="display:block;width:100%;padding:14px 0;border-radius:50px;background:#00897b;color:white;font-weight:700;text-decoration:none;font-size:16px;margin-bottom:12px;box-shadow: 0 4px 10px rgba(0, 137, 123, 0.2);">
             Reprendre une photo
           </a>
           <button onclick="window.resumeAnalysis()" class="force-link">
@@ -388,7 +388,7 @@
       </p>
       <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
         <a href="/" class="hover:text-teal-600 transition-colors !text-adermio-dark">Accueil</a>
-        <a href="https://adermio.com/formulaire2" class="hover:text-teal-600 transition-colors !text-adermio-dark">Faire l'analyse</a>
+        <a href="https://adermio.com/formulaire" class="hover:text-teal-600 transition-colors !text-adermio-dark">Faire l'analyse</a>
         <a href="https://adermio.com/about" class="hover:text-teal-600 transition-colors !text-adermio-dark">À Propos</a>
         <a href="https://adermio.com/blog" class="hover:text-teal-600 transition-colors !text-adermio-dark">Blog</a>
         <a href="https://adermio.com/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Nous Contacter</a>
@@ -671,7 +671,7 @@
 
       // Démarrage initial
       animateProgress();
-      setTimeout(checkStatus, 500);        // Premier poll immédiat
+      setTimeout(checkStatus, 2000);        // Premier poll à 2s
       setTimeout(startPolling, 25000);     // Puis pause 25s, ensuite toutes les 3s
 
       window.addEventListener("beforeunload", () => stopPollingAll());
