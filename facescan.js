@@ -892,6 +892,7 @@
 
         // Face uploaded — unblock user
         if (window.validationState) window.validationState.facePhotoUploaded = true;
+        if (window.formState) window.formState.photoMethod = "scan";
         syncManualPreviews();
         var photoErr = document.getElementById("photo-error");
         if (photoErr) photoErr.classList.add("hidden");

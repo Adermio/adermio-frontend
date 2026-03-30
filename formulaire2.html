@@ -903,6 +903,7 @@
                 wide_left: { key: null, getUrl: null },
                 zoom: { key: null, getUrl: null }
             },
+            photoMethod: 'manual',
             goal: 'correction',
             duration: '3-6 mois',
             frequency: '',
@@ -1699,6 +1700,7 @@ async function submitFormData() {
   params.append("Email_2", Email_2);
   params.append("jobId", jobId);
   params.append("mode_diagnostic", mode_diagnostic);
+  params.append("photo_method", formState.photoMethod || "manual");
 
   params.append("file", file_face);
   params.append("file_face", file_face);
