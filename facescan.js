@@ -365,21 +365,22 @@
     + '<p id="fs-t1" style="color:#fff;font-size:17px;font-weight:600;margin:0 0 4px;font-family:\'DM Sans\',sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.5);"></p>'
     + '<p id="fs-t2" style="color:rgba(255,255,255,.55);font-size:12px;margin:0;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);"></p>'
     + '</div></div>'
-    + '<div id="fs-prev" style="display:none;padding:28px 20px;background:linear-gradient(160deg,#0F3D39 0%,#1a5249 100%);color:#fff;">'
-    + '<h3 style="font-family:\'Playfair Display\',serif;font-size:19px;font-weight:600;margin:0 0 20px;text-align:center;">' + t.previewTitle + '</h3>'
-    + '<div id="fs-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px;"></div>'
-    + '<div id="fs-zoom-wrap" style="margin-bottom:20px;">'
+    + '<div id="fs-prev" style="display:none;padding:24px 16px;background:#FAFAF9;color:#1f2937;">'
+    + '<p style="font-size:10px;font-weight:600;color:#44403C;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 4px;text-align:center;">' + t.previewTitle + '</p>'
+    + '<p style="font-size:11px;color:#a8a29e;margin:0 0 16px;text-align:center;font-weight:400;">7 angles captur\u00e9s</p>'
+    + '<div id="fs-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;"></div>'
+    + '<div id="fs-zoom-wrap" style="margin-bottom:16px;">'
     + '<input type="file" id="fs-zoom-input" accept="image/*" capture="environment" style="display:none;"/>'
-    + '<button id="fs-zoom-btn" style="width:100%;padding:14px;border:1px dashed rgba(20,184,166,.3);border-radius:12px;background:rgba(20,184,166,.04);color:rgba(255,255,255,.7);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;">'
-    + '<svg width="18" height="18" fill="none" stroke="#14B8A6" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>'
-    + '<span><span style="display:block;font-size:13px;">' + t.zoomBtn + '</span><span style="display:block;font-size:10px;color:rgba(255,255,255,.35);font-weight:400;margin-top:2px;">' + t.zoomSub + '</span></span>'
+    + '<button id="fs-zoom-btn" style="width:100%;padding:12px;border:1px dashed #d6d3d1;border-radius:12px;background:transparent;color:#78716c;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;">'
+    + '<svg width="16" height="16" fill="none" stroke="#a8a29e" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>'
+    + '<span><span style="display:block;font-size:12px;color:#57534e;">' + t.zoomBtn + '</span><span style="display:block;font-size:10px;color:#a8a29e;font-weight:400;margin-top:1px;">' + t.zoomSub + '</span></span>'
     + '</button>'
-    + '<div id="fs-zoom-preview" style="display:none;margin-top:10px;position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(20,184,166,.2);">'
-    + '<img id="fs-zoom-img" style="width:100%;max-height:180px;object-fit:cover;display:block;"/>'
-    + '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(transparent,rgba(0,0,0,.6));text-align:center;">'
-    + '<span style="font-size:10px;color:#5eead4;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">' + t.zoomAdded + '</span>'
+    + '<div id="fs-zoom-preview" style="display:none;margin-top:8px;position:relative;border-radius:10px;overflow:hidden;border:1px solid #e7e5e4;">'
+    + '<img id="fs-zoom-img" style="width:100%;max-height:160px;object-fit:cover;display:block;"/>'
+    + '<div style="position:absolute;bottom:0;left:0;right:0;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,.4));text-align:center;">'
+    + '<span style="font-size:9px;color:#fff;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">' + t.zoomAdded + '</span>'
     + '</div></div></div>'
-    + '<button id="fs-re" style="width:100%;padding:13px;margin-top:10px;border:1px solid rgba(255,255,255,.1);border-radius:2rem;background:transparent;color:rgba(255,255,255,.4);font-size:12px;font-weight:500;cursor:pointer;">' + t.restart + '</button>'
+    + '<button id="fs-re" style="width:100%;padding:11px;border:1px solid #e7e5e4;border-radius:2rem;background:transparent;color:#a8a29e;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;">' + t.restart + '</button>'
     + '</div>'
     + '<div id="fs-err" style="display:none;padding:52px 28px;text-align:center;background:#0F3D39;color:#fff;">'
     + '<div style="width:52px;height:52px;margin:0 auto 20px;border-radius:50%;border:1.5px solid rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;">'
@@ -848,22 +849,19 @@
     }
 
     function makeCard(entry, label) {
-      var q = entry ? qLabel(entry.score, t) : qLabel(0, t);
       var el = document.createElement("div");
-      el.style.cssText = "border-radius:12px;overflow:hidden;background:rgba(255,255,255,.03);text-align:center;";
+      el.style.cssText = "border-radius:10px;overflow:hidden;background:#fff;border:1px solid #e7e5e4;text-align:center;";
       if (entry) {
-        el.innerHTML = '<img src="' + entry.url + '" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;border-radius:12px 12px 0 0;"/>'
-          + '<div style="padding:10px 4px 8px;">'
-          + '<span style="display:inline-block;padding:3px 12px;border-radius:2rem;font-size:9px;font-weight:600;color:' + q.c + ';background:rgba(255,255,255,.06);letter-spacing:.4px;">' + q.l + '</span>'
-          + '<p style="font-size:9px;color:rgba(255,255,255,.3);margin:6px 0 0;font-weight:500;text-transform:uppercase;letter-spacing:1px;">' + label + '</p>'
+        el.innerHTML = '<img src="' + entry.url + '" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;"/>'
+          + '<div style="padding:6px 2px 5px;background:#FAFAF9;border-top:1px solid #f5f5f4;">'
+          + '<p style="font-size:8px;color:#78716c;margin:0;font-weight:600;text-transform:uppercase;letter-spacing:.8px;">' + label + '</p>'
           + '</div>';
       } else {
-        el.innerHTML = '<div style="width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border-radius:12px 12px 0 0;">'
-          + '<svg width="24" height="24" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>'
+        el.innerHTML = '<div style="width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:#f5f5f4;">'
+          + '<svg width="20" height="20" fill="none" stroke="#d6d3d1" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>'
           + '</div>'
-          + '<div style="padding:10px 4px 8px;">'
-          + '<span style="display:inline-block;padding:3px 12px;border-radius:2rem;font-size:9px;font-weight:600;color:' + q.c + ';background:rgba(255,255,255,.06);letter-spacing:.4px;">' + q.l + '</span>'
-          + '<p style="font-size:9px;color:rgba(255,255,255,.3);margin:6px 0 0;font-weight:500;text-transform:uppercase;letter-spacing:1px;">' + label + '</p>'
+          + '<div style="padding:6px 2px 5px;background:#FAFAF9;border-top:1px solid #f5f5f4;">'
+          + '<p style="font-size:8px;color:#d6d3d1;margin:0;font-weight:600;text-transform:uppercase;letter-spacing:.8px;">' + label + '</p>'
           + '</div>';
       }
       return el;
