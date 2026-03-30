@@ -174,11 +174,14 @@
   var BIN_IDEAL_YAW = { face: 0, semi_right: 20, right: 38, wide_right: 55, semi_left: 20, left: 38, wide_left: 55 };
 
   function classifyBin(absYaw, noseX) {
-    var right = noseX < 0.5;
+    // Photo is mirrored at capture (scaleX -1), so the visible cheek in the photo
+    // is OPPOSITE to the raw nose direction. noseX < 0.5 in raw = user turns right
+    // = LEFT cheek visible in mirrored photo. So we swap: raw right → label left.
+    var showsRight = noseX > 0.5;
     if (absYaw < CFG.faceYawMax) return "face";
-    if (absYaw >= CFG.semiYawMin && absYaw < CFG.semiYawMax) return right ? "semi_right" : "semi_left";
-    if (absYaw >= CFG.profYawMin && absYaw < CFG.wideYawMin) return right ? "right" : "left";
-    if (absYaw >= CFG.wideYawMin && absYaw <= CFG.wideYawMax) return right ? "wide_right" : "wide_left";
+    if (absYaw >= CFG.semiYawMin && absYaw < CFG.semiYawMax) return showsRight ? "semi_right" : "semi_left";
+    if (absYaw >= CFG.profYawMin && absYaw < CFG.wideYawMin) return showsRight ? "right" : "left";
+    if (absYaw >= CFG.wideYawMin && absYaw <= CFG.wideYawMax) return showsRight ? "wide_right" : "wide_left";
     return null;
   }
 
@@ -486,13 +489,17 @@
      ═══════════════════════════════════════════════════════════ */
   function adaptiveGuide(S, t) {
     function has(id) { return S.bins[id].length > 0; }
+    // Guide says "turn right" → user turns right → camera sees LEFT cheek → fills LEFT bins
+    // Guide says "turn left" → user turns left → camera sees RIGHT cheek → fills RIGHT bins
     if (!has("face")) return { t1: t.scanFace, t2: t.scanFaceSub };
-    if (!has("semi_right")) return { t1: t.scanRight, t2: t.scanRightSub };
-    if (!has("right")) return { t1: t.scanRight, t2: t.scanRightSub };
-    if (!has("wide_right")) return { t1: t.scanWideRight, t2: t.scanWideRightSub };
-    if (!has("semi_left")) return { t1: t.scanLeft, t2: t.scanLeftSub };
-    if (!has("left")) return { t1: t.scanLeft, t2: t.scanLeftSub };
-    if (!has("wide_left")) return { t1: t.scanWideLeft, t2: t.scanWideLeftSub };
+    // "Tournez à droite" fills left bins (camera sees left cheek)
+    if (!has("semi_left")) return { t1: t.scanRight, t2: t.scanRightSub };
+    if (!has("left")) return { t1: t.scanRight, t2: t.scanRightSub };
+    if (!has("wide_left")) return { t1: t.scanWideRight, t2: t.scanWideRightSub };
+    // "Tournez à gauche" fills right bins (camera sees right cheek)
+    if (!has("semi_right")) return { t1: t.scanLeft, t2: t.scanLeftSub };
+    if (!has("right")) return { t1: t.scanLeft, t2: t.scanLeftSub };
+    if (!has("wide_right")) return { t1: t.scanWideLeft, t2: t.scanWideLeftSub };
     return { t1: t.scanDone, t2: t.scanDoneSub };
   }
 
