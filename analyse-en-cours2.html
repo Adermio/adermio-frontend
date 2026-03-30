@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="scroll-smooth">
 <head>
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
@@ -8,90 +8,299 @@
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "ua5d07cn1u");
     </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Analyse en cours &#8212; Adermio</title>
-  <meta name="description" content="Votre analyse dermatologique Adermio est en cours de traitement.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#0F3D39">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { adermio: { base:'#F8FAFC', dark:'#0F3D39', primary:'#14B8A6', text:'#334155', muted:'#94A3B8', surface:'#FFFFFF' } },
+          fontFamily: { serif:['"Playfair Display"','serif'], sans:['"DM Sans"','sans-serif'] },
+          boxShadow: { soft:'0 30px 60px -15px rgba(15,61,57,0.15)', luxury:'0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)' },
+        }
+      }
+    };
+  </script>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'DM Sans',sans-serif;background:#FAFAF9;color:#1f2937;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-    .nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(250,250,249,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.04)}
-    .nav-inner{max-width:600px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
-    .nav img{height:26px}
-    .nav-right{display:flex;align-items:center;gap:6px;font-size:12px;color:#0F3D39;font-weight:500}
-    .main{max-width:500px;margin:0 auto;padding:80px 24px 40px;min-height:100vh;display:flex;flex-direction:column}
-    .ring-wrap{width:160px;height:160px;margin:0 auto 28px;position:relative}
-    .ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
-    .ring-bg{fill:none;stroke:#E7E5E4;stroke-width:6}
-    .ring-fill{fill:none;stroke:#14B8A6;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
-    .ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:700;color:#0F3D39}
-    .steps{display:flex;justify-content:center;gap:8px;margin-bottom:32px}
-    .step-dot{width:32px;height:3px;border-radius:2px;background:#E7E5E4;transition:all .6s}
-    .step-dot.active{background:#14B8A6;width:48px}
-    .step-dot.done{background:#14B8A6}
-    .title-area{text-align:center;margin-bottom:36px}
-    .title-area h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#0F3D39;margin-bottom:8px;transition:all .4s}
-    .title-area p{font-size:13px;color:#78716c;line-height:1.6;transition:opacity .3s;min-height:40px}
-    .insight-card{background:#fff;border:1px solid #e7e5e4;border-radius:16px;padding:20px;margin-bottom:16px;transition:all .5s;opacity:0;transform:translateY(12px)}
-    .insight-card.visible{opacity:1;transform:translateY(0)}
-    .ic-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .ic-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .ic-title{font-size:12px;font-weight:600;color:#0F3D39;text-transform:uppercase;letter-spacing:.5px}
-    .ic-body{font-size:12px;color:#57534e;line-height:1.7}
-    .ic-body strong{color:#0F3D39;font-weight:600}
-    .demand-box{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:16px;margin-bottom:16px;display:none;opacity:0;transition:opacity .5s}
-    .demand-box.visible{display:block;opacity:1}
-    .demand-bar{width:100%;height:4px;background:#E7E5E4;border-radius:2px;overflow:hidden;margin-top:10px}
-    .demand-bar-fill{height:100%;background:#D97706;width:0%;transition:width .2s linear}
-    .fail-box{display:none;text-align:center;padding:20px}
-    .fail-box.visible{display:block}
-    .fail-btn{display:inline-block;background:#0F3D39;color:#fff;padding:14px 32px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px}
-    .success-box{display:none;text-align:center;margin-top:8px;opacity:0;transition:all .5s}
-    .success-box.visible{display:block;opacity:1}
-    .success-btn{display:inline-block;background:#0F3D39;color:#fff;padding:16px 40px;border-radius:50px;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:.3px;box-shadow:0 4px 15px rgba(15,61,57,.2);transition:transform .15s}
-    .success-btn:active{transform:scale(.97)}
-    .review-nav{position:absolute;bottom:18px;right:18px;display:flex;gap:4px}
-    .review-nav button{width:24px;height:24px;border-radius:50%;border:1px solid #e7e5e4;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#78716c}
-    .trust-row{display:flex;justify-content:center;gap:16px;padding:16px 0}
-    .trust-item{display:flex;align-items:center;gap:4px;font-size:10px;color:#a8a29e;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
-    .trust-item svg{width:12px;height:12px;color:#14B8A6}
-    .popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:9999}
-    .popup-box{background:#fff;padding:32px 28px;border-radius:20px;width:90%;max-width:360px;text-align:center}
-    .popup-box h2{font-family:'Playfair Display',serif;font-size:20px;color:#0F3D39;margin-bottom:10px}
-    .popup-box p{font-size:13px;color:#57534e;line-height:1.6;margin-bottom:20px}
-    .popup-btn{display:inline-block;padding:13px 28px;border-radius:50px;background:#0F3D39;color:#fff;font-weight:600;font-size:14px;text-decoration:none}
-    .force-link{background:none;border:none;color:#78716c;text-decoration:underline;cursor:pointer;font-size:13px;margin-top:12px;font-family:'DM Sans',sans-serif}
-    .footer{text-align:center;padding:24px;font-size:9px;color:#d6d3d1;text-transform:uppercase;letter-spacing:.8px;border-top:1px solid #f5f5f4;margin-top:auto}
+    ::-webkit-scrollbar{width:0;background:transparent}
+    a,a:visited,a:hover,a:active{color:inherit;text-decoration:none}
+    .glass-nav{background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
+    .lang-dropdown{opacity:0;visibility:hidden;transform:translateY(10px);transition:all .2s}
+    .group:hover .lang-dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+    #full-menu{transition:opacity .4s,visibility .4s;opacity:0;visibility:hidden;pointer-events:none}
+    #full-menu.menu-active{opacity:1;visibility:visible;pointer-events:auto}
+    @keyframes pulse-ring{0%{transform:scale(.95);opacity:1}70%{transform:scale(1.15);opacity:0}100%{transform:scale(.95);opacity:0}}
+    .pulse-ring{animation:pulse-ring 2s cubic-bezier(.215,.61,.355,1) infinite}
   </style>
 </head>
-<body>
-<div class="nav"><div class="nav-inner"><a href="/"><img src="/logo_Adermio.png" alt="Adermio"></a><div class="nav-right"><img src="https://flagcdn.com/fr.svg" width="14" alt="FR" style="border-radius:2px"><span>FR</span></div></div></div>
-<div class="main">
-  <div class="ring-wrap"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="45"/><circle class="ring-fill" id="progress-circle" cx="50" cy="50" r="45" stroke-dasharray="282.6" stroke-dashoffset="282.6"/></svg><div class="ring-text" id="progress-text">0%</div></div>
-  <div class="steps" id="steps-dots"></div>
-  <div class="title-area"><h1 id="status-title">Analyse en cours</h1><p id="status-subtitle">Connexion &#224; l'IA dermatologique...</p></div>
-  <div id="card-1" class="insight-card"><div class="ic-header"><div class="ic-icon" style="background:#F0FDFA"><i data-lucide="scan-face" style="width:18px;height:18px;color:#14B8A6"></i></div><div class="ic-title">Scan multi-angles</div></div><div class="ic-body">Vos <strong>7 captures</strong> sont analys&#233;es sous 3 branches ind&#233;pendantes pour une pr&#233;cision maximale.</div></div>
-  <div id="card-2" class="insight-card"><div class="ic-header"><div class="ic-icon" style="background:#FEF3C7"><i data-lucide="lightbulb" style="width:18px;height:18px;color:#D97706"></i></div><div class="ic-title" id="fact-title">Le saviez-vous ?</div></div><div class="ic-body" id="fact-body">Votre peau se renouvelle enti&#232;rement tous les 28 jours.</div></div>
-  <div id="card-3" class="insight-card"><div class="ic-header"><div class="ic-icon" style="background:#EFF6FF"><i data-lucide="shield-check" style="width:18px;height:18px;color:#3B82F6"></i></div><div class="ic-title">Donn&#233;es prot&#233;g&#233;es</div></div><div class="ic-body">Votre photo est analys&#233;e par IA puis <strong>anonymis&#233;e</strong>. Votre identit&#233; reste 100% confidentielle.</div></div>
-  <div id="card-4" class="insight-card" style="min-height:140px;position:relative"><div class="ic-header"><div class="ic-icon" style="background:#ECFDF5"><i data-lucide="star" style="width:18px;height:18px;color:#059669"></i></div><div class="ic-title">Avis client</div></div><div style="font-size:12px;color:#44403C;line-height:1.6;margin-bottom:10px" id="review-text"></div><div style="font-size:10px;color:#a8a29e;font-weight:600;text-transform:uppercase;letter-spacing:.8px" id="review-author"></div><div class="review-nav"><button onclick="prevReview()"><i data-lucide="chevron-left" style="width:12px;height:12px"></i></button><button onclick="nextReview()"><i data-lucide="chevron-right" style="width:12px;height:12px"></i></button></div></div>
-  <div class="demand-box" id="demand-box"><div id="demand-wait"><div style="font-size:13px;color:#92400e;font-weight:600;margin-bottom:4px">Forte demande en cours</div><div style="font-size:12px;color:#92400e;line-height:1.5">Tentative de finalisation, merci de patienter...</div><div class="demand-bar"><div class="demand-bar-fill" id="demand-bar-fill"></div></div></div><div id="demand-fail" class="fail-box"><p style="font-size:13px;color:#991b1b;margin-bottom:16px">D&#233;lai d&#233;pass&#233;. Merci de r&#233;essayer.</p><a href="https://adermio.com/formulaire2" class="fail-btn">Recommencer</a></div></div>
-  <div class="success-box" id="success-box"><p style="font-size:13px;color:#059669;font-weight:600;margin-bottom:16px">Analyse termin&#233;e avec succ&#232;s</p><a id="access-btn" href="#" class="success-btn">Ouvrir mon analyse</a></div>
-  <div class="trust-row"><div class="trust-item"><i data-lucide="lock"></i> S&#233;curis&#233;</div><div class="trust-item"><i data-lucide="zap"></i> IA avanc&#233;e</div><div class="trust-item"><i data-lucide="shield-check"></i> RGPD</div></div>
-  <div class="footer">Adermio Lab &#169; 2025 &#183; Analyse confidentielle</div>
-</div>
-<div class="popup-overlay" id="face-error-popup"><div class="popup-box"><h2>Aucun visage d&#233;tect&#233;</h2><p>Veuillez prendre une photo nette de votre visage et recommencer.</p><a href="https://adermio.com/formulaire2" class="popup-btn">Recommencer</a></div></div>
-<div class="popup-overlay" id="quality-error-popup"><div class="popup-box"><h2>V&#233;rification conseill&#233;e</h2><p>Notre IA a d&#233;tect&#233; peu d'imperfections. C'est possible si votre peau est tr&#232;s nette, mais cela arrive aussi si la photo manque de lumi&#232;re.</p><a href="https://adermio.com/formulaire2" class="popup-btn">Reprendre une photo</a><br><button onclick="window.resumeAnalysis()" class="force-link">Je confirme, c'est bien ma peau &#8594;</button></div></div>
-<script>
-lucide.createIcons();
-document.addEventListener("DOMContentLoaded",function(){var params=new URLSearchParams(window.location.search);var jobId=params.get("jobId");var POLL_URL="https://n8n.adermio.com/webhook/job-status?jobId=";var NORMAL_DURATION=75000;var TIMEOUT_DURATION=45000;var loadingSteps=[{pct:0,text:"Connexion s\u00e9curis\u00e9e \u00e0 l'IA..."},{pct:10,text:"R\u00e9ception de vos 7 captures..."},{pct:20,text:"Scan dermatologique multi-angles..."},{pct:35,text:"Analyse de la zone frontale..."},{pct:45,text:"Analyse du c\u00f4t\u00e9 droit (3 angles)..."},{pct:55,text:"Analyse du c\u00f4t\u00e9 gauche (3 angles)..."},{pct:65,text:"Croisement des observations..."},{pct:75,text:"D\u00e9tection zone par zone..."},{pct:85,text:"G\u00e9n\u00e9ration de votre diagnostic..."},{pct:92,text:"Finalisation du rapport..."},{pct:97,text:"Derni\u00e8res v\u00e9rifications..."}];var stepsCount=5;var circumference=2*Math.PI*45;var startTime=Date.now();var pc=document.getElementById("progress-circle");var pt=document.getElementById("progress-text");var ti=document.getElementById("status-title");var su=document.getElementById("status-subtitle");var db=document.getElementById("demand-box");var dw=document.getElementById("demand-wait");var df=document.getElementById("demand-fail");var dbf=document.getElementById("demand-bar-fill");var sb=document.getElementById("success-box");var ab=document.getElementById("access-btn");var pi=null,po=null,toi=null,hd=false,td=false,uf=false,cr=0;var dd=document.getElementById("steps-dots");for(var d=0;d<stepsCount;d++){var dot=document.createElement("div");dot.className="step-dot";dot.id="dot-"+d;dd.appendChild(dot)}function ud(p){var a=Math.min(Math.floor(p/(100/stepsCount)),stepsCount-1);for(var i=0;i<stepsCount;i++){var e=document.getElementById("dot-"+i);if(i<a)e.className="step-dot done";else if(i===a)e.className="step-dot active";else e.className="step-dot"}}function rc(p){if(p>=5&&cr<1){document.getElementById("card-1").classList.add("visible");cr=1}if(p>=25&&cr<2){document.getElementById("card-2").classList.add("visible");cr=2}if(p>=45&&cr<3){document.getElementById("card-3").classList.add("visible");cr=3}if(p>=60&&cr<4){document.getElementById("card-4").classList.add("visible");cr=4;rr();srt()}}var facts=[{t:"Le saviez-vous ?",b:"Votre peau se renouvelle enti\u00e8rement tous les 28 jours. Patience et r\u00e9gularit\u00e9 sont les cl\u00e9s."},{t:"Pores et hydratation",b:"Les pores visibles ne sont pas forc\u00e9ment sales. Une bonne hydratation aide \u00e0 resserrer leur apparence."},{t:"Le mythe du trop propre",b:"Nettoyer sa peau trop souvent d\u00e9truit la barri\u00e8re cutan\u00e9e et peut causer plus d'acn\u00e9."},{t:"L'impact du soleil",b:"80% du vieillissement cutan\u00e9 est li\u00e9 au soleil. Un SPF quotidien est le geste anti-\u00e2ge le plus efficace."}];var fi=0;setInterval(function(){fi=(fi+1)%facts.length;var ft=document.getElementById("fact-title");var fb=document.getElementById("fact-body");if(ft&&fb){ft.textContent=facts[fi].t;fb.textContent=facts[fi].b}},8000);var reviews=[{n:"Camille D.",t:"Top merci ! Ma peau commence \u00e0 \u00eatre de mieux en mieux"},{n:"Thomas L.",t:"Pas cher pour un r\u00e9sultat aussi complet!"},{n:"Sarah B.",t:"Tr\u00e8s contente de ma routine"},{n:"Nassim K.",t:"Pratique si on a pas le temps d'aller chez un dermatho"},{n:"Julie P.",t:"Le diagnostic correspond exactement \u00e0 mon cas, merci."},{n:"L\u00e9a R.",t:"Enfin une routine qui correspond \u00e0 mon acn\u00e9 !"},{n:"Marc A.",t:"PDF clair. Recommandations accessibles en pharmacie."},{n:"Sophie T.",t:"Pr\u00e9cis et utile, \u00e7a va beaucoup mieux"},{n:"Manon C.",t:"L'analyse d\u00e9taille bien mon probl\u00e8me de peau."},{n:"Chlo\u00e9 V.",t:"Je recommande"}];var ri=0,rtm=null;function rr(){var r=reviews[ri];var rt=document.getElementById("review-text");var ra=document.getElementById("review-author");if(rt)rt.textContent='\u201C'+r.t+'\u201D';if(ra)ra.textContent=r.n}function srt(){if(rtm)clearInterval(rtm);rtm=setInterval(function(){ri=(ri+1)%reviews.length;rr()},6000)}window.nextReview=function(){ri=(ri+1)%reviews.length;rr();srt()};window.prevReview=function(){ri=(ri-1+reviews.length)%reviews.length;rr();srt()};function sa(){if(po){clearInterval(po);po=null}if(pi){clearInterval(pi);pi=null}if(toi){clearInterval(toi);toi=null}}function ap(){if(pi)clearInterval(pi);pi=setInterval(function(){if(td){clearInterval(pi);return}if(sb.classList.contains("visible"))return;var el=Date.now()-startTime;var p=Math.min((el/NORMAL_DURATION)*100,99);if(p>=99){p=99;if(!hd){hd=true;thd()}}var o=circumference-(p/100)*circumference;if(pc)pc.style.strokeDashoffset=o.toFixed(2);if(pt)pt.textContent=Math.floor(p)+"%";ud(p);rc(p);if(!hd){var st=null;for(var s=loadingSteps.length-1;s>=0;s--){if(p>=loadingSteps[s].pct){st=loadingSteps[s];break}}if(st&&su&&su.textContent!==st.text){su.style.opacity="0";var txt=st.text;setTimeout(function(){su.textContent=txt;su.style.opacity="1"},150)}}},800)}function thd(){if(su){su.style.color="#D97706";su.textContent="Traitement prolong\u00e9 en cours..."}db.classList.add("visible");dw.style.display="block";df.classList.remove("visible");var el=0;toi=setInterval(function(){if(sb.classList.contains("visible")){clearInterval(toi);return}el+=100;var p=Math.min((el/TIMEOUT_DURATION)*100,100);if(dbf)dbf.style.width=p+"%";if(el>=TIMEOUT_DURATION){clearInterval(toi);hf()}},100)}function hf(){td=true;sa();dw.style.display="none";df.classList.add("visible");if(su)su.style.display="none";if(ti)ti.textContent="D\u00e9lai d\u00e9pass\u00e9"}function ss(url){td=false;sa();db.classList.remove("visible");if(pt)pt.textContent="100%";if(pc){pc.style.strokeDashoffset="0";pc.style.stroke="#059669"}if(ti)ti.textContent="Votre analyse est pr\u00eate";if(su)su.style.display="none";ud(100);ab.href=url;sb.classList.add("visible")}function cs(){if(!jobId||td)return;fetch(POLL_URL+encodeURIComponent(jobId),{method:"GET",cache:"no-store"}).then(function(r){return r.json()}).then(function(data){if(!data)return;var rec=Array.isArray(data)?data[0]:data;var st=rec.analysis_status||rec.status||"processing";var dl=rec.downloadUrl;if(st==="NO_FACE"||rec.face_detected===false){sa();document.getElementById("face-error-popup").style.display="flex";return}if(st==="RETRY_NEEDED"&&!uf){sa();document.getElementById("quality-error-popup").style.display="flex";return}var ok=(st==="SUCCESS"||st==="ready")||(st==="RETRY_NEEDED"&&uf);if(ok&&dl){var fu="/free-analysis?jobId="+encodeURIComponent(jobId);if(uf)fu+="&force=true";ss(fu)}}).catch(function(){})}function sp(){if(po)clearInterval(po);po=setInterval(cs,3000)}window.resumeAnalysis=function(){document.getElementById("quality-error-popup").style.display="none";uf=true;td=false;hd=false;startTime=Date.now();if(su){su.textContent="Reprise de l'analyse...";su.style.color="#14B8A6";su.style.display="block"}sa();ap();cs();sp()};ap();setTimeout(cs,500);setTimeout(function(){sp()},25000);window.addEventListener("beforeunload",function(){sa()})});
-</script>
+<body class="bg-white text-adermio-text antialiased overflow-x-hidden">
+
+  <!-- NAV (same as homepage) -->
+  <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain">
+        <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+      </a>
+      <div class="flex items-center gap-2">
+        <div class="relative group">
+          <button class="flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+            <img src="https://flagcdn.com/fr.svg" width="16" alt="FR" class="rounded-sm shadow-sm">
+            <span class="font-sans font-medium text-sm">FR</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+          </button>
+          <div class="lang-dropdown absolute right-0 top-full mt-2 w-36 bg-white rounded-xl shadow-luxury border border-adermio-dark/5 overflow-hidden z-[80]">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+              <img src="https://flagcdn.com/fr.svg" width="20" alt="FR" class="rounded-sm shadow-sm"><span>Fran&#231;ais</span>
+            </a>
+            <a href="https://adermio.com/en/processing" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+              <img src="https://flagcdn.com/us.svg" width="20" alt="EN" class="rounded-sm shadow-sm"><span>English</span>
+            </a>
+          </div>
+        </div>
+        <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MENU -->
+  <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+    <nav class="flex flex-col items-center gap-8">
+      <a href="/" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark">Accueil</a>
+      <a href="https://adermio.com/formulaire" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark">Faire l'analyse</a>
+      <a href="https://adermio.com/about" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark">&#192; Propos</a>
+      <a href="https://adermio.com/blog" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark">Blog</a>
+      <a href="https://adermio.com/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark">Contact</a>
+    </nav>
+  </div>
+
+  <!-- MAIN -->
+  <main class="pt-24 pb-16 px-6">
+    <div class="max-w-lg mx-auto">
+
+      <!-- Hero section -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-50/80 border border-teal-100/50 mb-6">
+          <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-teal-500"></span></span>
+          <span class="text-[10px] font-bold uppercase tracking-[.15em] text-teal-800">Analyse en cours</span>
+        </div>
+        <h1 class="font-serif text-3xl md:text-4xl text-adermio-dark leading-tight mb-4 tracking-tight" id="status-title">
+          Votre diagnostic est en <br class="hidden sm:block">cours de pr&#233;paration
+        </h1>
+        <p class="text-sm text-adermio-text/60 font-light leading-relaxed max-w-sm mx-auto" id="status-subtitle">
+          Connexion s&#233;curis&#233;e &#224; l'IA...
+        </p>
+      </div>
+
+      <!-- Progress ring -->
+      <div class="relative w-44 h-44 mx-auto mb-10">
+        <div class="absolute inset-0 rounded-full border border-adermio-dark/5 pulse-ring"></div>
+        <svg viewBox="0 0 100 100" class="w-full h-full" style="transform:rotate(-90deg)">
+          <circle cx="50" cy="50" r="43" fill="none" stroke="#f1f5f9" stroke-width="5"/>
+          <circle id="progress-circle" cx="50" cy="50" r="43" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-dasharray="270.2" stroke-dashoffset="270.2" style="transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)"/>
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <span id="progress-text" class="text-3xl font-bold text-adermio-dark">0%</span>
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="flex justify-center gap-2 mb-14" id="steps-dots"></div>
+
+      <!-- Content grid (visible immediately) -->
+      <div class="space-y-4 mb-12">
+
+        <!-- Processing steps -->
+        <div class="bg-adermio-base rounded-2xl p-5 border border-adermio-dark/5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center flex-shrink-0">
+              <i data-lucide="scan-face" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-adermio-dark">Analyse multi-angles</div>
+              <div class="text-[11px] text-adermio-muted">7 captures &#183; 3 branches IA</div>
+            </div>
+          </div>
+          <div class="space-y-3" id="processing-steps">
+            <div class="flex items-center gap-3" id="pstep-0"><div class="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center"><i data-lucide="loader" class="w-3 h-3 text-teal-600 animate-spin"></i></div><span class="text-xs text-adermio-text/70">R&#233;ception des captures</span></div>
+            <div class="flex items-center gap-3 opacity-40" id="pstep-1"><div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center"><div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div></div><span class="text-xs text-adermio-text/50">Scan dermatologique IA</span></div>
+            <div class="flex items-center gap-3 opacity-40" id="pstep-2"><div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center"><div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div></div><span class="text-xs text-adermio-text/50">Analyse zone par zone</span></div>
+            <div class="flex items-center gap-3 opacity-40" id="pstep-3"><div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center"><div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div></div><span class="text-xs text-adermio-text/50">G&#233;n&#233;ration du rapport</span></div>
+          </div>
+        </div>
+
+        <!-- Skin fact -->
+        <div class="bg-white rounded-2xl p-5 border border-adermio-dark/5">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-adermio-dark mb-1" id="fact-title">Le saviez-vous ?</div>
+              <p class="text-[13px] text-adermio-text/60 leading-relaxed font-light" id="fact-body">Votre peau se renouvelle enti&#232;rement tous les 28 jours. La patience et la r&#233;gularit&#233; sont les cl&#233;s du succ&#232;s.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review -->
+        <div class="bg-white rounded-2xl p-5 border border-adermio-dark/5 relative">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex items-center bg-green-50 px-2.5 py-1 rounded-full border border-green-100">
+              <i data-lucide="star" class="w-3 h-3 fill-current text-green-600 mr-1"></i>
+              <span class="text-[10px] font-bold text-green-700">4.4/5</span>
+            </div>
+            <span class="text-[10px] text-adermio-muted">Bas&#233; sur +2000 avis</span>
+          </div>
+          <p class="text-[13px] text-adermio-text/70 leading-relaxed mb-2 min-h-[40px]" id="review-text"></p>
+          <div class="text-[10px] text-adermio-muted font-semibold uppercase tracking-wider" id="review-author"></div>
+          <div class="absolute top-5 right-5 flex gap-1.5">
+            <button onclick="prevReview()" class="w-6 h-6 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-adermio-dark hover:border-slate-300 transition-colors"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
+            <button onclick="nextReview()" class="w-6 h-6 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-adermio-dark hover:border-slate-300 transition-colors"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+          </div>
+        </div>
+
+        <!-- Trust -->
+        <div class="flex items-center justify-center gap-6 py-2">
+          <div class="flex items-center gap-1.5 text-[10px] text-adermio-muted uppercase tracking-wider"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-teal-500"></i>S&#233;curis&#233;</div>
+          <div class="flex items-center gap-1.5 text-[10px] text-adermio-muted uppercase tracking-wider"><i data-lucide="zap" class="w-3.5 h-3.5 text-teal-500"></i>IA avanc&#233;e</div>
+          <div class="flex items-center gap-1.5 text-[10px] text-adermio-muted uppercase tracking-wider"><i data-lucide="lock" class="w-3.5 h-3.5 text-teal-500"></i>RGPD</div>
+        </div>
+
+      </div>
+
+      <!-- High demand -->
+      <div id="demand-box" class="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6 hidden">
+        <div id="demand-wait">
+          <div class="text-sm font-semibold text-amber-800 mb-1">Forte demande en cours</div>
+          <div class="text-xs text-amber-700 leading-relaxed mb-3">Tentative de finalisation, merci de patienter...</div>
+          <div class="w-full h-1 bg-amber-100 rounded-full overflow-hidden"><div id="demand-bar-fill" class="h-full bg-amber-500 rounded-full transition-all" style="width:0%"></div></div>
+        </div>
+        <div id="demand-fail" class="hidden text-center py-4">
+          <p class="text-sm text-red-700 mb-4">D&#233;lai d&#233;pass&#233;. Merci de r&#233;essayer.</p>
+          <a href="https://adermio.com/formulaire2" class="inline-flex items-center gap-2 bg-adermio-dark text-white px-6 py-3 rounded-full text-sm font-medium">Recommencer</a>
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div id="success-box" class="text-center hidden">
+        <div class="mb-4">
+          <div class="w-12 h-12 mx-auto rounded-full bg-green-50 flex items-center justify-center mb-3"><i data-lucide="check" class="w-6 h-6 text-green-600"></i></div>
+          <p class="text-sm font-semibold text-green-700">Analyse termin&#233;e</p>
+        </div>
+        <a id="access-btn" href="#" class="inline-flex items-center gap-2 bg-adermio-dark text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-teal-800 transition-all shadow-soft">
+          <span>Ouvrir mon analyse</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- POPUPS -->
+  <div id="face-error-popup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] hidden items-center justify-center">
+    <div class="bg-white p-8 rounded-3xl w-[90%] max-w-sm text-center shadow-soft">
+      <h2 class="font-serif text-xl text-adermio-dark mb-3">Aucun visage d&#233;tect&#233;</h2>
+      <p class="text-sm text-adermio-text/60 leading-relaxed mb-6">Veuillez prendre une photo nette de votre visage et recommencer.</p>
+      <a href="https://adermio.com/formulaire2" class="inline-flex items-center gap-2 bg-adermio-dark text-white px-6 py-3 rounded-full text-sm font-medium">Recommencer</a>
+    </div>
+  </div>
+
+  <div id="quality-error-popup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] hidden items-center justify-center">
+    <div class="bg-white p-8 rounded-3xl w-[90%] max-w-sm text-center shadow-soft">
+      <h2 class="font-serif text-xl text-adermio-dark mb-3">V&#233;rification conseill&#233;e</h2>
+      <p class="text-sm text-adermio-text/60 leading-relaxed mb-6">Notre IA a d&#233;tect&#233; peu d'imperfections. C'est possible si votre peau est tr&#232;s nette, mais cela arrive aussi si la photo manque de lumi&#232;re.</p>
+      <a href="https://adermio.com/formulaire2" class="inline-flex items-center gap-2 bg-adermio-dark text-white px-6 py-3 rounded-full text-sm font-medium mb-3">Reprendre une photo</a>
+      <br>
+      <button onclick="window.resumeAnalysis()" class="text-sm text-adermio-muted underline mt-2 bg-transparent border-none cursor-pointer font-sans">Je confirme, c'est bien ma peau &#8594;</button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    // Menu
+    var menuBtn=document.getElementById("menu-btn"),menuO=document.getElementById("full-menu"),mOpen=false;
+    function toggleMenu(){mOpen=!mOpen;if(mOpen){menuO.classList.add("menu-active");menuBtn.innerHTML='<i data-lucide="x" class="w-6 h-6"></i>'}else{menuO.classList.remove("menu-active");menuBtn.innerHTML='<i data-lucide="menu" class="w-6 h-6"></i>'}lucide.createIcons()}
+    menuBtn.addEventListener("click",function(e){e.stopPropagation();toggleMenu()});
+    document.querySelectorAll(".menu-link").forEach(function(l){l.addEventListener("click",function(){if(mOpen)toggleMenu()})});
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded",function(){
+      var params=new URLSearchParams(window.location.search),jobId=params.get("jobId");
+      var POLL_URL="https://n8n.adermio.com/webhook/job-status?jobId=";
+      var NORMAL_DURATION=75000,TIMEOUT_DURATION=45000;
+      var circumference=2*Math.PI*43;
+      var loadingMsgs=[{p:0,t:"Connexion s\u00e9curis\u00e9e \u00e0 l'IA..."},{p:10,t:"R\u00e9ception de vos 7 captures..."},{p:20,t:"Scan dermatologique multi-angles..."},{p:35,t:"Analyse de la zone frontale..."},{p:45,t:"Analyse du c\u00f4t\u00e9 droit (3 angles)..."},{p:55,t:"Analyse du c\u00f4t\u00e9 gauche (3 angles)..."},{p:65,t:"Croisement des observations..."},{p:75,t:"D\u00e9tection zone par zone..."},{p:85,t:"G\u00e9n\u00e9ration de votre diagnostic..."},{p:92,t:"Finalisation du rapport..."},{p:97,t:"Derni\u00e8res v\u00e9rifications..."}];
+      var pStepThresholds=[0,25,55,80];
+      var startTime=Date.now();
+      var pc=document.getElementById("progress-circle"),pt=document.getElementById("progress-text"),ti=document.getElementById("status-title"),su=document.getElementById("status-subtitle");
+      var db=document.getElementById("demand-box"),dw=document.getElementById("demand-wait"),df=document.getElementById("demand-fail"),dbf=document.getElementById("demand-bar-fill");
+      var sb=document.getElementById("success-box"),ab=document.getElementById("access-btn");
+      var pi=null,po=null,toi=null,hd=false,td=false,uf=false;
+
+      // Steps dots
+      var stepsCount=5,dd=document.getElementById("steps-dots");
+      for(var d=0;d<stepsCount;d++){var dot=document.createElement("div");dot.className="w-8 h-[3px] rounded-full bg-slate-200 transition-all duration-500";dot.id="dot-"+d;dd.appendChild(dot)}
+      function updateDots(p){var a=Math.min(Math.floor(p/(100/stepsCount)),stepsCount-1);for(var i=0;i<stepsCount;i++){var e=document.getElementById("dot-"+i);if(i<a){e.className="w-8 h-[3px] rounded-full bg-teal-500 transition-all duration-500"}else if(i===a){e.className="w-12 h-[3px] rounded-full bg-teal-500 transition-all duration-500"}else{e.className="w-8 h-[3px] rounded-full bg-slate-200 transition-all duration-500"}}}
+
+      // Processing steps animation
+      function updatePSteps(p){
+        for(var i=0;i<pStepThresholds.length;i++){
+          var el=document.getElementById("pstep-"+i);if(!el)continue;
+          if(i<pStepThresholds.length-1&&p>=pStepThresholds[i+1]){
+            el.style.opacity="1";el.querySelector("div").className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center";el.querySelector("div").innerHTML='<i data-lucide="check" class="w-3 h-3 text-green-600"></i>';el.querySelector("span").className="text-xs text-green-700 font-medium"
+          }else if(p>=pStepThresholds[i]){
+            el.style.opacity="1";el.querySelector("div").className="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center";el.querySelector("div").innerHTML='<i data-lucide="loader" class="w-3 h-3 text-teal-600 animate-spin"></i>';el.querySelector("span").className="text-xs text-adermio-dark font-medium"
+          }
+        }
+        if(p>=95){var last=document.getElementById("pstep-3");if(last){last.style.opacity="1";last.querySelector("div").className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center";last.querySelector("div").innerHTML='<i data-lucide="check" class="w-3 h-3 text-green-600"></i>';last.querySelector("span").className="text-xs text-green-700 font-medium"}}
+        lucide.createIcons()
+      }
+
+      // Facts
+      var facts=[{t:"Le saviez-vous ?",b:"Votre peau se renouvelle enti\u00e8rement tous les 28 jours. Patience et r\u00e9gularit\u00e9 sont les cl\u00e9s."},{t:"Pores et hydratation",b:"Les pores visibles ne sont pas forc\u00e9ment sales. Une bonne hydratation aide \u00e0 resserrer leur apparence."},{t:"Le mythe du trop propre",b:"Nettoyer sa peau trop souvent d\u00e9truit la barri\u00e8re cutan\u00e9e et peut causer plus d'acn\u00e9."},{t:"L'impact du soleil",b:"80% du vieillissement cutan\u00e9 est li\u00e9 au soleil. Un SPF quotidien est le geste anti-\u00e2ge le plus efficace."}];
+      var fi=0;setInterval(function(){fi=(fi+1)%facts.length;var ft=document.getElementById("fact-title"),fb=document.getElementById("fact-body");if(ft)ft.textContent=facts[fi].t;if(fb)fb.textContent=facts[fi].b},8000);
+
+      // Reviews
+      var reviews=[{n:"Camille D.",t:"Top merci ! Ma peau commence \u00e0 \u00eatre de mieux en mieux"},{n:"Thomas L.",t:"Pas cher pour un r\u00e9sultat aussi complet!"},{n:"Sarah B.",t:"Tr\u00e8s contente de ma routine"},{n:"Nassim K.",t:"Pratique si on a pas le temps d'aller chez un dermatho"},{n:"Julie P.",t:"Le diagnostic correspond exactement \u00e0 mon cas, merci."},{n:"L\u00e9a R.",t:"Enfin une routine qui correspond \u00e0 mon acn\u00e9 !"},{n:"Marc A.",t:"PDF clair. Recommandations accessibles en pharmacie."},{n:"Sophie T.",t:"Pr\u00e9cis et utile, \u00e7a va beaucoup mieux"},{n:"Manon C.",t:"L'analyse d\u00e9taille bien mon probl\u00e8me de peau."},{n:"Chlo\u00e9 V.",t:"Je recommande"}];
+      var ri=0,rtm=null;
+      function rr(){var r=reviews[ri],rt=document.getElementById("review-text"),ra=document.getElementById("review-author");if(rt)rt.textContent='\u201C'+r.t+'\u201D';if(ra)ra.textContent=r.n}
+      function srt(){if(rtm)clearInterval(rtm);rtm=setInterval(function(){ri=(ri+1)%reviews.length;rr()},6000)}
+      window.nextReview=function(){ri=(ri+1)%reviews.length;rr();srt()};
+      window.prevReview=function(){ri=(ri-1+reviews.length)%reviews.length;rr();srt()};
+      rr();srt();
+
+      function sa(){if(po){clearInterval(po);po=null}if(pi){clearInterval(pi);pi=null}if(toi){clearInterval(toi);toi=null}}
+
+      function ap(){if(pi)clearInterval(pi);pi=setInterval(function(){if(td){clearInterval(pi);return}if(!sb.classList.contains("hidden"))return;var el=Date.now()-startTime,p=Math.min((el/NORMAL_DURATION)*100,99);if(p>=99){p=99;if(!hd){hd=true;thd()}}var o=circumference-(p/100)*circumference;if(pc)pc.style.strokeDashoffset=o.toFixed(2);if(pt)pt.textContent=Math.floor(p)+"%";updateDots(p);updatePSteps(p);if(!hd){var st=null;for(var s=loadingMsgs.length-1;s>=0;s--){if(p>=loadingMsgs[s].p){st=loadingMsgs[s];break}}if(st&&su&&su.textContent!==st.t){su.style.opacity="0";var txt=st.t;setTimeout(function(){su.textContent=txt;su.style.opacity="1"},150)}}},800)}
+
+      function thd(){if(su){su.style.color="#D97706";su.textContent="Traitement prolong\u00e9 en cours..."}db.classList.remove("hidden");dw.style.display="block";df.classList.add("hidden");var el=0;toi=setInterval(function(){if(!sb.classList.contains("hidden")){clearInterval(toi);return}el+=100;var p=Math.min((el/TIMEOUT_DURATION)*100,100);if(dbf)dbf.style.width=p+"%";if(el>=TIMEOUT_DURATION){clearInterval(toi);hf()}},100)}
+
+      function hf(){td=true;sa();dw.style.display="none";df.classList.remove("hidden");if(su)su.style.display="none";if(ti)ti.textContent="D\u00e9lai d\u00e9pass\u00e9"}
+
+      function ss(url){td=false;sa();db.classList.add("hidden");if(pt)pt.textContent="100%";if(pc){pc.style.strokeDashoffset="0";pc.style.stroke="#059669"}if(ti)ti.textContent="Votre analyse est pr\u00eate";if(su)su.style.display="none";updateDots(100);updatePSteps(100);ab.href=url;sb.classList.remove("hidden");lucide.createIcons()}
+
+      function cs(){if(!jobId||td)return;fetch(POLL_URL+encodeURIComponent(jobId),{method:"GET",cache:"no-store"}).then(function(r){return r.json()}).then(function(data){if(!data)return;var rec=Array.isArray(data)?data[0]:data;var st=rec.analysis_status||rec.status||"processing";var dl=rec.downloadUrl;if(st==="NO_FACE"||rec.face_detected===false){sa();document.getElementById("face-error-popup").style.display="flex";return}if(st==="RETRY_NEEDED"&&!uf){sa();document.getElementById("quality-error-popup").style.display="flex";return}var ok=(st==="SUCCESS"||st==="ready")||(st==="RETRY_NEEDED"&&uf);if(ok&&dl){var fu="/free-analysis?jobId="+encodeURIComponent(jobId);if(uf)fu+="&force=true";ss(fu)}}).catch(function(){})}
+
+      function sp(){if(po)clearInterval(po);po=setInterval(cs,3000)}
+
+      window.resumeAnalysis=function(){document.getElementById("quality-error-popup").style.display="none";uf=true;td=false;hd=false;startTime=Date.now();if(su){su.textContent="Reprise de l'analyse...";su.style.color="#14B8A6";su.style.display="block"}sa();ap();cs();sp()};
+
+      ap();setTimeout(cs,500);setTimeout(function(){sp()},25000);
+      window.addEventListener("beforeunload",function(){sa()})
+    });
+  </script>
 </body>
 </html>
