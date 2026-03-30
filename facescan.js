@@ -379,7 +379,6 @@
     + '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(transparent,rgba(0,0,0,.6));text-align:center;">'
     + '<span style="font-size:10px;color:#5eead4;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">' + t.zoomAdded + '</span>'
     + '</div></div></div>'
-    + '<div id="fs-upload-status" style="width:100%;padding:14px;border-radius:2rem;background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.2);text-align:center;font-size:12px;font-weight:600;color:#14B8A6;display:none;"><span id="fs-upload-text">' + t.uploading + '</span></div>'
     + '<button id="fs-re" style="width:100%;padding:13px;margin-top:10px;border:1px solid rgba(255,255,255,.1);border-radius:2rem;background:transparent;color:rgba(255,255,255,.4);font-size:12px;font-weight:500;cursor:pointer;">' + t.restart + '</button>'
     + '</div>'
     + '<div id="fs-err" style="display:none;padding:52px 28px;text-align:center;background:#0F3D39;color:#fff;">'
@@ -872,10 +871,6 @@
 
     /* ── Upload ───────────────────────────── */
     function doUpload() {
-      var $status = $("#fs-upload-status");
-      var $statusText = $("#fs-upload-text");
-      $status.style.display = "";
-
       if (!S.bins.face[0]) {
         if (window.AdermioFaceScan) window.AdermioFaceScan.restart();
         return;
@@ -889,31 +884,21 @@
             if (window.formState) window.formState.photos[item.binId] = { key: result.key, getUrl: result.getUrl };
             return result;
           })
-          .catch(function (e) { if (DEBUG) console.warn("[Adermio] Upload failed:", item.binId, e); return null; });
+          .catch(function () { return null; });
       }
 
-      // STEP 1: Upload face photo first (blocks user)
+      // STEP 1: Upload face photo first
       var faceItem = { binId: "face", blob: S.bins.face[0].blob };
       uploadOne(faceItem).then(function (result) {
-        if (!result) {
-          $statusText.textContent = t.uploadFail;
-          $status.style.background = "rgba(239,68,68,.1)";
-          $status.style.borderColor = "rgba(239,68,68,.2)";
-          $statusText.style.color = "#ef4444";
-          return;
-        }
+        if (!result) return;
 
         // Face uploaded — unblock user
         if (window.validationState) window.validationState.facePhotoUploaded = true;
         syncManualPreviews();
-        // Hide photo-error if visible
         var photoErr = document.getElementById("photo-error");
         if (photoErr) photoErr.classList.add("hidden");
 
-        $statusText.textContent = "Photo de face envoy\u00e9e \u2714";
-        $status.style.background = "rgba(20,184,166,.08)";
-
-        // STEP 2: Upload remaining photos in background (user can continue)
+        // STEP 2: Upload remaining photos one by one in background (low priority)
         var bgQueue = [];
         for (var i = 0; i < BIN_IDS.length; i++) {
           if (BIN_IDS[i] === "face") continue;
@@ -922,18 +907,15 @@
         }
         if (S.zoomFile) bgQueue.push({ binId: "zoom", blob: S.zoomFile });
 
-        // Upload in batches of 3, silently in background
-        function bgBatch(idx) {
+        // Upload one at a time to avoid saturating bandwidth
+        function bgNext(idx) {
           if (idx >= bgQueue.length) {
             if (onDone) onDone({ uploaded: bgQueue.length + 1 });
             return;
           }
-          var batch = bgQueue.slice(idx, idx + 3);
-          var promises = [];
-          for (var b = 0; b < batch.length; b++) promises.push(uploadOne(batch[b]));
-          Promise.all(promises).then(function () { bgBatch(idx + 3); });
+          uploadOne(bgQueue[idx]).then(function () { bgNext(idx + 1); });
         }
-        bgBatch(0);
+        bgNext(0);
       });
     }
 
