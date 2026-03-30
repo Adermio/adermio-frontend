@@ -379,7 +379,7 @@
     + '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(transparent,rgba(0,0,0,.6));text-align:center;">'
     + '<span style="font-size:10px;color:#5eead4;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">' + t.zoomAdded + '</span>'
     + '</div></div></div>'
-    + '<button id="fs-ok" style="width:100%;padding:16px;border:none;border-radius:2rem;background:#14B8A6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;">' + t.validate + '</button>'
+    + '<div id="fs-upload-status" style="width:100%;padding:14px;border-radius:2rem;background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.2);text-align:center;font-size:12px;font-weight:600;color:#14B8A6;display:none;"><span id="fs-upload-text">' + t.uploading + '</span></div>'
     + '<button id="fs-re" style="width:100%;padding:13px;margin-top:10px;border:1px solid rgba(255,255,255,.1);border-radius:2rem;background:transparent;color:rgba(255,255,255,.4);font-size:12px;font-weight:500;cursor:pointer;">' + t.restart + '</button>'
     + '</div>'
     + '<div id="fs-err" style="display:none;padding:52px 28px;text-align:center;background:#0F3D39;color:#fff;">'
@@ -843,8 +843,9 @@
         reader.readAsDataURL(f);
       };
 
-      $("#fs-ok").onclick = function () { doUpload(); };
       $("#fs-re").onclick = function () { if (window.AdermioFaceScan) window.AdermioFaceScan.restart(); };
+      // Auto-start upload immediately
+      doUpload();
     }
 
     function makeCard(entry, label) {
@@ -871,22 +872,14 @@
 
     /* ── Upload ───────────────────────────── */
     function doUpload() {
-      var $btn = $("#fs-ok");
-      $btn.textContent = t.uploading; $btn.disabled = true; $btn.style.opacity = ".5";
+      var $status = $("#fs-upload-status");
+      var $statusText = $("#fs-upload-text");
+      $status.style.display = "";
 
       if (!S.bins.face[0]) {
-        $btn.textContent = t.validate; $btn.disabled = false; $btn.style.opacity = "1";
         if (window.AdermioFaceScan) window.AdermioFaceScan.restart();
         return;
       }
-
-      var uploadCount = 0;
-      var uploadQueue = [];
-      for (var i = 0; i < BIN_IDS.length; i++) {
-        var best = S.bins[BIN_IDS[i]][0];
-        if (best) uploadQueue.push({ binId: BIN_IDS[i], blob: best.blob });
-      }
-      if (S.zoomFile) uploadQueue.push({ binId: "zoom", blob: S.zoomFile });
 
       function uploadOne(item) {
         var file = new File([item.blob], "scan_" + item.binId + "_" + Date.now() + ".jpg", { type: "image/jpeg" });
@@ -894,41 +887,58 @@
         return window.uploadToS3Presigned({ file: file, jobId: (window.formState && window.formState.jobId) || "", type: item.binId })
           .then(function (result) {
             if (window.formState) window.formState.photos[item.binId] = { key: result.key, getUrl: result.getUrl };
-            uploadCount++;
+            return result;
           })
-          .catch(function () {});
+          .catch(function (e) { if (DEBUG) console.warn("[Adermio] Upload failed:", item.binId, e); return null; });
       }
 
-      function uploadBatch(startIdx) {
-        if (startIdx >= uploadQueue.length) {
-          if (uploadCount === 0) {
-            $btn.textContent = t.uploadFail; $btn.disabled = false; $btn.style.opacity = "1";
-            setTimeout(function () { $btn.textContent = t.validate; }, 2500);
-            return;
-          }
-          // Reset button state before advancing
-          $btn.textContent = t.validate; $btn.disabled = false; $btn.style.opacity = "1";
-          if (window.validationState) window.validationState.facePhotoUploaded = true;
-          syncManualPreviews();
-          if (onDone) onDone({ uploaded: uploadCount });
-          if (typeof window.goToStep === "function" && typeof window.currentStep === "number") {
-            window.goToStep(window.currentStep + 1);
-          } else {
-            var btn = document.getElementById("btn-next");
-            if (btn) btn.click();
-          }
+      // STEP 1: Upload face photo first (blocks user)
+      var faceItem = { binId: "face", blob: S.bins.face[0].blob };
+      uploadOne(faceItem).then(function (result) {
+        if (!result) {
+          $statusText.textContent = t.uploadFail;
+          $status.style.background = "rgba(239,68,68,.1)";
+          $status.style.borderColor = "rgba(239,68,68,.2)";
+          $statusText.style.color = "#ef4444";
           return;
         }
-        var batch = uploadQueue.slice(startIdx, startIdx + 3);
-        var promises = [];
-        for (var b = 0; b < batch.length; b++) promises.push(uploadOne(batch[b]));
-        Promise.all(promises).then(function () { uploadBatch(startIdx + 3); });
-      }
-      uploadBatch(0);
+
+        // Face uploaded — unblock user
+        if (window.validationState) window.validationState.facePhotoUploaded = true;
+        syncManualPreviews();
+        // Hide photo-error if visible
+        var photoErr = document.getElementById("photo-error");
+        if (photoErr) photoErr.classList.add("hidden");
+
+        $statusText.textContent = "Photo de face envoy\u00e9e \u2714";
+        $status.style.background = "rgba(20,184,166,.08)";
+
+        // STEP 2: Upload remaining photos in background (user can continue)
+        var bgQueue = [];
+        for (var i = 0; i < BIN_IDS.length; i++) {
+          if (BIN_IDS[i] === "face") continue;
+          var best = S.bins[BIN_IDS[i]][0];
+          if (best) bgQueue.push({ binId: BIN_IDS[i], blob: best.blob });
+        }
+        if (S.zoomFile) bgQueue.push({ binId: "zoom", blob: S.zoomFile });
+
+        // Upload in batches of 3, silently in background
+        function bgBatch(idx) {
+          if (idx >= bgQueue.length) {
+            if (onDone) onDone({ uploaded: bgQueue.length + 1 });
+            return;
+          }
+          var batch = bgQueue.slice(idx, idx + 3);
+          var promises = [];
+          for (var b = 0; b < batch.length; b++) promises.push(uploadOne(batch[b]));
+          Promise.all(promises).then(function () { bgBatch(idx + 3); });
+        }
+        bgBatch(0);
+      });
     }
 
     function syncManualPreviews() {
-      var mapping = { face: "face", right: "left", left: "right" };
+      var mapping = { face: "face", right: "right", left: "left" };
       for (var bin in mapping) {
         var entry = S.bins[bin] && S.bins[bin][0]; if (!entry) continue;
         var img = document.getElementById("preview-" + mapping[bin]);
