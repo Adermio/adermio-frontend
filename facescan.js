@@ -360,7 +360,7 @@
     + '<video id="fs-v" playsinline autoplay muted style="width:100%;height:100%;display:block;object-fit:cover;transform:scaleX(-1);"></video>'
     + '<canvas id="fs-ov" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>'
     + '<div id="fs-fl" style="display:none;position:absolute;inset:0;background:rgba(20,184,166,.12);pointer-events:none;z-index:5;transition:opacity .2s;"></div>'
-    + '<button id="fs-cancel" style="position:absolute;top:12px;right:12px;z-index:10;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,.4);color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);">&times;</button>'
+    + '<button id="fs-cancel" style="position:absolute;top:calc(12px + env(safe-area-inset-top, 0px));right:12px;z-index:10;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,.4);color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);">&times;</button>'
     + '<div id="fs-guide" style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px 28px;background:linear-gradient(0deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.4) 70%,transparent 100%);text-align:center;z-index:4;">'
     + '<p id="fs-t1" style="color:#fff;font-size:17px;font-weight:600;margin:0 0 4px;font-family:\'DM Sans\',sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.5);"></p>'
     + '<p id="fs-t2" style="color:rgba(255,255,255,.55);font-size:12px;margin:0;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);"></p>'
@@ -615,10 +615,15 @@
 
     var $root = $("#fs-root");
     var _fsActive = false;
+    var _savedScrollY = 0;
 
     function enterFullscreen() {
       if (_fsActive) return;
       _fsActive = true;
+      // Fix 4: Save scroll position
+      _savedScrollY = window.scrollY || window.pageYOffset || 0;
+      // Fix 5: Blur any focused input to dismiss keyboard
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
       $root.style.position = "fixed";
       $root.style.top = "0";
       $root.style.left = "0";
@@ -626,11 +631,24 @@
       $root.style.bottom = "0";
       $root.style.width = "100%";
       $root.style.maxWidth = "100%";
-      $root.style.height = "100%";
+      // Fix 2: Use dvh with fallback for iOS Safari address bar
+      $root.style.height = "100dvh";
+      $root.style.height = "calc(var(--vh, 1vh) * 100)";
       $root.style.margin = "0";
       $root.style.borderRadius = "0";
       $root.style.zIndex = "9999";
+      // Fix 1: Safe area padding for notch/Dynamic Island
+      $root.style.paddingTop = "env(safe-area-inset-top, 0px)";
       document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = "-" + _savedScrollY + "px";
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      // Fix 2: Update --vh on resize (iOS Safari address bar)
+      updateVh();
+      window.addEventListener("resize", updateVh);
+      // Fix 3: Lock orientation if possible
+      try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock("portrait").catch(function(){}); } catch(e) {}
     }
 
     function exitFullscreen() {
@@ -647,7 +665,22 @@
       $root.style.margin = "0 auto";
       $root.style.borderRadius = "1.25rem";
       $root.style.zIndex = "";
+      $root.style.paddingTop = "";
+      // Fix 4: Restore scroll position
       document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      window.scrollTo(0, _savedScrollY);
+      window.removeEventListener("resize", updateVh);
+      // Fix 3: Unlock orientation
+      try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch(e) {}
+    }
+
+    function updateVh() {
+      var vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", vh + "px");
     }
 
     function show(name) {
