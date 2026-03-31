@@ -344,12 +344,13 @@
      ═══════════════════════════════════════════════════════════ */
   function buildUI(t) {
     return '<div id="fs-root" style="position:relative;width:100%;max-width:420px;margin:0 auto;border-radius:1.25rem;overflow:hidden;background:#FAFAF9;font-family:\'DM Sans\',sans-serif;transition:all .3s ease;">'
-    + '<div id="fs-perm" style="padding:40px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
-    + '<div style="width:52px;height:52px;margin:0 auto 20px;border-radius:50%;background:#f5f5f4;border:1px solid #e7e5e4;display:flex;align-items:center;justify-content:center;">'
+    + '<div id="fs-perm" style="padding:24px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
+    + '<div style="width:52px;height:52px;margin:0 auto 16px;border-radius:50%;background:#f5f5f4;border:1px solid #e7e5e4;display:flex;align-items:center;justify-content:center;">'
     + '<svg width="22" height="22" fill="none" stroke="#0F3D39" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>'
     + '</div>'
     + '<button id="fs-go" style="width:100%;padding:15px;border:none;border-radius:2rem;background:#0F3D39;color:#fff;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.4px;text-transform:uppercase;transition:background .15s;">' + t.permBtn + '</button>'
-    + '<div style="display:flex;align-items:center;gap:5px;justify-content:center;margin-top:16px;opacity:.4;">'
+    + '<p style="font-size:11px;color:#a8a29e;margin:10px 0 0;font-weight:400;">~15 secondes</p>'
+    + '<div style="display:flex;align-items:center;gap:5px;justify-content:center;margin-top:10px;opacity:.4;">'
     + '<svg width="11" height="11" fill="none" stroke="#44403C" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
     + '<span style="font-size:9px;color:#44403C;font-weight:500;letter-spacing:.05em;">Aucune donn\u00e9e vid\u00e9o conserv\u00e9e</span>'
     + '</div>'
