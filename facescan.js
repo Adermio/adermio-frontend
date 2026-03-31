@@ -841,6 +841,13 @@
         var reader = new FileReader();
         reader.onload = function (ev) { $zImg.src = ev.target.result; $zPrev.style.display = ""; };
         reader.readAsDataURL(f);
+        // Upload zoom immediately when selected
+        var zoomFileObj = new File([f], "scan_zoom_" + Date.now() + ".jpg", { type: f.type || "image/jpeg" });
+        if (typeof window.uploadToS3Presigned === "function") {
+          window.uploadToS3Presigned({ file: zoomFileObj, jobId: (window.formState && window.formState.jobId) || "", type: "zoom" })
+            .then(function (result) { if (window.formState) window.formState.photos.zoom = { key: result.key, getUrl: result.getUrl }; })
+            .catch(function () {});
+        }
       };
 
       $("#fs-re").onclick = function () { if (window.AdermioFaceScan) window.AdermioFaceScan.restart(); };
