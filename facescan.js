@@ -33,7 +33,7 @@
     fr: {
       permTitle: "Analyse Haute D\u00e9finition",
       permDesc: "7 captures automatis\u00e9es sous diff\u00e9rents angles pour une pr\u00e9cision maximale. Aucune donn\u00e9e vid\u00e9o n'est conserv\u00e9e.",
-      permBtn: "D\u00e9marrer l'analyse",
+      permBtn: "D\u00e9marrer le scan 3D",
       denied: "Acc\u00e8s cam\u00e9ra refus\u00e9. Utilisez l'import manuel.",
       notSupported: "Navigateur incompatible. Utilisez l'import manuel.",
       noDevice: "Aucune cam\u00e9ra frontale d\u00e9tect\u00e9e.",
@@ -83,7 +83,7 @@
     en: {
       permTitle: "High Definition Analysis",
       permDesc: "7 automated captures from different angles for maximum precision. No video data is stored.",
-      permBtn: "Start analysis",
+      permBtn: "Start 3D scan",
       denied: "Camera access denied. Use manual upload.",
       notSupported: "Browser not supported. Use manual upload.",
       noDevice: "No front camera detected.",
@@ -693,6 +693,15 @@
       // Fullscreen for scan phases, exit for others
       if (name === "scan" || name === "load") { enterFullscreen(); }
       else { exitFullscreen(); }
+      // Hide/show bottom nav bar
+      var navBar = document.getElementById("nav-bar");
+      if (navBar) {
+        if (name === "perm" || name === "scan" || name === "load") {
+          navBar.style.display = "none";
+        } else {
+          navBar.style.display = "";
+        }
+      }
     }
     function showErr(msg) { $em.textContent = msg; show("err"); S.phase = "idle"; setTimeout(function () { if (onFall && !dead) onFall(); }, 3000); }
 
@@ -1060,6 +1069,8 @@
     function destroy() {
       dead = true;
       exitFullscreen();
+      var navBar = document.getElementById("nav-bar");
+      if (navBar) navBar.style.display = "";
       stopCam(S);
       if (S.fm) { try { S.fm.close(); } catch (e) {} S.fm = null; }
       // Restore original thresholds if they were modified for 16:9
