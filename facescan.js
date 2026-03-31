@@ -778,9 +778,11 @@
       }).catch(function (e) {
         clearTimeout(wasmTimeout);
         startClicked = false;
-        if (e.name === "NotAllowedError") showErr(t.denied);
-        else if (e.name === "NotFoundError") showErr(t.noDevice);
-        else showErr(t.denied);
+        console.error("[FaceScan] init error:", e && e.name, e && e.message, e);
+        if (e && e.name === "NotAllowedError") showErr(t.denied);
+        else if (e && e.name === "NotFoundError") showErr(t.noDevice);
+        else if (e && e.name === "NotReadableError") showErr(t.denied);
+        else showErr(t.notSupported);
       });
     });
 
