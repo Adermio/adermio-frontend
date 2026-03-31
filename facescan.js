@@ -695,7 +695,7 @@
       if (name === "scan" || name === "load") { enterFullscreen(); }
       else { exitFullscreen(); }
     }
-    function showErr(msg) { $em.textContent = msg; show("err"); S.phase = "idle"; setTimeout(function () { if (onFall && !dead) onFall(); }, 3000); }
+    function showErr(msg) { stopCam(S); $em.textContent = msg; show("err"); S.phase = "idle"; setTimeout(function () { if (onFall && !dead) onFall(); }, 3000); }
 
     function resize() {
       var r = $scan.getBoundingClientRect();
@@ -725,6 +725,7 @@
     /* ── Cancel button (during scan) ────────── */
     $("#fs-cancel").addEventListener("click", function () {
       stopCam(S);
+      exitFullscreen();
       S.phase = "idle";
       if (onFall && !dead) onFall();
       else show("perm");
