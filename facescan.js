@@ -79,6 +79,8 @@
       zoomBtn: "Ajouter un gros plan",
       zoomSub: "Photo d'une zone sp\u00e9cifique (optionnel)",
       zoomAdded: "Gros plan ajout\u00e9",
+      noDataStored: "Aucune donn\u00e9e vid\u00e9o conserv\u00e9e",
+      anglesCaptured: "7 angles captur\u00e9s",
     },
     en: {
       permTitle: "High Definition Analysis",
@@ -129,6 +131,8 @@
       zoomBtn: "Add a close-up",
       zoomSub: "Photo of a specific area (optional)",
       zoomAdded: "Close-up added",
+      noDataStored: "No video data stored",
+      anglesCaptured: "7 angles captured",
     },
   };
 
@@ -352,7 +356,7 @@
     + '<p style="font-size:11px;color:#a8a29e;margin:10px 0 0;font-weight:400;">~15 secondes</p>'
     + '<div style="display:flex;align-items:center;gap:5px;justify-content:center;margin-top:10px;opacity:.4;">'
     + '<svg width="11" height="11" fill="none" stroke="#44403C" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
-    + '<span style="font-size:9px;color:#44403C;font-weight:500;letter-spacing:.05em;">Aucune donn\u00e9e vid\u00e9o conserv\u00e9e</span>'
+    + '<span style="font-size:9px;color:#44403C;font-weight:500;letter-spacing:.05em;">' + t.noDataStored + '</span>'
     + '</div>'
     + '</div>'
     + '<div id="fs-load" style="display:none;padding:64px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
@@ -370,7 +374,7 @@
     + '</div></div>'
     + '<div id="fs-prev" style="display:none;padding:24px 16px;background:#FAFAF9;color:#1f2937;">'
     + '<p style="font-size:10px;font-weight:600;color:#44403C;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 4px;text-align:center;">' + t.previewTitle + '</p>'
-    + '<p style="font-size:11px;color:#a8a29e;margin:0 0 16px;text-align:center;font-weight:400;">7 angles captur\u00e9s</p>'
+    + '<p style="font-size:11px;color:#a8a29e;margin:0 0 16px;text-align:center;font-weight:400;">' + t.anglesCaptured + '</p>'
     + '<div id="fs-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;"></div>'
     + '<div id="fs-zoom-wrap" style="margin-bottom:16px;">'
     + '<input type="file" id="fs-zoom-input" accept="image/*" capture="environment" style="display:none;"/>'
