@@ -436,9 +436,9 @@
 
       // --- CONFIG ---
       const POLL_URL = "https://n8n.adermio.com/webhook/job-status?jobId=";
-      const MAX_WAIT_TIME = 75 * 1000; // 1m15
+      const MAX_WAIT_TIME = 45 * 1000; // 45s
       const POLL_INTERVAL = 3000;
-      const TIMEOUT_DURATION = 45000; // 45s haute demande
+      const TIMEOUT_DURATION = 30000; // 30s haute demande
 
       // Messages de progression
       const loadingSteps = [
@@ -672,7 +672,7 @@
       // Démarrage initial
       animateProgress();
       setTimeout(checkStatus, 2000);        // Premier poll à 2s
-      setTimeout(startPolling, 25000);     // Puis pause 25s, ensuite toutes les 3s
+      setTimeout(startPolling, 12000);     // Puis pause 12s, ensuite toutes les 3s
 
       window.addEventListener("beforeunload", () => stopPollingAll());
     });
@@ -856,7 +856,7 @@
     renderSteps();
     lucide.createIcons();
 
-    const stepDuration = 18750; // 75s / 4 steps
+    const stepDuration = 11250; // 45s / 4 steps
     const totalSteps = 4;
     const totalDuration = stepDuration * totalSteps;
     const intervalDelay = 100;
