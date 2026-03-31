@@ -343,7 +343,7 @@
      UI — Adermio Brand
      ═══════════════════════════════════════════════════════════ */
   function buildUI(t) {
-    return '<div id="fs-root" style="position:relative;width:100%;max-width:420px;margin:0 auto;border-radius:1.25rem;overflow:hidden;background:#0F3D39;font-family:\'DM Sans\',sans-serif;">'
+    return '<div id="fs-root" style="position:relative;width:100%;max-width:420px;margin:0 auto;border-radius:1.25rem;overflow:hidden;background:#0F3D39;font-family:\'DM Sans\',sans-serif;transition:all .3s ease;">'
     + '<div id="fs-perm" style="padding:44px 28px;text-align:center;background:linear-gradient(160deg,#0F3D39 0%,#1a5249 100%);color:#fff;">'
     + '<div style="width:60px;height:60px;margin:0 auto 24px;border-radius:50%;border:1.5px solid rgba(20,184,166,.25);display:flex;align-items:center;justify-content:center;">'
     + '<svg width="26" height="26" fill="none" stroke="#14B8A6" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>'
@@ -356,8 +356,8 @@
     + '<div style="width:40px;height:40px;margin:0 auto 24px;border:2.5px solid rgba(255,255,255,.08);border-top-color:#14B8A6;border-radius:50%;animation:fsSpin .7s linear infinite;"></div>'
     + '<p style="font-size:13px;color:rgba(255,255,255,.45);font-weight:400;">' + t.loading + '</p>'
     + '</div>'
-    + '<div id="fs-scan" style="display:none;position:relative;background:#000;overflow:hidden;">'
-    + '<video id="fs-v" playsinline autoplay muted style="width:100%;display:block;object-fit:cover;transform:scaleX(-1);"></video>'
+    + '<div id="fs-scan" style="display:none;position:relative;background:#000;overflow:hidden;width:100%;height:100%;">'
+    + '<video id="fs-v" playsinline autoplay muted style="width:100%;height:100%;display:block;object-fit:cover;transform:scaleX(-1);"></video>'
     + '<canvas id="fs-ov" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>'
     + '<div id="fs-fl" style="display:none;position:absolute;inset:0;background:rgba(20,184,166,.12);pointer-events:none;z-index:5;transition:opacity .2s;"></div>'
     + '<button id="fs-cancel" style="position:absolute;top:12px;right:12px;z-index:10;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,.4);color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);">&times;</button>'
@@ -424,7 +424,47 @@
     }
 
     drawBadges(ctx, w, h, S.st, t);
-    if (S.phase === "scanning") drawBinDots(ctx, w, h, S, t);
+    if (S.phase === "scanning") {
+      drawBinDots(ctx, w, h, S, t);
+      if (S._guideDir) drawArrow(ctx, w, h, S._guideDir, cx, cy, rx);
+    }
+  }
+
+  function drawArrow(ctx, w, h, dir, cx, cy, rx) {
+    if (dir === "none") return;
+    var time = performance.now();
+    var pulse = Math.sin(time / 300) * 8; // oscillation
+    var arrowX, tipDir;
+    if (dir === "right") {
+      arrowX = cx + rx + 30 + pulse;
+      tipDir = 1;
+    } else {
+      arrowX = cx - rx - 30 - pulse;
+      tipDir = -1;
+    }
+    var arrowY = cy;
+    var size = 14;
+
+    ctx.save();
+    ctx.globalAlpha = 0.7 + Math.sin(time / 400) * 0.3;
+    ctx.fillStyle = "#14B8A6";
+    ctx.beginPath();
+    ctx.moveTo(arrowX + tipDir * size, arrowY);
+    ctx.lineTo(arrowX - tipDir * size * 0.5, arrowY - size * 0.7);
+    ctx.lineTo(arrowX - tipDir * size * 0.5, arrowY + size * 0.7);
+    ctx.closePath();
+    ctx.fill();
+
+    // Second arrow behind (smaller, more transparent)
+    ctx.globalAlpha = 0.3 + Math.sin(time / 400) * 0.15;
+    var offset = tipDir * -22;
+    ctx.beginPath();
+    ctx.moveTo(arrowX + offset + tipDir * size * 0.8, arrowY);
+    ctx.lineTo(arrowX + offset - tipDir * size * 0.4, arrowY - size * 0.55);
+    ctx.lineTo(arrowX + offset - tipDir * size * 0.4, arrowY + size * 0.55);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
   }
 
   function drawBadges(ctx, w, h, st, t) {
@@ -489,18 +529,15 @@
      ═══════════════════════════════════════════════════════════ */
   function adaptiveGuide(S, t) {
     function has(id) { return S.bins[id].length > 0; }
-    // Guide says "turn right" → user turns right → camera sees LEFT cheek → fills LEFT bins
-    // Guide says "turn left" → user turns left → camera sees RIGHT cheek → fills RIGHT bins
-    if (!has("face")) return { t1: t.scanFace, t2: t.scanFaceSub };
-    // "Tournez à droite" fills left bins (camera sees left cheek)
-    if (!has("semi_left")) return { t1: t.scanRight, t2: t.scanRightSub };
-    if (!has("left")) return { t1: t.scanRight, t2: t.scanRightSub };
-    if (!has("wide_left")) return { t1: t.scanWideRight, t2: t.scanWideRightSub };
-    // "Tournez à gauche" fills right bins (camera sees right cheek)
-    if (!has("semi_right")) return { t1: t.scanLeft, t2: t.scanLeftSub };
-    if (!has("right")) return { t1: t.scanLeft, t2: t.scanLeftSub };
-    if (!has("wide_right")) return { t1: t.scanWideLeft, t2: t.scanWideLeftSub };
-    return { t1: t.scanDone, t2: t.scanDoneSub };
+    // dir: "none", "right", "left" — direction user should turn (mirrored display)
+    if (!has("face")) return { t1: t.scanFace, t2: t.scanFaceSub, dir: "none" };
+    if (!has("semi_left")) return { t1: t.scanRight, t2: t.scanRightSub, dir: "right" };
+    if (!has("left")) return { t1: t.scanRight, t2: t.scanRightSub, dir: "right" };
+    if (!has("wide_left")) return { t1: t.scanWideRight, t2: t.scanWideRightSub, dir: "right" };
+    if (!has("semi_right")) return { t1: t.scanLeft, t2: t.scanLeftSub, dir: "left" };
+    if (!has("right")) return { t1: t.scanLeft, t2: t.scanLeftSub, dir: "left" };
+    if (!has("wide_right")) return { t1: t.scanWideLeft, t2: t.scanWideLeftSub, dir: "left" };
+    return { t1: t.scanDone, t2: t.scanDoneSub, dir: "none" };
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -576,10 +613,50 @@
     var $t1 = $("#fs-t1"), $t2 = $("#fs-t2"), $em = $("#fs-em");
     var ctx = $ov.getContext("2d");
 
+    var $root = $("#fs-root");
+    var _fsActive = false;
+
+    function enterFullscreen() {
+      if (_fsActive) return;
+      _fsActive = true;
+      $root.style.position = "fixed";
+      $root.style.top = "0";
+      $root.style.left = "0";
+      $root.style.right = "0";
+      $root.style.bottom = "0";
+      $root.style.width = "100%";
+      $root.style.maxWidth = "100%";
+      $root.style.height = "100%";
+      $root.style.margin = "0";
+      $root.style.borderRadius = "0";
+      $root.style.zIndex = "9999";
+      document.body.style.overflow = "hidden";
+    }
+
+    function exitFullscreen() {
+      if (!_fsActive) return;
+      _fsActive = false;
+      $root.style.position = "relative";
+      $root.style.top = "";
+      $root.style.left = "";
+      $root.style.right = "";
+      $root.style.bottom = "";
+      $root.style.width = "100%";
+      $root.style.maxWidth = "420px";
+      $root.style.height = "";
+      $root.style.margin = "0 auto";
+      $root.style.borderRadius = "1.25rem";
+      $root.style.zIndex = "";
+      document.body.style.overflow = "";
+    }
+
     function show(name) {
       var map = { perm: $perm, load: $load, scan: $scan, prev: $prev, err: $err };
       [$perm, $load, $scan, $prev, $err].forEach(function (e) { e.style.display = "none"; });
       map[name].style.display = "";
+      // Fullscreen for scan phases, exit for others
+      if (name === "scan" || name === "load") { enterFullscreen(); }
+      else { exitFullscreen(); }
     }
     function showErr(msg) { $em.textContent = msg; show("err"); S.phase = "idle"; setTimeout(function () { if (onFall && !dead) onFall(); }, 3000); }
 
@@ -731,6 +808,7 @@
           S.phase = "scanning"; S.scanStart = now;
           var g = adaptiveGuide(S, t);
           $t1.textContent = g.t1; $t2.textContent = g.t2;
+          S._guideDir = g.dir;
           if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
         }
       }
@@ -741,17 +819,23 @@
 
         if (!distOk && sz < CFG.faceSizeMin) {
           $t1.textContent = t.moveCloser; $t2.textContent = "";
+          S._guideDir = "none";
         } else if (!distOk && sz > CFG.faceSizeMax) {
           $t1.textContent = t.moveBack; $t2.textContent = "";
+          S._guideDir = "none";
         } else if (br.dark) {
           $t1.textContent = t.lowLight; $t2.textContent = "";
+          S._guideDir = "none";
         } else if (br.bright) {
           $t1.textContent = t.strongLight; $t2.textContent = "";
+          S._guideDir = "none";
         } else if (br.bl) {
           $t1.textContent = t.backlight; $t2.textContent = "";
+          S._guideDir = "none";
         } else {
           var guide = adaptiveGuide(S, t);
           $t1.textContent = guide.t1; $t2.textContent = guide.t2;
+          S._guideDir = guide.dir;
         }
 
         if (now - S.lastCapt >= CFG.captureMs && !S.capturing && distOk) {
@@ -939,6 +1023,7 @@
     /* ── Destroy ──────────────────────────── */
     function destroy() {
       dead = true;
+      exitFullscreen();
       stopCam(S);
       if (S.fm) { try { S.fm.close(); } catch (e) {} S.fm = null; }
       // Restore original thresholds if they were modified for 16:9
