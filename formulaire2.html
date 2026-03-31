@@ -977,11 +977,14 @@
                 btnText.textContent = "CONTINUER";
             }
 
-            // Hide "Continuer" button on step 3 when scan is active, keep back button
+            // Hide "Continuer" button on step 3 when scan is active (not completed)
             const btnNextEl = document.getElementById('btn-next');
             const navBarEl = document.getElementById('nav-bar');
             const scanContainer = document.getElementById('facescan-container');
-            if (currentStep === 3 && scanContainer && !scanContainer.classList.contains('hidden')) {
+            const fsPrev = document.getElementById('fs-prev');
+            const fsErr = document.getElementById('fs-err');
+            const scanDone = (fsPrev && fsPrev.style.display !== 'none') || (fsErr && fsErr.style.display !== 'none');
+            if (currentStep === 3 && scanContainer && !scanContainer.classList.contains('hidden') && !scanDone) {
                 btnNextEl.style.display = 'none';
                 navBarEl.style.pointerEvents = 'none';
                 btnBack.style.pointerEvents = 'auto';
