@@ -977,13 +977,13 @@
                 btnText.textContent = "CONTINUER";
             }
 
-            // Hide nav bar on step 3 (photos) when scan is active, show on all other steps
-            const navBar = document.getElementById('nav-bar');
+            // Hide "Continuer" button on step 3 when scan is active, keep back button
+            const btnNextEl = document.getElementById('btn-next');
             const scanContainer = document.getElementById('facescan-container');
             if (currentStep === 3 && scanContainer && !scanContainer.classList.contains('hidden')) {
-                navBar.style.display = 'none';
+                btnNextEl.style.display = 'none';
             } else {
-                navBar.style.display = '';
+                btnNextEl.style.display = '';
             }
         }
 
@@ -1811,18 +1811,18 @@ async function submitFormData() {
         if (window.AdermioFaceScan) AdermioFaceScan.destroy();
         document.getElementById('facescan-container').classList.add('hidden');
         document.getElementById('manual-upload-container').classList.remove('hidden');
-        // Show nav bar back
-        var navBar = document.getElementById('nav-bar');
-        if (navBar) navBar.style.display = '';
+        // Show Continuer button back
+        var btnNextEl = document.getElementById('btn-next');
+        if (btnNextEl) btnNextEl.style.display = '';
         lucide.createIcons();
     };
 
     window.switchToScanMode = function() {
         document.getElementById('manual-upload-container').classList.add('hidden');
         document.getElementById('facescan-container').classList.remove('hidden');
-        // Hide nav bar for scan
-        var navBar = document.getElementById('nav-bar');
-        if (navBar) navBar.style.display = 'none';
+        // Hide Continuer button for scan
+        var btnNextEl = document.getElementById('btn-next');
+        if (btnNextEl) btnNextEl.style.display = 'none';
         // Re-init scan
         if (window.AdermioFaceScan) {
             AdermioFaceScan.init('facescan-mount', {
