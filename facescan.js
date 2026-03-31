@@ -497,7 +497,8 @@
   }
 
   function drawBinDots(ctx, w, h, S, t) {
-    var order = ["wide_left", "left", "semi_left", "face", "semi_right", "right", "wide_right"];
+    // Visual order: left dots = right bins, right dots = left bins (mirrors user perspective)
+    var order = ["wide_right", "right", "semi_right", "face", "semi_left", "left", "wide_left"];
     var total = w * 0.85, sx = (w - total) / 2, y = h * 0.055;
     var sp = total / (order.length - 1), r = 6;
 
