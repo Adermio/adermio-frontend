@@ -693,6 +693,13 @@
       // Fullscreen for scan phases, exit for others
       if (name === "scan" || name === "load") { enterFullscreen(); }
       else { exitFullscreen(); }
+      // Restore Continuer button when scan is done (preview or error)
+      if (name === "prev" || name === "err") {
+        var btnNext = document.getElementById("btn-next");
+        var navBar = document.getElementById("nav-bar");
+        if (btnNext) btnNext.style.display = "";
+        if (navBar) navBar.style.pointerEvents = "";
+      }
     }
     function showErr(msg) { $em.textContent = msg; show("err"); S.phase = "idle"; setTimeout(function () { if (onFall && !dead) onFall(); }, 3000); }
 
