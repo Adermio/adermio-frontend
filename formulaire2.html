@@ -977,21 +977,6 @@
                 btnText.textContent = "CONTINUER";
             }
 
-            // Hide "Continuer" button on step 3 when scan is active (not completed)
-            const btnNextEl = document.getElementById('btn-next');
-            const navBarEl = document.getElementById('nav-bar');
-            const scanContainer = document.getElementById('facescan-container');
-            const fsPrev = document.getElementById('fs-prev');
-            const fsErr = document.getElementById('fs-err');
-            const scanDone = (fsPrev && fsPrev.style.display !== 'none') || (fsErr && fsErr.style.display !== 'none');
-            if (currentStep === 3 && scanContainer && !scanContainer.classList.contains('hidden') && !scanDone) {
-                btnNextEl.style.display = 'none';
-                navBarEl.style.pointerEvents = 'none';
-                btnBack.style.pointerEvents = 'auto';
-            } else {
-                btnNextEl.style.display = '';
-                navBarEl.style.pointerEvents = '';
-            }
         }
 
         window.goToStep = goToStep;
@@ -1818,18 +1803,12 @@ async function submitFormData() {
         if (window.AdermioFaceScan) AdermioFaceScan.destroy();
         document.getElementById('facescan-container').classList.add('hidden');
         document.getElementById('manual-upload-container').classList.remove('hidden');
-        // Show Continuer button back
-        var btnNextEl = document.getElementById('btn-next');
-        if (btnNextEl) btnNextEl.style.display = '';
         lucide.createIcons();
     };
 
     window.switchToScanMode = function() {
         document.getElementById('manual-upload-container').classList.add('hidden');
         document.getElementById('facescan-container').classList.remove('hidden');
-        // Hide Continuer button for scan
-        var btnNextEl = document.getElementById('btn-next');
-        if (btnNextEl) btnNextEl.style.display = 'none';
         // Re-init scan
         if (window.AdermioFaceScan) {
             AdermioFaceScan.init('facescan-mount', {
