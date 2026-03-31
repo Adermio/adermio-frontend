@@ -924,6 +924,10 @@
             treatmentAnswered: false
         };
 
+        // Expose to facescan.js
+        window.formState = formState;
+        window.validationState = validationState;
+
         // --- DOM ELEMENTS ---
         const btnNext = document.getElementById('btn-next');
         const btnBack = document.getElementById('btn-back');
@@ -1328,6 +1332,7 @@ function getSafeContentType(file) {
 }
 
 async function uploadToS3Presigned({ file, jobId, type }) {
+  if (!window.uploadToS3Presigned) window.uploadToS3Presigned = uploadToS3Presigned;
   const safeContentType = getSafeContentType(file);
 
   const presignResp = await fetch(PRESIGN_URL, {
