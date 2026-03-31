@@ -31,9 +31,9 @@
      ═══════════════════════════════════════════════════════════ */
   var T = {
     fr: {
-      permTitle: "Scan facial intelligent",
-      permDesc: "Notre technologie analyse votre visage en quelques secondes pour garantir des photos optimales pour votre diagnostic. Aucune donn\u00e9e vid\u00e9o n'est conserv\u00e9e.",
-      permBtn: "Activer la cam\u00e9ra",
+      permTitle: "Analyse Haute D\u00e9finition",
+      permDesc: "7 captures automatis\u00e9es sous diff\u00e9rents angles pour une pr\u00e9cision maximale. Aucune donn\u00e9e vid\u00e9o n'est conserv\u00e9e.",
+      permBtn: "D\u00e9marrer l'analyse",
       denied: "Acc\u00e8s cam\u00e9ra refus\u00e9. Utilisez l'import manuel.",
       notSupported: "Navigateur incompatible. Utilisez l'import manuel.",
       noDevice: "Aucune cam\u00e9ra frontale d\u00e9tect\u00e9e.",
@@ -81,9 +81,9 @@
       zoomAdded: "Gros plan ajout\u00e9",
     },
     en: {
-      permTitle: "Smart face scan",
-      permDesc: "Our technology analyzes your face in seconds to ensure optimal photos for your diagnosis. No video data is stored.",
-      permBtn: "Enable camera",
+      permTitle: "High Definition Analysis",
+      permDesc: "7 automated captures from different angles for maximum precision. No video data is stored.",
+      permBtn: "Start analysis",
       denied: "Camera access denied. Use manual upload.",
       notSupported: "Browser not supported. Use manual upload.",
       noDevice: "No front camera detected.",
@@ -343,18 +343,30 @@
      UI — Adermio Brand
      ═══════════════════════════════════════════════════════════ */
   function buildUI(t) {
-    return '<div id="fs-root" style="position:relative;width:100%;max-width:420px;margin:0 auto;border-radius:1.25rem;overflow:hidden;background:#0F3D39;font-family:\'DM Sans\',sans-serif;transition:all .3s ease;">'
-    + '<div id="fs-perm" style="padding:44px 28px;text-align:center;background:linear-gradient(160deg,#0F3D39 0%,#1a5249 100%);color:#fff;">'
-    + '<div style="width:60px;height:60px;margin:0 auto 24px;border-radius:50%;border:1.5px solid rgba(20,184,166,.25);display:flex;align-items:center;justify-content:center;">'
-    + '<svg width="26" height="26" fill="none" stroke="#14B8A6" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>'
+    return '<div id="fs-root" style="position:relative;width:100%;max-width:420px;margin:0 auto;border-radius:1.25rem;overflow:hidden;background:#FAFAF9;font-family:\'DM Sans\',sans-serif;transition:all .3s ease;">'
+    + '<div id="fs-perm" style="padding:36px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
+    + '<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:2rem;background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.12);margin-bottom:24px;">'
+    + '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#14B8A6;"></span>'
+    + '<span style="font-size:9px;font-weight:700;color:#0F3D39;text-transform:uppercase;letter-spacing:.12em;">Adermio DermoScan v2.4</span>'
     + '</div>'
-    + '<h3 style="font-family:\'Playfair Display\',serif;font-size:21px;font-weight:600;margin:0 0 10px;letter-spacing:-.3px;">' + t.permTitle + '</h3>'
-    + '<p style="font-size:13px;color:rgba(255,255,255,.5);margin:0 0 32px;line-height:1.75;font-weight:300;">' + t.permDesc + '</p>'
-    + '<button id="fs-go" style="width:100%;padding:16px;border:none;border-radius:2rem;background:#14B8A6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;">' + t.permBtn + '</button>'
+    + '<h3 style="font-family:\'Playfair Display\',serif;font-size:22px;font-weight:600;margin:0 0 8px;letter-spacing:-.3px;color:#0F3D39;">' + t.permTitle + '</h3>'
+    + '<p style="font-size:12px;color:#78716c;margin:0 0 24px;line-height:1.7;font-weight:400;">' + t.permDesc + '</p>'
+    + '<div style="display:flex;justify-content:center;gap:20px;margin-bottom:28px;">'
+    + '<div style="text-align:center;"><div style="font-size:18px;font-weight:700;color:#0F3D39;font-family:\'Playfair Display\',serif;">7</div><div style="font-size:8px;color:#a8a29e;text-transform:uppercase;letter-spacing:.1em;font-weight:500;">Captures</div></div>'
+    + '<div style="width:1px;background:#e7e5e4;"></div>'
+    + '<div style="text-align:center;"><div style="font-size:18px;font-weight:700;color:#0F3D39;font-family:\'Playfair Display\',serif;">3</div><div style="font-size:8px;color:#a8a29e;text-transform:uppercase;letter-spacing:.1em;font-weight:500;">Branches IA</div></div>'
+    + '<div style="width:1px;background:#e7e5e4;"></div>'
+    + '<div style="text-align:center;"><div style="font-size:18px;font-weight:700;color:#0F3D39;font-family:\'Playfair Display\',serif;">19</div><div style="font-size:8px;color:#a8a29e;text-transform:uppercase;letter-spacing:.1em;font-weight:500;">Zones</div></div>'
     + '</div>'
-    + '<div id="fs-load" style="display:none;padding:64px 28px;text-align:center;background:#0F3D39;color:#fff;">'
-    + '<div style="width:40px;height:40px;margin:0 auto 24px;border:2.5px solid rgba(255,255,255,.08);border-top-color:#14B8A6;border-radius:50%;animation:fsSpin .7s linear infinite;"></div>'
-    + '<p style="font-size:13px;color:rgba(255,255,255,.45);font-weight:400;">' + t.loading + '</p>'
+    + '<div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:28px;opacity:.5;">'
+    + '<svg width="12" height="12" fill="none" stroke="#0F3D39" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+    + '<span style="font-size:9px;color:#44403C;font-weight:500;text-transform:uppercase;letter-spacing:.08em;">Donn\u00e9es crypt\u00e9es & s\u00e9curis\u00e9es</span>'
+    + '</div>'
+    + '<button id="fs-go" style="width:100%;padding:16px;border:none;border-radius:2rem;background:#0F3D39;color:#fff;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:background .15s;">' + t.permBtn + '</button>'
+    + '</div>'
+    + '<div id="fs-load" style="display:none;padding:64px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
+    + '<div style="width:36px;height:36px;margin:0 auto 20px;border:2px solid #e7e5e4;border-top-color:#0F3D39;border-radius:50%;animation:fsSpin .7s linear infinite;"></div>'
+    + '<p style="font-size:13px;color:#78716c;font-weight:400;">' + t.loading + '</p>'
     + '</div>'
     + '<div id="fs-scan" style="display:none;position:relative;background:#000;overflow:hidden;width:100%;height:100%;">'
     + '<video id="fs-v" playsinline autoplay muted style="width:100%;height:100%;display:block;object-fit:cover;transform:scaleX(-1);"></video>'
@@ -382,11 +394,11 @@
     + '</div></div></div>'
     + '<button id="fs-re" style="width:100%;padding:11px;border:1px solid #e7e5e4;border-radius:2rem;background:transparent;color:#a8a29e;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;">' + t.restart + '</button>'
     + '</div>'
-    + '<div id="fs-err" style="display:none;padding:52px 28px;text-align:center;background:#0F3D39;color:#fff;">'
-    + '<div style="width:52px;height:52px;margin:0 auto 20px;border-radius:50%;border:1.5px solid rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;">'
-    + '<svg width="22" height="22" fill="none" stroke="#f87171" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
+    + '<div id="fs-err" style="display:none;padding:52px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
+    + '<div style="width:48px;height:48px;margin:0 auto 16px;border-radius:50%;border:1.5px solid #fecaca;display:flex;align-items:center;justify-content:center;background:#fef2f2;">'
+    + '<svg width="20" height="20" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
     + '</div>'
-    + '<p id="fs-em" style="font-size:14px;color:#fca5a5;margin:0;font-weight:400;line-height:1.6;"></p>'
+    + '<p id="fs-em" style="font-size:13px;color:#991b1b;margin:0;font-weight:400;line-height:1.6;"></p>'
     + '</div></div>'
     + '<style>@keyframes fsSpin{to{transform:rotate(360deg)}}</style>';
   }
