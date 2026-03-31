@@ -976,6 +976,7 @@
                 btnBack.classList.remove('hidden');
                 btnText.textContent = "CONTINUER";
             }
+
         }
 
         window.goToStep = goToStep;
@@ -1215,7 +1216,7 @@
                 return true;
             } catch(e) {
                 console.error("Erreur validation :", e);
-                return currentStep === 7 ? true : false;
+                return false;
             }
         }
 
@@ -1798,8 +1799,13 @@ async function submitFormData() {
     <script>
     // ── Mode switching: Scan ↔ Manual Upload ──
     window.switchToManualUpload = function() {
-        // Stop any active scan
+        // Stop any active scan & force-clear fullscreen body locks
         if (window.AdermioFaceScan) AdermioFaceScan.destroy();
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
         document.getElementById('facescan-container').classList.add('hidden');
         document.getElementById('manual-upload-container').classList.remove('hidden');
         lucide.createIcons();
