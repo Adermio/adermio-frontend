@@ -2,7 +2,7 @@
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Adermio — Analyse dermatologique par intelligence artificielle</title>
     <meta name="description" content="Adermio utilise l'IA pour analyser votre peau et diagnostiquer l'acné. Recevez un diagnostic personnalisé, des recommandations de produits et un suivi sur 28 jours. Essai gratuit.">
@@ -95,14 +95,14 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 
-    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
 </head>
 <body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
 
     <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                 <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain" fetchpriority="high">
                  <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
             </div>
             
@@ -836,6 +836,7 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
         lucide.createIcons();
 
         // 1. Logique du Menu
@@ -885,8 +886,9 @@
                 item.classList.toggle('active');
             });
         });
-        
-        
+
+
+        });
     </script>
     
     <script src="/js/pwa.js" defer></script>
