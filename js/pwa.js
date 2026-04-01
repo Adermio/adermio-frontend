@@ -78,11 +78,11 @@
                   : "Suivez l'evolution de votre peau"))
           + '</div>' +
         '</div>' +
-        (isIOS
-          ? ''
-          : '<button class="apwa-install-btn" id="apwa-install">' +
-              (isEN ? 'Install' : 'Installer') +
-            '</button>') +
+        '<button class="apwa-install-btn" id="apwa-install">' +
+          (isIOS
+            ? (isEN ? 'Got it' : 'Compris')
+            : (isEN ? 'Install' : 'Installer')) +
+        '</button>' +
         '<button class="apwa-close" id="apwa-close" aria-label="Fermer">&times;</button>' +
       '</div>';
 
@@ -112,26 +112,32 @@
       '}' +
       '.apwa-install-btn:active { opacity: 0.8; }' +
       '.apwa-close {' +
-        'position: absolute; top: 8px; right: 8px;' +
-        'background: none; border: none; font-size: 20px; color: #94a3b8;' +
+        'position: absolute; top: 6px; right: 68px;' +
+        'background: none; border: none; font-size: 22px; color: #94a3b8;' +
         'cursor: pointer; padding: 4px 8px; line-height: 1;' +
       '}';
 
     document.head.appendChild(style);
     document.body.appendChild(banner);
 
-    // Install button handler (non-iOS)
+    // Install button handler
     var installBtn = document.getElementById('apwa-install');
-    if (installBtn && deferredPrompt) {
+    if (installBtn) {
       installBtn.addEventListener('click', function () {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(function (result) {
-          if (result.outcome === 'accepted') {
-            console.log('Adermio PWA installed');
-          }
-          deferredPrompt = null;
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(function (result) {
+            if (result.outcome === 'accepted') {
+              console.log('Adermio PWA installed');
+            }
+            deferredPrompt = null;
+            removeBanner();
+          });
+        } else {
+          // iOS: just dismiss
+          localStorage.setItem('adermio_pwa_dismissed', '1');
           removeBanner();
-        });
+        }
       });
     }
 
