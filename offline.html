@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hors connexion — Adermio</title>
+    <meta name="theme-color" content="#0F3D39">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 32px;
+            border-radius: 16px;
+        }
+        .icon-offline {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 24px;
+            color: #94a3b8;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0F3D39;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        p {
+            font-size: 15px;
+            color: #64748b;
+            max-width: 340px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .retry-btn {
+            margin-top: 28px;
+            padding: 12px 28px;
+            background: #0F3D39;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .retry-btn:active { opacity: 0.8; }
+        .lang-switch {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .lang-switch a {
+            color: #0F3D39;
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <img src="/android-chrome-192x192.png" alt="Adermio" class="logo">
+    <svg class="icon-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+        <path d="M10.71 5.05A16 16 0 0 1 22.56 9"></path>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+    </svg>
+
+    <div id="content-fr">
+        <h1>Vous etes hors connexion</h1>
+        <p>Reconnectez-vous a internet pour acceder a vos diagnostics Adermio.</p>
+    </div>
+    <div id="content-en" style="display:none;">
+        <h1>You are offline</h1>
+        <p>Reconnect to the internet to access your Adermio diagnostics.</p>
+    </div>
+
+    <button class="retry-btn" onclick="window.location.reload();" id="retry-btn">Reessayer</button>
+
+    <div class="lang-switch" id="lang-switch-fr">
+        <a href="#" onclick="switchLang('en'); return false;">Switch to English</a>
+    </div>
+    <div class="lang-switch" id="lang-switch-en" style="display:none;">
+        <a href="#" onclick="switchLang('fr'); return false;">Passer en francais</a>
+    </div>
+
+    <script>
+        var lang = 'fr';
+        try {
+            var ref = document.referrer || '';
+            if (ref.includes('/en/') || localStorage.getItem('adermio_lang') === 'en') {
+                lang = 'en';
+            }
+        } catch(e) {}
+        if (lang === 'en') switchLang('en');
+
+        function switchLang(l) {
+            document.getElementById('content-fr').style.display = l === 'fr' ? 'block' : 'none';
+            document.getElementById('content-en').style.display = l === 'en' ? 'block' : 'none';
+            document.getElementById('lang-switch-fr').style.display = l === 'fr' ? 'block' : 'none';
+            document.getElementById('lang-switch-en').style.display = l === 'en' ? 'block' : 'none';
+            document.getElementById('retry-btn').textContent = l === 'fr' ? 'Reessayer' : 'Try again';
+            document.documentElement.lang = l;
+            try { localStorage.setItem('adermio_lang', l); } catch(e) {}
+        }
+    </script>
+</body>
+</html>
