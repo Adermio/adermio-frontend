@@ -43,6 +43,8 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
 
     <script>
         tailwind.config = {
@@ -392,7 +394,23 @@
                 </ul>
             </div>
 
-            <div class="space-y-4 animate-fade-in max-w-sm mx-auto">
+            <!-- ══════ FACE SCAN MODE (default) ══════ -->
+            <div id="facescan-container" class="max-w-sm mx-auto animate-fade-in">
+                <div id="facescan-mount"></div>
+                <button type="button" id="switch-to-upload-btn" class="mt-4 w-full py-2.5 rounded-2xl border border-dashed border-stone-300 text-stone-400 text-xs font-bold flex items-center justify-center gap-2 hover:border-brand-primary hover:text-brand-primary transition-all uppercase tracking-wide" onclick="switchToManualUpload()">
+                    <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                    Import manually
+                </button>
+            </div>
+
+            <!-- ══════ MANUAL UPLOAD MODE (fallback / hidden by default) ══════ -->
+            <div id="manual-upload-container" class="hidden space-y-4 animate-fade-in max-w-sm mx-auto">
+
+                <!-- Switch back to scan -->
+                <button type="button" id="switch-to-scan-btn" class="w-full py-2.5 rounded-2xl border border-brand-primary/30 text-brand-primary text-xs font-bold flex items-center justify-center gap-2 hover:bg-brand-primary/5 transition-all uppercase tracking-wide mb-2" onclick="switchToScanMode()">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/></svg>
+                    Use guided scan
+                </button>
 
                 <div class="relative w-10/12 mx-auto sm:w-full">
                     <div class="flex justify-between items-center mb-2 px-1">
@@ -842,7 +860,7 @@
         lucide.createIcons();
 
         // --- CONFIGURATION ---
-        const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/analyse-gratuite-en-test';
+        const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/free-analysis-scan';
         const PRESIGN_URL = 'https://api.adermio.com/v2/uploads/presign';
         const UPLOAD_LOG_URL = "https://n8n.adermio.com/webhook/upload-log";
         const MAX_IMAGE_MB = 25;
@@ -850,6 +868,7 @@
         // --- GLOBAL STATE ---
         const totalSteps = 7;
         let currentStep = 1;
+        Object.defineProperty(window, 'currentStep', { get() { return currentStep; } });
 
         // Anti double submit
         let isSubmitting = false;
@@ -874,8 +893,13 @@
                 face: { key: null, getUrl: null },
                 left: { key: null, getUrl: null },
                 right: { key: null, getUrl: null },
+                semi_right: { key: null, getUrl: null },
+                wide_right: { key: null, getUrl: null },
+                semi_left: { key: null, getUrl: null },
+                wide_left: { key: null, getUrl: null },
                 zoom: { key: null, getUrl: null }
             },
+            photoMethod: 'manual',
             goal: 'correction',
             duration: '3-6 months',
             frequency: '',
@@ -900,6 +924,10 @@
             allergiesAnswered: false,
             treatmentAnswered: false
         };
+
+        // Expose to facescan.js
+        window.formState = formState;
+        window.validationState = validationState;
 
         // --- DOM ELEMENTS ---
         const btnNext = document.getElementById('btn-next');
@@ -946,6 +974,7 @@
             }
         }
 
+        window.goToStep = goToStep;
         function goToStep(step) {
             const currentEl = document.getElementById(`step-${currentStep}`);
             if(!currentEl) return;
@@ -1182,7 +1211,7 @@
                 return true;
             } catch(e) {
                 console.error("Validation error :", e);
-                return currentStep === 7 ? true : false;
+                return false;
             }
         }
 
@@ -1305,6 +1334,7 @@ function getSafeContentType(file) {
 }
 
 async function uploadToS3Presigned({ file, jobId, type }) {
+  if (!window.uploadToS3Presigned) window.uploadToS3Presigned = uploadToS3Presigned;
   const safeContentType = getSafeContentType(file);
 
   const presignResp = await fetch(PRESIGN_URL, {
@@ -1614,11 +1644,19 @@ async function submitFormData() {
   const file_face = formState.photos.face.getUrl || "";
   const file_left = formState.photos.left.getUrl || "";
   const file_right = formState.photos.right.getUrl || "";
+  const file_semi_right = formState.photos.semi_right.getUrl || "";
+  const file_wide_right = formState.photos.wide_right.getUrl || "";
+  const file_semi_left = formState.photos.semi_left.getUrl || "";
+  const file_wide_left = formState.photos.wide_left.getUrl || "";
   const file_zoom = formState.photos.zoom.getUrl || "";
 
   const sourceKey_face = formState.photos.face.key || "";
   const sourceKey_left = formState.photos.left.key || "";
   const sourceKey_right = formState.photos.right.key || "";
+  const sourceKey_semi_right = formState.photos.semi_right.key || "";
+  const sourceKey_wide_right = formState.photos.wide_right.key || "";
+  const sourceKey_semi_left = formState.photos.semi_left.key || "";
+  const sourceKey_wide_left = formState.photos.wide_left.key || "";
   const sourceKey_zoom = formState.photos.zoom.key || "";
 
   const emailInput = document.getElementById("email");
@@ -1654,15 +1692,25 @@ async function submitFormData() {
   params.append("jobId", jobId);
   params.append("mode_diagnostic", mode_diagnostic);
 
+  params.append("photo_method", formState.photoMethod || "manual");
+
   params.append("file", file_face);
   params.append("file_face", file_face);
   params.append("file_left", file_left);
   params.append("file_right", file_right);
+  params.append("file_semi_right", file_semi_right);
+  params.append("file_wide_right", file_wide_right);
+  params.append("file_semi_left", file_semi_left);
+  params.append("file_wide_left", file_wide_left);
   params.append("file_zoom", file_zoom);
 
   params.append("sourceKey_face", sourceKey_face);
   params.append("sourceKey_left", sourceKey_left);
   params.append("sourceKey_right", sourceKey_right);
+  params.append("sourceKey_semi_right", sourceKey_semi_right);
+  params.append("sourceKey_wide_right", sourceKey_wide_right);
+  params.append("sourceKey_semi_left", sourceKey_semi_left);
+  params.append("sourceKey_wide_left", sourceKey_wide_left);
   params.append("sourceKey_zoom", sourceKey_zoom);
 
   if (formState.goal === 'correction') {
@@ -1712,9 +1760,9 @@ async function submitFormData() {
 
       setTimeout(function () {
         if (formState.jobId) {
-          window.location.href = "/en/processing?jobId=" + encodeURIComponent(formState.jobId);
+          window.location.href = "/en/processing2?jobId=" + encodeURIComponent(formState.jobId);
         } else {
-          window.location.href = "/en/processing";
+          window.location.href = "/en/processing2";
         }
       }, 800);
     }, 1000);
@@ -1735,6 +1783,76 @@ async function submitFormData() {
     btnNext.disabled = false;
   }
 }
+    </script>
+
+    <!-- Face Scan Module -->
+    <script src="/facescan.js"></script>
+    <script>
+    // ── Mode switching: Scan ↔ Manual Upload ──
+    window.switchToManualUpload = function() {
+        // Stop any active scan & force-clear fullscreen body locks
+        if (window.AdermioFaceScan) AdermioFaceScan.destroy();
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.getElementById('facescan-container').classList.add('hidden');
+        document.getElementById('manual-upload-container').classList.remove('hidden');
+        lucide.createIcons();
+    };
+
+    window.switchToScanMode = function() {
+        document.getElementById('manual-upload-container').classList.add('hidden');
+        document.getElementById('facescan-container').classList.remove('hidden');
+        // Re-init scan
+        if (window.AdermioFaceScan) {
+            AdermioFaceScan.init('facescan-mount', {
+                lang: 'en',
+                onComplete: function() {
+                    console.log('Scan photos uploaded to S3 successfully');
+                },
+                onFallback: function() {
+                    switchToManualUpload();
+                }
+            });
+        }
+        lucide.createIcons();
+    };
+
+    // ── Auto-init face scan when step 3 becomes visible ──
+    (function() {
+        var scanInitialized = false;
+
+        var observer = new MutationObserver(function() {
+            var step3 = document.getElementById('step-3');
+            if (step3 && !step3.classList.contains('hidden') && !scanInitialized) {
+                scanInitialized = true;
+                if (window.AdermioFaceScan) {
+                    AdermioFaceScan.init('facescan-mount', {
+                        lang: 'en',
+                        onComplete: function() {
+                            console.log('Scan photos uploaded to S3 successfully');
+                        },
+                        onFallback: function() {
+                            switchToManualUpload();
+                        }
+                    });
+                }
+                lucide.createIcons();
+            }
+            if (step3 && step3.classList.contains('hidden') && scanInitialized) {
+                scanInitialized = false;
+                if (window.AdermioFaceScan) AdermioFaceScan.destroy();
+            }
+        });
+
+        observer.observe(document.getElementById('form-container') || document.body, {
+            attributes: true,
+            subtree: true,
+            attributeFilter: ['class']
+        });
+    })();
     </script>
 </body>
 </html>
