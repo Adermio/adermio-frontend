@@ -15,7 +15,9 @@
     });
   }
 
-  // 2. Install Banner — only on premium result pages
+  // 2. Install Banner — DISABLED until auth system is in place
+  //    Re-enable when user accounts + dashboard are ready
+  return;
   var premiumPaths = [
     '/premium', '/en/premium',
     '/bilan', '/en/bilan',
