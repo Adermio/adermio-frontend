@@ -1,15 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "ua5d07cn1u");
-    </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Diagnostic Expert — Adermio</title>
     <meta name="description" content="Formulaire de diagnostic expert Adermio. Analyse dermatologique avancée par intelligence artificielle.">
@@ -41,186 +34,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://unpkg.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style-formulaire.css">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- MediaPipe Face Mesh + Camera Utils -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            dark: '#0F3D39',
-                            primary: '#14B8A6',
-                            light: '#F0FDFA',
-                            cream: '#FAFAF9',
-                            sand: '#E7E5E4',
-                            gold: '#D4B483'
-                        }
-                    },
-                    fontFamily: {
-                        serif: ['"Playfair Display"', 'serif'],
-                        sans: ['"DM Sans"', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.4s ease-out',
-                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
-                        'pulse-glow': 'pulseGlow 3s infinite',
-                        'scan': 'scan 2s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        shake: {
-                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
-                            '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
-                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
-                            '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
-                        },
-                        pulseGlow: {
-                            '0%, 100%': { opacity: '0.6' },
-                            '50%': { opacity: '1' },
-                        },
-                        scan: {
-                            '0%, 100%': { top: '0%' },
-                            '50%': { top: '100%' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body {
-            -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
-        }
-
-        .step-container {
-            transition: opacity 0.3s ease;
-            position: absolute;
-            width: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            pointer-events: none;
-            display: none;
-        }
-
-        .step-container.active {
-            opacity: 1;
-            pointer-events: all;
-            display: block;
-            position: relative;
-            margin-top: auto;
-            margin-bottom: auto;
-        }
-
-        input[type=range] {
-            -webkit-appearance: none;
-            background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: #0F3D39;
-            border: 2px solid white;
-            cursor: pointer;
-            margin-top: -9px;
-            box-shadow: 0 2px 6px rgba(15, 61, 57, 0.2);
-            transition: transform 0.1s;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 2px;
-            cursor: pointer;
-            background: #E7E5E4;
-        }
-
-        .sketch-line {
-            fill: none;
-            stroke: #44403C;
-            stroke-width: 1.2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            opacity: 0.8;
-        }
-
-        .zone-spot {
-            fill: transparent;
-            cursor: pointer;
-            transition: all 0.4s ease-out;
-        }
-
-        @media (hover: hover) {
-            .zone-spot:hover {
-                fill: rgba(20, 184, 166, 0.1);
-            }
-        }
-
-        .zone-spot.selected {
-            fill: rgba(20, 184, 166, 0.4);
-            filter: blur(4px);
-        }
-
-        .zone-item {
-            transition: all 0.2s;
-        }
-        .zone-item.selected {
-            background-color: #F0FDFA;
-            border-color: #14B8A6;
-            color: #0F3D39;
-            font-weight: 500;
-        }
-        .zone-item.selected .indicator {
-            background-color: #14B8A6;
-            border-color: #14B8A6;
-        }
-
-        textarea {
-            resize: none;
-        }
-
-        .input-error {
-            border-color: #ef4444 !important;
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-        #loading-overlay {
-            backdrop-filter: blur(5px);
-        }
-
-        #age-inline-input {
-            width: 4.5rem;
-            text-align: right;
-            background: transparent;
-            border: none;
-            outline: none;
-        }
-
-        .lang-dropdown {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.2s ease;
-        }
-        .group:hover .lang-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-    </style>
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
 </head>
 <body class="bg-brand-cream text-brand-dark font-sans min-h-screen flex flex-col selection:bg-brand-primary/20">
 
@@ -865,6 +684,7 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
         lucide.createIcons();
 
         // --- CONFIGURATION ---
@@ -1795,6 +1615,7 @@ async function submitFormData() {
   }
 }
 
+    });
     </script>
 
     <!-- Face Scan Module -->
@@ -1868,5 +1689,39 @@ async function submitFormData() {
     })();
     </script>
     <script src="/js/pwa.js" defer></script>
+
+    <!-- MediaPipe: async background load (needed at step 3) -->
+    <script>
+    (function() {
+        function loadMediaPipe() {
+            var s1 = document.createElement('script');
+            s1.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js';
+            s1.async = true;
+            s1.crossOrigin = 'anonymous';
+            s1.onload = function() {
+                var s2 = document.createElement('script');
+                s2.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js';
+                s2.async = true;
+                s2.crossOrigin = 'anonymous';
+                document.head.appendChild(s2);
+            };
+            document.head.appendChild(s1);
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadMediaPipe);
+        } else {
+            loadMediaPipe();
+        }
+    })();
+    </script>
+
+    <!-- Clarity (deferred) -->
+    <script defer>
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ua5d07cn1u");
+    </script>
 </body>
 </html>
