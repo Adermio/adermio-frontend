@@ -684,8 +684,9 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        lucide.createIcons();
+        // Lucide is deferred: init icons when ready
+        if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+        else { document.addEventListener('DOMContentLoaded', function() { lucide.createIcons(); }); }
 
         // --- CONFIGURATION ---
         const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/analyse-gratuite-fr-test';
@@ -1615,7 +1616,6 @@ async function submitFormData() {
   }
 }
 
-    });
     </script>
 
     <!-- Face Scan Module -->
