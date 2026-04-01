@@ -435,7 +435,8 @@
       const jobId = params.get("jobId");
 
       // --- CONFIG ---
-      const POLL_URL = "https://n8n.adermio.com/webhook/job-status?jobId=";
+      const SUPABASE_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
       const MAX_WAIT_TIME = 45 * 1000; // 45s
       const POLL_INTERVAL = 3000;
       const TIMEOUT_DURATION = 30000; // 30s haute demande
@@ -606,16 +607,26 @@
         }, 50);
       }
 
-      // --- 4. Polling n8n ---
+      // --- 4. Polling Supabase ---
       async function checkStatus() {
         if (!jobId || isTimeoutDead) return;
 
         try {
-          const res = await fetch(POLL_URL + encodeURIComponent(jobId), { method: "GET", cache: "no-store" });
+          const res = await fetch(
+            SUPABASE_URL + "/rest/v1/free_analysis?jobId=eq." + encodeURIComponent(jobId) + "&select=status,analysis_status,downloadUrl,face_detected&limit=1",
+            {
+              method: "GET",
+              headers: {
+                "apikey": SUPABASE_KEY,
+                "Authorization": "Bearer " + SUPABASE_KEY
+              },
+              cache: "no-store"
+            }
+          );
           const data = await res.json();
 
-          if (!data) return;
-          const record = Array.isArray(data) ? data[0] : data;
+          if (!data || !Array.isArray(data) || data.length === 0) return;
+          const record = data[0];
 
           const status = record.analysis_status || record.status || "processing";
           const downloadUrl = record.downloadUrl;
