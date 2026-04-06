@@ -13,6 +13,16 @@
       "statusCode": 301
     },
     {
+      "source": "/es",
+      "destination": "/es/home",
+      "statusCode": 301
+    },
+    {
+      "source": "/es/",
+      "destination": "/es/home",
+      "statusCode": 301
+    },
+    {
       "source": "/finalisation",
       "destination": "/success",
       "statusCode": 301
