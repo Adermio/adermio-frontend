@@ -62,10 +62,19 @@
       calibReady: "Parfait, ne bougez pas",
       calibReadySub: "Position idéale",
 
-      // Shown until MediaPipe's first result lands — avoids the user staring at
-      // "Positionnez votre visage" for 10s while the WASM downloads from the CDN.
+      // Shown until MediaPipe's first result lands. The progressive copy below
+      // ramps up clarity as the wait drags on:
+      //   0–4s   → neutral "loading engine"
+      //   4–12s  → "slow connection detected"
+      //   12s+   → "weak connection" + inline fallback button so the user can
+      //            switch to manual upload without backing out of the scan
       initializingTitle: "Initialisation de l'analyse…",
       initializingSub: "Préparation du moteur de détection",
+      initializingTitleSlow: "Connexion lente détectée",
+      initializingSubSlow: "Téléchargement du moteur en cours…",
+      initializingTitleVerySlow: "La connexion est faible",
+      initializingSubVerySlow: "Vous pouvez basculer en import manuel",
+      initFallbackBtn: "Importer manuellement",
       initializingTimeout: "Connexion trop lente. Utilisez l'import manuel.",
 
       countdownSub: "Préparez-vous, le scan va commencer",
@@ -158,6 +167,11 @@
 
       initializingTitle: "Initializing analysis…",
       initializingSub: "Loading detection engine",
+      initializingTitleSlow: "Slow connection detected",
+      initializingSubSlow: "Downloading the engine…",
+      initializingTitleVerySlow: "Weak connection",
+      initializingSubVerySlow: "You can switch to manual upload",
+      initFallbackBtn: "Upload manually",
       initializingTimeout: "Connection too slow. Use manual upload.",
 
       countdownSub: "Get ready, scan is about to start",
@@ -735,6 +749,14 @@
     +   '<p style="color:#fff;font-size:18px;font-weight:700;margin:14px 0 0;font-family:\'DM Sans\',sans-serif;">' + t.scanDone + '</p>'
     + '</div>'
 
+    /* Inline manual-upload fallback shown during the "very slow connection"
+       phase of init (after 12s with no first frame) — lets the user bail out
+       to the manual upload flow without backing out of the scan entirely. */
+    + '<button id="fs-init-fallback" style="display:none;position:absolute;top:calc(46% + 45.9vw + 30px);left:50%;transform:translateX(-50%);padding:11px 22px;border-radius:999px;border:1px solid rgba(20,184,166,.45);background:rgba(20,184,166,.14);color:#5eead4;font-size:12px;font-weight:600;cursor:pointer;z-index:7;letter-spacing:.4px;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;gap:6px;">'
+    +   '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>'
+    +   t.initFallbackBtn
+    + '</button>'
+
     /* Bottom: progress bar + Distance/Lumière/Stabilité badges */
     + '<div id="fs-bot" style="position:absolute;bottom:calc(16px + env(safe-area-inset-bottom, 0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 24px;z-index:6;pointer-events:none;">'
     +   '<div id="fs-pbar" style="width:100%;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;"><div id="fs-pfill" style="width:0;height:100%;background:#14B8A6;border-radius:2px;transition:width .25s;"></div></div>'
@@ -937,8 +959,13 @@
   }
 
   function initFM(cb) {
+    // Use the same base path as formulaire2.html's pre-warm so the browser
+    // hits its HTTP cache (or the SW's pre-cached copy) — never the CDN.
+    // Falls back to the jsdelivr URL if the script tag had to use it.
+    var base = (typeof window !== "undefined" && window._adermioMediaPipeBase) ||
+               "/vendor/mediapipe/face_mesh/";
     var fm = new window.FaceMesh({
-      locateFile: function (f) { return "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/" + f; },
+      locateFile: function (f) { return base + f; },
     });
     fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
     fm.onResults(cb);
@@ -1288,14 +1315,41 @@
           $t1.textContent = t.initializingTitle; $t2.textContent = t.initializingSub;
         }
 
-        // Track the boot moment so idleDraw can surface a clear "too slow" error
-        // if MediaPipe never returns a frame (slow CDN, captive portal, etc).
+        // Progressive feedback during MediaPipe boot — keeps the user informed
+        // even when the network is dragging. Stage transitions are one-way so
+        // the copy doesn't flicker between states. Once the first frame lands
+        // the idleDraw clears itself and the regular position guidance takes over.
         var bootStart = performance.now();
         var firstFrameTimeoutMs = enginePreWarmed ? 12000 : 25000;
+        var $initFallback = $("#fs-init-fallback");
+        var initStage = enginePreWarmed ? "warm" : "neutral";
         S.idleDraw = setInterval(function () {
-          if (S.fc > 0 || dead) { clearInterval(S.idleDraw); S.idleDraw = null; return; }
-          if (performance.now() - bootStart > firstFrameTimeoutMs) {
+          if (S.fc > 0 || dead) {
             clearInterval(S.idleDraw); S.idleDraw = null;
+            if ($initFallback) $initFallback.style.display = "none";
+            return;
+          }
+          var elapsed = performance.now() - bootStart;
+
+          // Cold-start staircase: neutral → slow → very-slow → timeout.
+          // Pre-warmed boots skip these (the timeout still applies but the user
+          // shouldn't see the slow-connection copy unless something is genuinely wrong).
+          if (!enginePreWarmed) {
+            if (elapsed > 12000 && initStage !== "verySlow") {
+              initStage = "verySlow";
+              $t1.textContent = t.initializingTitleVerySlow;
+              $t2.textContent = t.initializingSubVerySlow;
+              if ($initFallback) $initFallback.style.display = "inline-flex";
+            } else if (elapsed > 4000 && initStage === "neutral") {
+              initStage = "slow";
+              $t1.textContent = t.initializingTitleSlow;
+              $t2.textContent = t.initializingSubSlow;
+            }
+          }
+
+          if (elapsed > firstFrameTimeoutMs) {
+            clearInterval(S.idleDraw); S.idleDraw = null;
+            if ($initFallback) $initFallback.style.display = "none";
             if (!dead) showErr(t.initializingTimeout);
             return;
           }
@@ -1303,6 +1357,17 @@
           var rect = $scan.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) drawOverlay(ctx, rect.width, rect.height, S, t);
         }, 100);
+
+        // Inline fallback button → drops out of scan into the manual upload flow,
+        // same path as the gallery shortcut and the cancel-after-no-face case.
+        if ($initFallback) {
+          $initFallback.onclick = function () {
+            if (S.idleDraw) { clearInterval(S.idleDraw); S.idleDraw = null; }
+            $initFallback.style.display = "none";
+            stopCam(S); exitFullscreen(); S.phase = "idle";
+            if (onFall && !dead) onFall();
+          };
+        }
 
         // Retake banner
         if (S.retake) {

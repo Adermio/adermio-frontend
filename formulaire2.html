@@ -35,8 +35,16 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://unpkg.com">
+
+    <!-- Preload MediaPipe FaceMesh WASM + packed assets so the browser starts
+         pulling them in parallel with the HTML/CSS/JS, before our scan code
+         actually requests them. These are the two heavyweight files (~10 MB
+         combined) that dominate first-load time on slow mobile connections.
+         Self-hosted on Vercel so HTTP/2 multiplexes them on the existing
+         connection — no extra DNS / TLS handshake. -->
+    <link rel="preload" href="/vendor/mediapipe/face_mesh/face_mesh_solution_simd_wasm_bin.wasm" as="fetch" type="application/wasm" crossorigin="anonymous">
+    <link rel="preload" href="/vendor/mediapipe/face_mesh/face_mesh_solution_packed_assets.data" as="fetch" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style-formulaire.css">
 
@@ -1700,52 +1708,57 @@ async function submitFormData() {
     </script>
     <script src="/js/pwa.js" defer></script>
 
-    <!-- MediaPipe: async background load + WASM pre-warm so the engine is hot
-         by the time the user reaches step 3. Without this, mobile users on slow
-         networks land on the calibration screen while ~10MB of WASM is still
-         downloading from the CDN, and the camera preview looks frozen. -->
+    <!-- MediaPipe FaceMesh — self-hosted on Vercel.
+         The library + its WASM/data assets are served from /vendor/mediapipe/
+         instead of jsdelivr. This buys us:
+           - HTTP/2 multiplexing on the same origin (no extra DNS / TLS / TCP)
+           - Service-Worker-controlled caching (long-lived, deterministic)
+           - Resilience to CDN outages or mobile carriers blocking jsdelivr
+         camera_utils.js was loaded but never used — dropped to save a request.
+         Kept the same async background pre-warm so the engine is hot by the
+         time the user reaches step 3 of the form. -->
     <script>
     (function() {
-        var WASM_BASE = "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/";
+        var WASM_BASE = "/vendor/mediapipe/face_mesh/";
+        // Expose for facescan.js so it uses the same locateFile target
+        window._adermioMediaPipeBase = WASM_BASE;
+
         function loadMediaPipe() {
             var s1 = document.createElement('script');
-            s1.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js';
+            s1.src = WASM_BASE + 'face_mesh.js';
             s1.async = true;
-            s1.crossOrigin = 'anonymous';
-            s1.onload = function() {
-                var s2 = document.createElement('script');
-                s2.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js';
-                s2.async = true;
-                s2.crossOrigin = 'anonymous';
-                s2.onload = preWarmFaceMesh;
-                document.head.appendChild(s2);
+            s1.onload = preWarmFaceMesh;
+            s1.onerror = function () {
+                // Fallback to jsdelivr if our vendored copy somehow 404s.
+                var fallback = document.createElement('script');
+                fallback.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js';
+                fallback.async = true;
+                fallback.crossOrigin = 'anonymous';
+                fallback.onload = function () {
+                    window._adermioMediaPipeBase = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/';
+                    preWarmFaceMesh();
+                };
+                document.head.appendChild(fallback);
             };
             document.head.appendChild(s1);
         }
 
-        // Pre-instantiate FaceMesh in the background. The constructor + initialize()
-        // triggers the WASM download into the browser's HTTP cache; the real
-        // FaceMesh instance created by facescan.js when the user clicks "Démarrer
-        // le scan" then loads from cache instantly.
         function preWarmFaceMesh() {
             try {
                 if (typeof window.FaceMesh !== 'function') return;
-                var fm = new window.FaceMesh({ locateFile: function (f) { return WASM_BASE + f; } });
+                var base = window._adermioMediaPipeBase;
+                var fm = new window.FaceMesh({ locateFile: function (f) { return base + f; } });
                 fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
                 if (typeof fm.initialize === 'function') {
                     fm.initialize().then(function () {
                         window._adermioFaceMeshReady = true;
                         try { fm.close(); } catch (_) {}
                     }).catch(function () {
-                        // If initialize fails (offline, blocked CDN), the real init
-                        // attempt later will surface the error to the user.
                         try { fm.close(); } catch (_) {}
                     });
                 }
             } catch (_) {}
         }
-        // Expose readiness flag so facescan.js can show a clear "loading engine"
-        // message instead of "positionnez votre visage" while WASM downloads.
         window._adermioFaceMeshReady = false;
 
         if (document.readyState === 'loading') {
