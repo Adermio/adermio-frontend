@@ -1061,26 +1061,47 @@
       beginCalibration(true);
     });
 
+    var beginInFlight = false;
     function beginCalibration(initial) {
       // initial=true means we're entering from perm screen — load MediaPipe + camera fresh.
       // initial=false means we're restarting after a retake — camera may already be alive.
+      // Guard: ignore re-entry while a calibration boot is already underway
+      // (e.g., user double-taps a retake button).
+      if (beginInFlight) return;
+      beginInFlight = true;
       show("load"); S.phase = "load";
 
       var wasmTimeout = setTimeout(function () {
         if (S.phase === "load" && !dead) showErr(t.loadTimeout);
       }, CFG.wasmTimeoutMs);
 
-      var ensureStream = (S.stream && initial !== true)
+      // Reuse the existing stream only when it is still alive. After a scan
+      // completes, finish() calls stopCam() which ends every track, so on
+      // retake we always need a fresh getUserMedia call.
+      var streamAlive = !!(S.stream && S.stream.active);
+      var ensureStream = (streamAlive && initial !== true)
         ? Promise.resolve(S.stream)
         : reqCam();
 
       ensureStream.then(function (stream) {
+        var streamChanged = $v.srcObject !== stream;
         S.stream = stream;
-        if (!$v.srcObject) $v.srcObject = stream;
+        if (streamChanged) {
+          // Reassigning srcObject resets readyState — must wait for fresh
+          // loadedmetadata regardless of any prior video state.
+          $v.srcObject = stream;
+        }
         return new Promise(function (ok, no) {
-          if ($v.readyState >= 2) { ok(); return; }
-          $v.addEventListener("loadedmetadata", ok, { once: true });
-          setTimeout(function () { no(new Error("timeout")); }, 10000);
+          if (!streamChanged && $v.readyState >= 2) { ok(); return; }
+          var done = false;
+          var onMeta = function () { if (done) return; done = true; ok(); };
+          $v.addEventListener("loadedmetadata", onMeta, { once: true });
+          setTimeout(function () {
+            if (done) return;
+            done = true;
+            $v.removeEventListener("loadedmetadata", onMeta);
+            no(new Error("loadedmetadata_timeout"));
+          }, 10000);
         });
       }).then(function () {
         try { $v.play(); } catch (e) {}
@@ -1117,9 +1138,11 @@
         }
 
         $t1.textContent = t.calibTitle; $t2.textContent = t.calibSub;
+        beginInFlight = false;
       }).catch(function (e) {
         clearTimeout(wasmTimeout);
         startClicked = false;
+        beginInFlight = false;
         console.error("[FaceScan] init error:", e && e.name, e && e.message, e);
         if (e && e.name === "NotAllowedError") showErr(t.denied);
         else if (e && e.name === "NotFoundError") showErr(t.noDevice);
@@ -1558,6 +1581,8 @@
       dead = true;
       exitFullscreen();
       stopCam(S);
+      // Release the dead MediaStream reference so a future scan instance starts clean
+      try { if ($v) $v.srcObject = null; } catch (_) {}
       if (S.fm) { try { S.fm.close(); } catch (e) {} S.fm = null; }
       if (S._origFaceSizeMin != null) { CFG.faceSizeMin = S._origFaceSizeMin; CFG.faceSizeMax = S._origFaceSizeMax; }
       for (var i = 0; i < BIN_IDS.length; i++) {
