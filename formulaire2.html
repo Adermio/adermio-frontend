@@ -749,7 +749,8 @@
                 detail: ''
             },
             extraNotes: '',
-            email: ''
+            email: '',
+            scanLog: ''
         };
 
         const validationState = {
@@ -1172,8 +1173,6 @@ function getSafeContentType(file) {
 }
 
 async function uploadToS3Presigned({ file, jobId, type }) {
-  // Expose on window for facescan.js
-  if (!window.uploadToS3Presigned) window.uploadToS3Presigned = uploadToS3Presigned;
   const safeContentType = getSafeContentType(file);
 
   const presignResp = await fetch(PRESIGN_URL, {
@@ -1215,6 +1214,10 @@ async function uploadToS3Presigned({ file, jobId, type }) {
 
   return { key, getUrl };
 }
+
+// Expose immediately on window so facescan.js can call it on first scan
+// (without waiting for a manual upload to trigger the assignment).
+window.uploadToS3Presigned = uploadToS3Presigned;
 
 window.handleImageUpload = async function (input, previewId, overlayId, emptyId) {
   if (!(input && input.files && input.files[0])) return;
@@ -1569,6 +1572,8 @@ async function submitFormData() {
   params.append("traitement_oui", traitement_oui);
 
   params.append("info_suppl", info_suppl);
+
+  params.append("scan_log", formState.scanLog || "");
 
   params.append("consentement", "yes");
   params.append("formid", "form1380783333");
