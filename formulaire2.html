@@ -93,6 +93,27 @@
             if (menuEl) menuEl.textContent = '\u22ef';
         }
     })();
+
+    // bfcache recovery \u2014 when the user backgrounds Safari mid-scan and comes
+    // back, the body inherits the position:fixed scroll-lock the scanner set
+    // during fullscreen mode. Without this reset the form is unscrollable
+    // until a hard reload, which silently kills retention.
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            // Coming back from bfcache \u2014 undo any scroll-lock styles that the
+            // scanner's enterFullscreen() applied before backgrounding.
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            // Force a full re-init of the scan module so any frozen MediaPipe
+            // instance from before the bfcache freeze is replaced.
+            if (window.AdermioFaceScan && window.AdermioFaceScan.destroy) {
+                try { window.AdermioFaceScan.destroy(); } catch (_) {}
+            }
+        }
+    });
     </script>
 
     <div id="loading-overlay" class="fixed inset-0 z-[120] bg-brand-cream/80 hidden items-center justify-center flex-col">
@@ -1671,39 +1692,55 @@ async function submitFormData() {
     };
 
     // ── Auto-init face scan when step 3 becomes visible ──
+    // Scoped to the step-3 element itself instead of the whole form container —
+    // every Tailwind class flip across the page used to fire the observer
+    // callback (header animations, lucide mounts, etc), which is wasteful on
+    // low-end devices and risky during init/destroy races.
     (function() {
         var scanInitialized = false;
-        var origGoToStep = window.goToStep;
+        var initInFlight = false;
 
-        // Observe step changes to init scan when step 3 appears
-        var observer = new MutationObserver(function() {
-            var step3 = document.getElementById('step-3');
-            if (step3 && !step3.classList.contains('hidden') && !scanInitialized) {
-                scanInitialized = true;
-                if (window.AdermioFaceScan) {
+        function initScan() {
+            if (initInFlight || scanInitialized) return;
+            initInFlight = true;
+            scanInitialized = true;
+            if (window.AdermioFaceScan) {
+                try {
                     AdermioFaceScan.init('facescan-mount', {
-                        onComplete: function() {
-                            console.log('Scan photos uploaded to S3 successfully');
-                        },
-                        onFallback: function() {
-                            switchToManualUpload();
-                        }
+                        onComplete: function() {},
+                        onFallback: function() { switchToManualUpload(); }
                     });
+                } catch (e) {
+                    // Defensive: never let a scanner init crash bubble to the form
+                    console.warn('FaceScan init failed:', e);
+                    scanInitialized = false;
                 }
-                lucide.createIcons();
             }
-            // Reset when leaving step 3
-            if (step3 && step3.classList.contains('hidden') && scanInitialized) {
-                scanInitialized = false;
-                if (window.AdermioFaceScan) AdermioFaceScan.destroy();
+            try { if (typeof lucide !== 'undefined') lucide.createIcons(); } catch (_) {}
+            initInFlight = false;
+        }
+
+        function teardownScan() {
+            if (!scanInitialized) return;
+            scanInitialized = false;
+            if (window.AdermioFaceScan) {
+                try { AdermioFaceScan.destroy(); } catch (_) {}
             }
+        }
+
+        var step3 = document.getElementById('step-3');
+        if (!step3) return;
+
+        var observer = new MutationObserver(function() {
+            var hidden = step3.classList.contains('hidden');
+            if (!hidden && !scanInitialized) initScan();
+            else if (hidden && scanInitialized) teardownScan();
         });
 
-        observer.observe(document.getElementById('form-container') || document.body, {
-            attributes: true,
-            subtree: true,
-            attributeFilter: ['class']
-        });
+        // Watch only the step-3 element's class attribute — not the whole form
+        // tree. Cuts the callback rate from "every class change anywhere" to
+        // "step-3 visibility actually changed".
+        observer.observe(step3, { attributes: true, attributeFilter: ['class'] });
     })();
     </script>
     <script src="/js/pwa.js" defer></script>

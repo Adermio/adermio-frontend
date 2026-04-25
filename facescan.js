@@ -99,6 +99,10 @@
 
       noFace: "Aucun visage détecté",
       noFaceSub: "Placez votre visage dans l'ovale",
+      interrupted: "Scan interrompu",
+      interruptedSub: "Relancez le scan ou utilisez l'import manuel",
+      rotateTitle: "Tournez votre téléphone",
+      rotateSub: "Le scan fonctionne en mode portrait",
 
       // Scanning guidance — getGuidance() in scan-engine.ts (verbatim)
       scanFace: "Regardez la caméra",
@@ -195,6 +199,10 @@
 
       noFace: "No face detected",
       noFaceSub: "Place your face in the oval",
+      interrupted: "Scan interrupted",
+      interruptedSub: "Restart the scan or use manual upload",
+      rotateTitle: "Rotate your phone",
+      rotateSub: "The scan only works in portrait",
 
       scanFace: "Look at the camera",
       scanFaceSub: "Stay facing forward",
@@ -818,7 +826,19 @@
     + '<svg width="20" height="20" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
     + '</div>'
     + '<p id="fs-em" style="font-size:13px;color:#991b1b;margin:0;font-weight:400;line-height:1.6;"></p>'
-    + '</div></div>'
+    + '</div>'
+
+    /* Landscape overlay — shown automatically when width > height during the
+       scan (DOM elements positioned via calc(46% ± 45.9vw) don\'t fit in
+       landscape and would render off-screen). screen.orientation.lock is not
+       reliable on iOS, so we just ask the user to rotate. */
+    + '<div id="fs-rotate" style="display:none;position:fixed;inset:0;z-index:11000;background:#0F3D39;color:#fff;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;font-family:\'DM Sans\',sans-serif;">'
+    +   '<svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="margin-bottom:18px;animation:fsRotateNudge 1.6s ease-in-out infinite;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>'
+    +   '<p style="font-size:18px;font-weight:700;margin:0 0 6px;">' + t.rotateTitle + '</p>'
+    +   '<p style="font-size:13px;color:rgba(255,255,255,.7);margin:0;font-weight:300;">' + t.rotateSub + '</p>'
+    + '</div>'
+
+    + '</div>'
     + '<style>'
     + '@keyframes fsSpin{to{transform:rotate(360deg)}}'
     /* Top-bar circular buttons (parity with mobile cBtn 40×40) */
@@ -852,6 +872,9 @@
     /* Countdown circle visibility helper */
     + '#fs-countdown.show{display:flex !important;}'
     + '#fs-complete-overlay.show{display:flex !important;}'
+    /* Rotate-to-portrait overlay */
+    + '#fs-rotate.show{display:flex !important;}'
+    + '@keyframes fsRotateNudge{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-90deg)}}'
     + '</style>';
   }
 
@@ -1183,6 +1206,10 @@
       map[name].style.display = "";
       if (name === "scan" || name === "load") enterFullscreen();
       else exitFullscreen();
+      // Re-evaluate landscape overlay on every phase change so a user who
+      // already had the phone in landscape sees the warning immediately on
+      // entering scan (not only when they actually rotate).
+      checkOrientation();
     }
 
     function showErr(msg) {
@@ -1209,10 +1236,50 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
+    var $rotate = $("#fs-rotate");
+    function checkOrientation() {
+      // Show the "rotate to portrait" overlay only during phases where the
+      // scanner UI is on-screen — perm/preview/err are vertical-flow content
+      // that survives landscape just fine.
+      var inScan = (S.phase === "load" || S.phase === "calibrating" ||
+                    S.phase === "countdown" || S.phase === "scanning" ||
+                    S.phase === "complete");
+      var landscape = window.innerWidth > window.innerHeight;
+      if ($rotate) $rotate.classList.toggle("show", inScan && landscape);
+    }
     var resizeHandler = function () {
+      checkOrientation();
       if (S.phase === "calibrating" || S.phase === "scanning" || S.phase === "countdown") resize();
     };
     window.addEventListener("resize", resizeHandler);
+    window.addEventListener("orientationchange", resizeHandler);
+
+    // ── Lifecycle: release the camera when the user backgrounds the tab ──
+    // iOS Safari otherwise keeps the camera light on (privacy + battery
+    // concern), and on resume the dead MediaStream silently never produces
+    // frames again — burning CPU in the rAF loop with no recovery. We bail
+    // out cleanly and force the user to restart the scan from the perm screen.
+    function onVisibilityChange() {
+      if (document.visibilityState === "hidden") {
+        if (S.phase === "calibrating" || S.phase === "scanning" || S.phase === "countdown" || S.phase === "load") {
+          stopCam(S);
+          if (S.idleDraw) { clearInterval(S.idleDraw); S.idleDraw = null; }
+          // Keep state recoverable: when the user returns we surface a clear
+          // "interrupted" message instead of a frozen camera preview.
+          S._interrupted = true;
+          if (!dead) showErr(t.interrupted + " — " + t.interruptedSub);
+        }
+      }
+    }
+    function onPageHide() {
+      // pagehide fires on tab close, navigation away, and bfcache freeze. Always
+      // release the camera regardless of state — leaving tracks alive would keep
+      // the iOS camera indicator on after the page is gone.
+      stopCam(S);
+      try { if ($v) $v.srcObject = null; } catch (_) {}
+    }
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("pagehide", onPageHide);
 
     show("perm"); S.phase = "perm";
 
@@ -1556,10 +1623,16 @@
       updateBadge($bdgStab, null);
       if (!S.noFaceT) {
         S.noFaceT = setTimeout(function () {
-          if ((S.phase === "calibrating" || S.phase === "scanning") && !dead) {
+          // Fire only if we're still actively waiting for a face — including
+          // mid-countdown, where MediaPipe stutter on low-end devices used to
+          // silently keep the timer running and pop a misleading "no face"
+          // error after the scan had moved on.
+          var stillWaiting = (S.phase === "calibrating" || S.phase === "countdown" || S.phase === "scanning");
+          if (stillWaiting && !dead && !S._interrupted) {
             S.logger.log({ type: "no_face", timestamp: Date.now(), durationMs: 0 });
             showErr(t.noFace);
           }
+          S.noFaceT = null;
         }, CFG.noFaceMs);
       }
       var rect = $scan.getBoundingClientRect();
@@ -1833,7 +1906,17 @@
       // Face first — unblocks the form's "next" button
       var faceItem = { binId: "face", blob: S.bins.face[0].blob };
       uploadOne(faceItem).then(function (result) {
-        if (!result) return;
+        if (dead) return;
+        if (!result) {
+          // Surface the failure so the user knows to retry instead of being
+          // silently stuck on the photo-required validation gate.
+          var photoErr = document.getElementById("photo-error");
+          if (photoErr) {
+            photoErr.classList.remove("hidden");
+            photoErr.textContent = t.uploadFail;
+          }
+          return;
+        }
         if (window.validationState) window.validationState.facePhotoUploaded = true;
         if (window.formState) window.formState.photoMethod = "scan";
         syncManualPreviews();
@@ -1850,6 +1933,11 @@
         if (S.zoomFile) bgQueue.push({ binId: "zoom", blob: S.zoomFile });
 
         function bgNext(idx) {
+          // Abort if the scanner was destroyed mid-queue. Without this the
+          // pending uploads keep mutating window.formState.photos AFTER the
+          // form has already been submitted (or the user retook + we have
+          // a stale upload from a previous session overwriting the new key).
+          if (dead) return;
           if (idx >= bgQueue.length) {
             if (onDone) onDone({ uploaded: bgQueue.length + 1 });
             return;
@@ -1886,6 +1974,9 @@
         S.bins[BIN_IDS[i]] = [];
       }
       window.removeEventListener("resize", resizeHandler);
+      window.removeEventListener("orientationchange", resizeHandler);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pagehide", onPageHide);
       S.phase = "idle";
     }
 
