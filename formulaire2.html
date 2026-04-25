@@ -252,13 +252,15 @@
                 </ul>
             </div>
 
-            <!-- ══════ FACE SCAN MODE (default) ══════ -->
+            <!-- ══════ FACE SCAN MODE (default) ══════
+                 The "Importer manuellement" CTA used to live here, outside the
+                 widget. It was hidden behind the form's fixed bottom nav on
+                 small screens, and after a successful scan it suggested adding
+                 a manual photo while actually destroying the captures. The
+                 widget's perm screen now hosts the scan/manual choice itself,
+                 and post-scan users get back to it via "Recommencer le scan". -->
             <div id="facescan-container" class="max-w-sm mx-auto animate-fade-in">
                 <div id="facescan-mount"></div>
-                <button type="button" id="switch-to-upload-btn" class="mt-4 w-full py-2.5 rounded-2xl border border-dashed border-stone-300 text-stone-400 text-xs font-bold flex items-center justify-center gap-2 hover:border-brand-primary hover:text-brand-primary transition-all uppercase tracking-wide" onclick="switchToManualUpload()">
-                    <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-                    Importer manuellement
-                </button>
             </div>
 
             <!-- ══════ MANUAL UPLOAD MODE (fallback / hidden by default) ══════ -->

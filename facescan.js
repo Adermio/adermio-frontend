@@ -50,7 +50,10 @@
     fr: {
       permTitle: "Analyse Haute Définition",
       permDesc: "7 captures automatisées sous différents angles pour une précision maximale. Aucune donnée vidéo n'est conservée.",
-      permBtn: "Démarrer le scan 3D",
+      permBtn: "Démarrer le scan",
+      permManualBtn: "Importer manuellement",
+      retakeManualLabel: "Photo",
+      retakeScanLabel: "Scan",
       denied: "Accès caméra refusé. Utilisez l'import manuel.",
       notSupported: "Navigateur incompatible. Utilisez l'import manuel.",
       noDevice: "Aucune caméra frontale détectée.",
@@ -157,7 +160,10 @@
     en: {
       permTitle: "High Definition Analysis",
       permDesc: "7 automated captures from different angles for maximum precision. No video data is stored.",
-      permBtn: "Start 3D scan",
+      permBtn: "Start scan",
+      permManualBtn: "Upload manually",
+      retakeManualLabel: "Photo",
+      retakeScanLabel: "Scan",
       denied: "Camera access denied. Use manual upload.",
       notSupported: "Browser not supported. Use manual upload.",
       noDevice: "No front camera detected.",
@@ -257,8 +263,11 @@
      CONFIG — synced with mobile app (lib/scan-engine.ts CFG)
      ═══════════════════════════════════════════════════════════ */
   var CFG = {
-    faceSizeMin: 0.33,
-    faceSizeMax: 0.58,
+    // Tighter "too far" threshold + looser "too close" cap (Antoine's call
+    // after testing on iPhone): we want users to come closer than the mobile
+    // app's defaults, with no nag when they fill more of the oval.
+    faceSizeMin: 0.40,  // was 0.33 — require closer
+    faceSizeMax: 0.70,  // was 0.58 — accept much closer
     centerMaxOff: 0.15,
 
     faceYawMax: 12,
@@ -687,13 +696,23 @@
      ═══════════════════════════════════════════════════════════ */
   function buildUI(t) {
     return '<div id="fs-root" style="position:relative;width:100%;max-width:420px;margin:0 auto;border-radius:1.25rem;overflow:hidden;background:#FAFAF9;font-family:\'DM Sans\',sans-serif;transition:all .3s ease;">'
-    + '<div id="fs-perm" style="padding:24px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
-    + '<div style="width:52px;height:52px;margin:0 auto 16px;border-radius:50%;background:#f5f5f4;border:1px solid #e7e5e4;display:flex;align-items:center;justify-content:center;">'
-    + '<svg width="22" height="22" fill="none" stroke="#0F3D39" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>'
-    + '</div>'
-    + '<button id="fs-go" style="width:100%;padding:15px;border:none;border-radius:2rem;background:#0F3D39;color:#fff;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.4px;text-transform:uppercase;transition:background .15s;">' + t.permBtn + '</button>'
-    + '<p style="font-size:11px;color:#a8a29e;margin:10px 0 0;font-weight:400;">~15 secondes</p>'
-    + '<div style="display:flex;align-items:center;gap:5px;justify-content:center;margin-top:10px;opacity:.4;">'
+    /* Pre-scan choice screen — matches the design Antoine validated:
+         primary "Démarrer le scan" pill (scan-corners icon) over a dashed
+         "Importer manuellement" pill, with the privacy line below. The two
+         CTAs live INSIDE the widget so the post-scan flow can return to this
+         choice (via "Recommencer le scan") without falling back to a
+         confusing standalone manual button outside the widget. */
+    + '<div id="fs-perm" style="padding:20px 24px 22px;text-align:center;background:#FAFAF9;color:#1f2937;">'
+    + '<button id="fs-go" style="width:100%;padding:18px 20px;border:none;border-radius:9999px;background:#0F3D39;color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px -8px rgba(15,61,57,.4);">'
+    +   '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>'
+    +   t.permBtn
+    + '</button>'
+    + '<p style="font-size:11px;color:#a8a29e;margin:10px 0 14px;font-weight:400;">~15 secondes</p>'
+    + '<button id="fs-perm-manual" type="button" style="width:100%;padding:14px 20px;border:1px dashed #d6d3d1;border-radius:9999px;background:transparent;color:#a8a29e;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;transition:border-color .15s,color .15s;">'
+    +   '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>'
+    +   t.permManualBtn
+    + '</button>'
+    + '<div style="display:flex;align-items:center;gap:5px;justify-content:center;margin-top:14px;opacity:.4;">'
     + '<svg width="11" height="11" fill="none" stroke="#44403C" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
     + '<span style="font-size:9px;color:#44403C;font-weight:500;letter-spacing:.05em;">' + t.noDataStored + '</span>'
     + '</div>'
@@ -722,8 +741,11 @@
     +   '</button>'
     + '</div>'
 
-    /* Retake banner (shown only in retake mode) */
-    + '<div id="fs-retakebadge" style="display:none;position:absolute;top:calc(60px + env(safe-area-inset-top, 0px));left:50%;transform:translateX(-50%);z-index:6;padding:6px 14px;border-radius:999px;background:rgba(20,184,166,.18);border:1px solid rgba(20,184,166,.4);color:#5eead4;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);"></div>'
+    /* Retake banner — anchored ABOVE the bottom controls (was at top, where it
+       overlapped the dot strip and the instructions during retake-scan mode).
+       Sits between the under-oval chevrons and the progress bar so it never
+       fights the position-guidance copy for screen real estate. */
+    + '<div id="fs-retakebadge" style="display:none;position:absolute;bottom:calc(72px + env(safe-area-inset-bottom, 0px));left:50%;transform:translateX(-50%);z-index:6;padding:7px 16px;border-radius:999px;background:rgba(20,184,166,.22);border:1px solid rgba(20,184,166,.5);color:#5eead4;font-size:10.5px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 16px -8px rgba(0,0,0,.4);white-space:nowrap;"></div>'
 
     /* Instructions ABOVE the oval — positioned via calc() relative to the oval
        geometry (centre 46% h, vertical radius 0.459×width). 70px gap above. */
@@ -806,17 +828,30 @@
     + '<button id="fs-re" style="width:100%;padding:11px;border:1px solid #e7e5e4;border-radius:2rem;background:transparent;color:#a8a29e;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;">' + t.restart + '</button>'
     + '</div>'
 
-    /* Retake/preview modal (full-size photo) */
+    /* Retake/preview modal — three actions in a 1+2 stack:
+         row 1: Garder (full width, keeps the current capture)
+         row 2: Scan + Photo (split, the two retake modes)
+       The dual retake choice replaces the previous single "Reprendre" button:
+       users can now either re-shoot the angle live OR upload an existing
+       photo for that bin (capture="user" hints the front camera on mobile). */
     + '<div id="fs-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.85);align-items:center;justify-content:center;flex-direction:column;padding:24px;">'
-    + '<img id="fs-modal-img" style="max-width:100%;max-height:60vh;border-radius:14px;object-fit:contain;display:block;"/>'
+    + '<img id="fs-modal-img" style="max-width:100%;max-height:54vh;border-radius:14px;object-fit:contain;display:block;"/>'
     + '<p id="fs-modal-label" style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;margin:14px 0 16px;text-align:center;"></p>'
-    + '<div style="display:flex;gap:10px;width:100%;max-width:340px;">'
-    +   '<button id="fs-modal-keep" style="flex:1;padding:12px;border-radius:999px;border:1px solid rgba(20,184,166,.45);background:rgba(20,184,166,.12);color:#5eead4;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.4px;text-transform:uppercase;">'
-    +   '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' + t.keep + '</button>'
-    +   '<button id="fs-modal-retake" style="flex:1;padding:12px;border-radius:999px;border:none;background:#0F3D39;color:#fff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.4px;text-transform:uppercase;">'
-    +   '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>' + t.retakeOne + '</button>'
+    + '<div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;">'
+    +   '<button id="fs-modal-keep" type="button" style="width:100%;padding:13px;border-radius:999px;border:1px solid rgba(20,184,166,.45);background:rgba(20,184,166,.12);color:#5eead4;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.4px;text-transform:uppercase;">'
+    +     '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' + t.keep
+    +   '</button>'
+    +   '<div style="display:flex;gap:10px;">'
+    +     '<button id="fs-modal-retake-scan" type="button" style="flex:1;padding:13px;border-radius:999px;border:none;background:#0F3D39;color:#fff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.4px;text-transform:uppercase;">'
+    +       '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>' + t.retakeScanLabel
+    +     '</button>'
+    +     '<button id="fs-modal-retake-manual" type="button" style="flex:1;padding:13px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.4px;text-transform:uppercase;">'
+    +       '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' + t.retakeManualLabel
+    +     '</button>'
+    +   '</div>'
     + '</div>'
-    + '<button id="fs-modal-close" style="margin-top:18px;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;padding:8px;">'
+    + '<input type="file" id="fs-modal-retake-input" accept="image/*" capture="user" style="display:none;"/>'
+    + '<button id="fs-modal-close" type="button" style="margin-top:18px;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;padding:8px;">'
     +   '<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
     + '</button>'
     + '</div>'
@@ -1310,6 +1345,17 @@
       beginCalibration(true);
     });
 
+    /* ── In-perm manual upload button ────────────────────────────
+       Antoine moved the manual-upload affordance into the perm screen so the
+       user has a clear "scan or manual" choice up-front. The fallback is
+       wired to switchToManualUpload (passed in via opts.onFallback). */
+    var $permManual = $("#fs-perm-manual");
+    if ($permManual) {
+      $permManual.addEventListener("click", function () {
+        if (onFall && !dead) onFall();
+      });
+    }
+
     var beginInFlight = false;
     function beginCalibration(initial) {
       // initial=true means we're entering from perm screen — load MediaPipe + camera fresh.
@@ -1359,7 +1405,10 @@
         if (ratio > 1.5 && S._origFaceSizeMin == null) {
           S._origFaceSizeMin = CFG.faceSizeMin;
           S._origFaceSizeMax = CFG.faceSizeMax;
-          CFG.faceSizeMin = 0.28; CFG.faceSizeMax = 0.62;
+          // 16:9 cameras (some Android front cameras) crop tighter, so the
+          // face appears proportionally smaller. Scale the new 4:3 thresholds
+          // down by the same ratio (0.40 → 0.34, 0.70 → 0.75 capped).
+          CFG.faceSizeMin = 0.34; CFG.faceSizeMax = 0.75;
         }
         if (!S.fm) S.fm = initFM(onRes);
         if (!S.cam) S.cam = startLoop($v, S.fm);
@@ -1800,6 +1849,27 @@
       var $modal = $("#fs-modal");
       $modal.onclick = function (e) { if (e.target === $modal) closeModal(); };
 
+      // Manual retake — file input change. Bound once per preview render.
+      var $modalRetakeInput = $("#fs-modal-retake-input");
+      if ($modalRetakeInput) {
+        $modalRetakeInput.onchange = function (e) {
+          var input = e.target;
+          var bin = input.dataset.bin;
+          var f = input.files && input.files[0];
+          if (!f || !bin) return;
+          // Defensive sanity check on file type
+          if (!(f.type || "").toLowerCase().startsWith("image/")) {
+            input.value = "";
+            var photoErr = document.getElementById("file-type-error");
+            if (photoErr) photoErr.classList.remove("hidden");
+            return;
+          }
+          closeModal();
+          manualRetake(bin, f);
+          input.value = "";
+        };
+      }
+
       // After a retake, run the upload again so the new photo lands on S3
       doUpload(wasRetake);
     }
@@ -1849,16 +1919,95 @@
       $lbl.textContent = label;
       $modal.style.display = "flex";
 
+      // Re-bind onclicks every open so they capture the right `bin` in closure
+      // without leaking listeners across opens.
       $("#fs-modal-keep").onclick = closeModal;
-      $("#fs-modal-retake").onclick = function () {
+      $("#fs-modal-retake-scan").onclick = function () {
         closeModal();
         startRetake(bin);
+      };
+      $("#fs-modal-retake-manual").onclick = function () {
+        var input = $("#fs-modal-retake-input");
+        // Clear value so picking the same file twice still fires onchange
+        input.value = "";
+        input.dataset.bin = bin;
+        input.click();
       };
     }
 
     function closeModal() {
       var $modal = $("#fs-modal");
       $modal.style.display = "none";
+    }
+
+    /* ── Manual retake — replace one bin's photo with a user-picked file ──
+       The new file goes through the same compression + S3 upload path as a
+       scan capture, but we re-render only the affected grid card to avoid
+       triggering a full doUpload (which would re-send every other bin). */
+    function manualRetake(bin, file) {
+      if (!bin || !file) return;
+      compressBlob(file).then(function (compressed) {
+        if (dead) return;
+        var blob = (compressed instanceof Blob) ? compressed : file;
+        var url = URL.createObjectURL(blob);
+
+        // Free the old blob URLs for this bin before overwriting it. The new
+        // entry gets a moderate score (0.5 → "Bon" badge) since we don't have
+        // a face-mesh score for an externally-supplied photo.
+        var oldEntries = S.bins[bin];
+        for (var i = 0; i < oldEntries.length; i++) URL.revokeObjectURL(oldEntries[i].url);
+        S.bins[bin] = [{ blob: blob, url: url, score: 0.5 }];
+        S.logger.log({ type: "capture", timestamp: Date.now(), bin: bin, score: 0.5, wasNew: true });
+
+        // Re-render just this card (and the scan-log/sub line) without
+        // triggering a full background upload sweep over the other bins.
+        rerenderPreviewGrid();
+
+        // Upload the new photo. Same retry/backoff as the scan path.
+        if (typeof window.uploadToS3Presigned === "function") {
+          var f2 = new File(
+            [blob],
+            "scan_" + bin + "_" + Date.now() + ".jpg",
+            { type: "image/jpeg" }
+          );
+          withRetry(function () {
+            return window.uploadToS3Presigned({
+              file: f2,
+              jobId: (window.formState && window.formState.jobId) || "",
+              type: bin,
+            });
+          }, "manual_retake_" + bin)
+            .then(function (result) {
+              if (dead || !result) return;
+              if (window.formState) window.formState.photos[bin] = { key: result.key, getUrl: result.getUrl };
+              if (bin === "face" && window.validationState) window.validationState.facePhotoUploaded = true;
+            })
+            .catch(function () {
+              var photoErr = document.getElementById("photo-error");
+              if (photoErr) {
+                photoErr.classList.remove("hidden");
+                photoErr.textContent = t.uploadFail;
+              }
+            });
+        }
+      });
+    }
+
+    /* Re-render only the grid + sub-text after a manual retake, keeping the
+       rest of the preview screen state intact. */
+    function rerenderPreviewGrid() {
+      var grid = $("#fs-grid");
+      if (!grid) return;
+      grid.innerHTML = "";
+      var filled = 0;
+      for (var k = 0; k < BIN_IDS.length; k++) if (S.bins[BIN_IDS[k]].length > 0) filled++;
+      var subEl = $("#fs-prev-sub");
+      if (subEl) subEl.textContent = filled + " " + (filled === 1 ? t.angleCaptured : t.anglesCaptured);
+      for (var i = 0; i < DOT_ORDER.length; i++) {
+        var bin = DOT_ORDER[i];
+        var entry = S.bins[bin][0] || null;
+        grid.appendChild(makeCard(bin, entry));
+      }
     }
 
     function startRetake(bin) {
