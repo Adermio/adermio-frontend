@@ -680,16 +680,71 @@
     + '<div style="width:36px;height:36px;margin:0 auto 20px;border:2px solid #e7e5e4;border-top-color:#0F3D39;border-radius:50%;animation:fsSpin .7s linear infinite;"></div>'
     + '<p style="font-size:13px;color:#78716c;font-weight:400;">' + t.loading + '</p>'
     + '</div>'
+    /* Scan screen — DOM-driven overlay (matches mobile step7.tsx layout):
+       canvas only paints the dim mask + oval border + progress arc.
+       Everything else (top bar, dots, instructions, arrows, countdown,
+       badges, progress bar, complete overlay) is DOM, mirroring the mobile
+       View hierarchy 1:1 in placement, animation and styling. */
     + '<div id="fs-scan" style="display:none;position:relative;background:#000;overflow:hidden;width:100%;height:100%;">'
     + '<video id="fs-v" playsinline autoplay muted style="width:100%;height:100%;display:block;object-fit:cover;transform:scaleX(-1);"></video>'
-    + '<canvas id="fs-ov" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>'
-    + '<div id="fs-fl" style="display:none;position:absolute;inset:0;background:rgba(20,184,166,.12);pointer-events:none;z-index:5;transition:opacity .2s;"></div>'
+    + '<canvas id="fs-ov" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>'
+
+    /* Top bar: cancel × + dot strip + gallery shortcut (parity with mobile cTop) */
+    + '<div id="fs-top" style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top, 0px)) 16px 0;z-index:10;">'
+    +   '<button id="fs-cancel" class="fs-cBtn" aria-label="Fermer">'
+    +     '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+    +   '</button>'
+    +   '<div id="fs-dots-strip" style="display:flex;align-items:center;gap:4px;"></div>'
+    +   '<button id="fs-gallery" class="fs-cBtn" aria-label="Importer">'
+    +     '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>'
+    +   '</button>'
+    + '</div>'
+
+    /* Retake banner (shown only in retake mode) */
     + '<div id="fs-retakebadge" style="display:none;position:absolute;top:calc(60px + env(safe-area-inset-top, 0px));left:50%;transform:translateX(-50%);z-index:6;padding:6px 14px;border-radius:999px;background:rgba(20,184,166,.18);border:1px solid rgba(20,184,166,.4);color:#5eead4;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);"></div>'
-    + '<button id="fs-cancel" style="position:absolute;top:calc(12px + env(safe-area-inset-top, 0px));right:12px;z-index:10;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,.4);color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);">&times;</button>'
-    + '<div id="fs-guide" style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px 28px;background:linear-gradient(0deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.4) 70%,transparent 100%);text-align:center;z-index:4;">'
-    + '<p id="fs-t1" style="color:#fff;font-size:17px;font-weight:600;margin:0 0 4px;font-family:\'DM Sans\',sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.5);"></p>'
-    + '<p id="fs-t2" style="color:rgba(255,255,255,.55);font-size:12px;margin:0;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);"></p>'
-    + '</div></div>'
+
+    /* Instructions ABOVE the oval — positioned via calc() relative to the oval
+       geometry (centre 46% h, vertical radius 0.459×width). 70px gap above. */
+    + '<div id="fs-instr-above" style="position:absolute;top:calc(46% - 45.9vw - 70px);left:0;right:0;text-align:center;z-index:6;pointer-events:none;padding:0 24px;">'
+    +   '<p id="fs-t1" style="color:#fff;font-size:16px;font-weight:700;margin:0 0 4px;font-family:\'DM Sans\',sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.5);line-height:1.2;"></p>'
+    +   '<p id="fs-t2" style="color:rgba(255,255,255,.6);font-size:12px;margin:0;font-weight:300;text-shadow:0 1px 4px rgba(0,0,0,.4);"></p>'
+    + '</div>'
+
+    /* Side chevron arrow — vertically centered on the oval, animated translateX */
+    + '<div id="fs-arrow-side" class="fs-arrow-side" style="display:none;">'
+    +   '<svg width="32" height="32" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>'
+    + '</div>'
+
+    /* Triple chevrons under the oval (1.0/0.5/0.2 opacity, animated) */
+    + '<div id="fs-arrow-under" class="fs-arrow-under" style="display:none;">'
+    +   '<svg width="22" height="22" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:1;"><polyline points="9 18 15 12 9 6"/></svg>'
+    +   '<svg width="22" height="22" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.5;margin-left:-8px;"><polyline points="9 18 15 12 9 6"/></svg>'
+    +   '<svg width="22" height="22" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.2;margin-left:-8px;"><polyline points="9 18 15 12 9 6"/></svg>'
+    + '</div>'
+
+    /* Countdown circle (80×80, centered on oval) */
+    + '<div id="fs-countdown" style="display:none;position:absolute;top:46%;left:50%;transform:translate(-50%, -50%);width:80px;height:80px;border-radius:50%;background:rgba(0,0,0,.6);align-items:center;justify-content:center;z-index:8;pointer-events:none;">'
+    +   '<span id="fs-cd-num" style="color:#fff;font-size:42px;font-weight:700;line-height:1;font-family:\'DM Sans\',sans-serif;"></span>'
+    + '</div>'
+
+    /* Complete overlay (1.5s freeze + checkmark before preview).
+       z-index 11 so it covers the top bar (z=10) just like the mobile
+       absoluteFillObject overlay covers cTop. */
+    + '<div id="fs-complete-overlay" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:11;pointer-events:none;flex-direction:column;align-items:center;justify-content:center;">'
+    +   '<svg width="64" height="64" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#14B8A6"/><polyline points="8 12 11 15 16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+    +   '<p style="color:#fff;font-size:18px;font-weight:700;margin:14px 0 0;font-family:\'DM Sans\',sans-serif;">' + t.scanDone + '</p>'
+    + '</div>'
+
+    /* Bottom: progress bar + Distance/Lumière/Stabilité badges */
+    + '<div id="fs-bot" style="position:absolute;bottom:calc(16px + env(safe-area-inset-bottom, 0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 24px;z-index:6;pointer-events:none;">'
+    +   '<div id="fs-pbar" style="width:100%;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;"><div id="fs-pfill" style="width:0;height:100%;background:#14B8A6;border-radius:2px;transition:width .25s;"></div></div>'
+    +   '<div id="fs-badges-row" style="display:flex;gap:6px;">'
+    +     '<div class="fs-badge" id="fs-bdg-dist"><span class="fs-bdot"></span><span class="fs-blbl">' + t.distance + '</span></div>'
+    +     '<div class="fs-badge" id="fs-bdg-light"><span class="fs-bdot"></span><span class="fs-blbl">' + t.light + '</span></div>'
+    +     '<div class="fs-badge" id="fs-bdg-stab"><span class="fs-bdot"></span><span class="fs-blbl">' + t.stability + '</span></div>'
+    +   '</div>'
+    + '</div>'
+    + '</div>'
 
     /* Preview screen */
     + '<div id="fs-prev" style="display:none;padding:24px 16px;background:#FAFAF9;color:#1f2937;">'
@@ -742,123 +797,103 @@
     + '</div>'
     + '<p id="fs-em" style="font-size:13px;color:#991b1b;margin:0;font-weight:400;line-height:1.6;"></p>'
     + '</div></div>'
-    + '<style>@keyframes fsSpin{to{transform:rotate(360deg)}}</style>';
+    + '<style>'
+    + '@keyframes fsSpin{to{transform:rotate(360deg)}}'
+    /* Top-bar circular buttons (parity with mobile cBtn 40×40) */
+    + '.fs-cBtn{width:40px;height:40px;border-radius:50%;border:none;background:rgba(0,0,0,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:0;}'
+    /* Dot strip (parity with mobile dots/dot/dotDone) */
+    + '.fs-dot{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;}'
+    + '.fs-dot.done{background:#14B8A6;}'
+    + '.fs-dot-cnt{font-size:11px;font-weight:700;color:rgba(255,255,255,.5);margin-left:6px;font-family:\'DM Sans\',sans-serif;}'
+    /* Bottom badges (parity with mobile sB / sOk / sBad) */
+    + '.fs-badge{display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:10px;background:rgba(255,255,255,.04);font-family:\'DM Sans\',sans-serif;}'
+    + '.fs-badge.ok{background:rgba(20,184,166,.15);}'
+    + '.fs-badge.bad{background:rgba(239,68,68,.10);}'
+    + '.fs-bdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.25);}'
+    + '.fs-badge.ok .fs-bdot{background:#14B8A6;}'
+    + '.fs-badge.bad .fs-bdot{background:#ef4444;}'
+    + '.fs-blbl{font-size:9px;font-weight:500;color:rgba(255,255,255,.7);}'
+    /* Side chevron arrow — vertically centred on the oval, slides on the X axis */
+    + '.fs-arrow-side{position:absolute;top:46%;z-index:7;pointer-events:none;}'
+    + '.fs-arrow-side.dir-right{right:14px;left:auto;animation:fsArrowSlideR 1.4s ease-in-out infinite;}'
+    + '.fs-arrow-side.dir-left{left:14px;right:auto;animation:fsArrowSlideL 1.4s ease-in-out infinite;}'
+    + '.fs-arrow-side.dir-left>svg{transform:scaleX(-1);}'
+    + '@keyframes fsArrowSlideR{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(12px)}}'
+    + '@keyframes fsArrowSlideL{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(-12px)}}'
+    /* Triple chevrons under the oval — same X slide animation */
+    + '.fs-arrow-under{position:absolute;top:calc(46% + 45.9vw + 16px);left:0;right:0;display:none;align-items:center;justify-content:center;z-index:7;pointer-events:none;}'
+    + '.fs-arrow-under.dir-right{display:flex;animation:fsArrowSlideUR 1.4s ease-in-out infinite;}'
+    + '.fs-arrow-under.dir-left{display:flex;animation:fsArrowSlideUL 1.4s ease-in-out infinite;}'
+    + '.fs-arrow-under.dir-left>svg{transform:scaleX(-1);}'
+    + '@keyframes fsArrowSlideUR{0%,100%{transform:translateX(0)}50%{transform:translateX(12px)}}'
+    + '@keyframes fsArrowSlideUL{0%,100%{transform:translateX(0)}50%{transform:translateX(-12px)}}'
+    /* Countdown circle visibility helper */
+    + '#fs-countdown.show{display:flex !important;}'
+    + '#fs-complete-overlay.show{display:flex !important;}'
+    + '</style>';
   }
 
   /* ═══════════════════════════════════════════════════════════
-     OVERLAY DRAWING
+     OVERLAY DRAWING — minimal, matches mobile SVG layer
+     Canvas paints only:
+       1. Dim mask outside the oval
+       2. Oval border (white dim while scanning, teal once allGood in calibration)
+       3. Progress arc (clockwise from 12 o'clock, scaled to filled/7)
+     Everything else (badges, dot strip, arrows, countdown, instructions) is
+     driven from DOM elements positioned over the canvas.
+
+     Geometry (matches mobile lib step7.tsx):
+       cy = container height × 0.46
+       rx = container width × 0.34
+       ry = container width × 0.459 (gives 1.35 aspect ratio — face-shaped,
+            independent of container height so the oval looks the same on any phone)
      ═══════════════════════════════════════════════════════════ */
   function drawOverlay(ctx, w, h, S, t) {
     ctx.clearRect(0, 0, w, h);
-    if (S.phase !== "calibrating" && S.phase !== "scanning" && S.phase !== "countdown") return;
+    if (S.phase !== "calibrating" && S.phase !== "scanning" && S.phase !== "countdown" && S.phase !== "complete") return;
 
-    var cx = w / 2, cy = h * 0.42, rx = w * 0.34, ry = h * 0.29;
+    var cx = w / 2, cy = h * 0.46;
+    var rx = w * 0.34;
+    var ry = w * 0.459;
+    // Cap ry to half the container height so the oval never overflows in landscape
+    if (ry > h * 0.48) ry = h * 0.48;
 
     // Dim outside oval
-    ctx.fillStyle = "rgba(0,0,0,.5)";
+    ctx.fillStyle = "rgba(0,0,0,.55)";
     ctx.beginPath(); ctx.rect(0, 0, w, h);
     ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2, true);
     fillEvenOdd(ctx);
 
-    // Oval border
+    // Oval border — teal when allGood during calibration, dim white otherwise.
+    // During scanning we always show the dim base ring (the progress arc carries
+    // the "active" colour, just like the mobile SVG layer).
+    var scanning = (S.phase === "scanning" || S.phase === "complete");
     var allOk = S.st.dist && S.st.light;
-    ctx.strokeStyle = allOk ? "#14B8A6" : "rgba(255,255,255,.3)";
-    ctx.lineWidth = allOk ? 2.5 : 1.5;
+    if (scanning) {
+      ctx.strokeStyle = "rgba(255,255,255,.15)";
+      ctx.lineWidth = 2;
+    } else {
+      ctx.strokeStyle = allOk ? "#14B8A6" : "rgba(255,255,255,.3)";
+      ctx.lineWidth = allOk ? 2.5 : 1.5;
+    }
     ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
 
-    // Scanning: progress arc
-    if (S.phase === "scanning" && S.scanStart) {
-      var elapsed = performance.now() - S.scanStart;
-      var p = Math.min(1, elapsed / CFG.timeoutMs);
-      ctx.strokeStyle = "rgba(20,184,166,.4)";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, rx + 6, ry + 6, 0, -Math.PI / 2, -Math.PI / 2 + p * Math.PI * 2);
-      ctx.stroke();
-    }
-
-    drawBadges(ctx, w, h, S.st, t);
-    if (S.phase === "scanning") {
-      drawBinDots(ctx, w, h, S, t);
-      if (S._guideDir) drawArrow(ctx, w, h, S._guideDir, cx, cy, rx);
-    }
-  }
-
-  function drawArrow(ctx, w, h, dir, cx, cy, rx) {
-    if (dir === "none") return;
-    var time = performance.now();
-    var pulse = Math.sin(time / 300) * 8;
-    var arrowX, tipDir;
-    if (dir === "right") { arrowX = cx + rx + 30 + pulse; tipDir = 1; }
-    else { arrowX = cx - rx - 30 - pulse; tipDir = -1; }
-    var arrowY = cy, size = 14;
-
-    ctx.save();
-    ctx.globalAlpha = 0.7 + Math.sin(time / 400) * 0.3;
-    ctx.fillStyle = "#14B8A6";
-    ctx.beginPath();
-    ctx.moveTo(arrowX + tipDir * size, arrowY);
-    ctx.lineTo(arrowX - tipDir * size * 0.5, arrowY - size * 0.7);
-    ctx.lineTo(arrowX - tipDir * size * 0.5, arrowY + size * 0.7);
-    ctx.closePath(); ctx.fill();
-
-    ctx.globalAlpha = 0.3 + Math.sin(time / 400) * 0.15;
-    var offset = tipDir * -22;
-    ctx.beginPath();
-    ctx.moveTo(arrowX + offset + tipDir * size * 0.8, arrowY);
-    ctx.lineTo(arrowX + offset - tipDir * size * 0.4, arrowY - size * 0.55);
-    ctx.lineTo(arrowX + offset - tipDir * size * 0.4, arrowY + size * 0.55);
-    ctx.closePath(); ctx.fill();
-    ctx.restore();
-  }
-
-  function drawBadges(ctx, w, h, st, t) {
-    var items = [{ k: "dist", l: t.distance }, { k: "light", l: t.light }, { k: "stab", l: t.stability }];
-    var bw = 76, bh = 26, gap = 6;
-    var tw = items.length * bw + (items.length - 1) * gap;
-    var x = (w - tw) / 2, y = h * 0.80;
-
-    for (var i = 0; i < items.length; i++) {
-      var b = items[i], v = st[b.k];
-      var bg = v === true ? "rgba(20,184,166,.12)" : v === false ? "rgba(239,68,68,.10)" : "rgba(255,255,255,.04)";
-      var fg = v === true ? "#5eead4" : v === false ? "#fca5a5" : "rgba(255,255,255,.25)";
-      ctx.fillStyle = bg;
-      ctx.beginPath(); ctx.roundRect(x, y, bw, bh, 13); ctx.fill();
-      ctx.fillStyle = fg;
-      ctx.beginPath(); ctx.arc(x + 12, y + bh / 2, 3, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = fg;
-      ctx.font = "500 9px 'DM Sans',sans-serif";
-      ctx.textAlign = "left"; ctx.textBaseline = "middle";
-      ctx.fillText(b.l, x + 20, y + bh / 2 + 0.5);
-      x += bw + gap;
-    }
-  }
-
-  function drawBinDots(ctx, w, h, S, t) {
-    var total = w * 0.85, sx = (w - total) / 2, y = h * 0.055;
-    var sp = total / (DOT_ORDER.length - 1), r = 6;
-
-    ctx.strokeStyle = "rgba(255,255,255,.06)"; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(sx, y); ctx.lineTo(sx + total, y); ctx.stroke();
-
-    for (var i = 0; i < DOT_ORDER.length; i++) {
-      var dx = sx + i * sp;
-      var has = S.bins[DOT_ORDER[i]].length > 0;
-      ctx.beginPath(); ctx.arc(dx, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = has ? "#14B8A6" : "rgba(255,255,255,.05)";
-      ctx.fill();
-      if (has) {
-        ctx.strokeStyle = "rgba(20,184,166,.5)"; ctx.lineWidth = 1; ctx.stroke();
-        ctx.fillStyle = "#fff"; ctx.font = "600 7px 'DM Sans',sans-serif";
-        ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.fillText("✓", dx, y + 0.5);
+    // Progress arc — driven by filled/7 instead of elapsed time so it visually
+    // tracks captured angles (parity with mobile progressArcLen calculation).
+    if (scanning) {
+      var filled = 0;
+      for (var i = 0; i < BIN_IDS.length; i++) if (S.bins[BIN_IDS[i]].length > 0) filled++;
+      if (filled > 0) {
+        var arcSpan = (filled / 7) * Math.PI * 2;
+        ctx.strokeStyle = "#14B8A6";
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rx, ry, 0, -Math.PI / 2, -Math.PI / 2 + arcSpan);
+        ctx.stroke();
+        ctx.lineCap = "butt";
       }
     }
-
-    var count = 0;
-    for (var j = 0; j < BIN_IDS.length; j++) { if (S.bins[BIN_IDS[j]].length > 0) count++; }
-    ctx.fillStyle = "rgba(255,255,255,.5)"; ctx.font = "600 11px 'DM Sans',sans-serif";
-    ctx.textAlign = "center"; ctx.fillText(count + "/7", w / 2, y + r + 14);
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -988,10 +1023,85 @@
     function $(sel) { return container.querySelector(sel); }
     var $perm = $("#fs-perm"), $load = $("#fs-load"), $scan = $("#fs-scan");
     var $prev = $("#fs-prev"), $err = $("#fs-err");
-    var $v = $("#fs-v"), $ov = $("#fs-ov"), $fl = $("#fs-fl");
+    var $v = $("#fs-v"), $ov = $("#fs-ov");
     var $t1 = $("#fs-t1"), $t2 = $("#fs-t2"), $em = $("#fs-em");
     var $retakeBadge = $("#fs-retakebadge");
+    var $dotsStrip = $("#fs-dots-strip");
+    var $arrowSide = $("#fs-arrow-side"), $arrowUnder = $("#fs-arrow-under");
+    var $countdown = $("#fs-countdown"), $cdNum = $("#fs-cd-num");
+    var $completeOv = $("#fs-complete-overlay");
+    var $pfill = $("#fs-pfill");
+    var $bdgDist = $("#fs-bdg-dist"), $bdgLight = $("#fs-bdg-light"), $bdgStab = $("#fs-bdg-stab");
     var ctx = $ov.getContext("2d");
+
+    // Populate the dot strip once (mobile keeps these as DOM elements with
+    // checkmark icons, indexed by bin id so we can toggle .done individually).
+    var dotEls = {};
+    for (var di = 0; di < DOT_ORDER.length; di++) {
+      var dEl = document.createElement("div");
+      dEl.className = "fs-dot";
+      dEl.setAttribute("data-bin", DOT_ORDER[di]);
+      dEl.innerHTML = '<svg width="9" height="9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="display:none;"><polyline points="20 6 9 17 4 12"/></svg>';
+      $dotsStrip.appendChild(dEl);
+      dotEls[DOT_ORDER[di]] = dEl;
+    }
+    var $dotCnt = document.createElement("span");
+    $dotCnt.className = "fs-dot-cnt";
+    $dotCnt.textContent = "0/7";
+    $dotsStrip.appendChild($dotCnt);
+
+    // ── DOM update helpers (called from onRes + finish) ──
+    function updateBadge($el, v) {
+      $el.classList.toggle("ok", v === true);
+      $el.classList.toggle("bad", v === false);
+    }
+    function updateDots() {
+      var filled = 0;
+      for (var i = 0; i < BIN_IDS.length; i++) {
+        var has = S.bins[BIN_IDS[i]].length > 0;
+        if (has) filled++;
+        var el = dotEls[BIN_IDS[i]];
+        if (el) {
+          el.classList.toggle("done", has);
+          var sv = el.querySelector("svg");
+          if (sv) sv.style.display = has ? "" : "none";
+        }
+      }
+      $dotCnt.textContent = filled + "/7";
+      $pfill.style.width = (filled / 7 * 100) + "%";
+    }
+    function setSideArrow(dir) {
+      if (!dir || dir === "none") { $arrowSide.style.display = "none"; return; }
+      $arrowSide.style.display = "block";
+      $arrowSide.classList.toggle("dir-right", dir === "right");
+      $arrowSide.classList.toggle("dir-left", dir === "left");
+    }
+    function setUnderArrows(dir) {
+      if (!dir || dir === "none") {
+        $arrowUnder.style.display = "none";
+        $arrowUnder.classList.remove("dir-right", "dir-left");
+        return;
+      }
+      // Inline style wins over class display, so we set it explicitly here
+      // (the base class only carries layout — display is JS-driven).
+      $arrowUnder.style.display = "flex";
+      $arrowUnder.classList.toggle("dir-right", dir === "right");
+      $arrowUnder.classList.toggle("dir-left", dir === "left");
+    }
+    function showCountdown(num) {
+      $cdNum.textContent = num;
+      $countdown.classList.add("show");
+    }
+    function hideCountdown() { $countdown.classList.remove("show"); }
+    function showCompleteOverlay() { $completeOv.classList.add("show"); }
+    function hideCompleteOverlay() { $completeOv.classList.remove("show"); }
+    function clearGuideUI() {
+      // Used when transitioning out of scan (preview / finish): hide all the
+      // floating overlay bits so a stale arrow doesn't linger on top of preview.
+      setSideArrow("none");
+      setUnderArrows("none");
+      hideCountdown();
+    }
 
     var $root = $("#fs-root");
     var _fsActive = false;
@@ -1082,8 +1192,21 @@
     /* ── Cancel button (during scan) ────────── */
     $("#fs-cancel").addEventListener("click", function () {
       stopCam(S); exitFullscreen(); S.phase = "idle";
+      // If face was already captured during the session, returning to preview
+      // is more useful than dropping the user back to the perm screen.
+      var hasFace = S.bins.face.length > 0;
+      if (hasFace) { showPreview(false); return; }
       if (onFall && !dead) onFall(); else show("perm");
     });
+
+    /* ── Gallery shortcut — switches to manual upload mid-scan ───── */
+    var $gallery = $("#fs-gallery");
+    if ($gallery) {
+      $gallery.addEventListener("click", function () {
+        stopCam(S); exitFullscreen(); S.phase = "idle";
+        if (onFall && !dead) onFall();
+      });
+    }
 
     /* ── Start button ──────────────────────── */
     var startClicked = false;
@@ -1238,8 +1361,21 @@
       S.st.dist = pos.distOk; S.st.light = br.ok; S.st.stab = stab <= CFG.stabMax;
       S.prev = marks; S.prevT = now;
 
+      // DOM badges + dot strip + progress bar — sync every frame so the live
+      // status visible in the bottom row matches what the calibration logic sees.
+      updateBadge($bdgDist, S.st.dist);
+      updateBadge($bdgLight, S.st.light);
+      updateBadge($bdgStab, S.st.stab);
+      updateDots();
+
       // ── CALIBRATION ──
       if (S.phase === "calibrating") {
+        // Defensive cleanup of overlays in case the user is re-entering
+        // calibration (post-retake or via state-machine reset).
+        hideCountdown();
+        if (S._guideDir && S._guideDir !== "none") {
+          setSideArrow("none"); setUnderArrows("none"); S._guideDir = "none";
+        }
         $t1.textContent = pos.msg; $t2.textContent = pos.sub;
 
         if (pos.allGood) {
@@ -1257,21 +1393,26 @@
       }
 
       // ── COUNTDOWN ──
+      // Mobile renders the countdown in an 80×80 black-circle overlay centred
+      // on the oval, with the "Préparez-vous…" copy still visible above. Web
+      // mirrors that: fs-countdown is the circle, instr-above keeps t1/t2.
       if (S.phase === "countdown") {
         var cdElapsed = now - S.countdownStart;
         var sec = Math.ceil(3 - cdElapsed / 1000);
         if (sec >= 1) {
-          $t1.textContent = sec.toString();
-          $t1.style.fontSize = "42px";
+          showCountdown(sec.toString());
+          $t1.textContent = ""; // Avoid duplicating the digit above
           $t2.textContent = t.countdownSub;
         }
         if (cdElapsed >= 3000) {
-          $t1.style.fontSize = "";
+          hideCountdown();
           S.phase = "scanning"; S.scanStart = now;
           S.logger.log({ type: "scanning_start", timestamp: Date.now() });
           var g = S.retake ? retakeGuide(S.retake, t) : adaptiveGuide(S, t);
           $t1.textContent = g.t1; $t2.textContent = g.t2;
           S._guideDir = g.dir;
+          setSideArrow(g.dir);
+          setUnderArrows(g.dir);
           if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
         }
       }
@@ -1279,32 +1420,39 @@
       // ── SCANNING ──
       if (S.phase === "scanning") {
         var scanElapsed = now - S.scanStart;
+        var nextDir = "none";
 
         // Quality-hint overrides (after multiple post-capture rejects)
         if (S.qualityHint === "lightDuringScan") {
           $t1.textContent = t.lightDuringScan; $t2.textContent = t.lightDuringScanSub;
-          S._guideDir = "none";
         } else if (S.qualityHint === "qualityLow") {
           $t1.textContent = t.qualityLow; $t2.textContent = t.qualityLowSub;
-          S._guideDir = "none";
         } else if (!pos.distOk && sz < CFG.faceSizeMin) {
-          $t1.textContent = t.moveCloser; $t2.textContent = t.moveCloserSub; S._guideDir = "none";
+          $t1.textContent = t.moveCloser; $t2.textContent = t.moveCloserSub;
         } else if (!pos.distOk && sz > CFG.faceSizeMax) {
-          $t1.textContent = t.moveBack; $t2.textContent = t.moveBackSub; S._guideDir = "none";
+          $t1.textContent = t.moveBack; $t2.textContent = t.moveBackSub;
         } else if (br.dark) {
-          $t1.textContent = t.lowLight; $t2.textContent = t.lowLightSub; S._guideDir = "none";
+          $t1.textContent = t.lowLight; $t2.textContent = t.lowLightSub;
         } else if (br.bright) {
-          $t1.textContent = t.strongLight; $t2.textContent = t.strongLightSub; S._guideDir = "none";
+          $t1.textContent = t.strongLight; $t2.textContent = t.strongLightSub;
         } else if (br.bl) {
-          $t1.textContent = t.backlight; $t2.textContent = t.backlightSub; S._guideDir = "none";
+          $t1.textContent = t.backlight; $t2.textContent = t.backlightSub;
         } else if (!pos.pitchOk) {
-          $t1.textContent = t.pitchOff; $t2.textContent = t.pitchOffSub; S._guideDir = "none";
+          $t1.textContent = t.pitchOff; $t2.textContent = t.pitchOffSub;
         } else if (!pos.rollOk) {
-          $t1.textContent = t.rollOff; $t2.textContent = t.rollOffSub; S._guideDir = "none";
+          $t1.textContent = t.rollOff; $t2.textContent = t.rollOffSub;
         } else {
           var guide = S.retake ? retakeGuide(S.retake, t) : adaptiveGuide(S, t);
           $t1.textContent = guide.t1; $t2.textContent = guide.t2;
-          S._guideDir = guide.dir;
+          nextDir = guide.dir;
+        }
+        // Drive the DOM chevrons (both side + under-oval) — they only show when
+        // the user is supposed to turn. Other guidance states hide them so the
+        // arrow doesn't conflict with a "fix your lighting" message.
+        if (S._guideDir !== nextDir) {
+          setSideArrow(nextDir);
+          setUnderArrows(nextDir);
+          S._guideDir = nextDir;
         }
 
         // Adaptive capture cadence (matches mobile step7.tsx): high-end devices
@@ -1337,6 +1485,10 @@
     function noFace() {
       $t1.textContent = t.noFace; $t2.textContent = t.noFaceSub;
       S.st = { dist: null, light: null, stab: null }; S.calibSince = null;
+      // Reset the bottom badges visually too (no face → unknown state)
+      updateBadge($bdgDist, null);
+      updateBadge($bdgLight, null);
+      updateBadge($bdgStab, null);
       if (!S.noFaceT) {
         S.noFaceT = setTimeout(function () {
           if ((S.phase === "calibrating" || S.phase === "scanning") && !dead) {
@@ -1433,22 +1585,35 @@
     }
 
     function finish() {
-      if (S.phase === "preview") return;
+      if (S.phase === "preview" || S.phase === "complete") return;
       var binsFilled = 0;
       for (var i = 0; i < BIN_IDS.length; i++) if (S.bins[BIN_IDS[i]].length > 0) binsFilled++;
       S.logger.logComplete(binsFilled);
-      S.phase = "preview";
-      stopCam(S);
-      if (navigator.vibrate) navigator.vibrate([50, 25, 50]);
-      // Persist scan log to formState so it ships with the form submission
-      try {
-        if (window.formState) window.formState.scanLog = S.logger.toJSON();
-      } catch (_) {}
       var wasRetake = !!S.retake;
-      S.retake = null;
-      S.retakeRejects = 0;
-      S.qualityHint = null;
-      showPreview(wasRetake);
+      // Mobile parity: short "Scan terminé" overlay before transitioning to
+      // preview. We freeze the camera in place (don't stopCam yet — the live
+      // last frame stays under the dark overlay) and switch phase to "complete"
+      // so onRes drops out of the scanning branch without redrawing arrows.
+      S.phase = "complete";
+      clearGuideUI();
+      $t1.textContent = ""; $t2.textContent = "";
+      showCompleteOverlay();
+      if (navigator.vibrate) navigator.vibrate([50, 25, 50]);
+
+      setTimeout(function () {
+        if (dead) return;
+        hideCompleteOverlay();
+        S.phase = "preview";
+        stopCam(S);
+        // Persist scan log to formState so it ships with the form submission
+        try {
+          if (window.formState) window.formState.scanLog = S.logger.toJSON();
+        } catch (_) {}
+        S.retake = null;
+        S.retakeRejects = 0;
+        S.qualityHint = null;
+        showPreview(wasRetake);
+      }, 1500);
     }
 
     /* ── Preview ───────────────────────────── */
