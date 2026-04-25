@@ -303,6 +303,28 @@
     return null;
   }
 
+  // getAllowedBins — port from mobile lib/scan-engine.ts.
+  // Restricts captures to the side currently being guided so a user who
+  // accidentally turns the wrong way doesn't capture an off-side photo
+  // ahead of schedule (which would then be missing from the expected
+  // capture sequence and confuse the guidance).
+  function getAllowedBins(bins) {
+    var allowed = {};
+    if (!bins.face.length) { allowed.face = true; return allowed; }
+    var leftMissing = !bins.semi_left.length || !bins.left.length || !bins.wide_left.length;
+    var rightMissing = !bins.semi_right.length || !bins.right.length || !bins.wide_right.length;
+    if (leftMissing) {
+      if (!bins.semi_left.length) allowed.semi_left = true;
+      if (!bins.left.length) allowed.left = true;
+      if (!bins.wide_left.length) allowed.wide_left = true;
+    } else if (rightMissing) {
+      if (!bins.semi_right.length) allowed.semi_right = true;
+      if (!bins.right.length) allowed.right = true;
+      if (!bins.wide_right.length) allowed.wide_right = true;
+    }
+    return allowed;
+  }
+
   /* ═══════════════════════════════════════════════════════════
      LANDMARKS & GEOMETRY
      ═══════════════════════════════════════════════════════════ */
@@ -1285,7 +1307,11 @@
           S._guideDir = guide.dir;
         }
 
-        if (now - S.lastCapt >= CFG.captureMs && !S.capturing && pos.distOk) {
+        // Adaptive capture cadence (matches mobile step7.tsx): high-end devices
+        // can sustain 150ms intervals for finer top-K selection; low/mid-end
+        // devices throttle to 300ms to avoid frame drops during analysis.
+        var captureInterval = isHighEnd ? CFG.captureMs : CFG.captureMs * 2;
+        if (now - S.lastCapt >= captureInterval && !S.capturing && pos.distOk) {
           tryCapture(marks, pose, br, bl, stab, absYaw, noseX, now);
         }
 
@@ -1327,8 +1353,17 @@
     function tryCapture(marks, pose, br, bl, stab, absYaw, noseX, now) {
       var detectedBin = classifyBin(absYaw, noseX);
       if (!detectedBin) return;
-      // In retake mode, only capture the bin we're explicitly retaking
-      if (S.retake && detectedBin !== S.retake) return;
+      if (S.retake) {
+        // Retake mode: only the explicitly retaken bin is eligible
+        if (detectedBin !== S.retake) return;
+      } else {
+        // Normal mode: only capture bins on the side we're currently guiding
+        // toward. Prevents the user from accidentally banking right-side photos
+        // while the guidance is still asking them to turn left, which would
+        // leave the sequence half-done with mismatched expectations.
+        var allowed = getAllowedBins(S.bins);
+        if (!allowed[detectedBin]) return;
+      }
       var binId = detectedBin;
 
       var preScore = computeScore(bl, stab, absYaw, BIN_IDEAL_YAW[binId]);
