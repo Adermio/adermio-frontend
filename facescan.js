@@ -62,6 +62,12 @@
       calibReady: "Parfait, ne bougez pas",
       calibReadySub: "Position idéale",
 
+      // Shown until MediaPipe's first result lands — avoids the user staring at
+      // "Positionnez votre visage" for 10s while the WASM downloads from the CDN.
+      initializingTitle: "Initialisation de l'analyse…",
+      initializingSub: "Préparation du moteur de détection",
+      initializingTimeout: "Connexion trop lente. Utilisez l'import manuel.",
+
       countdownSub: "Préparez-vous, le scan va commencer",
 
       // Position issues — checkPosition() in scan-engine.ts
@@ -149,6 +155,10 @@
       calibSub: "Place your face inside the oval",
       calibReady: "Perfect, hold still",
       calibReadySub: "Ideal position",
+
+      initializingTitle: "Initializing analysis…",
+      initializingSub: "Loading detection engine",
+      initializingTimeout: "Connection too slow. Use manual upload.",
 
       countdownSub: "Get ready, scan is about to start",
 
@@ -1121,8 +1131,29 @@
         }
 
         S.phase = "calibrating"; show("scan"); resize();
+
+        // If MediaPipe WASM hasn't been pre-warmed (or just isn't ready yet),
+        // tell the user explicitly. Otherwise jump straight into the calibration
+        // copy. The pre-warm in formulaire2.html sets this flag once initialize()
+        // resolves, so on a warm cache subsequent scans show calibration immediately.
+        var enginePreWarmed = !!window._adermioFaceMeshReady;
+        if (enginePreWarmed) {
+          $t1.textContent = t.calibTitle; $t2.textContent = t.calibSub;
+        } else {
+          $t1.textContent = t.initializingTitle; $t2.textContent = t.initializingSub;
+        }
+
+        // Track the boot moment so idleDraw can surface a clear "too slow" error
+        // if MediaPipe never returns a frame (slow CDN, captive portal, etc).
+        var bootStart = performance.now();
+        var firstFrameTimeoutMs = enginePreWarmed ? 12000 : 25000;
         S.idleDraw = setInterval(function () {
           if (S.fc > 0 || dead) { clearInterval(S.idleDraw); S.idleDraw = null; return; }
+          if (performance.now() - bootStart > firstFrameTimeoutMs) {
+            clearInterval(S.idleDraw); S.idleDraw = null;
+            if (!dead) showErr(t.initializingTimeout);
+            return;
+          }
           resize();
           var rect = $scan.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) drawOverlay(ctx, rect.width, rect.height, S, t);
@@ -1137,7 +1168,6 @@
           $retakeBadge.style.display = "none";
         }
 
-        $t1.textContent = t.calibTitle; $t2.textContent = t.calibSub;
         beginInFlight = false;
       }).catch(function (e) {
         clearTimeout(wasmTimeout);
