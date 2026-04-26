@@ -756,7 +756,7 @@
        width thanks to inline-block. z-index 11 + pointer-events:none means it
        overlays the top bar visually on small phones (iPhone SE) without
        blocking the close/gallery buttons underneath. */
-    + '<div id="fs-instr-above" style="position:absolute;top:calc(46% - 45.9vw - 78px);left:0;right:0;display:flex;justify-content:center;z-index:11;pointer-events:none;padding:0 16px;">'
+    + '<div id="fs-instr-above" style="position:absolute;top:calc(46% - 45.9vw - 65px);left:0;right:0;display:flex;justify-content:center;z-index:11;pointer-events:none;padding:0 16px;">'
     +   '<div style="display:inline-block;padding:9px 18px;border-radius:18px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(12px) saturate(1.3);-webkit-backdrop-filter:blur(12px) saturate(1.3);text-align:center;max-width:100%;box-shadow:0 4px 16px -4px rgba(0,0,0,.4);">'
     +     '<p id="fs-t1" style="color:#fff;font-size:19px;font-weight:700;margin:0 0 3px;font-family:\'DM Sans\',sans-serif;line-height:1.2;letter-spacing:-0.1px;"></p>'
     +     '<p id="fs-t2" style="color:rgba(255,255,255,.78);font-size:13px;margin:0;font-weight:400;line-height:1.35;font-family:\'DM Sans\',sans-serif;"></p>'
