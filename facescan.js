@@ -263,11 +263,13 @@
      CONFIG — synced with mobile app (lib/scan-engine.ts CFG)
      ═══════════════════════════════════════════════════════════ */
   var CFG = {
-    // Tighter "too far" threshold + looser "too close" cap (Antoine's call
-    // after testing on iPhone): we want users to come closer than the mobile
-    // app's defaults, with no nag when they fill more of the oval.
-    faceSizeMin: 0.40,  // was 0.33 — require closer
-    faceSizeMax: 0.70,  // was 0.58 — accept much closer
+    // Real-user testing showed 0.40 was too tight: typical arm-length selfies
+    // (~45 cm) gave faceSize ~0.30-0.36 and the calibration nagged "Rapprochez-
+    // vous" forever. We relax the lower bound to 0.32 so a natural selfie
+    // distance passes immediately, while keeping the upper bound generous
+    // for users who want a true close-up.
+    faceSizeMin: 0.32,  // was 0.40 — accept further-back faces (selfie distance)
+    faceSizeMax: 0.70,  // unchanged — still allow very close zoom-in
     centerMaxOff: 0.15,
 
     faceYawMax: 12,
@@ -747,11 +749,18 @@
        fights the position-guidance copy for screen real estate. */
     + '<div id="fs-retakebadge" style="display:none;position:absolute;bottom:calc(72px + env(safe-area-inset-bottom, 0px));left:50%;transform:translateX(-50%);z-index:6;padding:7px 16px;border-radius:999px;background:rgba(20,184,166,.22);border:1px solid rgba(20,184,166,.5);color:#5eead4;font-size:10.5px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 16px -8px rgba(0,0,0,.4);white-space:nowrap;"></div>'
 
-    /* Instructions ABOVE the oval — positioned via calc() relative to the oval
-       geometry (centre 46% h, vertical radius 0.459×width). 70px gap above. */
-    + '<div id="fs-instr-above" style="position:absolute;top:calc(46% - 45.9vw - 70px);left:0;right:0;text-align:center;z-index:6;pointer-events:none;padding:0 24px;">'
-    +   '<p id="fs-t1" style="color:#fff;font-size:16px;font-weight:700;margin:0 0 4px;font-family:\'DM Sans\',sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.5);line-height:1.2;"></p>'
-    +   '<p id="fs-t2" style="color:rgba(255,255,255,.6);font-size:12px;margin:0;font-weight:300;text-shadow:0 1px 4px rgba(0,0,0,.4);"></p>'
+    /* Instructions ABOVE the oval — wrapped in a backdrop-blur pill so they
+       stay legible regardless of what the camera is pointing at (white walls,
+       windows, mixed lighting). Real-user feedback: the previous floating
+       white text vanished on bright scenes. The pill auto-shrinks to content
+       width thanks to inline-block. z-index 11 + pointer-events:none means it
+       overlays the top bar visually on small phones (iPhone SE) without
+       blocking the close/gallery buttons underneath. */
+    + '<div id="fs-instr-above" style="position:absolute;top:calc(46% - 45.9vw - 78px);left:0;right:0;display:flex;justify-content:center;z-index:11;pointer-events:none;padding:0 16px;">'
+    +   '<div style="display:inline-block;padding:9px 18px;border-radius:18px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(12px) saturate(1.3);-webkit-backdrop-filter:blur(12px) saturate(1.3);text-align:center;max-width:100%;box-shadow:0 4px 16px -4px rgba(0,0,0,.4);">'
+    +     '<p id="fs-t1" style="color:#fff;font-size:19px;font-weight:700;margin:0 0 3px;font-family:\'DM Sans\',sans-serif;line-height:1.2;letter-spacing:-0.1px;"></p>'
+    +     '<p id="fs-t2" style="color:rgba(255,255,255,.78);font-size:13px;margin:0;font-weight:400;line-height:1.35;font-family:\'DM Sans\',sans-serif;"></p>'
+    +   '</div>'
     + '</div>'
 
     /* Side chevron arrow — vertically centered on the oval, animated translateX */
@@ -1429,8 +1438,8 @@
           S._origFaceSizeMax = CFG.faceSizeMax;
           // 16:9 cameras (some Android front cameras) crop tighter, so the
           // face appears proportionally smaller. Scale the new 4:3 thresholds
-          // down by the same ratio (0.40 → 0.34, 0.70 → 0.75 capped).
-          CFG.faceSizeMin = 0.34; CFG.faceSizeMax = 0.75;
+          // down by the same ratio (0.32 → 0.27, 0.70 → 0.75 capped).
+          CFG.faceSizeMin = 0.27; CFG.faceSizeMax = 0.75;
         }
         if (!S.fm) S.fm = initFM(onRes);
         if (!S.cam) S.cam = startLoop($v, S.fm);
