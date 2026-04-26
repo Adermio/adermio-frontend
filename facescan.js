@@ -1102,6 +1102,16 @@
     var t = T[lang] || T.fr;
     var onDone = opts.onComplete || null;
     var onFall = opts.onFallback || null;
+    // onReturn: invoked when the user taps "Recommencer le scan" in the
+    // preview. Lets the caller (formulaire2) take over the post-preview
+    // navigation — typically routing back to its own pre-scan choice screen.
+    // If unset, we fall back to the legacy in-widget restart() behaviour.
+    var onReturn = opts.onReturn || null;
+    // autoStart: when true, the widget never displays its own fs-perm screen.
+    // Used by formulaire2 since the scan-vs-manual choice now lives in the
+    // form itself (its own step), so the widget should jump straight into
+    // the camera load phase as soon as init() runs.
+    var autoStart = !!opts.autoStart;
     var S = mkState(), dead = false;
 
     container.innerHTML = buildUI(t);
@@ -1317,6 +1327,18 @@
     window.addEventListener("pagehide", onPageHide);
 
     show("perm"); S.phase = "perm";
+
+    // autoStart skips the fs-perm screen — the host page (formulaire2) owns
+    // the scan/manual choice, so we jump straight into camera-load. We defer
+    // by a tick so the host has time to render the container in the DOM
+    // before MediaPipe starts requesting WebGL contexts on it.
+    if (autoStart) {
+      setTimeout(function () {
+        if (dead || S.phase !== "perm") return;
+        startClicked = true;
+        beginCalibration(true);
+      }, 0);
+    }
 
     /* ── Cancel button (during scan) ────────── */
     $("#fs-cancel").addEventListener("click", function () {
@@ -1842,7 +1864,18 @@
         });
       };
 
-      $("#fs-re").onclick = function () { if (window.AdermioFaceScan) window.AdermioFaceScan.restart(); };
+      // "Recommencer le scan" — when the host wires opts.onReturn we hand the
+      // navigation back to it (so the user lands on the form's choice step,
+      // not on a stale fs-perm). Without onReturn we keep the legacy in-widget
+      // restart so existing callers don't break.
+      $("#fs-re").onclick = function () {
+        if (onReturn) {
+          if (window.AdermioFaceScan) window.AdermioFaceScan.destroy();
+          onReturn();
+          return;
+        }
+        if (window.AdermioFaceScan) window.AdermioFaceScan.restart();
+      };
 
       // Modal close button
       $("#fs-modal-close").onclick = closeModal;
