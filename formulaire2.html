@@ -360,15 +360,10 @@
                                 <ellipse cx="50" cy="86" rx="14" ry="4" fill="url(#admShadowGrad)"/>
                             </svg>
                         </div>
-                        <!-- Chevrons (outside rotor, sharp). Sit just past
-                             the head silhouette and fade in/out via JS in
-                             sync with the 3D head's actual rotation. Dark
-                             brand colour so they read against the cream
-                             page even when the wireframe is the same
-                             family of teal. -->
-                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;overflow:visible;">
-                            <path class="adm-anim-chev-r" d="M92 60 L100 68 L92 76" stroke="#0F3D39" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" style="opacity:0;"/>
-                            <path class="adm-anim-chev-l" d="M8 60 L0 68 L8 76" stroke="#0F3D39" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" style="opacity:0;"/>
+                        <!-- Chevrons (outside rotor, sharp) -->
+                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;">
+                            <path class="adm-anim-chev-r" d="M88 62 L94 68 L88 74" stroke="#14B8A6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <path class="adm-anim-chev-l" d="M12 62 L6 68 L12 74" stroke="#14B8A6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                         </svg>
                     </div>
                 </div>
@@ -2214,10 +2209,8 @@ async function submitFormData() {
         //   - brow ridge protrusion
         // We use Icosahedron (not Sphere) so the wireframe triangles are
         // roughly equilateral and uniform — way prettier than a sphere's
-        // pinched-at-poles UV grid. Detail 4 = ~1900 tris — sparse enough
-        // that the projected features stay readable on the front face,
-        // dense enough that the silhouette curve is smooth.
-        var headBase = new T.IcosahedronGeometry(1.0, 4);
+        // pinched-at-poles UV grid.
+        var headBase = new T.IcosahedronGeometry(1.0, 5); // detail 5 = ~7700 tris
         (function shape(geo) {
           var pos = geo.attributes.position;
           var v = new T.Vector3();
@@ -2299,26 +2292,19 @@ async function submitFormData() {
         head.add(solidMesh);
         head.add(wireMesh);
 
-        // ── Scan rings — two perpendicular travelling rings ────────────
-        // Vertical (Y-axis) ring travels top → bottom.
-        // Horizontal (X-axis) ring travels left → right.
-        // Two scan axes is what every credible biometric capture visual
-        // shows (FaceID dot projector, ARKit mesh sweep) — single-axis
-        // looks like a fax machine.
-        function makeScanRing() {
-          var g = new T.TorusGeometry(0.96, 0.008, 6, 96);
-          var m = new T.MeshBasicMaterial({
-            color: BRAND_TEAL, transparent: true, opacity: 0.9, depthWrite: false
-          });
-          return new T.Mesh(g, m);
-        }
-        var scanRingY = makeScanRing();
-        scanRingY.rotation.x = Math.PI / 2; // axis = Y, slice = XZ → travels in Y
-        head.add(scanRingY);
-
-        var scanRingX = makeScanRing();
-        scanRingX.rotation.z = Math.PI / 2; // axis = X, slice = YZ → travels in X
-        head.add(scanRingX);
+        // ── Scan ring — horizontal teal disc that travels top→bottom,
+        //    the visual cue that explicitly says "we are scanning". Lives
+        //    on the head group so it rotates with the face.
+        var scanRingGeo = new T.TorusGeometry(0.96, 0.008, 6, 96);
+        var scanRingMat = new T.MeshBasicMaterial({
+          color: BRAND_TEAL,
+          transparent: true,
+          opacity: 0.85,
+          depthWrite: false
+        });
+        var scanRing = new T.Mesh(scanRingGeo, scanRingMat);
+        scanRing.rotation.x = Math.PI / 2;
+        head.add(scanRing);
 
         scene.add(head);
 
@@ -2327,74 +2313,31 @@ async function submitFormData() {
         var startTime = performance.now();
         var firstFrame = false;
 
-        // Scan-ring travel: each ring runs on its own clock, offset by
-        // half a cycle so the two never traverse simultaneously — that
-        // stagger is what makes it read as "multi-axis biometric capture"
-        // rather than two rings in lockstep.
+        // Scan-ring travel cycle, decoupled from head rotation. The ring
+        // traverses head height once per cycle, with a brief invisible
+        // gap at the bottom so it doesn't feel like a continuous strobe.
         var SCAN_CYCLE_S = 2.6;
-        var H_LIMIT = 1.20; // half-extent of the head along Y (vertical) and X (horizontal)
-
-        // Hook chevrons (SVG fallback) so they sync with the actual head
-        // rotation, not the legacy 4.8s CSS clock that drifted against
-        // the JS 5.0s cycle.
-        var chevR = document.querySelector('.adm-anim-chev-r');
-        var chevL = document.querySelector('.adm-anim-chev-l');
-        if (chevR) chevR.style.animation = 'none';
-        if (chevL) chevL.style.animation = 'none';
-
-        function updateScanRing(ring, axis, t) {
-          // axis: 'y' for vertical ring (top→bottom), 'x' for horizontal (left→right)
-          var pos = H_LIMIT - 2 * H_LIMIT * t; // top → bottom OR right → left
-          if (axis === 'y') {
-            ring.position.y = pos;
-            ring.position.x = 0;
-          } else {
-            ring.position.x = pos;
-            ring.position.y = 0;
-          }
-          var profile = Math.max(0.05, Math.sqrt(Math.max(0, 1 - Math.pow(pos / H_LIMIT, 2))));
-          if (axis === 'y') ring.scale.set(profile, 1, profile);
-          else              ring.scale.set(1, profile, profile);
-          // Fade in at start, fade out at end of visible window
-          ring.material.opacity = 0.90 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
-        }
+        var SCAN_TOP_Y = 1.20, SCAN_BOTTOM_Y = -1.20;
 
         function frame() {
           if (!running) return;
           requestAnimationFrame(frame);
           var elapsed = (performance.now() - startTime) / 1000;
           var phase = (elapsed % CYCLE_S) / CYCLE_S;
-          var angle = angleAtPhase(phase);
-          head.rotation.y = angle;
+          head.rotation.y = angleAtPhase(phase);
 
-          // ── Scan rings ───────────────────────────────────────────────
-          // Vertical ring (Y-axis): cycles on its own SCAN_CYCLE_S.
-          // Horizontal ring (X-axis): same cycle, offset by 0.5 so the
-          // two scans alternate.
-          var tY = (elapsed % SCAN_CYCLE_S) / SCAN_CYCLE_S;
-          var tX = ((elapsed + SCAN_CYCLE_S * 0.5) % SCAN_CYCLE_S) / SCAN_CYCLE_S;
-          if (tY < 0.8) updateScanRing(scanRingY, 'y', tY / 0.8);
-          else scanRingY.material.opacity = 0;
-          if (tX < 0.8) updateScanRing(scanRingX, 'x', tX / 0.8);
-          else scanRingX.material.opacity = 0;
-
-          // ── Chevron sync ─────────────────────────────────────────────
-          // Drive the SVG chevron opacity directly off the head rotation
-          // so the "turn this way" gesture cue lines up perfectly with
-          // the head's actual movement. Threshold + cubic ease keeps
-          // them subtle near centre and full-bright at the extremes.
-          // Sign convention in three.js (right-hand rule, camera looking
-          // down -Z, Y up): rotation.y < 0 → face turns toward viewer's
-          // right → glow the right chevron. rotation.y > 0 → left.
-          if (chevR) {
-            var rIntensity = Math.max(0, -angle / MAX_ANGLE);
-            chevR.style.opacity = (rIntensity * rIntensity).toFixed(3);
-            chevR.style.transform = 'translateX(' + (rIntensity * 3).toFixed(2) + 'px)';
-          }
-          if (chevL) {
-            var lIntensity = Math.max(0, angle / MAX_ANGLE);
-            chevL.style.opacity = (lIntensity * lIntensity).toFixed(3);
-            chevL.style.transform = 'translateX(' + (-lIntensity * 3).toFixed(2) + 'px)';
+          var scanT = (elapsed % SCAN_CYCLE_S) / SCAN_CYCLE_S;
+          // Visible 80% of the cycle, fades out for the last 20% (return)
+          if (scanT < 0.8) {
+            var t = scanT / 0.8;
+            scanRing.position.y = SCAN_TOP_Y + (SCAN_BOTTOM_Y - SCAN_TOP_Y) * t;
+            // Scale ring radius to match the head's profile at that height
+            // (head is roughly a unit ovoid; radius narrows toward poles)
+            var profile = Math.max(0.05, Math.sqrt(Math.max(0, 1 - Math.pow(scanRing.position.y / 1.20, 2))));
+            scanRing.scale.set(profile, 1, profile);
+            scanRingMat.opacity = 0.92 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
+          } else {
+            scanRingMat.opacity = 0;
           }
 
           renderer.render(scene, camera);
