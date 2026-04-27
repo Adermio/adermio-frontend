@@ -2191,127 +2191,120 @@ async function submitFormData() {
         camera.position.set(0, 0.05, 5.2);
         camera.lookAt(0, -0.02, 0);
 
-        // V3 lighting — env handles broad ambient/reflections; dir lights
-        // do the shaping. We keep their intensities high because the env
-        // gradient is intentionally neutral (no tone mapping → linear) and
-        // the skin material is light, so cumulative brightness is fine.
-        scene.add(new T.AmbientLight(0xffffff, 0.25));
-        var key = new T.DirectionalLight(0xffffff, 1.30); key.position.set(-2.4, 3.0, 4.2); scene.add(key);
-        var fill = new T.DirectionalLight(0x14B8A6, 0.20); fill.position.set(3.2, 1.0, 1.6); scene.add(fill);
-        var rim = new T.DirectionalLight(0xfff8ec, 1.50); rim.position.set(2.2, 2.6, -3.2); scene.add(rim);
+        // V6 — FaceID-style wireframe head. The previous solid/sketched
+        // variants all read as "amateur 3D"; the only procedural style that
+        // actually communicates "premium tech / scan / medical" without a
+        // real photogrammetry asset is the iconic Apple-FaceID wireframe.
+        // Rotation, brand-teal glow, and a moving horizontal scan ring
+        // sell the gesture and the brand simultaneously.
 
-        // V5 — built from the same SVG face that the form's "Quelles zones
-        // vous préoccupent" picker uses. We keep the brand's editorial line-
-        // drawing aesthetic and give it real volume by extruding the outline
-        // with a heavy bevel (porcelain bas-relief), then redraw the sketch
-        // strokes as TubeGeometry on top. Result: a clean medical sketch
-        // sculpture, no emoji-cartoon vibes, that turns to demonstrate the
-        // scan gesture.
+        var BRAND_TEAL = 0x14B8A6;
+        var BRAND_DARK = 0x0F3D39;
 
-        // ── SVG → Three.js coord helper ─────────────────────────────────
-        // Original SVG path is centred near (150, 175), spans 70..230 in X
-        // and 50..300 in Y. We map to a 1-unit-tall head: scale 1/110, flip
-        // Y (SVG goes down, three.js goes up).
-        var SVG_CX = 150, SVG_CY = 175, SVG_S = 1 / 110;
-        function sx(x) { return (x - SVG_CX) * SVG_S; }
-        function sy(y) { return -(y - SVG_CY) * SVG_S; }
+        // ── Head geometry ───────────────────────────────────────────────
+        // Sphere with vertex displacement to suggest head proportions:
+        //   - vertical stretch (oval)
+        //   - slight back-of-head extension
+        //   - chin taper
+        //   - brow ridge protrusion
+        // We use Icosahedron (not Sphere) so the wireframe triangles are
+        // roughly equilateral and uniform — way prettier than a sphere's
+        // pinched-at-poles UV grid.
+        var headBase = new T.IcosahedronGeometry(1.0, 5); // detail 5 = ~7700 tris
+        (function shape(geo) {
+          var pos = geo.attributes.position;
+          var v = new T.Vector3();
+          for (var i = 0; i < pos.count; i++) {
+            v.fromBufferAttribute(pos, i);
+            // Vertical oval (head taller than wide)
+            v.y *= 1.20;
+            // Slightly narrower side-to-side
+            v.x *= 0.88;
+            // Back of head pokes out a bit (z < 0)
+            if (v.z < 0) v.z *= 1.10;
+            // Brow ridge: subtle outward bump on the upper front
+            if (v.z > 0.55 && v.y > 0.10 && v.y < 0.35 && Math.abs(v.x) < 0.5) {
+              var brow = (1 - Math.abs(v.x) / 0.5) * (1 - Math.abs(v.y - 0.22) / 0.13);
+              v.z += brow * 0.05;
+            }
+            // Chin taper — narrow x as we go below jaw line
+            if (v.y < -0.6) {
+              var t = Math.min(1, (-v.y - 0.6) / 0.6);
+              v.x *= (1 - t * 0.45);
+              v.z *= (1 - t * 0.20);
+            }
+            // Slight nose protrusion in the front centre
+            if (v.z > 0.6 && v.y > -0.25 && v.y < 0.15 && Math.abs(v.x) < 0.18) {
+              var nose = (1 - Math.abs(v.x) / 0.18) * (1 - Math.abs(v.y + 0.05) / 0.20);
+              v.z += nose * 0.08;
+            }
+            pos.setXYZ(i, v.x, v.y, v.z);
+          }
+          pos.needsUpdate = true;
+          geo.computeVertexNormals();
+        })(headBase);
 
-        // ── Face shape from outline path ────────────────────────────────
-        // M70,120 C70,50 150,50 150,50 C150,50 230,50 230,120
-        // C230,220 210,290 150,300 C90,290 70,220 70,120
-        var faceShape = new T.Shape();
-        faceShape.moveTo(sx(70), sy(120));
-        faceShape.bezierCurveTo(sx(70), sy(50), sx(150), sy(50), sx(150), sy(50));
-        faceShape.bezierCurveTo(sx(150), sy(50), sx(230), sy(50), sx(230), sy(120));
-        faceShape.bezierCurveTo(sx(230), sy(220), sx(210), sy(290), sx(150), sy(300));
-        faceShape.bezierCurveTo(sx(90), sy(290), sx(70), sy(220), sx(70), sy(120));
-
-        var extrudeSettings = {
-          depth: 0.45,
-          bevelEnabled: true,
-          bevelSegments: 16,
-          bevelSize: 0.22,
-          bevelThickness: 0.22,
-          curveSegments: 80
-        };
-        var faceGeo = new T.ExtrudeGeometry(faceShape, extrudeSettings);
-        // Centre on Z so the head rotates around its true centre. The
-        // extrusion spans z = -bevelThickness .. depth + bevelThickness, so
-        // its midpoint is at depth/2 — translating by -depth/2 centres it.
-        faceGeo.translate(0, 0, -(extrudeSettings.depth / 2));
-        faceGeo.computeVertexNormals();
-
-        var Physical = T.MeshPhysicalMaterial || T.MeshStandardMaterial;
-        // Warm porcelain — picks up the env gradient beautifully without
-        // reading as either "skin tone" (avoids ethnic bias) or "stone"
-        // (too cold). Soft clearcoat for the "freshly polished" sheen.
-        var faceMat = new Physical({
-          color: 0xf6efe5, roughness: 0.48, metalness: 0.0,
-          clearcoat: 0.45, clearcoatRoughness: 0.55
+        // ── Wireframe rendering ─────────────────────────────────────────
+        // WireframeGeometry creates a LineSegments-friendly geometry from
+        // the triangle edges of the input. LineBasicMaterial with linewidth
+        // is mostly ignored on WebGL (limited to 1px on most platforms),
+        // but at this canvas size 1px reads as a fine medical-tech line —
+        // exactly the FaceID look.
+        var wireGeo = new T.WireframeGeometry(headBase);
+        var wireMat = new T.LineBasicMaterial({
+          color: BRAND_TEAL,
+          transparent: true,
+          opacity: 0.88,
+          depthWrite: false
         });
-        var faceMesh = new T.Mesh(faceGeo, faceMat);
+        var wireMesh = new T.LineSegments(wireGeo, wireMat);
+
+        // Subtle solid backing — gives the wireframe a sense of volume and
+        // hides the edges on the far side that would otherwise cross-hatch
+        // through the front when rotating. Very low opacity so it never
+        // competes with the wireframe; just a hint of teal mist.
+        var solidMat = new T.MeshBasicMaterial({
+          color: BRAND_TEAL,
+          transparent: true,
+          opacity: 0.07,
+          depthWrite: false,
+          side: T.FrontSide
+        });
+        var solidMesh = new T.Mesh(headBase, solidMat);
+
+        // Slightly darker silhouette: a second pass with backside material,
+        // a touch larger, dark teal — gives the head a "halo" + ensures the
+        // wireframe pops against the page's cream background even at
+        // extreme rotations.
+        var haloGeo = headBase.clone();
+        var haloMat = new T.MeshBasicMaterial({
+          color: BRAND_DARK,
+          transparent: true,
+          opacity: 0.04,
+          side: T.BackSide,
+          depthWrite: false
+        });
+        var halo = new T.Mesh(haloGeo, haloMat);
+        halo.scale.setScalar(1.005);
 
         var head = new T.Group();
-        head.add(faceMesh);
+        head.add(halo);
+        head.add(solidMesh);
+        head.add(wireMesh);
 
-        // ── Sketched feature lines on the front face ────────────────────
-        // Same stroke colour as the SVG source (.sketch-line → #44403c).
-        // Tube radius is tuned so the lines read at the rendered 160×200
-        // canvas size without being thicker than they look in the source.
-        var sketchMat = new T.MeshStandardMaterial({
-          color: 0x44403c, roughness: 0.78, metalness: 0.0
+        // ── Scan ring — horizontal teal disc that travels top→bottom,
+        //    the visual cue that explicitly says "we are scanning". Lives
+        //    on the head group so it rotates with the face.
+        var scanRingGeo = new T.TorusGeometry(0.96, 0.008, 6, 96);
+        var scanRingMat = new T.MeshBasicMaterial({
+          color: BRAND_TEAL,
+          transparent: true,
+          opacity: 0.85,
+          depthWrite: false
         });
-
-        // Z position where features sit — slightly above the front of the
-        // beveled extrusion so they read as embossed strokes on the
-        // porcelain rather than getting buried inside it. Front of geometry
-        // (after the -depth/2 centring translate) is at depth/2 +
-        // bevelThickness; we add a tiny bias so the tubes float just above
-        // and don't z-fight.
-        var FRONT_Z = extrudeSettings.depth / 2 + extrudeSettings.bevelThickness + 0.005;
-
-        function tubeFromCurve(curve, radius, radial) {
-          var g = new T.TubeGeometry(curve, 32, radius || 0.011, radial || 8, false);
-          return new T.Mesh(g, sketchMat);
-        }
-        function quad(x0, y0, cx, cy, x1, y1, z) {
-          return new T.QuadraticBezierCurve3(
-            new T.Vector3(sx(x0), sy(y0), z),
-            new T.Vector3(sx(cx), sy(cy), z),
-            new T.Vector3(sx(x1), sy(y1), z)
-          );
-        }
-        // Eyebrows: M95,145 Q115,135 135,145 / M165,145 Q185,135 205,145
-        head.add(tubeFromCurve(quad(95, 145, 115, 135, 135, 145, FRONT_Z), 0.013));
-        head.add(tubeFromCurve(quad(165, 145, 185, 135, 205, 145, FRONT_Z), 0.013));
-
-        // Nose ridge: M150,150 Q145,190 138,200 — then nostril hint Q150,210 162,200.
-        // Two stacked quads give the proper hooked profile.
-        head.add(tubeFromCurve(quad(150, 150, 145, 190, 138, 200, FRONT_Z), 0.010));
-        head.add(tubeFromCurve(quad(138, 200, 150, 210, 162, 200, FRONT_Z), 0.010));
-
-        // Mouth: upper lip line M125,240 Q150,235 175,240, lower curve M130,245 Q150,255 170,245
-        head.add(tubeFromCurve(quad(125, 240, 150, 235, 175, 240, FRONT_Z), 0.012));
-        var lower = tubeFromCurve(quad(130, 245, 150, 255, 170, 245, FRONT_Z), 0.008);
-        lower.material = new T.MeshStandardMaterial({ color: 0x44403c, roughness: 0.78, transparent: true, opacity: 0.6 });
-        head.add(lower);
-
-        // Eyes — tiny dark spheres sitting on the surface where the SVG
-        // didn't draw them (the SVG omits eyes entirely; we keep them very
-        // subtle so the sketch aesthetic isn't broken). Anchored at the
-        // brow midpoints + a touch lower.
-        var eyeMat = new T.MeshStandardMaterial({ color: 0x1a1614, roughness: 0.42 });
-        function eyeAt(svgX, svgY) {
-          var m = new T.Mesh(new T.SphereGeometry(0.022, 16, 16), eyeMat);
-          m.position.set(sx(svgX), sy(svgY), FRONT_Z + 0.005);
-          return m;
-        }
-        head.add(eyeAt(115, 158));
-        head.add(eyeAt(185, 158));
-
-        // Lift the whole head group slightly so the chin doesn't clip
-        // against the bottom of the canvas frame.
-        head.position.y = 0.0;
+        var scanRing = new T.Mesh(scanRingGeo, scanRingMat);
+        scanRing.rotation.x = Math.PI / 2;
+        head.add(scanRing);
 
         scene.add(head);
 
@@ -2320,12 +2313,33 @@ async function submitFormData() {
         var startTime = performance.now();
         var firstFrame = false;
 
+        // Scan-ring travel cycle, decoupled from head rotation. The ring
+        // traverses head height once per cycle, with a brief invisible
+        // gap at the bottom so it doesn't feel like a continuous strobe.
+        var SCAN_CYCLE_S = 2.6;
+        var SCAN_TOP_Y = 1.20, SCAN_BOTTOM_Y = -1.20;
+
         function frame() {
           if (!running) return;
           requestAnimationFrame(frame);
           var elapsed = (performance.now() - startTime) / 1000;
           var phase = (elapsed % CYCLE_S) / CYCLE_S;
           head.rotation.y = angleAtPhase(phase);
+
+          var scanT = (elapsed % SCAN_CYCLE_S) / SCAN_CYCLE_S;
+          // Visible 80% of the cycle, fades out for the last 20% (return)
+          if (scanT < 0.8) {
+            var t = scanT / 0.8;
+            scanRing.position.y = SCAN_TOP_Y + (SCAN_BOTTOM_Y - SCAN_TOP_Y) * t;
+            // Scale ring radius to match the head's profile at that height
+            // (head is roughly a unit ovoid; radius narrows toward poles)
+            var profile = Math.max(0.05, Math.sqrt(Math.max(0, 1 - Math.pow(scanRing.position.y / 1.20, 2))));
+            scanRing.scale.set(profile, 1, profile);
+            scanRingMat.opacity = 0.92 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
+          } else {
+            scanRingMat.opacity = 0;
+          }
+
           renderer.render(scene, camera);
           if (!firstFrame) {
             firstFrame = true;
