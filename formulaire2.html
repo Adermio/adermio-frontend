@@ -2365,23 +2365,46 @@ async function submitFormData() {
           return m;
         }
 
-        // Super-thin eyebrows — barely-there structure cue above the eyes,
-        // tube radius 0.006 so they read as a hairline at small canvas
-        // size without adding any expression.
-        head.add(projectedQuad(95,  148, 115, 142, 135, 148, 0.006));
-        head.add(projectedQuad(165, 148, 185, 142, 205, 148, 0.006));
+        // Replicating the form's "Quelles zones vous préoccupent" SVG
+        // face exactly — brows, nose ridge + nostril hook, mouth top +
+        // softer mouth bottom. No eyes (the source SVG doesn't draw any).
+        // Tube radii are tuned to match the relative stroke weights of
+        // the source paths (1.0 / 0.8 / 0.5).
 
-        // Eyes — the minimum that anchors the head as a face. Two dots,
-        // no expression.
-        function eyeDot(svgX, svgY) {
-          var cx = sx(svgX), cy = sy(svgY);
-          var m = new T.Mesh(new T.SphereGeometry(0.024, 14, 14), faceMat);
-          m.position.set(cx, cy, headFrontZ(cx, cy) + 0.025);
-          m.renderOrder = 11;
+        // Brows: M95,145 Q115,135 135,145 / M165,145 Q185,135 205,145
+        head.add(projectedQuad(95,  145, 115, 135, 135, 145, 0.008));
+        head.add(projectedQuad(165, 145, 185, 135, 205, 145, 0.008));
+
+        // Nose ridge: M150,150 Q145,190 138,200 (stroke 0.8)
+        head.add(projectedQuad(150, 150, 145, 190, 138, 200, 0.007));
+        // Nostril hook: Q150,210 162,200 — same start point as ridge end
+        head.add(projectedQuad(138, 200, 150, 210, 162, 200, 0.007));
+
+        // Mouth top: M125,240 Q150,235 175,240 (stroke 1.0)
+        head.add(projectedQuad(125, 240, 150, 235, 175, 240, 0.008));
+
+        // Mouth bottom (stroke 0.5, opacity 0.6 in SVG) — built with a
+        // dedicated thinner / softer material to match the source.
+        var faceMatSoft = new T.MeshBasicMaterial({
+          color: 0x0F3D39, transparent: true, opacity: 0.55,
+          depthTest: false, depthWrite: false
+        });
+        function projectedQuadSoft(x0, y0, cx, cy, x1, y1, radius) {
+          var c2 = new T.QuadraticBezierCurve(
+            new T.Vector2(sx(x0), sy(y0)),
+            new T.Vector2(sx(cx), sy(cy)),
+            new T.Vector2(sx(x1), sy(y1))
+          );
+          var pts3 = c2.getPoints(24).map(function (p) {
+            return new T.Vector3(p.x, p.y, headFrontZ(p.x, p.y) + 0.020);
+          });
+          var curve3 = new T.CatmullRomCurve3(pts3);
+          var tube = new T.TubeGeometry(curve3, 28, radius, 6, false);
+          var m = new T.Mesh(tube, faceMatSoft);
+          m.renderOrder = 10;
           return m;
         }
-        head.add(eyeDot(115, 165));
-        head.add(eyeDot(185, 165));
+        head.add(projectedQuadSoft(130, 245, 150, 255, 170, 245, 0.005));
 
         scene.add(head);
 
