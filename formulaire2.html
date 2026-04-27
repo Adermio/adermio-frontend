@@ -2303,9 +2303,14 @@ async function submitFormData() {
         var scanRingY = makeScanRing();
         scanRingY.rotation.x = Math.PI / 2;
         head.add(scanRingY);
-        // Horizontal ring: axis = X, slice = YZ → travels right → left
+        // Horizontal ring: axis = X, slice = YZ → travels right → left.
+        // TorusGeometry's default plane is XY; rotating around Y by 90°
+        // swings it into the YZ plane so when the ring sits at X=0 it's
+        // edge-on to the camera and reads as a clean vertical line, not
+        // a full face-on circle. (rotation.z would have left the ring
+        // in XY — invariant under Z rotation — which is the bug we had.)
         var scanRingX = makeScanRing();
-        scanRingX.rotation.z = Math.PI / 2;
+        scanRingX.rotation.y = Math.PI / 2;
         head.add(scanRingX);
 
         scene.add(head);
