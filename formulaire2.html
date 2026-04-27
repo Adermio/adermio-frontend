@@ -356,10 +356,13 @@
                                 <ellipse cx="50" cy="86" rx="14" ry="4" fill="url(#admShadowGrad)"/>
                             </svg>
                         </div>
-                        <!-- Chevrons (outside rotor, sharp) -->
-                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;">
-                            <path class="adm-anim-chev-r" d="M88 62 L94 68 L88 74" stroke="#14B8A6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                            <path class="adm-anim-chev-l" d="M12 62 L6 68 L12 74" stroke="#14B8A6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <!-- Chevrons (outside rotor, sharp). overflow:visible
+                             on the SVG so they can sit past the silhouette
+                             rather than being trimmed at viewBox=100. Driven
+                             from JS based on head rotation phase. -->
+                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;overflow:visible;">
+                            <path class="adm-anim-chev-r" d="M104 60 L113 68 L104 76" stroke="#0F3D39" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" style="opacity:0;"/>
+                            <path class="adm-anim-chev-l" d="M-4 60 L-13 68 L-4 76" stroke="#0F3D39" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" style="opacity:0;"/>
                         </svg>
                     </div>
                 </div>
@@ -2307,6 +2310,78 @@ async function submitFormData() {
         var scanRingY = makeScanRing();
         scanRingY.rotation.x = Math.PI / 2;
         head.add(scanRingY);
+
+        // ── Minimal face features ─────────────────────────────────────
+        // Subtle landmark lines projected onto the wireframe head so it
+        // reads as "scanning a face" rather than "scanning a sphere".
+        // Reuses the same SVG sketch paths the form's "Quelles zones
+        // vous préoccupent" picker uses, for visual consistency across
+        // the funnel. Sized + thinned to feel premium, not cartoon.
+        var SVG_CX = 150, SVG_CY = 175, SVG_S = 1 / 110;
+        function sx(x) { return (x - SVG_CX) * SVG_S; }
+        function sy(y) { return -(y - SVG_CY) * SVG_S; }
+
+        // Inverse displacement (matches the icosahedron shaping above):
+        // given an (x, y) on the front of the head, find z on the surface.
+        function headFrontZ(x, y) {
+          var ux = x / 0.88, uy = y / 1.20;
+          var r2 = ux * ux + uy * uy;
+          if (r2 >= 0.995) return 0;
+          var z = Math.sqrt(1 - r2);
+          if (z > 0.55 && y > 0.10 && y < 0.35 && Math.abs(x) < 0.5) {
+            var brow = (1 - Math.abs(x) / 0.5) * (1 - Math.abs(y - 0.22) / 0.13);
+            z += brow * 0.05;
+          }
+          if (z > 0.6 && y > -0.25 && y < 0.15 && Math.abs(x) < 0.18) {
+            var nose = (1 - Math.abs(x) / 0.18) * (1 - Math.abs(y + 0.05) / 0.20);
+            z += nose * 0.08;
+          }
+          return z;
+        }
+
+        // Brand-dark line material — contrasts the brand-teal wireframe
+        // without being as harsh as pure white. depthTest off + render
+        // order high so the features always read on top of the mesh
+        // regardless of head rotation.
+        var faceMat = new T.MeshBasicMaterial({
+          color: 0x0F3D39, transparent: true, opacity: 0.95,
+          depthTest: false, depthWrite: false
+        });
+
+        function projectedQuad(x0, y0, cx, cy, x1, y1, radius) {
+          var c2 = new T.QuadraticBezierCurve(
+            new T.Vector2(sx(x0), sy(y0)),
+            new T.Vector2(sx(cx), sy(cy)),
+            new T.Vector2(sx(x1), sy(y1))
+          );
+          var pts2 = c2.getPoints(24);
+          var pts3 = pts2.map(function (p) {
+            return new T.Vector3(p.x, p.y, headFrontZ(p.x, p.y) + 0.020);
+          });
+          var curve3 = new T.CatmullRomCurve3(pts3);
+          var tube = new T.TubeGeometry(curve3, 28, radius || 0.012, 6, false);
+          var m = new T.Mesh(tube, faceMat);
+          m.renderOrder = 10;
+          return m;
+        }
+
+        // Eyebrows (thin, restrained)
+        head.add(projectedQuad(95,  145, 115, 137, 135, 145, 0.011));
+        head.add(projectedQuad(165, 145, 185, 137, 205, 145, 0.011));
+
+        // Mouth (slight smile, subtle)
+        head.add(projectedQuad(130, 245, 150, 252, 170, 245, 0.011));
+
+        // Eyes — small dots on the surface
+        function eyeDot(svgX, svgY) {
+          var cx = sx(svgX), cy = sy(svgY);
+          var m = new T.Mesh(new T.SphereGeometry(0.024, 14, 14), faceMat);
+          m.position.set(cx, cy, headFrontZ(cx, cy) + 0.025);
+          m.renderOrder = 11;
+          return m;
+        }
+        head.add(eyeDot(115, 165));
+        head.add(eyeDot(185, 165));
 
         scene.add(head);
 
