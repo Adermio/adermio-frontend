@@ -2375,36 +2375,30 @@ async function submitFormData() {
         head.add(projectedQuad(95,  145, 115, 135, 135, 145, 0.008));
         head.add(projectedQuad(165, 145, 185, 135, 205, 145, 0.008));
 
-        // Nose ridge: M150,150 Q145,190 138,200 (stroke 0.8)
-        head.add(projectedQuad(150, 150, 145, 190, 138, 200, 0.007));
-        // Nostril hook: Q150,210 162,200 — same start point as ridge end
-        head.add(projectedQuad(138, 200, 150, 210, 162, 200, 0.007));
-
-        // Mouth top: M125,240 Q150,235 175,240 (stroke 1.0)
-        head.add(projectedQuad(125, 240, 150, 235, 175, 240, 0.008));
-
-        // Mouth bottom (stroke 0.5, opacity 0.6 in SVG) — built with a
-        // dedicated thinner / softer material to match the source.
-        var faceMatSoft = new T.MeshBasicMaterial({
-          color: 0x0F3D39, transparent: true, opacity: 0.55,
-          depthTest: false, depthWrite: false
-        });
-        function projectedQuadSoft(x0, y0, cx, cy, x1, y1, radius) {
+        // Nose at a flat constant Z — the surface projection made the
+        // nose curve deform during head rotation as it tracked the
+        // sphere's nose bump. A flat plane attached to the head group
+        // still rotates with it but doesn't twist on the surface.
+        function flatQuad(x0, y0, cx, cy, x1, y1, radius) {
+          var z = 1.05; // just past the nominal front of the unit sphere
           var c2 = new T.QuadraticBezierCurve(
             new T.Vector2(sx(x0), sy(y0)),
             new T.Vector2(sx(cx), sy(cy)),
             new T.Vector2(sx(x1), sy(y1))
           );
           var pts3 = c2.getPoints(24).map(function (p) {
-            return new T.Vector3(p.x, p.y, headFrontZ(p.x, p.y) + 0.020);
+            return new T.Vector3(p.x, p.y, z);
           });
           var curve3 = new T.CatmullRomCurve3(pts3);
           var tube = new T.TubeGeometry(curve3, 28, radius, 6, false);
-          var m = new T.Mesh(tube, faceMatSoft);
+          var m = new T.Mesh(tube, faceMat);
           m.renderOrder = 10;
           return m;
         }
-        head.add(projectedQuadSoft(130, 245, 150, 255, 170, 245, 0.005));
+        // Nose ridge: M150,150 Q145,190 138,200 (stroke 0.8)
+        head.add(flatQuad(150, 150, 145, 190, 138, 200, 0.007));
+        // Nostril hook: Q150,210 162,200
+        head.add(flatQuad(138, 200, 150, 210, 162, 200, 0.007));
 
         scene.add(head);
 
