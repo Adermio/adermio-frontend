@@ -2365,9 +2365,14 @@ async function submitFormData() {
           return m;
         }
 
-        // Eyes only — the most neutral "face" possible. Brows + mouth
-        // add personality (intent, expression); two dots add NONE,
-        // just enough to anchor the head as a face being scanned.
+        // Super-thin eyebrows — barely-there structure cue above the eyes,
+        // tube radius 0.006 so they read as a hairline at small canvas
+        // size without adding any expression.
+        head.add(projectedQuad(95,  148, 115, 142, 135, 148, 0.006));
+        head.add(projectedQuad(165, 148, 185, 142, 205, 148, 0.006));
+
+        // Eyes — the minimum that anchors the head as a face. Two dots,
+        // no expression.
         function eyeDot(svgX, svgY) {
           var cx = sx(svgX), cy = sy(svgY);
           var m = new T.Mesh(new T.SphereGeometry(0.024, 14, 14), faceMat);
