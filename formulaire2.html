@@ -2288,31 +2288,32 @@ async function submitFormData() {
         head.add(solidMesh);
         head.add(wireMesh);
 
-        // ── Scan effects — vertical ring + horizontal beam ─────────────
-        // Vertical scan: a horizontal halo around the head (TorusGeometry
-        // in XZ plane) travelling top → bottom. Reads naturally as a
-        // scan ring around the head.
-        // Horizontal scan: instead of a second torus (which fights the
-        // perspective and ends up looking ambiguous), a clean vertical
-        // beam — a thin tall plane facing the camera — sweeping right →
-        // left. The iconic "laser scanner" visual, zero ambiguity.
-        var scanRingY = new T.Mesh(
-          new T.TorusGeometry(0.96, 0.008, 6, 96),
-          new T.MeshBasicMaterial({
-            color: BRAND_TEAL, transparent: true, opacity: 0.9, depthWrite: false
-          })
-        );
+        // ── Scan rings — two halos, the second is the first rotated 90° ──
+        // Vertical scan: a horizontal halo around the head, travels Y axis.
+        // Horizontal scan: literally the same ring, parented to a Group
+        // that's rotated 90° around Z. The inner ring's animation logic
+        // is identical (same updateScanRingY function) — its local Y
+        // movement becomes world X movement thanks to the wrapper's
+        // rotation. "Exactly the same, but rotated 90°."
+        function makeScanRing() {
+          return new T.Mesh(
+            new T.TorusGeometry(0.96, 0.008, 6, 96),
+            new T.MeshBasicMaterial({
+              color: BRAND_TEAL, transparent: true, opacity: 0.9, depthWrite: false
+            })
+          );
+        }
+
+        var scanRingY = makeScanRing();
         scanRingY.rotation.x = Math.PI / 2;
         head.add(scanRingY);
 
-        var scanBeamX = new T.Mesh(
-          new T.PlaneGeometry(0.018, 2.4),
-          new T.MeshBasicMaterial({
-            color: BRAND_TEAL, transparent: true, opacity: 0.9, depthWrite: false,
-            side: T.DoubleSide
-          })
-        );
-        head.add(scanBeamX);
+        var scanRingX = makeScanRing();
+        scanRingX.rotation.x = Math.PI / 2; // same orientation as Y
+        var scanWrapperX = new T.Group();
+        scanWrapperX.add(scanRingX);
+        scanWrapperX.rotation.z = Math.PI / 2; // pivot the whole thing 90°
+        head.add(scanWrapperX);
 
         scene.add(head);
 
@@ -2328,23 +2329,17 @@ async function submitFormData() {
         var SCAN_CYCLE_S = 2.6;
         var H_LIMIT = 1.20;
 
-        // Vertical scan ring (Y axis): horizontal halo travelling top→bottom.
-        // Radius scales to head profile sqrt(1 - (y/limit)²) so it hugs
-        // the silhouette at every height instead of clipping.
-        function updateScanRingY(ring, t) {
+        // Same update logic for both rings — each ring travels along its
+        // own local Y. For scanRingY that's world Y (top→bottom). For
+        // scanRingX, the wrapper's 90° Z rotation maps local Y to world
+        // X, so updating ring.position.y inside the wrapper makes the
+        // ring sweep right→left in world space. "Same animation, rotated."
+        function updateScanRing(ring, t) {
           var pos = H_LIMIT - 2 * H_LIMIT * t;
           ring.position.y = pos;
           var profile = Math.max(0.05, Math.sqrt(Math.max(0, 1 - Math.pow(pos / H_LIMIT, 2))));
           ring.scale.set(profile, 1, profile);
           ring.material.opacity = 0.90 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
-        }
-        // Horizontal scan beam (X axis): thin vertical bar travelling
-        // right→left. No profile scaling — the beam stays full height
-        // throughout, classic laser-scanner feel.
-        function updateScanBeamX(beam, t) {
-          var pos = H_LIMIT - 2 * H_LIMIT * t;
-          beam.position.x = pos;
-          beam.material.opacity = 0.90 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
         }
 
         // Hook chevrons (SVG fallback elements) so they sync with the
@@ -2379,10 +2374,10 @@ async function submitFormData() {
           // they cross over each other instead of running in lockstep.
           var tY = (elapsed % SCAN_CYCLE_S) / SCAN_CYCLE_S;
           var tX = ((elapsed + SCAN_CYCLE_S * 0.5) % SCAN_CYCLE_S) / SCAN_CYCLE_S;
-          if (tY < 0.8) updateScanRingY(scanRingY, tY / 0.8);
+          if (tY < 0.8) updateScanRing(scanRingY, tY / 0.8);
           else scanRingY.material.opacity = 0;
-          if (tX < 0.8) updateScanBeamX(scanBeamX, tX / 0.8);
-          else scanBeamX.material.opacity = 0;
+          if (tX < 0.8) updateScanRing(scanRingX, tX / 0.8);
+          else scanRingX.material.opacity = 0;
 
           // Chevrons appear only on the "going to side" phases
           if (chevR) {
