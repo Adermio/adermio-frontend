@@ -2308,13 +2308,6 @@ async function submitFormData() {
         scanRingY.rotation.x = Math.PI / 2;
         head.add(scanRingY);
 
-        var scanRingX = makeScanRing();
-        scanRingX.rotation.x = Math.PI / 2; // same orientation as Y
-        var scanWrapperX = new T.Group();
-        scanWrapperX.add(scanRingX);
-        scanWrapperX.rotation.z = Math.PI / 2; // pivot the whole thing 90°
-        head.add(scanWrapperX);
-
         scene.add(head);
 
         // Animation
@@ -2322,18 +2315,11 @@ async function submitFormData() {
         var startTime = performance.now();
         var firstFrame = false;
 
-        // Scan-ring travel cycle, decoupled from head rotation. Each ring
+        // Scan-ring travel cycle, decoupled from head rotation. Ring
         // takes 80% of the cycle to traverse, then a brief invisible gap.
-        // The two rings share the cycle but are offset by 50% so they
-        // cross over each other instead of running in lockstep.
         var SCAN_CYCLE_S = 2.6;
         var H_LIMIT = 1.20;
 
-        // Same update logic for both rings — each ring travels along its
-        // own local Y. For scanRingY that's world Y (top→bottom). For
-        // scanRingX, the wrapper's 90° Z rotation maps local Y to world
-        // X, so updating ring.position.y inside the wrapper makes the
-        // ring sweep right→left in world space. "Same animation, rotated."
         function updateScanRing(ring, t) {
           var pos = H_LIMIT - 2 * H_LIMIT * t;
           ring.position.y = pos;
@@ -2370,14 +2356,9 @@ async function submitFormData() {
           var phase = (elapsed % CYCLE_S) / CYCLE_S;
           head.rotation.y = angleAtPhase(phase);
 
-          // Vertical ring + horizontal beam, offset by half a cycle so
-          // they cross over each other instead of running in lockstep.
           var tY = (elapsed % SCAN_CYCLE_S) / SCAN_CYCLE_S;
-          var tX = ((elapsed + SCAN_CYCLE_S * 0.5) % SCAN_CYCLE_S) / SCAN_CYCLE_S;
           if (tY < 0.8) updateScanRing(scanRingY, tY / 0.8);
           else scanRingY.material.opacity = 0;
-          if (tX < 0.8) updateScanRing(scanRingX, tX / 0.8);
-          else scanRingX.material.opacity = 0;
 
           // Chevrons appear only on the "going to side" phases
           if (chevR) {
