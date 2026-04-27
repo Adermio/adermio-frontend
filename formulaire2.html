@@ -2200,80 +2200,118 @@ async function submitFormData() {
         var fill = new T.DirectionalLight(0x14B8A6, 0.20); fill.position.set(3.2, 1.0, 1.6); scene.add(fill);
         var rim = new T.DirectionalLight(0xfff8ec, 1.50); rim.position.set(2.2, 2.6, -3.2); scene.add(rim);
 
-        // V3 materials — MeshPhysicalMaterial with clearcoat. Clearcoat is
-        // a thin shiny lacquer on top of the base material — it's how
-        // Apple's 3D health/AR models get that subtle "freshly polished"
-        // sheen on skin and porcelain alike. Fallback to MeshStandard if
-        // the user's three.js build doesn't expose Physical (it does on
-        // r160 — guard kept defensive).
+        // V5 — built from the same SVG face that the form's "Quelles zones
+        // vous préoccupent" picker uses. We keep the brand's editorial line-
+        // drawing aesthetic and give it real volume by extruding the outline
+        // with a heavy bevel (porcelain bas-relief), then redraw the sketch
+        // strokes as TubeGeometry on top. Result: a clean medical sketch
+        // sculpture, no emoji-cartoon vibes, that turns to demonstrate the
+        // scan gesture.
+
+        // ── SVG → Three.js coord helper ─────────────────────────────────
+        // Original SVG path is centred near (150, 175), spans 70..230 in X
+        // and 50..300 in Y. We map to a 1-unit-tall head: scale 1/110, flip
+        // Y (SVG goes down, three.js goes up).
+        var SVG_CX = 150, SVG_CY = 175, SVG_S = 1 / 110;
+        function sx(x) { return (x - SVG_CX) * SVG_S; }
+        function sy(y) { return -(y - SVG_CY) * SVG_S; }
+
+        // ── Face shape from outline path ────────────────────────────────
+        // M70,120 C70,50 150,50 150,50 C150,50 230,50 230,120
+        // C230,220 210,290 150,300 C90,290 70,220 70,120
+        var faceShape = new T.Shape();
+        faceShape.moveTo(sx(70), sy(120));
+        faceShape.bezierCurveTo(sx(70), sy(50), sx(150), sy(50), sx(150), sy(50));
+        faceShape.bezierCurveTo(sx(150), sy(50), sx(230), sy(50), sx(230), sy(120));
+        faceShape.bezierCurveTo(sx(230), sy(220), sx(210), sy(290), sx(150), sy(300));
+        faceShape.bezierCurveTo(sx(90), sy(290), sx(70), sy(220), sx(70), sy(120));
+
+        var extrudeSettings = {
+          depth: 0.45,
+          bevelEnabled: true,
+          bevelSegments: 16,
+          bevelSize: 0.22,
+          bevelThickness: 0.22,
+          curveSegments: 80
+        };
+        var faceGeo = new T.ExtrudeGeometry(faceShape, extrudeSettings);
+        // Centre on Z so the head rotates around its true centre. The
+        // extrusion spans z = -bevelThickness .. depth + bevelThickness, so
+        // its midpoint is at depth/2 — translating by -depth/2 centres it.
+        faceGeo.translate(0, 0, -(extrudeSettings.depth / 2));
+        faceGeo.computeVertexNormals();
+
         var Physical = T.MeshPhysicalMaterial || T.MeshStandardMaterial;
-        var skinMat = new Physical({
-          color: 0xf2dac4, roughness: 0.55, metalness: 0.0,
-          clearcoat: 0.35, clearcoatRoughness: 0.55
+        // Warm porcelain — picks up the env gradient beautifully without
+        // reading as either "skin tone" (avoids ethnic bias) or "stone"
+        // (too cold). Soft clearcoat for the "freshly polished" sheen.
+        var faceMat = new Physical({
+          color: 0xf6efe5, roughness: 0.48, metalness: 0.0,
+          clearcoat: 0.45, clearcoatRoughness: 0.55
         });
-        var hairMat = new T.MeshStandardMaterial({ color: 0x2e2a26, roughness: 0.7, metalness: 0.05 });
-        var scleraMat = new T.MeshStandardMaterial({ color: 0xfafaf9, roughness: 0.35 });
-        var irisMat   = new T.MeshStandardMaterial({ color: 0x4a3a30, roughness: 0.45 });
-        var browMat   = new T.MeshStandardMaterial({ color: 0x2a2520, roughness: 0.7 });
-        var lipMat    = new Physical({
-          color: 0xc88575, roughness: 0.45, metalness: 0.0,
-          clearcoat: 0.55, clearcoatRoughness: 0.4
-        });
+        var faceMesh = new T.Mesh(faceGeo, faceMat);
 
         var head = new T.Group();
+        head.add(faceMesh);
 
-        // Main head — slightly elongated sphere for the face oval feel
-        var headMesh = new T.Mesh(new T.SphereGeometry(1.0, 64, 64), skinMat);
-        headMesh.scale.set(0.94, 1.18, 0.96);
-        head.add(headMesh);
+        // ── Sketched feature lines on the front face ────────────────────
+        // Same stroke colour as the SVG source (.sketch-line → #44403c).
+        // Tube radius is tuned so the lines read at the rendered 160×200
+        // canvas size without being thicker than they look in the source.
+        var sketchMat = new T.MeshStandardMaterial({
+          color: 0x44403c, roughness: 0.78, metalness: 0.0
+        });
 
-        // Hair cap — top hemisphere only, slightly smaller arc than V1 so it
-        // reads as "hair on top" rather than "hooded silhouette".
-        var hairGeo = new T.SphereGeometry(1.02, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.32);
-        var hair = new T.Mesh(hairGeo, hairMat);
-        hair.scale.set(0.94, 1.18, 0.96);
-        hair.position.y = 0.08;
-        head.add(hair);
+        // Z position where features sit — slightly above the front of the
+        // beveled extrusion so they read as embossed strokes on the
+        // porcelain rather than getting buried inside it. Front of geometry
+        // (after the -depth/2 centring translate) is at depth/2 +
+        // bevelThickness; we add a tiny bias so the tubes float just above
+        // and don't z-fight.
+        var FRONT_Z = extrudeSettings.depth / 2 + extrudeSettings.bevelThickness + 0.005;
 
-        // Nose — cone protruding forward, smaller for refinement
-        var nose = new T.Mesh(new T.ConeGeometry(0.10, 0.28, 24), skinMat);
-        nose.position.set(0, -0.04, 0.96);
-        nose.rotation.x = Math.PI / 2;
-        head.add(nose);
-
-        // V4 face features — minimal, abstract, "scanning bust" aesthetic.
-        // The cartoon smile + big eyes pulled the head into "emoji" territory.
-        // Apple Medical / health-app 3D models use very restrained features:
-        // just enough to read as a face, not enough to anthropomorphise.
-        // We keep eyes (small, dark, no sclera/iris split) + thin brows.
-        // No mouth — its absence reads more "premium scanning preview" than
-        // any explicit lip shape ever could.
-        function makeEye(x) {
-          var e = new T.Mesh(new T.SphereGeometry(0.045, 20, 20),
-                             new T.MeshStandardMaterial({ color: 0x1a1614, roughness: 0.45 }));
-          e.position.set(x, 0.13, 0.90);
-          e.scale.set(1, 0.85, 0.6); // flatten into eye-shape rather than ball
-          return e;
+        function tubeFromCurve(curve, radius, radial) {
+          var g = new T.TubeGeometry(curve, 32, radius || 0.011, radial || 8, false);
+          return new T.Mesh(g, sketchMat);
         }
-        head.add(makeEye(-0.22));
-        head.add(makeEye(0.22));
-
-        // Thin, restrained brows — communicates orientation during rotation.
-        function makeBrow(x) {
-          var b = new T.Mesh(new T.TorusGeometry(0.095, 0.012, 8, 14, Math.PI * 0.50), browMat);
-          b.position.set(x, 0.25, 0.91);
-          b.rotation.set(0, 0, Math.PI);
-          return b;
+        function quad(x0, y0, cx, cy, x1, y1, z) {
+          return new T.QuadraticBezierCurve3(
+            new T.Vector3(sx(x0), sy(y0), z),
+            new T.Vector3(sx(cx), sy(cy), z),
+            new T.Vector3(sx(x1), sy(y1), z)
+          );
         }
-        head.add(makeBrow(-0.22));
-        head.add(makeBrow(0.22));
+        // Eyebrows: M95,145 Q115,135 135,145 / M165,145 Q185,135 205,145
+        head.add(tubeFromCurve(quad(95, 145, 115, 135, 135, 145, FRONT_Z), 0.013));
+        head.add(tubeFromCurve(quad(165, 145, 185, 135, 205, 145, FRONT_Z), 0.013));
 
-        // Subtle mouth — a tiny flat horizontal line, NOT a smile arc. Just
-        // enough to anchor the lower face when the head is centred. Disappears
-        // visually under most rotations, which is exactly what we want.
-        var mouth = new T.Mesh(new T.BoxGeometry(0.12, 0.012, 0.012), lipMat);
-        mouth.position.set(0, -0.32, 0.92);
-        head.add(mouth);
+        // Nose ridge: M150,150 Q145,190 138,200 — then nostril hint Q150,210 162,200.
+        // Two stacked quads give the proper hooked profile.
+        head.add(tubeFromCurve(quad(150, 150, 145, 190, 138, 200, FRONT_Z), 0.010));
+        head.add(tubeFromCurve(quad(138, 200, 150, 210, 162, 200, FRONT_Z), 0.010));
+
+        // Mouth: upper lip line M125,240 Q150,235 175,240, lower curve M130,245 Q150,255 170,245
+        head.add(tubeFromCurve(quad(125, 240, 150, 235, 175, 240, FRONT_Z), 0.012));
+        var lower = tubeFromCurve(quad(130, 245, 150, 255, 170, 245, FRONT_Z), 0.008);
+        lower.material = new T.MeshStandardMaterial({ color: 0x44403c, roughness: 0.78, transparent: true, opacity: 0.6 });
+        head.add(lower);
+
+        // Eyes — tiny dark spheres sitting on the surface where the SVG
+        // didn't draw them (the SVG omits eyes entirely; we keep them very
+        // subtle so the sketch aesthetic isn't broken). Anchored at the
+        // brow midpoints + a touch lower.
+        var eyeMat = new T.MeshStandardMaterial({ color: 0x1a1614, roughness: 0.42 });
+        function eyeAt(svgX, svgY) {
+          var m = new T.Mesh(new T.SphereGeometry(0.022, 16, 16), eyeMat);
+          m.position.set(sx(svgX), sy(svgY), FRONT_Z + 0.005);
+          return m;
+        }
+        head.add(eyeAt(115, 158));
+        head.add(eyeAt(185, 158));
+
+        // Lift the whole head group slightly so the chin doesn't clip
+        // against the bottom of the canvas frame.
+        head.position.y = 0.0;
 
         scene.add(head);
 
