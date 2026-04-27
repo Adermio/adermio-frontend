@@ -2209,8 +2209,10 @@ async function submitFormData() {
         //   - brow ridge protrusion
         // We use Icosahedron (not Sphere) so the wireframe triangles are
         // roughly equilateral and uniform — way prettier than a sphere's
-        // pinched-at-poles UV grid.
-        var headBase = new T.IcosahedronGeometry(1.0, 5); // detail 5 = ~7700 tris
+        // pinched-at-poles UV grid. Detail 4 = ~1900 tris — sparse enough
+        // that the projected features stay readable on the front face,
+        // dense enough that the silhouette curve is smooth.
+        var headBase = new T.IcosahedronGeometry(1.0, 4);
         (function shape(geo) {
           var pos = geo.attributes.position;
           var v = new T.Vector3();
@@ -2291,6 +2293,117 @@ async function submitFormData() {
         head.add(halo);
         head.add(solidMesh);
         head.add(wireMesh);
+
+        // ── Facial-feature landmarks ───────────────────────────────────
+        // Brings the face back without breaking the wireframe aesthetic.
+        // We reuse the same SVG sketch paths the form's "Quelles zones
+        // vous préoccupent" picker uses (eyebrows, nose, mouth) and
+        // project each point onto the actual 3D head surface so the
+        // landmarks hug the volume during rotation rather than floating
+        // in a 2D plane in front of it. Brighter teal than the wireframe
+        // so they read as "AI-detected facial landmarks", FaceID-style.
+
+        // SVG → three.js coord mapping (same scheme as V5)
+        var SVG_CX = 150, SVG_CY = 175, SVG_S = 1 / 110;
+        function sx(x) { return (x - SVG_CX) * SVG_S; }
+        function sy(y) { return -(y - SVG_CY) * SVG_S; }
+
+        // Inverse of the head displacement: given an (x, y) on the front
+        // of the head, return z. We unscale to sphere space, project to
+        // the unit sphere, then re-apply the nose bump where applicable.
+        function headFrontZ(x, y) {
+          var ux = x / 0.88, uy = y / 1.20;
+          var r2 = ux * ux + uy * uy;
+          if (r2 >= 0.995) return 0; // outside silhouette → drop to z=0 (won't be drawn)
+          var z = Math.sqrt(1 - r2);
+          // Brow ridge bump (matches the displacement above)
+          if (z > 0.55 && y > 0.10 && y < 0.35 && Math.abs(x) < 0.5) {
+            var brow = (1 - Math.abs(x) / 0.5) * (1 - Math.abs(y - 0.22) / 0.13);
+            z += brow * 0.05;
+          }
+          // Nose protrusion
+          if (z > 0.6 && y > -0.25 && y < 0.15 && Math.abs(x) < 0.18) {
+            var nose = (1 - Math.abs(x) / 0.18) * (1 - Math.abs(y + 0.05) / 0.20);
+            z += nose * 0.08;
+          }
+          return z;
+        }
+
+        // TubeGeometry for the features so they have actual visible
+        // thickness — Line/LineSegments are stuck at 1px on most WebGL
+        // drivers and disappear into the wireframe at this canvas size.
+        // Pure white + depthTest off so they always render above the
+        // teal wireframe with maximum contrast — like AI landmark
+        // detection markers overlaid on a scan.
+        var featureMat = new T.MeshBasicMaterial({
+          color: 0xffffff, transparent: true, opacity: 1.0,
+          depthTest: false, depthWrite: false
+        });
+
+        function projectedQuad(x0, y0, cx, cy, x1, y1, radius) {
+          var c2 = new T.QuadraticBezierCurve(
+            new T.Vector2(sx(x0), sy(y0)),
+            new T.Vector2(sx(cx), sy(cy)),
+            new T.Vector2(sx(x1), sy(y1))
+          );
+          var pts2 = c2.getPoints(28);
+          var pts3 = pts2.map(function (p) {
+            return new T.Vector3(p.x, p.y, headFrontZ(p.x, p.y) + 0.020);
+          });
+          // CatmullRom curve through the projected points → smooth tube
+          var curve3 = new T.CatmullRomCurve3(pts3);
+          var tubeGeo = new T.TubeGeometry(curve3, 32, radius || 0.020, 8, false);
+          var mesh = new T.Mesh(tubeGeo, featureMat);
+          mesh.renderOrder = 10; // draw on top of wireframe
+          return mesh;
+        }
+
+        // Eyebrows: M95,145 Q115,135 135,145 / M165,145 Q185,135 205,145
+        head.add(projectedQuad(95, 145, 115, 135, 135, 145));
+        head.add(projectedQuad(165, 145, 185, 135, 205, 145));
+
+        // Nose ridge + nostril hook: M150,150 Q145,190 138,200 / Q150,210 162,200
+        head.add(projectedQuad(150, 150, 145, 190, 138, 200));
+        head.add(projectedQuad(138, 200, 150, 210, 162, 200));
+
+        // Mouth: upper line M125,240 Q150,235 175,240, lower curve M130,245 Q150,255 170,245
+        head.add(projectedQuad(125, 240, 150, 235, 175, 240));
+        head.add(projectedQuad(130, 245, 150, 255, 170, 245));
+
+        // Eye landmarks — small oval rings projected onto the surface,
+        // like the anchor dots Apple's Face-ID setup animation traces
+        // around detected facial features. Built as torus rings since
+        // they need visible thickness too.
+        function eyeRing(svgX, svgY) {
+          var cx = sx(svgX), cy = sy(svgY);
+          // Build the ring as a curve in 3D, projected on the head
+          var pts = [];
+          var R = 0.055;
+          for (var k = 0; k <= 32; k++) {
+            var a = (k / 32) * Math.PI * 2;
+            var px = cx + Math.cos(a) * R;
+            var py = cy + Math.sin(a) * R * 0.7;
+            pts.push(new T.Vector3(px, py, headFrontZ(px, py) + 0.020));
+          }
+          var curve3 = new T.CatmullRomCurve3(pts, true);
+          var tubeGeo = new T.TubeGeometry(curve3, 64, 0.014, 6, true);
+          var m = new T.Mesh(tubeGeo, featureMat);
+          m.renderOrder = 10;
+          return m;
+        }
+        head.add(eyeRing(115, 158));
+        head.add(eyeRing(185, 158));
+
+        // Tiny pupil dots inside each ring — bright filled spheres on top.
+        function pupil(svgX, svgY) {
+          var cx = sx(svgX), cy = sy(svgY);
+          var m = new T.Mesh(new T.SphereGeometry(0.020, 12, 12), featureMat);
+          m.position.set(cx, cy, headFrontZ(cx, cy) + 0.030);
+          m.renderOrder = 11;
+          return m;
+        }
+        head.add(pupil(115, 158));
+        head.add(pupil(185, 158));
 
         // ── Scan ring — horizontal teal disc that travels top→bottom,
         //    the visual cue that explicitly says "we are scanning". Lives
