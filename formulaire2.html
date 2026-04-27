@@ -2299,69 +2299,6 @@ async function submitFormData() {
         head.add(solidMesh);
         head.add(wireMesh);
 
-        // ── Minimalist TrueDepth-style anchor dots ─────────────────────
-        // No drawn face — V6.1's eyebrows/nose/mouth lines made it look
-        // like a diagram. Apple's actual FaceID feedback is just a few
-        // tracking points lighting up at detected anatomical landmarks.
-        // 5 dots is the sweet spot: enough to communicate "we're tracking
-        // a face", few enough to stay minimalist and pro.
-        // Positions match canonical landmarks of MediaPipe / ARKit's
-        // facial-tracking outputs.
-
-        var SVG_CX = 150, SVG_CY = 175, SVG_S = 1 / 110;
-        function sx(x) { return (x - SVG_CX) * SVG_S; }
-        function sy(y) { return -(y - SVG_CY) * SVG_S; }
-
-        // Inverse displacement: project an (x, y) on the front of the
-        // sculpted head onto the actual surface so the dot sits properly
-        // on the volume rather than floating in front of it.
-        function headFrontZ(x, y) {
-          var ux = x / 0.88, uy = y / 1.20;
-          var r2 = ux * ux + uy * uy;
-          if (r2 >= 0.995) return 0;
-          var z = Math.sqrt(1 - r2);
-          if (z > 0.55 && y > 0.10 && y < 0.35 && Math.abs(x) < 0.5) {
-            var brow = (1 - Math.abs(x) / 0.5) * (1 - Math.abs(y - 0.22) / 0.13);
-            z += brow * 0.05;
-          }
-          if (z > 0.6 && y > -0.25 && y < 0.15 && Math.abs(x) < 0.18) {
-            var nose = (1 - Math.abs(x) / 0.18) * (1 - Math.abs(y + 0.05) / 0.20);
-            z += nose * 0.08;
-          }
-          return z;
-        }
-
-        // Anchor dot — small bright sphere with a soft halo behind it.
-        // depthTest off + renderOrder high so dots always read on top
-        // regardless of rotation, matching how AR/scan UIs overlay
-        // tracking markers.
-        var dotMat = new T.MeshBasicMaterial({
-          color: 0xffffff, transparent: true, opacity: 1.0,
-          depthTest: false, depthWrite: false
-        });
-        var dotHaloMat = new T.MeshBasicMaterial({
-          color: 0xffffff, transparent: true, opacity: 0.22,
-          depthTest: false, depthWrite: false
-        });
-        function anchorDot(svgX, svgY) {
-          var cx = sx(svgX), cy = sy(svgY);
-          var z = headFrontZ(cx, cy) + 0.030;
-          var g = new T.Group();
-          var dot = new T.Mesh(new T.SphereGeometry(0.022, 12, 12), dotMat);
-          dot.position.set(cx, cy, z);
-          dot.renderOrder = 11;
-          var halo = new T.Mesh(new T.SphereGeometry(0.045, 16, 16), dotHaloMat);
-          halo.position.copy(dot.position);
-          halo.renderOrder = 10;
-          g.add(halo); g.add(dot);
-          return g;
-        }
-        head.add(anchorDot(115, 158)); // left eye
-        head.add(anchorDot(185, 158)); // right eye
-        head.add(anchorDot(150, 200)); // nose tip
-        head.add(anchorDot(125, 240)); // mouth corner left
-        head.add(anchorDot(175, 240)); // mouth corner right
-
         // ── Scan rings — two perpendicular travelling rings ────────────
         // Vertical (Y-axis) ring travels top → bottom.
         // Horizontal (X-axis) ring travels left → right.
