@@ -2365,14 +2365,9 @@ async function submitFormData() {
           return m;
         }
 
-        // Eyebrows (thin, restrained)
-        head.add(projectedQuad(95,  145, 115, 137, 135, 145, 0.011));
-        head.add(projectedQuad(165, 145, 185, 137, 205, 145, 0.011));
-
-        // Mouth (slight smile, subtle)
-        head.add(projectedQuad(130, 245, 150, 252, 170, 245, 0.011));
-
-        // Eyes — small dots on the surface
+        // Eyes only — the most neutral "face" possible. Brows + mouth
+        // add personality (intent, expression); two dots add NONE,
+        // just enough to anchor the head as a face being scanned.
         function eyeDot(svgX, svgY) {
           var cx = sx(svgX), cy = sy(svgY);
           var m = new T.Mesh(new T.SphereGeometry(0.024, 14, 14), faceMat);
@@ -2418,10 +2413,13 @@ async function submitFormData() {
         // is moving to / holding at the negative-angle side (visually
         // right), 60-94% the positive-angle side (visually left). The
         // return phases (40-54%, 94-100%) leave both chevrons hidden.
+        // Max opacity capped under 1 so the chevrons read as gentle
+        // suggestions rather than hard "do this!" prompts — premium feel.
+        var CHEV_MAX = 0.55;
         function chevWindow(phase, lo, hi) {
           if (phase <= lo || phase >= hi) return 0;
           var t = (phase - lo) / (hi - lo);
-          return Math.min(1, t / 0.25); // fade in over the first quarter, full bright after
+          return CHEV_MAX * Math.min(1, t / 0.25);
         }
 
         function frame() {
