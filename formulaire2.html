@@ -2360,14 +2360,17 @@ async function submitFormData() {
           if (tY < 0.8) updateScanRing(scanRingY, tY / 0.8);
           else scanRingY.material.opacity = 0;
 
-          // Chevrons appear only on the "going to side" phases
+          // Chevrons appear only on the "going to side" phases.
+          // Sign convention: rotation.y > 0 (phase 60-94%) turns the face
+          // visually toward the viewer's right → glow the right chevron.
+          // rotation.y < 0 (phase 04-40%) → left chevron.
           if (chevR) {
-            var rO = chevWindow(phase, 0.04, 0.40);
+            var rO = chevWindow(phase, 0.60, 0.94);
             chevR.style.opacity = rO.toFixed(3);
             chevR.style.transform = 'translateX(' + (rO * 3).toFixed(2) + 'px)';
           }
           if (chevL) {
-            var lO = chevWindow(phase, 0.60, 0.94);
+            var lO = chevWindow(phase, 0.04, 0.40);
             chevL.style.opacity = lO.toFixed(3);
             chevL.style.transform = 'translateX(' + (-lO * 3).toFixed(2) + 'px)';
           }
