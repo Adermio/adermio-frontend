@@ -274,10 +274,6 @@
                          from temples to chin instead of a flat ellipse)
                        - moving "rim light" overlay swings opposite to the
                          rotation, mimicking how 3D shading would shift -->
-                        <!-- Static oval frame (no rotation) -->
-                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;">
-                            <ellipse cx="50" cy="68" rx="40" ry="55" stroke="#14B8A6" stroke-width="1.2" fill="none" opacity="0.4"/>
-                        </svg>
                         <!-- The rotor: contains all the depth-stacked face layers -->
                         <div class="adm-3d-rotor" style="position:absolute;inset:0;transform-style:preserve-3d;">
                             <!-- L1 BACK (z:-24): cranium silhouette, peeks
@@ -2292,19 +2288,25 @@ async function submitFormData() {
         head.add(solidMesh);
         head.add(wireMesh);
 
-        // ── Scan ring — horizontal teal disc that travels top→bottom,
-        //    the visual cue that explicitly says "we are scanning". Lives
-        //    on the head group so it rotates with the face.
-        var scanRingGeo = new T.TorusGeometry(0.96, 0.008, 6, 96);
-        var scanRingMat = new T.MeshBasicMaterial({
-          color: BRAND_TEAL,
-          transparent: true,
-          opacity: 0.85,
-          depthWrite: false
-        });
-        var scanRing = new T.Mesh(scanRingGeo, scanRingMat);
-        scanRing.rotation.x = Math.PI / 2;
-        head.add(scanRing);
+        // ── Scan rings — two perpendicular travelling rings that cross
+        //    each other to read as "multi-axis biometric capture" rather
+        //    than a single-axis fax-machine sweep. Each ring lives on
+        //    the head group so it rotates with the face.
+        function makeScanRing() {
+          var g = new T.TorusGeometry(0.96, 0.008, 6, 96);
+          var m = new T.MeshBasicMaterial({
+            color: BRAND_TEAL, transparent: true, opacity: 0.9, depthWrite: false
+          });
+          return new T.Mesh(g, m);
+        }
+        // Vertical ring: axis = Y, slice = XZ → travels top → bottom
+        var scanRingY = makeScanRing();
+        scanRingY.rotation.x = Math.PI / 2;
+        head.add(scanRingY);
+        // Horizontal ring: axis = X, slice = YZ → travels right → left
+        var scanRingX = makeScanRing();
+        scanRingX.rotation.z = Math.PI / 2;
+        head.add(scanRingX);
 
         scene.add(head);
 
@@ -2313,11 +2315,43 @@ async function submitFormData() {
         var startTime = performance.now();
         var firstFrame = false;
 
-        // Scan-ring travel cycle, decoupled from head rotation. The ring
-        // traverses head height once per cycle, with a brief invisible
-        // gap at the bottom so it doesn't feel like a continuous strobe.
+        // Scan-ring travel cycle, decoupled from head rotation. Each ring
+        // takes 80% of the cycle to traverse, then a brief invisible gap.
+        // The two rings share the cycle but are offset by 50% so they
+        // cross over each other instead of running in lockstep.
         var SCAN_CYCLE_S = 2.6;
-        var SCAN_TOP_Y = 1.20, SCAN_BOTTOM_Y = -1.20;
+        var H_LIMIT = 1.20;
+
+        function updateScanRing(ring, axis, t) {
+          var pos = H_LIMIT - 2 * H_LIMIT * t;
+          if (axis === 'y') { ring.position.y = pos; ring.position.x = 0; }
+          else              { ring.position.x = pos; ring.position.y = 0; }
+          var profile = Math.max(0.05, Math.sqrt(Math.max(0, 1 - Math.pow(pos / H_LIMIT, 2))));
+          if (axis === 'y') ring.scale.set(profile, 1, profile);
+          else              ring.scale.set(1, profile, profile);
+          ring.material.opacity = 0.90 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
+        }
+
+        // Hook chevrons (SVG fallback elements) so they sync with the
+        // 3D rotation cycle and appear ONLY when the head is moving
+        // toward (or holding at) that side, NOT during the return to
+        // centre. The legacy 4.8s CSS animation drifted against this
+        // 5.0s JS cycle and lit the chevrons on the return phase too,
+        // which read as "go back" instead of "look this way".
+        var chevR = document.querySelector('.adm-anim-chev-r');
+        var chevL = document.querySelector('.adm-anim-chev-l');
+        if (chevR) chevR.style.animation = 'none';
+        if (chevL) chevL.style.animation = 'none';
+
+        // Phase windows that match angleAtPhase exactly: 4-40% the head
+        // is moving to / holding at the negative-angle side (visually
+        // right), 60-94% the positive-angle side (visually left). The
+        // return phases (40-54%, 94-100%) leave both chevrons hidden.
+        function chevWindow(phase, lo, hi) {
+          if (phase <= lo || phase >= hi) return 0;
+          var t = (phase - lo) / (hi - lo);
+          return Math.min(1, t / 0.25); // fade in over the first quarter, full bright after
+        }
 
         function frame() {
           if (!running) return;
@@ -2326,18 +2360,24 @@ async function submitFormData() {
           var phase = (elapsed % CYCLE_S) / CYCLE_S;
           head.rotation.y = angleAtPhase(phase);
 
-          var scanT = (elapsed % SCAN_CYCLE_S) / SCAN_CYCLE_S;
-          // Visible 80% of the cycle, fades out for the last 20% (return)
-          if (scanT < 0.8) {
-            var t = scanT / 0.8;
-            scanRing.position.y = SCAN_TOP_Y + (SCAN_BOTTOM_Y - SCAN_TOP_Y) * t;
-            // Scale ring radius to match the head's profile at that height
-            // (head is roughly a unit ovoid; radius narrows toward poles)
-            var profile = Math.max(0.05, Math.sqrt(Math.max(0, 1 - Math.pow(scanRing.position.y / 1.20, 2))));
-            scanRing.scale.set(profile, 1, profile);
-            scanRingMat.opacity = 0.92 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
-          } else {
-            scanRingMat.opacity = 0;
+          // Two scan rings, offset by half a cycle so they cross
+          var tY = (elapsed % SCAN_CYCLE_S) / SCAN_CYCLE_S;
+          var tX = ((elapsed + SCAN_CYCLE_S * 0.5) % SCAN_CYCLE_S) / SCAN_CYCLE_S;
+          if (tY < 0.8) updateScanRing(scanRingY, 'y', tY / 0.8);
+          else scanRingY.material.opacity = 0;
+          if (tX < 0.8) updateScanRing(scanRingX, 'x', tX / 0.8);
+          else scanRingX.material.opacity = 0;
+
+          // Chevrons appear only on the "going to side" phases
+          if (chevR) {
+            var rO = chevWindow(phase, 0.04, 0.40);
+            chevR.style.opacity = rO.toFixed(3);
+            chevR.style.transform = 'translateX(' + (rO * 3).toFixed(2) + 'px)';
+          }
+          if (chevL) {
+            var lO = chevWindow(phase, 0.60, 0.94);
+            chevL.style.opacity = lO.toFixed(3);
+            chevL.style.transform = 'translateX(' + (-lO * 3).toFixed(2) + 'px)';
           }
 
           renderer.render(scene, camera);
