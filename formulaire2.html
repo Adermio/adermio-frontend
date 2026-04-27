@@ -249,59 +249,94 @@
                     <h2 class="font-serif text-3xl text-brand-dark">Analyse Haute D&eacute;finition</h2>
                 </div>
 
-                <!-- Pre-scan preview animation: pure SVG + CSS keyframes, ~3 KB,
-                     no external assets. Sets expectations on what the scan will
-                     ask the user to do (turn head left/right). Modeled after
-                     Apple FaceID setup — short, branded, looped. -->
+                <!-- Pre-scan preview animation — true 3D head turn.
+                     Uses CSS perspective + rotateY for genuine foreshortening
+                     (the head plate physically tilts in 3D space, not a flat
+                     2D rotation). The far-side eye fades behind the nose during
+                     each rotation peak so the user sees a real "looking away"
+                     effect. Pure SVG + CSS, ~4 KB, no external assets. -->
                 <div style="max-width:24rem;margin:0 auto 22px;display:flex;justify-content:center;">
-                    <div aria-hidden="true" style="width:120px;height:150px;position:relative;">
-                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                    <div aria-hidden="true" style="width:140px;height:175px;position:relative;perspective:620px;">
+                        <!-- Static oval frame (no rotation) -->
+                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;">
                             <ellipse cx="50" cy="68" rx="40" ry="55" stroke="#14B8A6" stroke-width="1.2" fill="none" opacity="0.4"/>
-                            <g class="adm-anim-head">
-                                <ellipse cx="50" cy="62" rx="22" ry="30" fill="#0F3D39"/>
-                                <path d="M28 52 Q30 32 50 32 Q70 32 72 52" fill="#0F3D39"/>
-                                <ellipse cx="42" cy="60" rx="2.2" ry="2.6" fill="#FAFAF9"/>
-                                <ellipse cx="58" cy="60" rx="2.2" ry="2.6" fill="#FAFAF9"/>
-                                <path d="M44 76 Q50 79 56 76" stroke="#FAFAF9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-                            </g>
+                        </svg>
+                        <!-- 3D-rotating head plate -->
+                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" class="adm-head3d" style="position:absolute;inset:0;width:100%;height:100%;">
+                            <defs>
+                                <!-- Subtle radial shading: lighter centre, deeper at edges, gives the
+                                     plate a sense of volume even before it rotates. -->
+                                <radialGradient id="admHeadGrad" cx="50%" cy="38%" r="65%">
+                                    <stop offset="0%"  stop-color="#1a4f4a"/>
+                                    <stop offset="65%" stop-color="#0F3D39"/>
+                                    <stop offset="100%" stop-color="#082522"/>
+                                </radialGradient>
+                            </defs>
+                            <ellipse cx="50" cy="62" rx="22" ry="30" fill="url(#admHeadGrad)"/>
+                            <path d="M28 52 Q30 32 50 32 Q70 32 72 52" fill="url(#admHeadGrad)"/>
+                            <!-- Subtle nose bridge — adds depth cue when turning -->
+                            <path d="M50 56 L49 70 L51 70 Z" fill="#082522" opacity="0.6"/>
+                            <!-- Eyes -->
+                            <ellipse class="adm-eye-l" cx="42" cy="60" rx="2.2" ry="2.6" fill="#FAFAF9"/>
+                            <ellipse class="adm-eye-r" cx="58" cy="60" rx="2.2" ry="2.6" fill="#FAFAF9"/>
+                            <!-- Mouth -->
+                            <path d="M44 76 Q50 79 56 76" stroke="#FAFAF9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                        </svg>
+                        <!-- Chevrons live outside the rotating plate so they stay sharp -->
+                        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;">
                             <path class="adm-anim-chev-r" d="M88 62 L94 68 L88 74" stroke="#14B8A6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                             <path class="adm-anim-chev-l" d="M12 62 L6 68 L12 74" stroke="#14B8A6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                         </svg>
                     </div>
                 </div>
                 <style>
-                    @keyframes admHeadTurn {
-                        0%, 8%   { transform: rotate(0deg) translateX(0); }
-                        24%, 32% { transform: rotate(-13deg) translateX(-2px); }
-                        46%, 54% { transform: rotate(0deg) translateX(0); }
-                        70%, 78% { transform: rotate(13deg) translateX(2px); }
-                        92%, 100%{ transform: rotate(0deg) translateX(0); }
+                    /* True 3D head rotation. perspective on the parent + rotateY
+                       on the SVG produces real foreshortening at the rotation
+                       peaks — the head plate physically tilts away rather than
+                       just spinning flat. */
+                    @keyframes admHead3D {
+                        0%, 6%    { transform: rotateY(0deg); }
+                        28%, 38%  { transform: rotateY(-42deg); }
+                        50%, 60%  { transform: rotateY(0deg); }
+                        82%, 92%  { transform: rotateY(42deg); }
+                        98%, 100% { transform: rotateY(0deg); }
+                    }
+                    /* Far-side eye fades when its hemisphere rotates away from
+                       the viewer — convincing "looking away" effect without
+                       multiple SVG states or a 3D mesh. */
+                    @keyframes admEyeR {
+                        0%, 14%   { opacity: 1; }
+                        28%, 38%  { opacity: 0.05; }
+                        50%, 100% { opacity: 1; }
+                    }
+                    @keyframes admEyeL {
+                        0%, 70%   { opacity: 1; }
+                        82%, 92%  { opacity: 0.05; }
+                        100%      { opacity: 1; }
                     }
                     @keyframes admChevR {
-                        0%, 14%  { opacity: 0; transform: translateX(0); }
-                        24%, 32% { opacity: 1; transform: translateX(3px); }
-                        42%      { opacity: 0; transform: translateX(0); }
-                        100%     { opacity: 0; }
+                        0%, 14%   { opacity: 0; transform: translateX(0); }
+                        28%, 36%  { opacity: 1; transform: translateX(3px); }
+                        46%, 100% { opacity: 0; transform: translateX(0); }
                     }
                     @keyframes admChevL {
-                        0%, 60%  { opacity: 0; transform: translateX(0); }
-                        70%, 78% { opacity: 1; transform: translateX(-3px); }
-                        88%      { opacity: 0; transform: translateX(0); }
-                        100%     { opacity: 0; }
+                        0%, 70%   { opacity: 0; transform: translateX(0); }
+                        82%, 90%  { opacity: 1; transform: translateX(-3px); }
+                        98%, 100% { opacity: 0; transform: translateX(0); }
                     }
-                    .adm-anim-head {
-                        animation: admHeadTurn 4.4s cubic-bezier(.45,.05,.55,.95) infinite;
-                        transform-origin: 50px 64px;
-                        transform-box: fill-box;
+                    .adm-head3d {
+                        animation: admHead3D 4.6s cubic-bezier(.45,.05,.55,.95) infinite;
+                        transform-origin: 50% 50%;
+                        backface-visibility: hidden;
+                        -webkit-backface-visibility: hidden;
                     }
-                    .adm-anim-chev-r {
-                        animation: admChevR 4.4s ease-in-out infinite;
-                    }
-                    .adm-anim-chev-l {
-                        animation: admChevL 4.4s ease-in-out infinite;
-                    }
+                    .adm-eye-r { animation: admEyeR 4.6s cubic-bezier(.45,.05,.55,.95) infinite; }
+                    .adm-eye-l { animation: admEyeL 4.6s cubic-bezier(.45,.05,.55,.95) infinite; }
+                    .adm-anim-chev-r { animation: admChevR 4.6s ease-in-out infinite; }
+                    .adm-anim-chev-l { animation: admChevL 4.6s ease-in-out infinite; }
                     @media (prefers-reduced-motion: reduce) {
-                        .adm-anim-head, .adm-anim-chev-r, .adm-anim-chev-l { animation: none; }
+                        .adm-head3d, .adm-eye-r, .adm-eye-l,
+                        .adm-anim-chev-r, .adm-anim-chev-l { animation: none; }
                     }
                 </style>
 
