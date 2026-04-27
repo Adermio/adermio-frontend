@@ -249,6 +249,17 @@
                     <h2 class="font-serif text-3xl text-brand-dark">Analyse Haute D&eacute;finition</h2>
                 </div>
 
+                <!-- Pre-scan preview animation — Three.js 3D head (V1).
+                     The SVG below is the fallback that renders immediately
+                     while three.min.js is fetched lazily (async). Once the
+                     canvas scene is ready, it fades in over the SVG. If
+                     three.js fails to load (CDN block, WebGL disabled,
+                     prefers-reduced-motion), the user keeps the SVG and
+                     never notices anything missing. -->
+                <div style="max-width:24rem;margin:0 auto 22px;display:flex;justify-content:center;">
+                    <div id="adm-anim-stage" aria-hidden="true" style="width:160px;height:200px;position:relative;perspective:420px;">
+                        <canvas id="adm-3d-canvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;z-index:3;"></canvas>
+                <!-- ──────── SVG fallback below (kept on-screen until 3D ready) ──────── -->
                 <!-- Pre-scan preview animation — multi-layer 2.5D parallax (V2).
                      Each facial feature is its own SVG layer at a different
                      translateZ depth. Refinements over V1:
@@ -263,8 +274,6 @@
                          from temples to chin instead of a flat ellipse)
                        - moving "rim light" overlay swings opposite to the
                          rotation, mimicking how 3D shading would shift -->
-                <div style="max-width:24rem;margin:0 auto 22px;display:flex;justify-content:center;">
-                    <div aria-hidden="true" class="adm-3d-stage" style="width:160px;height:200px;position:relative;perspective:420px;">
                         <!-- Static oval frame (no rotation) -->
                         <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;">
                             <ellipse cx="50" cy="68" rx="40" ry="55" stroke="#14B8A6" stroke-width="1.2" fill="none" opacity="0.4"/>
@@ -359,6 +368,17 @@
                     </div>
                 </div>
                 <style>
+                    /* When Three.js scene first renders, init script adds
+                       .adm-3d-ready to the stage. We fade in the canvas and
+                       fade out only the parallax rotor — the static oval
+                       frame and the directional chevrons stay visible
+                       (the chevrons reinforce the gesture, the oval echoes
+                       the actual scan UI's framing). */
+                    #adm-anim-stage.adm-3d-ready #adm-3d-canvas { opacity: 1 !important; }
+                    #adm-anim-stage.adm-3d-ready .adm-3d-rotor {
+                        opacity: 0;
+                        transition: opacity .4s ease;
+                    }
                     .adm-layer {
                         position: absolute;
                         inset: 0;
@@ -2056,6 +2076,279 @@ async function submitFormData() {
         } else {
             loadMediaPipe();
         }
+    })();
+    </script>
+
+    <!-- Three.js — self-hosted, async load. Powers the pre-scan 3D head
+         animation. SVG fallback continues to render until WebGL scene is up. -->
+    <script async src="/vendor/three/three.min.js"></script>
+    <script>
+    (function () {
+      'use strict';
+
+      // Single source of truth for the rotation cycle so visibility-pause
+      // resume can land on the right phase.
+      var CYCLE_S = 5.0;
+      var MAX_ANGLE = 0.62; // ~35.5°, slightly more dramatic than CSS variant since real 3D handles it well
+
+      // Piecewise smooth angle: hold centre → ease-in-out to left → hold →
+      // return → tiny pause → mirror right → hold → return. Mimics how a
+      // real human head moves during a scan: pauses at the extremes,
+      // not a constant sine wave that feels mechanical.
+      function angleAtPhase(p) {
+        if (p < 0.04) return 0;
+        if (p < 0.28) {
+          var t = (p - 0.04) / 0.24;
+          return -MAX_ANGLE * (1 - Math.cos(t * Math.PI)) / 2;
+        }
+        if (p < 0.40) return -MAX_ANGLE;
+        if (p < 0.54) {
+          var t2 = (p - 0.40) / 0.14;
+          return -MAX_ANGLE * (1 + Math.cos(t2 * Math.PI)) / 2;
+        }
+        if (p < 0.60) return 0;
+        if (p < 0.84) {
+          var t3 = (p - 0.60) / 0.24;
+          return MAX_ANGLE * (1 - Math.cos(t3 * Math.PI)) / 2;
+        }
+        if (p < 0.94) return MAX_ANGLE;
+        var t4 = (p - 0.94) / 0.06;
+        return MAX_ANGLE * (1 + Math.cos(t4 * Math.PI)) / 2;
+      }
+
+      function init() {
+        var existing = document.getElementById('adm-3d-canvas');
+        var stage  = document.getElementById('adm-anim-stage');
+        if (!existing || !stage || !window.THREE) return;
+        // Skip on prefers-reduced-motion (the SVG fallback animation also
+        // honours this — both stay still).
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        // Replace the placeholder canvas with a fresh element. Reason: the
+        // placeholder may already have an unrelated context attached (some
+        // mobile browsers / extensions pre-touch canvases for thumbnailing),
+        // and calling THREE.WebGLRenderer on a canvas with an existing
+        // context-of-a-different-type fails with "Canvas has an existing
+        // context of a different type" — leaving the SVG fallback as the
+        // only animation. A fresh element is guaranteed clean.
+        var canvas = document.createElement('canvas');
+        canvas.id = 'adm-3d-canvas';
+        canvas.style.cssText = existing.style.cssText;
+        existing.parentNode.replaceChild(canvas, existing);
+
+        var T = window.THREE;
+        var W = stage.clientWidth || 160;
+        var H = stage.clientHeight || 200;
+
+        var renderer = new T.WebGLRenderer({
+          canvas: canvas, antialias: true, alpha: true, powerPreference: 'low-power'
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setSize(W, H, false);
+        renderer.setClearColor(0x000000, 0);
+        if (T.SRGBColorSpace) renderer.outputColorSpace = T.SRGBColorSpace;
+        // No tone mapping — for a stylised flat-lit object we want the
+        // shader output rendered as-is. ACES would crush the midtones and
+        // darken the clay skin into something muddy.
+        renderer.toneMapping = T.NoToneMapping;
+        renderer.toneMappingExposure = 1.0;
+
+        var scene = new T.Scene();
+
+        // V3: image-based lighting from a procedural canvas gradient.
+        // We bake a soft 2-stop vertical gradient (warm overhead → cool
+        // ground bounce) into a CanvasTexture, run PMREM on it, and feed it
+        // as scene.environment. This is what gives MeshPhysicalMaterial
+        // the proper hemisphere ambient + reflections that pure
+        // DirectionalLights can't deliver — it's the difference between
+        // "shaded geometry" and "photographed object". RoomEnvironment is
+        // not bundled in three.min.js so we synthesise our own.
+        if (T.PMREMGenerator && T.CanvasTexture) {
+          try {
+            var envCanvas = document.createElement('canvas');
+            envCanvas.width = 8; envCanvas.height = 256;
+            var ectx = envCanvas.getContext('2d');
+            var grad = ectx.createLinearGradient(0, 0, 0, 256);
+            grad.addColorStop(0.00, '#fff5e6');   // warm overhead
+            grad.addColorStop(0.45, '#f3eadd');   // soft mid
+            grad.addColorStop(0.55, '#cdd9d8');   // horizon hint
+            grad.addColorStop(1.00, '#8aa4a0');   // cool ground bounce (subtle teal tint)
+            ectx.fillStyle = grad;
+            ectx.fillRect(0, 0, 8, 256);
+            var envTex = new T.CanvasTexture(envCanvas);
+            envTex.mapping = T.EquirectangularReflectionMapping;
+            envTex.colorSpace = T.SRGBColorSpace || envTex.colorSpace;
+            var pmrem = new T.PMREMGenerator(renderer);
+            scene.environment = pmrem.fromEquirectangular(envTex).texture;
+            envTex.dispose();
+            pmrem.dispose();
+          } catch (eEnv) {
+            console.warn('[3D-init] env build failed, falling back to lights only:', eEnv);
+          }
+        }
+
+        var camera = new T.PerspectiveCamera(30, W / H, 0.1, 50);
+        camera.position.set(0, 0.05, 5.2);
+        camera.lookAt(0, -0.02, 0);
+
+        // V3 lighting — env handles broad ambient/reflections; dir lights
+        // do the shaping. We keep their intensities high because the env
+        // gradient is intentionally neutral (no tone mapping → linear) and
+        // the skin material is light, so cumulative brightness is fine.
+        scene.add(new T.AmbientLight(0xffffff, 0.25));
+        var key = new T.DirectionalLight(0xffffff, 1.30); key.position.set(-2.4, 3.0, 4.2); scene.add(key);
+        var fill = new T.DirectionalLight(0x14B8A6, 0.20); fill.position.set(3.2, 1.0, 1.6); scene.add(fill);
+        var rim = new T.DirectionalLight(0xfff8ec, 1.50); rim.position.set(2.2, 2.6, -3.2); scene.add(rim);
+
+        // V3 materials — MeshPhysicalMaterial with clearcoat. Clearcoat is
+        // a thin shiny lacquer on top of the base material — it's how
+        // Apple's 3D health/AR models get that subtle "freshly polished"
+        // sheen on skin and porcelain alike. Fallback to MeshStandard if
+        // the user's three.js build doesn't expose Physical (it does on
+        // r160 — guard kept defensive).
+        var Physical = T.MeshPhysicalMaterial || T.MeshStandardMaterial;
+        var skinMat = new Physical({
+          color: 0xf2dac4, roughness: 0.55, metalness: 0.0,
+          clearcoat: 0.35, clearcoatRoughness: 0.55
+        });
+        var hairMat = new T.MeshStandardMaterial({ color: 0x2e2a26, roughness: 0.7, metalness: 0.05 });
+        var scleraMat = new T.MeshStandardMaterial({ color: 0xfafaf9, roughness: 0.35 });
+        var irisMat   = new T.MeshStandardMaterial({ color: 0x4a3a30, roughness: 0.45 });
+        var browMat   = new T.MeshStandardMaterial({ color: 0x2a2520, roughness: 0.7 });
+        var lipMat    = new Physical({
+          color: 0xc88575, roughness: 0.45, metalness: 0.0,
+          clearcoat: 0.55, clearcoatRoughness: 0.4
+        });
+
+        var head = new T.Group();
+
+        // Main head — slightly elongated sphere for the face oval feel
+        var headMesh = new T.Mesh(new T.SphereGeometry(1.0, 64, 64), skinMat);
+        headMesh.scale.set(0.94, 1.18, 0.96);
+        head.add(headMesh);
+
+        // Hair cap — top hemisphere only, slightly smaller arc than V1 so it
+        // reads as "hair on top" rather than "hooded silhouette".
+        var hairGeo = new T.SphereGeometry(1.02, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.32);
+        var hair = new T.Mesh(hairGeo, hairMat);
+        hair.scale.set(0.94, 1.18, 0.96);
+        hair.position.y = 0.08;
+        head.add(hair);
+
+        // Nose — cone protruding forward, smaller for refinement
+        var nose = new T.Mesh(new T.ConeGeometry(0.10, 0.28, 24), skinMat);
+        nose.position.set(0, -0.04, 0.96);
+        nose.rotation.x = Math.PI / 2;
+        head.add(nose);
+
+        // V4 face features — minimal, abstract, "scanning bust" aesthetic.
+        // The cartoon smile + big eyes pulled the head into "emoji" territory.
+        // Apple Medical / health-app 3D models use very restrained features:
+        // just enough to read as a face, not enough to anthropomorphise.
+        // We keep eyes (small, dark, no sclera/iris split) + thin brows.
+        // No mouth — its absence reads more "premium scanning preview" than
+        // any explicit lip shape ever could.
+        function makeEye(x) {
+          var e = new T.Mesh(new T.SphereGeometry(0.045, 20, 20),
+                             new T.MeshStandardMaterial({ color: 0x1a1614, roughness: 0.45 }));
+          e.position.set(x, 0.13, 0.90);
+          e.scale.set(1, 0.85, 0.6); // flatten into eye-shape rather than ball
+          return e;
+        }
+        head.add(makeEye(-0.22));
+        head.add(makeEye(0.22));
+
+        // Thin, restrained brows — communicates orientation during rotation.
+        function makeBrow(x) {
+          var b = new T.Mesh(new T.TorusGeometry(0.095, 0.012, 8, 14, Math.PI * 0.50), browMat);
+          b.position.set(x, 0.25, 0.91);
+          b.rotation.set(0, 0, Math.PI);
+          return b;
+        }
+        head.add(makeBrow(-0.22));
+        head.add(makeBrow(0.22));
+
+        // Subtle mouth — a tiny flat horizontal line, NOT a smile arc. Just
+        // enough to anchor the lower face when the head is centred. Disappears
+        // visually under most rotations, which is exactly what we want.
+        var mouth = new T.Mesh(new T.BoxGeometry(0.12, 0.012, 0.012), lipMat);
+        mouth.position.set(0, -0.32, 0.92);
+        head.add(mouth);
+
+        scene.add(head);
+
+        // Animation
+        var running = true;
+        var startTime = performance.now();
+        var firstFrame = false;
+
+        function frame() {
+          if (!running) return;
+          requestAnimationFrame(frame);
+          var elapsed = (performance.now() - startTime) / 1000;
+          var phase = (elapsed % CYCLE_S) / CYCLE_S;
+          head.rotation.y = angleAtPhase(phase);
+          renderer.render(scene, camera);
+          if (!firstFrame) {
+            firstFrame = true;
+            // Show the canvas synchronously now that we've committed pixels.
+            // Set opacity directly inline (instead of leaving the .adm-3d-ready
+            // CSS rule do it) because some mobile WebKit builds queue an
+            // opacity transition pre-init that gets stuck at currentTime:0 —
+            // the inline assignment without a transition guarantees visibility.
+            // Wrapping this in another rAF (as the previous version did)
+            // sometimes never fires when the parent is display:none at init
+            // time, so we keep it synchronous.
+            if (canvas.getAnimations) {
+              canvas.getAnimations().forEach(function (a) { try { a.cancel(); } catch (_e) {} });
+            }
+            canvas.style.transition = 'none';
+            canvas.style.opacity = '1';
+            stage.classList.add('adm-3d-ready');
+          }
+        }
+        frame();
+
+        // Pause when tab hidden / page bfcached. Resume cleanly on return.
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'hidden') {
+            running = false;
+          } else if (!running) {
+            running = true;
+            // Resume from where we left off so the rotation doesn't jump
+            startTime = performance.now() - ((performance.now() - startTime) % (CYCLE_S * 1000));
+            frame();
+          }
+        });
+
+        // Handle DPR / size changes (rare but cheap to support)
+        window.addEventListener('resize', function () {
+          var nw = stage.clientWidth || W, nh = stage.clientHeight || H;
+          if (nw !== W || nh !== H) {
+            W = nw; H = nh;
+            camera.aspect = W / H; camera.updateProjectionMatrix();
+            renderer.setSize(W, H, false);
+          }
+        });
+      }
+
+      // Wait for both DOM and Three.js to be ready before init.
+      function whenReady() {
+        if (window.THREE && document.getElementById('adm-3d-canvas')) {
+          try { init(); }
+          catch (e) {
+            // If anything goes wrong, the SVG fallback stays — log and bail
+            console.warn('Adermio 3D head init failed:', e);
+          }
+          return;
+        }
+        setTimeout(whenReady, 80);
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', whenReady);
+      } else {
+        whenReady();
+      }
     })();
     </script>
 
