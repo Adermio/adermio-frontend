@@ -2288,30 +2288,31 @@ async function submitFormData() {
         head.add(solidMesh);
         head.add(wireMesh);
 
-        // ── Scan rings — two perpendicular travelling rings that cross
-        //    each other to read as "multi-axis biometric capture" rather
-        //    than a single-axis fax-machine sweep. Each ring lives on
-        //    the head group so it rotates with the face.
-        function makeScanRing() {
-          var g = new T.TorusGeometry(0.96, 0.008, 6, 96);
-          var m = new T.MeshBasicMaterial({
+        // ── Scan effects — vertical ring + horizontal beam ─────────────
+        // Vertical scan: a horizontal halo around the head (TorusGeometry
+        // in XZ plane) travelling top → bottom. Reads naturally as a
+        // scan ring around the head.
+        // Horizontal scan: instead of a second torus (which fights the
+        // perspective and ends up looking ambiguous), a clean vertical
+        // beam — a thin tall plane facing the camera — sweeping right →
+        // left. The iconic "laser scanner" visual, zero ambiguity.
+        var scanRingY = new T.Mesh(
+          new T.TorusGeometry(0.96, 0.008, 6, 96),
+          new T.MeshBasicMaterial({
             color: BRAND_TEAL, transparent: true, opacity: 0.9, depthWrite: false
-          });
-          return new T.Mesh(g, m);
-        }
-        // Vertical ring: axis = Y, slice = XZ → travels top → bottom
-        var scanRingY = makeScanRing();
+          })
+        );
         scanRingY.rotation.x = Math.PI / 2;
         head.add(scanRingY);
-        // Horizontal ring: axis = X, slice = YZ → travels right → left.
-        // TorusGeometry's default plane is XY; rotating around Y by 90°
-        // swings it into the YZ plane so when the ring sits at X=0 it's
-        // edge-on to the camera and reads as a clean vertical line, not
-        // a full face-on circle. (rotation.z would have left the ring
-        // in XY — invariant under Z rotation — which is the bug we had.)
-        var scanRingX = makeScanRing();
-        scanRingX.rotation.y = Math.PI / 2;
-        head.add(scanRingX);
+
+        var scanBeamX = new T.Mesh(
+          new T.PlaneGeometry(0.018, 2.4),
+          new T.MeshBasicMaterial({
+            color: BRAND_TEAL, transparent: true, opacity: 0.9, depthWrite: false,
+            side: T.DoubleSide
+          })
+        );
+        head.add(scanBeamX);
 
         scene.add(head);
 
@@ -2327,14 +2328,23 @@ async function submitFormData() {
         var SCAN_CYCLE_S = 2.6;
         var H_LIMIT = 1.20;
 
-        function updateScanRing(ring, axis, t) {
+        // Vertical scan ring (Y axis): horizontal halo travelling top→bottom.
+        // Radius scales to head profile sqrt(1 - (y/limit)²) so it hugs
+        // the silhouette at every height instead of clipping.
+        function updateScanRingY(ring, t) {
           var pos = H_LIMIT - 2 * H_LIMIT * t;
-          if (axis === 'y') { ring.position.y = pos; ring.position.x = 0; }
-          else              { ring.position.x = pos; ring.position.y = 0; }
+          ring.position.y = pos;
           var profile = Math.max(0.05, Math.sqrt(Math.max(0, 1 - Math.pow(pos / H_LIMIT, 2))));
-          if (axis === 'y') ring.scale.set(profile, 1, profile);
-          else              ring.scale.set(1, profile, profile);
+          ring.scale.set(profile, 1, profile);
           ring.material.opacity = 0.90 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
+        }
+        // Horizontal scan beam (X axis): thin vertical bar travelling
+        // right→left. No profile scaling — the beam stays full height
+        // throughout, classic laser-scanner feel.
+        function updateScanBeamX(beam, t) {
+          var pos = H_LIMIT - 2 * H_LIMIT * t;
+          beam.position.x = pos;
+          beam.material.opacity = 0.90 * Math.min(1, t * 4) * Math.min(1, (1 - t) * 4 + 0.4);
         }
 
         // Hook chevrons (SVG fallback elements) so they sync with the
@@ -2365,13 +2375,14 @@ async function submitFormData() {
           var phase = (elapsed % CYCLE_S) / CYCLE_S;
           head.rotation.y = angleAtPhase(phase);
 
-          // Two scan rings, offset by half a cycle so they cross
+          // Vertical ring + horizontal beam, offset by half a cycle so
+          // they cross over each other instead of running in lockstep.
           var tY = (elapsed % SCAN_CYCLE_S) / SCAN_CYCLE_S;
           var tX = ((elapsed + SCAN_CYCLE_S * 0.5) % SCAN_CYCLE_S) / SCAN_CYCLE_S;
-          if (tY < 0.8) updateScanRing(scanRingY, 'y', tY / 0.8);
+          if (tY < 0.8) updateScanRingY(scanRingY, tY / 0.8);
           else scanRingY.material.opacity = 0;
-          if (tX < 0.8) updateScanRing(scanRingX, 'x', tX / 0.8);
-          else scanRingX.material.opacity = 0;
+          if (tX < 0.8) updateScanBeamX(scanBeamX, tX / 0.8);
+          else scanBeamX.material.opacity = 0;
 
           // Chevrons appear only on the "going to side" phases
           if (chevR) {
