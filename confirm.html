@@ -396,18 +396,6 @@
                 btnSignup.href = deepLink;
             }
 
-            // Auto-attempt: try to open the app as soon as the page loads.
-            // We use a hidden iframe trick so the page doesn't navigate away
-            // if the scheme isn't registered (browser silently ignores it).
-            var iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = deepLink;
-            document.body.appendChild(iframe);
-
-            // Remove the iframe after a short delay — it has done its job.
-            setTimeout(function () {
-                if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-            }, 2000);
         })();
     </script>
 
