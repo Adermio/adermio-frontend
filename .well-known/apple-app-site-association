@@ -1,0 +1,23 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["W8C5A63AV7.com.adermio.app"],
+        "components": [
+          {
+            "/": "/callback*",
+            "comment": "Auth callback (signup confirmation, password reset, magic link, email change)"
+          },
+          {
+            "/": "/diagnostic/*",
+            "comment": "Shared diagnostic links (V2)"
+          },
+          {
+            "/": "/share/*",
+            "comment": "Shared content (V2)"
+          }
+        ]
+      }
+    ]
+  }
+}
