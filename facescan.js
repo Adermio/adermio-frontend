@@ -52,6 +52,7 @@
       permDesc: "7 captures automatisées sous différents angles pour une précision maximale. Aucune donnée vidéo n'est conservée.",
       permBtn: "Démarrer le scan",
       permManualBtn: "Importer manuellement",
+      permTimeHint: "~15 secondes",
       retakeManualLabel: "Photo",
       retakeScanLabel: "Scan",
       denied: "Accès caméra refusé. Utilisez l'import manuel.",
@@ -162,6 +163,7 @@
       permDesc: "7 automated captures from different angles for maximum precision. No video data is stored.",
       permBtn: "Start scan",
       permManualBtn: "Upload manually",
+      permTimeHint: "~15 seconds",
       retakeManualLabel: "Photo",
       retakeScanLabel: "Scan",
       denied: "Camera access denied. Use manual upload.",
@@ -256,6 +258,107 @@
       noDataStored: "No video data stored",
       anglesCaptured: "angles captured",
       angleCaptured: "angle captured",
+    },
+    es: {
+      permTitle: "Análisis en alta definición",
+      permDesc: "7 capturas automáticas desde diferentes ángulos para máxima precisión. No se conservan datos de vídeo.",
+      permBtn: "Iniciar el escaneo",
+      permManualBtn: "Subir manualmente",
+      permTimeHint: "~15 segundos",
+      retakeManualLabel: "Foto",
+      retakeScanLabel: "Escaneo",
+      denied: "Acceso a la cámara denegado. Usa la subida manual.",
+      notSupported: "Navegador no compatible. Usa la subida manual.",
+      noDevice: "No se ha detectado ninguna cámara frontal.",
+      loading: "Cargando el análisis facial…",
+      loadTimeout: "Carga demasiado lenta. Verifica tu conexión.",
+
+      calibTitle: "Coloca tu rostro",
+      calibSub: "Coloca tu rostro dentro del óvalo",
+      calibReady: "Perfecto, no te muevas",
+      calibReadySub: "Posición ideal",
+
+      initializingTitle: "Iniciando el análisis…",
+      initializingSub: "Cargando el motor de detección",
+      initializingTitleSlow: "Conexión lenta detectada",
+      initializingSubSlow: "Descargando el motor…",
+      initializingTitleVerySlow: "Conexión débil",
+      initializingSubVerySlow: "Puedes cambiar a la subida manual",
+      initFallbackBtn: "Subir manualmente",
+      initializingTimeout: "Conexión demasiado lenta. Usa la subida manual.",
+
+      countdownSub: "Prepárate, el escaneo va a empezar",
+
+      moveCloser: "Acércate",
+      moveCloserSub: "Tu rostro está demasiado lejos",
+      moveBack: "Aléjate un poco",
+      moveBackSub: "Tu rostro está demasiado cerca",
+      lowLight: "Iluminación insuficiente",
+      lowLightSub: "Busca un lugar más iluminado",
+      strongLight: "Demasiada luz",
+      strongLightSub: "Aléjate de la luz",
+      backlight: "Contraluz detectado",
+      backlightSub: "Date la vuelta",
+      centerFace: "Centra tu rostro",
+      centerFaceSub: "Colócate dentro del óvalo",
+      pitchOff: "Mira al frente",
+      pitchOffSub: "No inclines la cabeza arriba o abajo",
+      rollOff: "Endereza la cabeza",
+      rollOffSub: "No inclines la cabeza hacia un lado",
+
+      noFace: "No se detecta ningún rostro",
+      noFaceSub: "Coloca tu rostro dentro del óvalo",
+      interrupted: "Escaneo interrumpido",
+      interruptedSub: "Reinicia el escaneo o usa la subida manual",
+      rotateTitle: "Gira tu teléfono",
+      rotateSub: "El escaneo solo funciona en modo retrato",
+
+      scanFace: "Mira a la cámara",
+      scanFaceSub: "Quédate mirando al frente",
+      scanRight1: "Gira la cabeza a la derecha",
+      scanRight1Sub: "Despacio, muestra tu perfil",
+      scanRight2: "Sigue girando a la derecha",
+      scanRight2Sub: "Muestra tu perfil",
+      scanRight3: "Un poco más a la derecha",
+      scanRight3Sub: "Muestra tu oreja",
+      scanLeft1: "Gira la cabeza a la izquierda",
+      scanLeft1Sub: "Despacio, muestra tu perfil",
+      scanLeft2: "Sigue girando a la izquierda",
+      scanLeft2Sub: "Muestra tu perfil",
+      scanLeft3: "Un poco más a la izquierda",
+      scanLeft3Sub: "Muestra tu oreja",
+      scanDone: "Escaneo completado",
+      scanDoneSub: "Analizando tus capturas…",
+
+      qualityLow: "Calidad insuficiente",
+      qualityLowSub: "Mantente quieto, frente a la luz",
+      lightDuringScan: "Iluminación insuficiente",
+      lightDuringScanSub: "Acércate a una ventana o enciende la luz",
+
+      retakeFor: "Repitiendo el ángulo",
+
+      captured: "Capturado",
+      binFace: "Frente", binSemiR: "Semi D", binRight: "Perfil D", binWideR: "Amplio D",
+      binSemiL: "Semi I", binLeft: "Perfil I", binWideL: "Amplio I",
+      distance: "Distancia", light: "Luz", stability: "Estabilidad",
+
+      previewTitle: "Tus capturas",
+      previewHint: "Toca una foto para ampliarla",
+
+      excellent: "Excelente", good: "Bien", ok: "Aceptable", missing: "Falta",
+      keep: "Conservar", retakeOne: "Volver a tomar",
+      retake: "Repetir", validate: "Validar y continuar",
+      restart: "Reiniciar el escaneo",
+      uploading: "Enviando…",
+      uploadFail: "Error de envío, inténtalo de nuevo",
+
+      zoomBtn: "Añadir un primer plano",
+      zoomSub: "Foto de una zona específica (opcional)",
+      zoomAdded: "Primer plano añadido",
+
+      noDataStored: "No se conservan datos de vídeo",
+      anglesCaptured: "ángulos capturados",
+      angleCaptured: "ángulo capturado",
     },
   };
 
@@ -709,7 +812,7 @@
     +   '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>'
     +   t.permBtn
     + '</button>'
-    + '<p style="font-size:11px;color:#a8a29e;margin:10px 0 14px;font-weight:400;">~15 secondes</p>'
+    + '<p style="font-size:11px;color:#a8a29e;margin:10px 0 14px;font-weight:400;">' + t.permTimeHint + '</p>'
     + '<button id="fs-perm-manual" type="button" style="width:100%;padding:14px 20px;border:1px dashed #d6d3d1;border-radius:9999px;background:transparent;color:#a8a29e;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;transition:border-color .15s,color .15s;">'
     +   '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>'
     +   t.permManualBtn
@@ -1107,7 +1210,12 @@
      MAIN SCANNER
      ═══════════════════════════════════════════════════════════ */
   function createScanner(container, opts) {
-    var lang = opts.lang || (((document.documentElement.lang || "").substring(0, 2) === "en") ? "en" : "fr");
+    var lang = opts.lang || (function () {
+      var docLang = (document.documentElement.lang || "").substring(0, 2).toLowerCase();
+      if (docLang === "en") return "en";
+      if (docLang === "es") return "es";
+      return "fr";
+    })();
     var t = T[lang] || T.fr;
     var onDone = opts.onComplete || null;
     var onFall = opts.onFallback || null;
