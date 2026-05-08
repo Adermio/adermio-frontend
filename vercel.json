@@ -103,12 +103,6 @@
       "statusCode": 301
     },
     {
-      "//": "Universal Links fallback. iOS / Android intercept this path",
-      "//1": "via the AASA / assetlinks association BEFORE hitting Vercel,",
-      "//2": "so this redirect only fires for users without the app",
-      "//3": "installed (or on a desktop browser). 302 (not 301) so we",
-      "//4": "can swap to a proper 'open in app' page later without",
-      "//5": "fighting cached redirects.",
       "source": "/callback",
       "destination": "/",
       "statusCode": 302
