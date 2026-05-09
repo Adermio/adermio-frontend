@@ -305,20 +305,11 @@
             </div>
 
             <!-- ══════ MODE 3 : IMPORT MANUEL (hidden until user picks manual) ══════
-                 Discreet mini-CTA at the top lets the user jump back to the
-                 video scan if they change their mind, without forcing them
-                 through the full Back-button flow. Wired to window.showScanMode()
-                 in the script block below (id: #manual-switch-to-scan). -->
+                 No in-flow scan switch here on purpose: once the user has
+                 committed to the manual path, we keep the funnel linear and
+                 let them focus on uploading. The Back button still routes
+                 back to the pre-scan choice screen for the rare second-guess. -->
             <div id="manual-upload-container" class="hidden space-y-4 animate-fade-in max-w-sm mx-auto">
-
-                <div style="text-align:center;padding:2px 0 4px;">
-                    <button type="button" id="manual-switch-to-scan"
-                        style="display:inline-flex;align-items:center;gap:7px;padding:6px 4px;background:transparent;border:none;color:#78716c;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:color .15s;">
-                        Plut&ocirc;t un scan vid&eacute;o automatique&nbsp;?
-                        <span style="background:#fef3c7;color:#92400e;padding:1px 6px;border-radius:9999px;font-size:8.5px;font-weight:800;letter-spacing:.08em;line-height:1;">BETA</span>
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                    </button>
-                </div>
 
                 <div class="relative w-10/12 mx-auto sm:w-full">
                     <div class="flex justify-between items-center mb-2 px-1">
@@ -1817,12 +1808,6 @@ async function submitFormData() {
         var $startManual = document.getElementById('prescan-start-manual');
         if ($startScan) $startScan.addEventListener('click', function() { window.showScanMode(); });
         if ($startManual) $startManual.addEventListener('click', function() { window.showManualMode(); });
-
-        // Wire the discreet "switch to scan" affordance inside manual mode,
-        // so users who entered manual upload can still hop into the BETA
-        // scan without backtracking via the form's Back button.
-        var $manualSwitchToScan = document.getElementById('manual-switch-to-scan');
-        if ($manualSwitchToScan) $manualSwitchToScan.addEventListener('click', function() { window.showScanMode(); });
 
         // Backwards-compat aliases for any code paths that still call the old
         // names (e.g. external automation, existing translations).
