@@ -38,21 +38,6 @@
       "statusCode": 301
     },
     {
-      "source": "/formulaire2",
-      "destination": "/formulaire",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/form2",
-      "destination": "/en/form",
-      "statusCode": 301
-    },
-    {
-      "source": "/es/form2",
-      "destination": "/es/form",
-      "statusCode": 301
-    },
-    {
       "source": "/en/privacy",
       "destination": "/en/confidentialite",
       "statusCode": 301
