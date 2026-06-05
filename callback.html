@@ -10,22 +10,38 @@
   <meta name="description" content="Ouverture de l'application Adermio.">
 
   <!--
-    Universal Link interception window.
+    Cette page est le point d'atterrissage de TOUS les liens email auth :
+    confirmation signup, magic link, password reset, change email.
 
-    Quand un user clique sur un lien d'email d'auth Supabase
-    (https://adermio.com/callback?code=xxx), iOS intercepte l'URL via le
-    fichier AASA et ouvre l'app Adermio si elle est installée. Pendant
-    ce délai très court, Mail/Safari affiche cette page. Si l'app n'est
-    pas installée OU que l'AASA n'est pas encore propagé, on tombe sur
-    le fallback `meta refresh` ci-dessous qui ramène l'user vers la home.
+    Format URL (depuis migration 2026-06-05) :
+      https://adermio.com/callback?token_hash=XXX&type=signup&next=onboarding
 
-    Avant : on avait un redirect 302 server-side dans vercel.json. Le
-    problème = Mail iOS s'interrompait avant la fin du 302 (l'app prend
-    le focus) → la WebView restait sur "about:blank". Une vraie page
-    HTML statique évite ce bug et donne un fond visuel propre pendant
-    la transition vers l'app.
+    Comportement attendu selon le contexte de l'user :
+
+    A. App Adermio installée sur l'iPhone qui clique
+       → iOS détecte l'Universal Link (via AASA) AVANT que la page se
+         charge entièrement. Prompt "Ouvrir dans Adermio ?".
+       → Si user accepte : l'app s'ouvre, reçoit le deep link avec
+         token_hash, appelle verifyOtp côté natif. Cette page reste en
+         fond avec son spinner — propre visuellement.
+       → Si user refuse : la page continue son JS et fait elle-même
+         le verifyOtp côté web pour ne pas perdre l'auth, puis affiche
+         un état de succès avec CTA "Ouvrir l'app" (qui retente l'UL).
+
+    B. Pas d'app installée (ou desktop)
+       → Pas de prompt iOS. La page charge intégralement, le JS
+         détecte le token_hash, fait le verifyOtp côté web, affiche
+         le résultat. Sur succès : "Compte confirmé, télécharge l'app".
+
+    C. URL hit sans token_hash (deep-link manuel, bot, etc.)
+       → Le meta refresh redirige vers / après 4s.
+
+    Avant cette migration, /callback faisait un 302 server-side vers /.
+    Le 302 cassait l'expérience iOS quand l'user refusait l'UL : la
+    WebView restait sur about:blank. Voir vercel.json (pas de redirect
+    /callback) et le commit 6f5e73a.
   -->
-  <meta http-equiv="refresh" content="3;url=/">
+  <meta http-equiv="refresh" content="4;url=/">
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -61,6 +77,7 @@
       text-align: center;
     }
 
+    /* Logo Adermio en cercle teal — match avec le hero des emails */
     .logo-wrap {
       width: 88px;
       height: 88px;
@@ -80,6 +97,8 @@
       object-fit: cover;
     }
 
+    /* État loading — affiché au démarrage et tant que l'UL n'a pas
+       été tentée ou que verifyOtp n'a pas répondu */
     .spinner {
       width: 28px;
       height: 28px;
@@ -94,26 +113,51 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Check icon — affiché en cas de succès. SVG inline pour éviter
+       un round-trip réseau supplémentaire au moment critique. */
+    .check {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 16px;
+      color: #0F3D39;
+    }
+
+    /* Warning icon — affiché pour "déjà utilisé" / "expiré" */
+    .warning {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 16px;
+      color: #D97706;
+    }
+
     h1 {
       font-size: 22px;
       font-weight: 700;
       margin: 0 0 10px 0;
       color: #0F172A;
       letter-spacing: -0.3px;
+      max-width: 320px;
     }
 
     p {
       font-size: 15px;
       line-height: 1.5;
       color: #64748B;
-      margin: 0 0 36px 0;
+      margin: 0 0 28px 0;
       max-width: 320px;
+    }
+
+    .email-hint {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0F3D39;
+      margin: -16px 0 28px 0;
     }
 
     .actions {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
       width: 100%;
       max-width: 280px;
@@ -131,36 +175,41 @@
       font-weight: 600;
       letter-spacing: 0.2px;
       transition: background-color 0.15s ease;
+      border: none;
+      cursor: pointer;
     }
 
     .cta:hover, .cta:active {
       background-color: #0A2A27;
     }
 
-    .secondary {
+    .cta-secondary {
+      background-color: transparent;
+      color: #0F3D39;
+      border: 1.5px solid #0F3D39;
+    }
+
+    .cta-secondary:hover, .cta-secondary:active {
+      background-color: rgba(15, 61, 57, 0.05);
+    }
+
+    .small-link {
       display: block;
+      margin-top: 14px;
       font-size: 13px;
       color: #94A3B8;
       text-decoration: none;
       padding: 8px;
     }
 
-    .secondary:hover {
+    .small-link:hover {
       color: #0F3D39;
     }
 
-    /* Hide CTA buttons for the first 2.5s — iOS Universal Link usually
-       intercepts within 500ms; we only show the fallback if the user
-       is still on the page after that. */
-    .actions {
-      opacity: 0;
-      animation: fadeIn 0.3s ease forwards;
-      animation-delay: 2.5s;
-    }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
+    /* Container réservé aux différents états — on switch via classes
+       au lieu de display:none, plus prédictible pour les transitions. */
+    .state { display: none; }
+    .state.active { display: contents; }
   </style>
 </head>
 <body>
@@ -168,32 +217,273 @@
     <div class="logo-wrap">
       <img src="/logo_Adermio.png" alt="Adermio">
     </div>
-    <div class="spinner"></div>
-    <h1>Ouverture d'Adermio…</h1>
-    <p>Si l'application ne s'ouvre pas automatiquement, vérifiez qu'elle est bien installée sur votre appareil.</p>
-    <div class="actions">
-      <a class="cta" href="/">Retour à l'accueil</a>
-      <a class="secondary" href="https://apps.apple.com/app/adermio">Télécharger l'application</a>
+
+    <!-- État A : loading (par défaut) — pendant qu'on laisse iOS
+         tenter l'Universal Link et qu'on attend la réponse de verifyOtp -->
+    <div class="state active" id="state-loading">
+      <div class="spinner"></div>
+      <h1>Ouverture d'Adermio…</h1>
+      <p>Si l'application ne s'ouvre pas automatiquement, on finalise la vérification côté web.</p>
+    </div>
+
+    <!-- État B : succès — token_hash consommé avec succès côté web,
+         ou pas d'app installée donc on confirme l'auth en web -->
+    <div class="state" id="state-success">
+      <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <h1 id="success-title">Compte confirmé !</h1>
+      <p id="success-body">Tu peux maintenant ouvrir Adermio pour démarrer ton analyse personnalisée.</p>
+      <div class="actions">
+        <a class="cta" href="adermio://callback" id="open-app-btn">Ouvrir Adermio</a>
+        <a class="cta cta-secondary" href="https://apps.apple.com/app/adermio" target="_blank">Télécharger l'app</a>
+        <a class="small-link" href="/">Retour à l'accueil</a>
+      </div>
+    </div>
+
+    <!-- État C : déjà utilisé — token consommé une fois précédemment,
+         généralement signe que l'app a déjà fait le verifyOtp côté natif -->
+    <div class="state" id="state-used">
+      <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <h1>Compte confirmé !</h1>
+      <p>Ce lien a déjà été utilisé. Ouvre Adermio pour continuer.</p>
+      <div class="actions">
+        <a class="cta" href="adermio://callback">Ouvrir Adermio</a>
+        <a class="small-link" href="/">Retour à l'accueil</a>
+      </div>
+    </div>
+
+    <!-- État D : expiré — le token a dépassé sa TTL Supabase
+         (24h pour signup, 1h pour magic link / recovery / email_change) -->
+    <div class="state" id="state-expired">
+      <svg class="warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <h1>Lien expiré</h1>
+      <p>Ce lien n'est plus valide. Ouvre Adermio et demande un nouveau lien.</p>
+      <div class="actions">
+        <a class="cta" href="adermio://callback">Ouvrir Adermio</a>
+        <a class="small-link" href="mailto:contact@adermio.com">contact@adermio.com</a>
+      </div>
+    </div>
+
+    <!-- État E : erreur générique — fallback si verifyOtp répond
+         avec un message qu'on ne sait pas classifier -->
+    <div class="state" id="state-error">
+      <svg class="warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <h1>Vérification impossible</h1>
+      <p id="error-body">Une erreur est survenue. Réessaye depuis l'application Adermio.</p>
+      <div class="actions">
+        <a class="cta" href="adermio://callback">Ouvrir Adermio</a>
+        <a class="small-link" href="mailto:contact@adermio.com">contact@adermio.com</a>
+      </div>
     </div>
   </div>
 
   <script>
-    // Fallback JS: si après 3s on est toujours là (pas d'app installée),
-    // on a déjà déclenché le meta refresh. Ce script sert juste à
-    // forcer un re-trigger de l'Universal Link sur Safari iOS qui
-    // parfois ne capte pas le premier hit.
-    //
-    // On garde l'URL d'origine (avec tokens Supabase) en hash pour que
-    // si l'app n'ouvre pas, on puisse au moins logger l'attempt.
-    (function () {
+    /**
+     * Web-side auth callback handler.
+     *
+     * Le flow :
+     *   1. Parse l'URL pour extraire token_hash, type, next.
+     *   2. Si pas de token_hash : on est arrivé ici "innocemment",
+     *      meta refresh prendra le relais vers /.
+     *   3. Si token_hash : on attend ~2.5s pour laisser iOS tenter
+     *      l'Universal Link en priorité (l'app native fera son propre
+     *      verifyOtp).
+     *   4. Après le délai, on tente NOUS-MÊMES le verifyOtp via fetch
+     *      sur l'auth REST API de Supabase. 4 issues possibles :
+     *        a. 200 OK : succès web (signifie que l'app n'a pas pris,
+     *           ou que l'user a refusé l'UL, ou pas d'app installée).
+     *        b. 400/410 "token has expired" : état expiré.
+     *        c. 400/410 "token already used" ou similaire : état used.
+     *           IMPORTANT : c'est aussi ce qu'on attend si l'app a
+     *           consommé le token avant nous — c'est PAS une erreur,
+     *           c'est le succès du chemin nominal.
+     *        d. Autre 4xx/5xx : état erreur générique.
+     */
+
+    var SUPABASE_URL = 'https://zqhmobgjxmyziuwkrkqf.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w';
+
+    /** Délai avant que le JS tente le verifyOtp (ms). Laisse l'iOS UL
+        une fenêtre prioritaire pour intercepter. */
+    var UNIVERSAL_LINK_GRACE_MS = 2500;
+
+    /** Switch l'état UI visible. Cache tous les states puis active le bon. */
+    function showState(id) {
+      var states = document.querySelectorAll('.state');
+      for (var i = 0; i < states.length; i++) states[i].classList.remove('active');
+      var el = document.getElementById(id);
+      if (el) el.classList.add('active');
+    }
+
+    /** Parse les query params de l'URL. URLSearchParams est dispo
+        partout depuis IE Edge / Safari 10. */
+    function parseParams() {
       try {
         var url = new URL(window.location.href);
-        // Pas de retransmission de tokens dans le history — RGPD.
-        if (url.search || url.hash) {
-          window.history.replaceState({}, document.title, url.pathname);
-        }
+        return {
+          token_hash: url.searchParams.get('token_hash') || '',
+          type: url.searchParams.get('type') || '',
+          next: url.searchParams.get('next') || '',
+          // Erreur Supabase peut être passée dans les query params
+          // (rare avec le nouveau format mais on garde le check).
+          error: url.searchParams.get('error') || '',
+          error_description: url.searchParams.get('error_description') || ''
+        };
+      } catch (e) {
+        return { token_hash: '', type: '', next: '', error: '', error_description: '' };
+      }
+    }
+
+    /** Nettoie l'URL visible — on ne veut pas que token_hash apparaisse
+        dans l'historique du browser ou les referrers. RGPD + security. */
+    function cleanUrl() {
+      try {
+        window.history.replaceState({}, document.title, window.location.pathname);
       } catch (e) { /* no-op */ }
-    })();
+    }
+
+    /** Adapte le message de succès selon le type d'OTP. */
+    function customizeSuccessCopy(type) {
+      var titleEl = document.getElementById('success-title');
+      var bodyEl = document.getElementById('success-body');
+      if (!titleEl || !bodyEl) return;
+      if (type === 'recovery') {
+        titleEl.textContent = 'Lien validé !';
+        bodyEl.textContent = 'Ouvre Adermio pour choisir ton nouveau mot de passe.';
+      } else if (type === 'magiclink') {
+        titleEl.textContent = 'Connexion validée !';
+        bodyEl.textContent = 'Ouvre Adermio pour accéder à ton espace.';
+      } else if (type === 'email_change') {
+        titleEl.textContent = 'Email mis à jour !';
+        bodyEl.textContent = 'Ta nouvelle adresse est confirmée. Ouvre Adermio.';
+      }
+      // signup → message par défaut (déjà dans le HTML).
+    }
+
+    /** Tente le verifyOtp côté web. Renvoie une promesse résolue avec
+        un objet { ok: boolean, status, body }. Ne jette jamais — on
+        gère toutes les erreurs réseau silencieusement (showError). */
+    function verifyOtpWeb(tokenHash, type) {
+      return fetch(SUPABASE_URL + '/auth/v1/verify', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ type: type, token_hash: tokenHash })
+      }).then(function (r) {
+        return r.text().then(function (text) {
+          var body = null;
+          try { body = JSON.parse(text); } catch (e) { /* not JSON */ }
+          return { ok: r.ok, status: r.status, body: body, raw: text };
+        });
+      }).catch(function (e) {
+        return { ok: false, status: 0, body: null, raw: String(e && e.message) };
+      });
+    }
+
+    /** Classifie l'erreur Supabase reçue pour choisir l'état UI. */
+    function classifyVerifyError(result) {
+      var msg = '';
+      if (result.body && result.body.error_description) msg = result.body.error_description;
+      else if (result.body && result.body.msg) msg = result.body.msg;
+      else if (result.body && result.body.message) msg = result.body.message;
+      else if (result.raw) msg = result.raw;
+      var lower = (msg || '').toLowerCase();
+
+      if (lower.indexOf('expired') !== -1) return 'expired';
+      // 'Token has been used', 'invalid token', etc. — on traite comme
+      // 'used' (succès implicite : signifie probablement que l'app a
+      // déjà consommé le token).
+      if (lower.indexOf('used') !== -1 ||
+          lower.indexOf('invalid') !== -1 ||
+          lower.indexOf('not found') !== -1) return 'used';
+      return 'error';
+    }
+
+    /** Main. Démarre tout. */
+    function main() {
+      var params = parseParams();
+
+      // Si Supabase a renvoyé une erreur explicite dans l'URL → on
+      // n'essaie même pas le verifyOtp, on affiche directement.
+      if (params.error) {
+        cleanUrl();
+        showState('state-error');
+        var bodyEl = document.getElementById('error-body');
+        if (bodyEl && params.error_description) bodyEl.textContent = params.error_description;
+        return;
+      }
+
+      // Pas de token_hash : l'user est arrivé ici sans email. Le meta
+      // refresh prendra le relais vers /.
+      if (!params.token_hash || !params.type) {
+        return;
+      }
+
+      // On a un token. Adapter le copy de succès au type AVANT le verify
+      // pour que la transition soit fluide quand on switche d'état.
+      customizeSuccessCopy(params.type);
+
+      // Capture token + type avant cleanup URL pour utilisation post-clean.
+      var tokenHash = params.token_hash;
+      var type = params.type;
+
+      // Cleanup URL maintenant — sécurité (pas de leak dans history /
+      // referer header si l'user navigue ensuite).
+      cleanUrl();
+
+      // Laisser iOS tenter l'Universal Link en priorité avant qu'on
+      // consomme le token côté web. Sinon on risque de griller le token
+      // avant que l'app native le récupère, et l'app montrera un état
+      // "déjà utilisé" alors que l'user vient juste de cliquer.
+      setTimeout(function () {
+        verifyOtpWeb(tokenHash, type).then(function (result) {
+          if (result.ok) {
+            // 200 OK : succès web. L'app n'a pas intercepté (refus user
+            // ou pas d'app installée). On affiche l'état succès.
+            showState('state-success');
+            return;
+          }
+          // Erreur — classifier.
+          var kind = classifyVerifyError(result);
+          if (kind === 'expired') {
+            showState('state-expired');
+          } else if (kind === 'used') {
+            // Token déjà consommé — probablement par l'app native qui
+            // a intercepté avant nous. UX = succès.
+            showState('state-used');
+          } else {
+            showState('state-error');
+            var bodyEl = document.getElementById('error-body');
+            if (bodyEl && result.body && result.body.error_description) {
+              bodyEl.textContent = result.body.error_description;
+            }
+          }
+        });
+      }, UNIVERSAL_LINK_GRACE_MS);
+    }
+
+    // Démarrer après que le DOM soit prêt (le script est en fin de body
+    // donc en pratique on est déjà bon, mais defensive).
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', main);
+    } else {
+      main();
+    }
   </script>
 </body>
 </html>
