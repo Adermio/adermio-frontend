@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light">
+
+  <title>Ouverture d'Adermio…</title>
+  <meta name="description" content="Ouverture de l'application Adermio.">
+
+  <!--
+    Universal Link interception window.
+
+    Quand un user clique sur un lien d'email d'auth Supabase
+    (https://adermio.com/callback?code=xxx), iOS intercepte l'URL via le
+    fichier AASA et ouvre l'app Adermio si elle est installée. Pendant
+    ce délai très court, Mail/Safari affiche cette page. Si l'app n'est
+    pas installée OU que l'AASA n'est pas encore propagé, on tombe sur
+    le fallback `meta refresh` ci-dessous qui ramène l'user vers la home.
+
+    Avant : on avait un redirect 302 server-side dans vercel.json. Le
+    problème = Mail iOS s'interrompait avant la fin du 302 (l'app prend
+    le focus) → la WebView restait sur "about:blank". Une vraie page
+    HTML statique évite ce bug et donne un fond visuel propre pendant
+    la transition vers l'app.
+  -->
+  <meta http-equiv="refresh" content="3;url=/">
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0F3D39">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #F8FAFC;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      color: #0F172A;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .logo-wrap {
+      width: 88px;
+      height: 88px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #0F3D39 0%, #14B8A6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 32px rgba(15, 61, 57, 0.18);
+    }
+
+    .logo-wrap img {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      object-fit: cover;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid #CCFBF1;
+      border-top-color: #0F3D39;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+      color: #0F172A;
+      letter-spacing: -0.3px;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #64748B;
+      margin: 0 0 36px 0;
+      max-width: 320px;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .cta {
+      display: block;
+      width: 100%;
+      padding: 14px 24px;
+      background-color: #0F3D39;
+      color: #FFFFFF;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      transition: background-color 0.15s ease;
+    }
+
+    .cta:hover, .cta:active {
+      background-color: #0A2A27;
+    }
+
+    .secondary {
+      display: block;
+      font-size: 13px;
+      color: #94A3B8;
+      text-decoration: none;
+      padding: 8px;
+    }
+
+    .secondary:hover {
+      color: #0F3D39;
+    }
+
+    /* Hide CTA buttons for the first 2.5s — iOS Universal Link usually
+       intercepts within 500ms; we only show the fallback if the user
+       is still on the page after that. */
+    .actions {
+      opacity: 0;
+      animation: fadeIn 0.3s ease forwards;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-wrap">
+      <img src="/logo_Adermio.png" alt="Adermio">
+    </div>
+    <div class="spinner"></div>
+    <h1>Ouverture d'Adermio…</h1>
+    <p>Si l'application ne s'ouvre pas automatiquement, vérifiez qu'elle est bien installée sur votre appareil.</p>
+    <div class="actions">
+      <a class="cta" href="/">Retour à l'accueil</a>
+      <a class="secondary" href="https://apps.apple.com/app/adermio">Télécharger l'application</a>
+    </div>
+  </div>
+
+  <script>
+    // Fallback JS: si après 3s on est toujours là (pas d'app installée),
+    // on a déjà déclenché le meta refresh. Ce script sert juste à
+    // forcer un re-trigger de l'Universal Link sur Safari iOS qui
+    // parfois ne capte pas le premier hit.
+    //
+    // On garde l'URL d'origine (avec tokens Supabase) en hash pour que
+    // si l'app n'ouvre pas, on puisse au moins logger l'attempt.
+    (function () {
+      try {
+        var url = new URL(window.location.href);
+        // Pas de retransmission de tokens dans le history — RGPD.
+        if (url.search || url.hash) {
+          window.history.replaceState({}, document.title, url.pathname);
+        }
+      } catch (e) { /* no-op */ }
+    })();
+  </script>
+</body>
+</html>

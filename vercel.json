@@ -101,16 +101,16 @@
       "source": "/static3.tildacdn.com/:path*",
       "destination": "/",
       "statusCode": 301
-    },
+    }
+  ],
+  "rewrites": [
     {
       "source": "/callback",
-      "destination": "/",
-      "statusCode": 302
+      "destination": "/callback.html"
     },
     {
       "source": "/callback/:path*",
-      "destination": "/",
-      "statusCode": 302
+      "destination": "/callback.html"
     }
   ],
   "headers": [
