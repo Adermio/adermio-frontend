@@ -600,17 +600,28 @@
     return { x0: x0, x1: x1, y0: y0, y1: y1 };
   }
 
-  function headPose(m) {
+  function headPose(m, aspect) {
     var lc = pt(m, LM.lCheek), rc = pt(m, LM.rCheek), ch = pt(m, LM.chin), fh = pt(m, LM.forehead);
     var hx = rc.x - lc.x, hy = rc.y - lc.y, hz = rc.z - lc.z;
     var vx = fh.x - ch.x, vy = fh.y - ch.y, vz = fh.z - ch.z;
     var nx = hy * vz - hz * vy, ny = hz * vx - hx * vz, nz = hx * vy - hy * vx;
     var nLen = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1e-9;
+    // MediaPipe normalizes x by video WIDTH and y by HEIGHT (z ~ width-scaled).
+    // In portrait (h>w) that anisotropy understates the y-terms of the normal,
+    // which INFLATES the measured pitch by ~h/w (1.78 on a 9:16 phone stream):
+    // pitchMax 20° behaved like a ~11° physical gate — users holding the phone
+    // slightly low got stuck on pitchOff (field report, ES launch test).
+    // Corrected normal in isotropic (width) units is (A·nx, ny, A·nz), so only
+    // the pitch denominator changes. Yaw is left as-is on purpose: its ratio
+    // nx/nz cancels the y-scale, so the tuned bin thresholds stay valid. Roll
+    // is left as-is too (under-measured = more tolerant, field-validated).
+    var A = aspect || 1;
+    var pLen = Math.sqrt(A * A * (nx * nx + nz * nz) + ny * ny) || 1e-9;
     // Roll: rotation of the cheek-to-cheek line in the image plane (z dropped).
     // atan2(hy, hx) gives the angle of the cheek vector vs horizontal.
     return {
       yaw: (Math.atan2(nx, -nz) * 180) / Math.PI,
-      pitch: (Math.asin(Math.max(-1, Math.min(1, -ny / nLen))) * 180) / Math.PI,
+      pitch: (Math.asin(Math.max(-1, Math.min(1, -ny / pLen))) * 180) / Math.PI,
       roll: (Math.atan2(hy, hx) * 180) / Math.PI,
     };
   }
@@ -1944,7 +1955,7 @@
 
       S.fc++;
       var dt = S.prevT ? now - S.prevT : 33;
-      var pose = headPose(marks);
+      var pose = headPose(marks, ($v.videoWidth > 0) ? $v.videoHeight / $v.videoWidth : 1);
       var sz = faceSize(marks);
       var stab = stabPerSec(marks, S.prev, dt);
       var nose = marks[LM.nose];
