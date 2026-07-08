@@ -1526,6 +1526,17 @@ window.handleImageUpload = async function (input, previewId, overlayId, emptyId)
 // --- SUBMISSION TO WEBHOOK ---
 async function submitFormData() {
   if (isSubmitting) return;
+
+  // Hard guard: never submit without a successfully uploaded face photo.
+  // The step-3 gate (validationState.facePhotoUploaded) should make this
+  // unreachable, but a failed background re-upload after a retake could in
+  // theory leave getUrl empty — the analysis would then run without any
+  // usable photo. Belt and braces.
+  if (!formState.photos.face.getUrl) {
+    alert("Votre photo de face n'a pas fini de s'envoyer. Vérifiez votre connexion puis réessayez — ou reprenez la photo à l'étape 3.");
+    return;
+  }
+
   isSubmitting = true;
   btnNext.disabled = true;
 
@@ -1650,6 +1661,12 @@ async function submitFormData() {
   params.append("info_suppl", info_suppl);
 
   params.append("scan_log", formState.scanLog || "");
+
+  // Provenance — parity with the app payload (source/lang) + engine version
+  // for telemetry. n8n ignores unknown fields, so these are additive-safe.
+  params.append("lang", "fr");
+  params.append("source", "web");
+  params.append("scan_engine", "web_facescan_v9.1");
 
   params.append("consentement", "yes");
   params.append("formid", "form1380783333");
@@ -1862,7 +1879,11 @@ async function submitFormData() {
                 if (typeof window.FaceMesh !== 'function') return;
                 var base = window._adermioMediaPipeBase;
                 var fm = new window.FaceMesh({ locateFile: function (f) { return base + f; } });
-                fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+                // refineLandmarks predicate MUST match facescan.js's isHighEnd so the
+                // pre-warmed graph is the same one the scan instantiates (a mismatch
+                // would re-initialize the WASM graph at scan start and waste the warm-up).
+                var preWarmHighEnd = (window.devicePixelRatio || 1) >= 3 || (navigator.deviceMemory || 4) >= 6;
+                fm.setOptions({ maxNumFaces: 1, refineLandmarks: preWarmHighEnd, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
                 if (typeof fm.initialize === 'function') {
                     fm.initialize().then(function () {
                         window._adermioFaceMeshReady = true;

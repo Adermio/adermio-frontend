@@ -1,7 +1,22 @@
 /**
- * Adermio Face Scan v9.0 — Production Release
+ * Adermio Face Scan v9.1 — Production Release
  *
  * Multi-angle guided scan via MediaPipe Face Mesh (468 landmarks).
+ *
+ * v9.1 (app-parity pass, 2026-07):
+ *  - Preview redesigned to match the app's "Scan validé." hero (Face ID style):
+ *    check hero + fusion copy + warning banners (face missing / borderline
+ *    quality) + collapsible captures grid + "Je préfère importer manuellement"
+ *  - Interrupted screen with RESUME (captures kept in memory) instead of the
+ *    old error + forced manual fallback
+ *  - Winner verification pass during the "Scan terminé" overlay: each bin's
+ *    best capture is re-analyzed on its real JPEG pixels; unacceptable winners
+ *    are swapped with their runner-up (port of the app's analyzeWinnersInBackground)
+ *  - "ultra" device tier (≥6GB RAM + ≥6 cores): 1920×1440 stream + 1500px
+ *    captures — upload resolution parity with the app's takePhoto+resize
+ *  - refineLandmarks enabled on high-end devices (iris-refined mesh → finer
+ *    pose + stability). The attention model ships inside the vendored
+ *    packed-assets .data, so no extra network fetch.
  *
  * Improvements over v8.0 (parity + edge over the React Native app):
  *  - Post-capture quality validation (real pixel-level brightness + Laplacian on every captured frame)
@@ -32,11 +47,21 @@
     return dpr >= 3 || mem >= 6;
   })();
 
-  var deviceTier = isHighEnd ? "high" : (navigator.deviceMemory && navigator.deviceMemory <= 2 ? "low" : "mid");
+  // "ultra" tier: proven RAM + cores → we can afford a 1920×1440 stream and
+  // 1500px captures (upload-resolution parity with the app, whose takePhoto
+  // output is resized to 1500px before upload anyway). iOS never exposes
+  // deviceMemory so iPhones stay on the safe 1280×960 "high" path.
+  var isUltra = (function () {
+    var mem = navigator.deviceMemory || 0;
+    var cores = navigator.hardwareConcurrency || 0;
+    return mem >= 6 && cores >= 6;
+  })();
 
-  var CAM_W = isHighEnd ? 1280 : 640;
-  var CAM_H = isHighEnd ? 960 : 480;
-  var CAP_MAX = isHighEnd ? 1280 : 800;
+  var deviceTier = isUltra ? "ultra" : (isHighEnd ? "high" : (navigator.deviceMemory && navigator.deviceMemory <= 2 ? "low" : "mid"));
+
+  var CAM_W = isUltra ? 1920 : (isHighEnd ? 1280 : 640);
+  var CAM_H = isUltra ? 1440 : (isHighEnd ? 960 : 480);
+  var CAP_MAX = isUltra ? 1500 : (isHighEnd ? 1280 : 800);
 
   // Compression target before upload (matches the mobile app)
   var COMPRESS_MAX_W = 1500;
@@ -143,6 +168,21 @@
       previewTitle: "Vos captures",
       previewHint: "Tapez sur une photo pour l'agrandir",
 
+      // Preview hero — verbatim app (lib/i18n/fr/scan.json "preview")
+      previewValidated: "Scan validé.",
+      previewFusion: "Adermio a fusionné vos {n} angles en un profil cutané unique.",
+      showCaptures: "Voir mes captures",
+      hideCaptures: "Masquer mes captures",
+      preferManual: "Je préfère importer manuellement",
+      warnFaceTitle: "Photo de face manquante",
+      warnFaceBody: "La photo de face est indispensable pour l'analyse.",
+      warnFaceBtn: "Capturer la face",
+      warnQuality: "Qualité d'image limite — vous pouvez reprendre un angle.",
+
+      // Interrupted screen (resume — verbatim app)
+      intSub: "Vos captures sont conservées. Reprenez là où vous en étiez.",
+      btnResume: "Reprendre le scan",
+
       excellent: "Excellent", good: "Bon", ok: "Correct", missing: "Manquant",
       keep: "Garder", retakeOne: "Reprendre",
       retake: "Refaire", validate: "Valider et continuer",
@@ -244,6 +284,19 @@
       previewTitle: "Your captures",
       previewHint: "Tap a photo to enlarge it",
 
+      previewValidated: "Scan validated.",
+      previewFusion: "Adermio merged your {n} angles into a single skin profile.",
+      showCaptures: "View my captures",
+      hideCaptures: "Hide my captures",
+      preferManual: "I'd rather upload manually",
+      warnFaceTitle: "Front photo missing",
+      warnFaceBody: "The front photo is required for the analysis.",
+      warnFaceBtn: "Capture front",
+      warnQuality: "Borderline image quality — you can retake an angle.",
+
+      intSub: "Your captures are saved. Pick up where you left off.",
+      btnResume: "Resume scan",
+
       excellent: "Excellent", good: "Good", ok: "Fair", missing: "Missing",
       keep: "Keep", retakeOne: "Retake",
       retake: "Retake", validate: "Validate and continue",
@@ -344,6 +397,19 @@
 
       previewTitle: "Tus capturas",
       previewHint: "Toca una foto para ampliarla",
+
+      previewValidated: "Escaneo validado.",
+      previewFusion: "Adermio ha fusionado tus {n} ángulos en un perfil cutáneo único.",
+      showCaptures: "Ver mis capturas",
+      hideCaptures: "Ocultar mis capturas",
+      preferManual: "Prefiero subir manualmente",
+      warnFaceTitle: "Falta la foto frontal",
+      warnFaceBody: "La foto frontal es imprescindible para el análisis.",
+      warnFaceBtn: "Capturar el frente",
+      warnQuality: "Calidad de imagen justa — puedes repetir un ángulo.",
+
+      intSub: "Tus capturas se han conservado. Continúa donde lo dejaste.",
+      btnResume: "Reanudar el escaneo",
 
       excellent: "Excelente", good: "Bien", ok: "Aceptable", missing: "Falta",
       keep: "Conservar", retakeOne: "Volver a tomar",
@@ -596,6 +662,59 @@
       rejectReason: rejectReason,
       warnings: warnings,
     };
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     WINNER VERIFICATION — port of the app's analyzeWinnersInBackground.
+     The per-capture quality gate uses brightness/blur sampled from the LIVE
+     video a few frames before the capture (≤200ms of drift). This pass
+     re-measures each bin's winning JPEG on its REAL stored pixels during the
+     1.5s "Scan terminé" overlay, and swaps in the runner-up when the winner
+     turns out unacceptable. Analysis window: center 60% crop downscaled to
+     120×120 — same scale as analyzeBlur, so CFG.postBlurMinReject and the
+     brightness reject thresholds stay directly comparable.
+     ═══════════════════════════════════════════════════════════ */
+  function analyzeBlobQuality(blob) {
+    return new Promise(function (resolve) {
+      var bmpPromise = (typeof createImageBitmap === "function")
+        ? createImageBitmap(blob).catch(function () { return null; })
+        : Promise.resolve(null);
+      bmpPromise.then(function (bmp) {
+        if (!bmp) { resolve(null); return; }
+        try {
+          var cw = 120, ch = 120;
+          var cv = document.createElement("canvas");
+          cv.width = cw; cv.height = ch;
+          var cx = cv.getContext("2d", { willReadFrequently: true });
+          // Center 60% crop — winners are face-centered by construction
+          // (captures only fire when distOk + centering hold).
+          var sx = bmp.width * 0.2, sy = bmp.height * 0.2;
+          var sw = bmp.width * 0.6, sh = bmp.height * 0.6;
+          cx.drawImage(bmp, sx, sy, sw, sh, 0, 0, cw, ch);
+          var d = cx.getImageData(0, 0, cw, ch).data;
+          try { bmp.close(); } catch (_) {}
+          var g = new Float32Array(cw * ch);
+          var lumaSum = 0;
+          for (var i = 0; i < g.length; i++) {
+            g[i] = d[i * 4] * 0.299 + d[i * 4 + 1] * 0.587 + d[i * 4 + 2] * 0.114;
+            lumaSum += g[i];
+          }
+          var sum = 0, n = 0;
+          for (var y = 1; y < ch - 1; y++) for (var x = 1; x < cw - 1; x++) {
+            var lap = -4 * g[y * cw + x] + g[(y - 1) * cw + x] + g[(y + 1) * cw + x] + g[y * cw + x - 1] + g[y * cw + x + 1];
+            sum += lap * lap; n++;
+          }
+          resolve({ luma: lumaSum / g.length, lap: n > 0 ? sum / n : 0 });
+        } catch (e) {
+          try { bmp.close(); } catch (_) {}
+          resolve(null);
+        }
+      });
+    });
+  }
+
+  function blobQualityUnacceptable(q) {
+    return q.luma < CFG.postBrightMinReject || q.luma > CFG.postBrightMaxReject || q.lap < CFG.postBlurMinReject;
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -910,19 +1029,48 @@
     + '</div>'
     + '</div>'
 
-    /* Preview screen */
-    + '<div id="fs-prev" style="display:none;padding:24px 16px;background:#FAFAF9;color:#1f2937;">'
-    + '<p style="font-size:10px;font-weight:600;color:#44403C;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 4px;text-align:center;">' + t.previewTitle + '</p>'
-    + '<p id="fs-prev-sub" style="font-size:11px;color:#a8a29e;margin:0 0 16px;text-align:center;font-weight:400;"></p>'
-    + '<div id="fs-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;"></div>'
-    + '<p style="font-size:10px;color:#a8a29e;margin:6px 0 14px;text-align:center;font-weight:400;">' + t.previewHint + '</p>'
+    /* Preview screen — "Scan validé." hero, mirror of the app's biometric
+       redesign: teal check hero + fusion copy + warning banners. The captures
+       grid (a web-only power feature: per-angle retake) is preserved but
+       collapsed behind a discreet text link so the default view matches the
+       app 1:1. */
+    + '<div id="fs-prev" style="display:none;padding:30px 20px 24px;background:#FAFAF9;color:#1f2937;">'
 
+    /* Hero */
+    + '<div style="text-align:center;margin-bottom:20px;">'
+    +   '<div style="width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:rgba(20,184,166,.10);display:flex;align-items:center;justify-content:center;">'
+    +     '<svg width="34" height="34" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#14B8A6"/><polyline points="8 12 11 15 16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+    +   '</div>'
+    +   '<p style="font-family:\'Playfair Display\',serif;font-size:27px;color:#0F3D39;margin:0 0 8px;font-weight:600;line-height:1.15;">' + t.previewValidated + '</p>'
+    +   '<p id="fs-prev-sub" style="font-size:13px;color:#78716c;margin:0 auto;max-width:280px;font-weight:400;line-height:1.5;"></p>'
+    + '</div>'
+
+    /* Warning banners (hidden by default, driven by updatePreviewMeta) */
+    + '<div id="fs-warn-face" style="display:none;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:14px;background:#FEF2F2;border:1px solid #FECACA;margin-bottom:12px;">'
+    +   '<svg width="16" height="16" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>'
+    +   '<div style="flex:1;text-align:left;">'
+    +     '<p style="font-size:12px;font-weight:700;color:#991B1B;margin:0 0 2px;">' + t.warnFaceTitle + '</p>'
+    +     '<p style="font-size:11px;color:#B91C1C;margin:0 0 8px;font-weight:400;line-height:1.4;">' + t.warnFaceBody + '</p>'
+    +     '<button id="fs-warn-face-btn" type="button" style="padding:8px 16px;border:none;border-radius:999px;background:#EF4444;color:#fff;font-size:10.5px;font-weight:700;cursor:pointer;letter-spacing:.6px;text-transform:uppercase;">' + t.warnFaceBtn + '</button>'
+    +   '</div>'
+    + '</div>'
+    + '<div id="fs-warn-quality" style="display:none;align-items:center;gap:10px;padding:11px 14px;border-radius:14px;background:#FFFBEB;border:1px solid #FDE68A;margin-bottom:12px;">'
+    +   '<svg width="15" height="15" fill="none" stroke="#D4B483" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+    +   '<p style="font-size:11px;color:#92400E;margin:0;font-weight:500;text-align:left;line-height:1.4;">' + t.warnQuality + '</p>'
+    + '</div>'
+
+    /* Collapsible captures grid (web-only: per-angle retake) */
+    + '<button id="fs-showgrid" type="button" style="display:block;width:100%;padding:8px;border:none;background:transparent;color:#a8a29e;font-size:11px;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:3px;margin-bottom:6px;font-family:\'DM Sans\',sans-serif;">' + t.showCaptures + '</button>'
+    + '<div id="fs-grid-wrap" style="display:none;margin-bottom:10px;">'
+    +   '<div id="fs-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;"></div>'
+    +   '<p style="font-size:10px;color:#a8a29e;margin:6px 0 10px;text-align:center;font-weight:400;">' + t.previewHint + '</p>'
     /* Quality legend */
-    + '<div id="fs-leg" style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;">'
-    +   '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#14B8A6;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.excellent + '</span></div>'
-    +   '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#D4B483;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.good + '</span></div>'
-    +   '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#A8A29E;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.ok + '</span></div>'
-    +   '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#EF4444;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.missing + '</span></div>'
+    +   '<div id="fs-leg" style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;">'
+    +     '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#14B8A6;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.excellent + '</span></div>'
+    +     '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#D4B483;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.good + '</span></div>'
+    +     '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#A8A29E;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.ok + '</span></div>'
+    +     '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#EF4444;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.missing + '</span></div>'
+    +   '</div>'
     + '</div>'
 
     + '<div id="fs-zoom-wrap" style="margin-bottom:16px;">'
@@ -938,6 +1086,7 @@
     + '</div></div></div>'
 
     + '<button id="fs-re" style="width:100%;padding:11px;border:1px solid #e7e5e4;border-radius:2rem;background:transparent;color:#a8a29e;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;">' + t.restart + '</button>'
+    + '<button id="fs-prefmanual" type="button" style="display:block;width:100%;padding:10px;border:none;background:transparent;color:#a8a29e;font-size:11px;font-weight:400;cursor:pointer;margin-top:2px;font-family:\'DM Sans\',sans-serif;">' + t.preferManual + '</button>'
     + '</div>'
 
     /* Retake/preview modal — three actions in a 1+2 stack:
@@ -973,6 +1122,19 @@
     + '<svg width="20" height="20" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
     + '</div>'
     + '<p id="fs-em" style="font-size:13px;color:#991b1b;margin:0;font-weight:400;line-height:1.6;"></p>'
+    + '</div>'
+
+    /* Interrupted screen — resume-friendly (app parity: captures are kept in
+       memory, "Reprendre le scan" re-enters calibration with the bins intact
+       instead of dumping the user to an error + forced manual fallback). */
+    + '<div id="fs-int" style="display:none;padding:48px 28px 36px;text-align:center;background:#FAFAF9;color:#1f2937;">'
+    + '<div style="width:56px;height:56px;margin:0 auto 16px;border-radius:50%;background:rgba(20,184,166,.10);display:flex;align-items:center;justify-content:center;">'
+    +   '<svg width="24" height="24" fill="none" stroke="#0F3D39" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="10" y1="9" x2="10" y2="15"/><line x1="14" y1="9" x2="14" y2="15"/></svg>'
+    + '</div>'
+    + '<p style="font-size:18px;font-weight:700;color:#0F3D39;margin:0 0 6px;font-family:\'DM Sans\',sans-serif;">' + t.interrupted + '</p>'
+    + '<p id="fs-int-sub" style="font-size:13px;color:#78716c;margin:0 auto 22px;max-width:280px;font-weight:400;line-height:1.5;">' + t.intSub + '</p>'
+    + '<button id="fs-int-resume" type="button" style="width:100%;max-width:320px;padding:16px 20px;border:none;border-radius:9999px;background:#0F3D39;color:#fff;font-size:12.5px;font-weight:700;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;display:block;margin:0 auto 10px;box-shadow:0 8px 20px -8px rgba(15,61,57,.4);">' + t.btnResume + '</button>'
+    + '<button id="fs-int-restart" type="button" style="width:100%;max-width:320px;padding:12px;border:1px solid #e7e5e4;border-radius:2rem;background:transparent;color:#a8a29e;font-size:11px;font-weight:500;cursor:pointer;display:block;margin:0 auto;">' + t.restart + '</button>'
     + '</div>'
 
     /* Landscape overlay — shown automatically when width > height during the
@@ -1137,7 +1299,12 @@
     var fm = new window.FaceMesh({
       locateFile: function (f) { return base + f; },
     });
-    fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+    // refineLandmarks (attention model — iris/lip-refined mesh) on high-end
+    // devices: finer landmark positions → better pose + stability estimates.
+    // The attention model lives inside the same vendored packed-assets .data,
+    // so enabling it costs CPU only, no extra network fetch. Low/mid devices
+    // keep the lighter mesh to preserve frame rate.
+    fm.setOptions({ maxNumFaces: 1, refineLandmarks: isHighEnd, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
     fm.onResults(cb);
     return fm;
   }
@@ -1234,7 +1401,7 @@
     container.innerHTML = buildUI(t);
     function $(sel) { return container.querySelector(sel); }
     var $perm = $("#fs-perm"), $load = $("#fs-load"), $scan = $("#fs-scan");
-    var $prev = $("#fs-prev"), $err = $("#fs-err");
+    var $prev = $("#fs-prev"), $err = $("#fs-err"), $int = $("#fs-int");
     var $v = $("#fs-v"), $ov = $("#fs-ov");
     var $t1 = $("#fs-t1"), $t2 = $("#fs-t2"), $em = $("#fs-em");
     var $retakeBadge = $("#fs-retakebadge");
@@ -1363,8 +1530,8 @@
     }
 
     function show(name) {
-      var map = { perm: $perm, load: $load, scan: $scan, prev: $prev, err: $err };
-      [$perm, $load, $scan, $prev, $err].forEach(function (e) { e.style.display = "none"; });
+      var map = { perm: $perm, load: $load, scan: $scan, prev: $prev, err: $err, int: $int };
+      [$perm, $load, $scan, $prev, $err, $int].forEach(function (e) { e.style.display = "none"; });
       map[name].style.display = "";
       if (name === "scan" || name === "load") enterFullscreen();
       else exitFullscreen();
@@ -1426,13 +1593,44 @@
         if (S.phase === "calibrating" || S.phase === "scanning" || S.phase === "countdown" || S.phase === "load") {
           stopCam(S);
           if (S.idleDraw) { clearInterval(S.idleDraw); S.idleDraw = null; }
-          // Keep state recoverable: when the user returns we surface a clear
-          // "interrupted" message instead of a frozen camera preview.
+          // App parity: captures stay in memory and the user gets a proper
+          // "interrupted" screen with a RESUME action (the old behaviour
+          // dumped them on an error screen + auto manual fallback after 3s,
+          // throwing away everything already captured).
           S._interrupted = true;
-          if (!dead) showErr(t.interrupted + " — " + t.interruptedSub);
+          if (!dead) showInterrupted();
         }
       }
     }
+
+    function showInterrupted() {
+      S.phase = "idle";
+      clearGuideUI();
+      show("int");
+      S.logger.log({ type: "scan_interrupted", timestamp: Date.now() });
+    }
+
+    // Interrupted-screen actions. Resume keeps everything (bins, retake
+    // target, logger session) and simply re-enters calibration — the camera
+    // stream was stopped, so beginCalibration re-requests it.
+    $("#fs-int-resume").addEventListener("click", function () {
+      S._interrupted = false;
+      S.calibSince = null;
+      S.fc = 0;
+      S.cBr = null; S.cBl = null;
+      S.prev = null; S.prevT = null;
+      S.logger.log({ type: "scan_resumed", timestamp: Date.now() });
+      beginCalibration(false);
+    });
+    $("#fs-int-restart").addEventListener("click", function () {
+      S._interrupted = false;
+      if (onReturn) {
+        if (window.AdermioFaceScan) window.AdermioFaceScan.destroy();
+        onReturn();
+        return;
+      }
+      if (window.AdermioFaceScan) window.AdermioFaceScan.restart();
+    });
     function onPageHide() {
       // pagehide fires on tab close, navigation away, and bfcache freeze. Always
       // release the camera regardless of state — leaving tracks alive would keep
@@ -1926,7 +2124,39 @@
       showCompleteOverlay();
       if (navigator.vibrate) navigator.vibrate([50, 25, 50]);
 
-      setTimeout(function () {
+      // Winner verification runs DURING the 1.5s overlay (parity with the
+      // app's analyzeWinnersInBackground): re-measure every bin winner on its
+      // real JPEG pixels, swap in the runner-up when the winner is
+      // unacceptable and the runner-up is clean. Must complete before
+      // showPreview → doUpload so the corrected winner is what gets uploaded.
+      function verifyWinners() {
+        var checks = [];
+        for (var vi = 0; vi < BIN_IDS.length; vi++) {
+          (function (binId) {
+            var bin = S.bins[binId];
+            if (!bin.length) return;
+            checks.push(analyzeBlobQuality(bin[0].blob).then(function (q) {
+              if (!q || !blobQualityUnacceptable(q)) return;
+              if (bin.length < 2) return;
+              return analyzeBlobQuality(bin[1].blob).then(function (q2) {
+                if (!q2 || blobQualityUnacceptable(q2)) return;
+                var demoted = bin[0];
+                bin[0] = bin[1];
+                bin[1] = demoted;
+                S.logger.log({
+                  type: "winner_swap", timestamp: Date.now(), bin: binId,
+                  winnerLuma: Math.round(q.luma), winnerLap: Math.round(q.lap * 10) / 10,
+                  runnerLuma: Math.round(q2.luma), runnerLap: Math.round(q2.lap * 10) / 10,
+                });
+              });
+            }));
+          })(BIN_IDS[vi]);
+        }
+        return Promise.all(checks).catch(function () {});
+      }
+
+      var overlayDelay = new Promise(function (res) { setTimeout(res, 1500); });
+      Promise.all([verifyWinners(), overlayDelay]).then(function () {
         if (dead) return;
         hideCompleteOverlay();
         S.phase = "preview";
@@ -1939,26 +2169,64 @@
         S.retakeRejects = 0;
         S.qualityHint = null;
         showPreview(wasRetake);
-      }, 1500);
+      });
     }
 
     /* ── Preview ───────────────────────────── */
+
+    // Hero copy + warning banners — shared by showPreview and
+    // rerenderPreviewGrid so a manual retake refreshes the warnings too.
+    function updatePreviewMeta() {
+      var filled = 0, worstScore = 1;
+      for (var k = 0; k < BIN_IDS.length; k++) {
+        var b = S.bins[BIN_IDS[k]];
+        if (b.length > 0) { filled++; if (b[0].score < worstScore) worstScore = b[0].score; }
+      }
+      var subEl = $("#fs-prev-sub");
+      subEl.textContent = t.previewFusion.replace("{n}", filled);
+
+      // Face missing → red banner with a direct "capture the front" action.
+      var faceMissing = S.bins.face.length === 0;
+      $("#fs-warn-face").style.display = faceMissing ? "flex" : "none";
+
+      // Borderline quality → gold banner (any winner below the "Bon"
+      // threshold, or an incomplete set of angles). Hidden when the face
+      // banner is up — one warning at a time, the face one wins.
+      var qualityBorderline = (filled > 0 && filled < 7) || worstScore < 0.35;
+      $("#fs-warn-quality").style.display = (!faceMissing && qualityBorderline) ? "flex" : "none";
+
+      // Auto-expand the captures grid when something needs fixing so the
+      // per-angle retake affordance is one tap away.
+      if (faceMissing || qualityBorderline) setGridOpen(true);
+    }
+
+    var gridOpen = false;
+    function setGridOpen(open) {
+      gridOpen = open;
+      $("#fs-grid-wrap").style.display = open ? "" : "none";
+      $("#fs-showgrid").textContent = open ? t.hideCaptures : t.showCaptures;
+    }
+
     function showPreview(wasRetake) {
       show("prev");
       var grid = $("#fs-grid");
       grid.innerHTML = "";
-
-      var filled = 0;
-      for (var k = 0; k < BIN_IDS.length; k++) if (S.bins[BIN_IDS[k]].length > 0) filled++;
-      var subEl = $("#fs-prev-sub");
-      var word = filled === 1 ? t.angleCaptured : t.anglesCaptured;
-      subEl.textContent = filled + " " + word;
 
       for (var i = 0; i < DOT_ORDER.length; i++) {
         var bin = DOT_ORDER[i];
         var entry = S.bins[bin][0] || null;
         grid.appendChild(makeCard(bin, entry));
       }
+
+      updatePreviewMeta();
+
+      // Collapsible grid + secondary actions
+      $("#fs-showgrid").onclick = function () { setGridOpen(!gridOpen); };
+      $("#fs-warn-face-btn").onclick = function () { startRetake("face"); };
+      $("#fs-prefmanual").onclick = function () {
+        if (window.AdermioFaceScan) window.AdermioFaceScan.destroy();
+        if (onFall && !dead) onFall();
+      };
 
       var $zBtn = $("#fs-zoom-btn"), $zIn = $("#fs-zoom-input"), $zPrev = $("#fs-zoom-preview"), $zImg = $("#fs-zoom-img");
       $zBtn.onclick = function () { $zIn.click(); };
@@ -2143,21 +2411,18 @@
       });
     }
 
-    /* Re-render only the grid + sub-text after a manual retake, keeping the
-       rest of the preview screen state intact. */
+    /* Re-render only the grid + hero/warnings after a manual retake, keeping
+       the rest of the preview screen state intact. */
     function rerenderPreviewGrid() {
       var grid = $("#fs-grid");
       if (!grid) return;
       grid.innerHTML = "";
-      var filled = 0;
-      for (var k = 0; k < BIN_IDS.length; k++) if (S.bins[BIN_IDS[k]].length > 0) filled++;
-      var subEl = $("#fs-prev-sub");
-      if (subEl) subEl.textContent = filled + " " + (filled === 1 ? t.angleCaptured : t.anglesCaptured);
       for (var i = 0; i < DOT_ORDER.length; i++) {
         var bin = DOT_ORDER[i];
         var entry = S.bins[bin][0] || null;
         grid.appendChild(makeCard(bin, entry));
       }
+      updatePreviewMeta();
     }
 
     function startRetake(bin) {
@@ -2178,6 +2443,7 @@
 
     /* ── Upload ───────────────────────────── */
     function doUpload(wasRetake) {
+      if (S._debugNoUpload) return; // dev harness (#fsdebug) — no network
       if (!S.bins.face[0]) {
         // Nothing to upload — handle restart gracefully
         if (!wasRetake && window.AdermioFaceScan) window.AdermioFaceScan.restart();
@@ -2256,6 +2522,42 @@
         if (img) { img.src = entry.url; img.classList.remove("hidden"); }
         if (empty) empty.classList.add("hidden");
       }
+    }
+
+    /* ── Dev-only visual harness ─────────────────────────────────
+       Activated ONLY when the page URL carries #fsdebug: fills the bins
+       with synthetic captures and jumps straight to the preview screen so
+       the preview/warning states can be inspected without a camera.
+       No-op in production URLs. */
+    if (typeof location !== "undefined" && (location.hash || "").indexOf("fsdebug") >= 0) {
+      window.__fsDebugPreview = function (opts2) {
+        opts2 = opts2 || {};
+        S._debugNoUpload = true; // never hit the real presign API with synthetic blobs
+        var skip = opts2.skipBins || [];
+        var lowScore = !!opts2.lowScore;
+        var colors = { face: "#8aa", semi_right: "#a98", right: "#9a8", wide_right: "#89a", semi_left: "#a89", left: "#98a", wide_left: "#aa8" };
+        var pending = 0;
+        for (var i = 0; i < BIN_IDS.length; i++) {
+          (function (binId) {
+            if (skip.indexOf(binId) >= 0) { S.bins[binId] = []; return; }
+            pending++;
+            var cv = document.createElement("canvas");
+            cv.width = 300; cv.height = 400;
+            var cx2 = cv.getContext("2d");
+            cx2.fillStyle = colors[binId] || "#999";
+            cx2.fillRect(0, 0, 300, 400);
+            cx2.fillStyle = "#fff"; cx2.font = "20px sans-serif";
+            cx2.fillText(binId, 20, 200);
+            cv.toBlob(function (b) {
+              S.bins[binId] = [{ blob: b, url: URL.createObjectURL(b), score: lowScore ? 0.2 : 0.6 }];
+              pending--;
+              if (pending === 0) { S.phase = "preview"; showPreview(false); }
+            }, "image/jpeg", 0.8);
+          })(BIN_IDS[i]);
+        }
+        if (pending === 0) { S.phase = "preview"; showPreview(false); }
+      };
+      window.__fsDebugInterrupted = function () { showInterrupted(); };
     }
 
     /* ── Destroy ──────────────────────────── */
