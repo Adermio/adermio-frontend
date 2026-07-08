@@ -1074,12 +1074,15 @@
     + '</div>'
     + '</div>'
 
-    /* Preview — exact port of the app's "Scan validé." screen (v2 redesign
+    /* Preview — port of the app's "Scan validé." screen (v2 redesign
        2026-06-04 in FaceCaptureScreen.tsx): warning banners → BARE teal check
        ("encoche teal — pas de fond, pas de bordure") → Playfair Italic title →
-       optional close-up card with a floating "Optionnel" badge → footer with
-       VALIDER ET CONTINUER + helper + manual + restart. No captures grid: the
-       app removed it ("cassait la magie du scan en exposant le mécanisme"). */
+       optional close-up card with a floating "Optionnel" badge. No captures
+       grid (the app removed it), and no in-widget footer either: on the web
+       the form's own CONTINUER button advances (with its face-photo gate) and
+       its back button returns to the scan/manual choice — the app's VALIDER /
+       manual / restart actions would be redundant here (decision Antoine
+       2026-07-08). */
     + '<div id="fs-prev" style="display:none;padding:28px 24px 32px;background:#FAFAF9;color:#1f2937;font-family:\'DM Sans\',sans-serif;">'
 
     /* Warning banners (app st.warningBanner / warningBannerSoft) */
@@ -1125,22 +1128,6 @@
     + '</div>'
     + '</div>'
 
-    /* Footer — app st.foot: CTA 56px pill + helper + dashed manual + restart */
-    + '<div style="padding-top:24px;display:flex;flex-direction:column;gap:8px;align-items:center;">'
-    +   '<button id="fs-validate" type="button" style="width:100%;height:56px;border-radius:28px;background:#0F3D39;border:none;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:12px;cursor:pointer;color:#fff;font-family:\'DM Sans\',sans-serif;transition:opacity .2s;">'
-    +     '<span id="fs-validate-txt" style="font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">' + t.validateCta + '</span>'
-    +     '<svg id="fs-validate-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
-    +   '</button>'
-    +   '<p id="fs-validate-helper" style="display:none;font-size:11px;color:#A8A29E;font-weight:300;margin:-2px 0 0;text-align:center;">' + t.validateHelper + '</p>'
-    +   '<button id="fs-prefmanual" type="button" style="width:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;padding:10px;border:1px dashed #D6D3D1;border-radius:16px;background:transparent;cursor:pointer;color:#78716C;font-size:12px;font-weight:500;font-family:\'DM Sans\',sans-serif;">'
-    +     '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>'
-    +     t.preferManual
-    +   '</button>'
-    +   '<button id="fs-re" type="button" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;padding:8px;border:none;background:none;cursor:pointer;color:#78716C;font-size:13px;font-weight:500;font-family:\'DM Sans\',sans-serif;">'
-    +     '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>'
-    +     t.restart
-    +   '</button>'
-    + '</div>'
     + '</div>'
 
     + '<div id="fs-err" style="display:none;padding:52px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
@@ -2314,73 +2301,11 @@
       $("#fs-warn-face").style.display = faceMissing ? "flex" : "none";
       $("#fs-warn-quality").style.display = (!faceMissing && allBad) ? "flex" : "none";
       $("#fs-valid-hero").style.display = (!faceMissing && !allBad) ? "flex" : "none";
-
-      var $validate = $("#fs-validate");
-      var disabled = faceMissing || S._validating;
-      $validate.disabled = disabled;
-      $validate.style.opacity = disabled ? "0.4" : "1";
-      $validate.style.cursor = disabled ? "default" : "pointer";
-      $("#fs-validate-helper").style.display = faceMissing ? "" : "none";
-    }
-
-    /* VALIDER ET CONTINUER — the app's goNext advances the onboarding; on
-       the web the equivalent is the form's own "next" button (which runs the
-       step-3 validation gate). The face photo uploads in the background
-       after the scan, so if the S3 getUrl isn't ready yet we show a short
-       uploading state and poll before advancing. */
-    function onValidate() {
-      if (S.bins.face.length === 0 || S._validating) return;
-      var btnNext = document.getElementById("btn-next");
-      if (!btnNext) return;
-
-      function advance() {
-        S._validating = false;
-        updatePreviewMeta();
-        $("#fs-validate-txt").textContent = t.validateCta;
-        btnNext.click();
-      }
-
-      if (window.validationState && window.validationState.facePhotoUploaded) { advance(); return; }
-
-      // Face still uploading — wait for it (max 30s), mirroring the app's
-      // isFinalizing state ("VALIDER ET CONTINUER…").
-      S._validating = true;
-      updatePreviewMeta();
-      $("#fs-validate-txt").textContent = t.validateCta + "…";
-      var waited = 0;
-      var poll = setInterval(function () {
-        waited += 500;
-        var ok = window.validationState && window.validationState.facePhotoUploaded;
-        if (ok || waited >= 30000 || dead) {
-          clearInterval(poll);
-          if (dead) return;
-          if (ok) { advance(); return; }
-          // Upload genuinely failed — reset the CTA, the photo-error line
-          // (shown by doUpload) explains what to do.
-          S._validating = false;
-          updatePreviewMeta();
-          $("#fs-validate-txt").textContent = t.validateCta;
-        }
-      }, 500);
     }
 
     function showPreview(wasRetake) {
       show("prev");
       updatePreviewMeta();
-
-      $("#fs-validate").onclick = onValidate;
-      $("#fs-prefmanual").onclick = function () {
-        if (window.AdermioFaceScan) window.AdermioFaceScan.destroy();
-        if (onFall && !dead) onFall();
-      };
-      $("#fs-re").onclick = function () {
-        if (onReturn) {
-          if (window.AdermioFaceScan) window.AdermioFaceScan.destroy();
-          onReturn();
-          return;
-        }
-        if (window.AdermioFaceScan) window.AdermioFaceScan.restart();
-      };
 
       // Optional close-up (zoom) — app zoomBlock behaviour: empty card ↔
       // filled card with thumb + remove; tapping the filled card replaces.
