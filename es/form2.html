@@ -7,11 +7,9 @@
    <title>Análisis de piel gratuito — Adermio</title>
    <meta name="description" content="Inicia tu análisis de piel gratuito con IA en Adermio. Sube una foto y recibe un diagnóstico dermatológico personalizado en minutos.">
    <meta name="robots" content="noindex, nofollow">
-   <link rel="canonical" href="https://adermio.com/es/form">
-   <link rel="alternate" hreflang="es" href="https://adermio.com/es/form">
+    <link rel="canonical" href="https://adermio.com/es/form">
    <link rel="alternate" hreflang="fr" href="https://adermio.com/formulaire">
-   <link rel="alternate" hreflang="en" href="https://adermio.com/en/form">
-   <link rel="alternate" hreflang="x-default" href="https://adermio.com/formulaire">
+    <link rel="alternate" hreflang="es" href="https://adermio.com/es/form">
    <meta property="og:title" content="Análisis de piel gratuito — Adermio">
    <meta property="og:description" content="Inicia tu análisis de piel gratuito con IA en Adermio. Sube una foto y recibe un diagnóstico dermatológico personalizado en minutos.">
    <meta property="og:url" content="https://adermio.com/es/form">
@@ -73,7 +71,7 @@
                    <span style="font-family:'DM Sans',sans-serif; font-size:12px; color:#44403C; text-align:left;" id="inapp-instruction">Selecciona <strong>"Abrir en el navegador"</strong></span>
                </div>
            </div>
-           <button onclick="navigator.clipboard.writeText(window.location.href).then(function(){var b=document.getElementById('inapp-copy-btn');b.textContent='Enlace copiado \u2705';setTimeout(function(){b.textContent='Copiar enlace';},2000);})" id="inapp-copy-btn" style="font-family:'DM Sans',sans-serif; width:100%; padding:13px; border:1.5px solid #E7E5E4; border-radius:14px; background:white; color:#0F3D39; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">Copiar enlace</button>
+            <button onclick="navigator.clipboard.writeText(window.location.href).then(function(){var b=document.getElementById('inapp-copy-btn');b.textContent='Enlace copiado \u2705';setTimeout(function(){b.textContent='Copiar enlace';},2000);})" id="inapp-copy-btn" style="font-family:'DM Sans',sans-serif; width:100%; padding:13px; border:1.5px solid #E7E5E4; border-radius:14px; background:white; color:#0F3D39; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">Copiar enlace</button>
        </div>
    </div>
    <script>
@@ -133,11 +131,11 @@
            <div class="flex items-center gap-4">
                <div class="relative group">
                    <button class="flex items-center gap-1.5 px-2 py-1 rounded-full hover:bg-black/5 transition-colors text-brand-dark">
-                       <img src="https://flagcdn.com/es.svg" width="16" alt="ES" class="rounded-sm shadow-sm">
+                        <img src="https://flagcdn.com/es.svg" width="16" alt="ES" class="rounded-sm shadow-sm">
                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
                    </button>
                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-brand-dark/5 overflow-hidden z-[80]">
-                       <a href="https://adermio.com/formulaire" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-brand-dark hover:bg-gray-50 transition-colors">
+                        <a href="https://adermio.com/formulaire" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-brand-dark hover:bg-gray-50 transition-colors">
                            <img src="https://flagcdn.com/fr.svg" width="18" alt="Fran&ccedil;ais" class="rounded-sm shadow-sm">
                            <span>FR</span>
                        </a>
@@ -145,7 +143,7 @@
                            <img src="https://flagcdn.com/us.svg" width="18" alt="English" class="rounded-sm shadow-sm">
                            <span>EN</span>
                        </a>
-                       <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
                            <img src="https://flagcdn.com/es.svg" width="18" alt="Español" class="rounded-sm shadow-sm">
                            <span>ES</span>
                        </a>
@@ -163,15 +161,15 @@
            <div class="space-y-8 animate-fade-in max-w-xl mx-auto">
                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-stone-200 text-[10px] uppercase tracking-widest text-stone-500 shadow-sm">
                    <span class="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse"></span>
-                   Diagnóstico IA
+                    Diagnóstico IA
                </div>
 
                <h1 class="font-serif text-5xl leading-[1.15] text-brand-dark">
-                   Tu piel tiene <br><span class="text-brand-primary italic">una historia.</span>
+                    Tu piel tiene <br><span class="text-brand-primary italic">una historia.</span>
                </h1>
 
                <p class="text-stone-500 text-lg font-light leading-relaxed max-w-sm">
-                   Deja que nuestra tecnología analice tus necesidades únicas para crear tu protocolo personalizado.
+                    Deja que nuestra tecnología analice tus necesidades únicas para crear tu protocolo personalizado.
                </p>
 
                <div class="pt-8 relative group" id="name-input-container">
@@ -238,28 +236,41 @@
        </div>
 
        <div id="step-3" class="step-container">
-           <!-- ══════ MODE 1 : PRÉ-SCAN — choix scan / manuel ══════
+           <!-- ══════ MODE 1: PRE-SCAN — scan / manual choice ══════
                 Antoine wanted this to be a real step rather than a sub-screen
                 of the AdermioFaceScan widget so the user can hit "Back" from
                 inside the active scan/preview and land here again to switch
                 to manual upload. The form's btnBack handler intercepts the
                 step-3 case and routes back to this mode instead of step-2
                 whenever scan/manual is currently visible. -->
+            <!-- Choice screen — mirror of the app scan intro (FaceCaptureScreen
+                 phase "intro"): 2-line title with "definición" in Playfair
+                 Italic teal, 4 tips without trailing periods, security note
+                 BEFORE the buttons, scan CTA + full subtitle, "O" divider,
+                 manual button as a white bordered pill + subtitle. Both
+                 buttons keep their slot (the form's CONTINUE/back nav sits
+                 below, content centered). -->
            <div id="prescan-choice-mode">
                <div class="text-center mb-8">
                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-primary mb-2 block animate-pulse">Tecnología Adermio Scan&trade;</span>
-                   <h2 class="font-serif text-3xl text-brand-dark">Análisis en alta definición</h2>
+                    <h2 class="font-serif text-3xl text-brand-dark" style="line-height:1.15;">Análisis en alta<br><em style="color:#14B8A6;font-style:italic;">definición</em></h2>
                </div>
 
-               <div class="bg-brand-light/50 border border-brand-primary/20 rounded-xl p-4 mb-6 max-w-sm mx-auto">
+                <div class="bg-brand-light/50 border border-brand-primary/20 rounded-xl p-4 mb-4 max-w-sm mx-auto">
                    <h4 class="text-xs font-bold uppercase text-brand-dark mb-2 flex items-center gap-2">
-                       <i data-lucide="info" class="w-3 h-3"></i> Consejos para un análisis perfecto
+                        <i data-lucide="info" class="w-3 h-3"></i> Consejos para un análisis perfecto
                    </h4>
                    <ul class="text-xs text-stone-600 space-y-1 font-light">
                        <li>&bull; Rostro bien centrado y bien iluminado.</li>
                        <li>&bull; Cabello recogido, sin gafas.</li>
                        <li>&bull; Piel sin maquillaje si es posible.</li>
+                        <li>&bull; Preferiblemente luz natural</li>
                    </ul>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:22px;">
+                    <svg width="13" height="13" fill="none" stroke="#14B8A6" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    <span style="font-size:12px;color:#a8a29e;font-weight:300;">No se conservan datos de vídeo</span>
                </div>
 
                <!-- Inline styles below: the project ships a pre-compiled
@@ -267,36 +278,26 @@
                     classes (gap-2.5, py-[18px], tracking-[1.5px]). Inline styles
                     guarantee the buttons render exactly as designed regardless
                     of what's in the compiled bundle. -->
-               <div style="max-width:24rem;margin:0 auto;padding-top:8px;font-family:'DM Sans',sans-serif;">
-                   <!-- Primary CTA = manual upload (reliable: user controls photo
-                        quality). Secondary CTA = video scan, BETA-badged.
-                        IDs preserved (#prescan-start-scan / #prescan-start-manual)
-                        so the existing JS mode-switching logic still wires correctly. -->
-                   <button type="button" id="prescan-start-manual"
+                <div style="max-width:24rem;margin:0 auto;font-family:'DM Sans',sans-serif;">
+                    <button type="button" id="prescan-start-scan"
                        style="width:100%;padding:18px 20px;border:none;border-radius:9999px;background:#0F3D39;color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px -8px rgba(15,61,57,.4);transition:background .15s, transform .15s;">
-                       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                       Añadir mis fotos
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                        Iniciar el escaneo
                    </button>
-                   <p style="text-align:center;font-size:11px;color:#a8a29e;margin:10px 0 18px;font-weight:400;">Cámara o galería · 3 ángulos</p>
+                    <p style="text-align:center;font-size:12px;color:#a8a29e;margin:10px 0 0;font-weight:300;">Detección automática en ~15 segundos</p>
 
-                   <div style="display:flex;align-items:center;gap:10px;margin:0 0 14px;">
+                    <div style="display:flex;align-items:center;gap:14px;margin:18px 0;">
                        <div style="flex:1;height:1px;background:#e7e5e4;"></div>
-                       <span style="font-size:10px;color:#a8a29e;font-weight:600;letter-spacing:.1em;text-transform:uppercase;">o</span>
+                        <span style="font-size:11px;color:#a8a29e;font-weight:500;letter-spacing:2px;text-transform:uppercase;">o</span>
                        <div style="flex:1;height:1px;background:#e7e5e4;"></div>
                    </div>
 
-                   <button type="button" id="prescan-start-scan"
-                       style="width:100%;padding:14px 20px;border:1px solid #d6d3d1;border-radius:9999px;background:#fff;color:#44403C;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1.2px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .15s, color .15s, background .15s;">
-                       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
-                       Escaneo de vídeo automático
-                       <span style="background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:9999px;font-size:9px;font-weight:800;letter-spacing:.08em;line-height:1;">BETA</span>
+                    <button type="button" id="prescan-start-manual"
+                        style="width:100%;padding:16px 20px;border:1px solid #e7e5e4;border-radius:9999px;background:#fff;color:#0F3D39;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .15s, color .15s;">
+                        <svg width="16" height="16" fill="none" stroke="#78716C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+                        Añadir mis fotos
                    </button>
-                   <p style="text-align:center;font-size:11px;color:#a8a29e;margin:8px 0 0;font-weight:400;">Detección automática en ~15 segundos</p>
-
-                   <div style="display:flex;align-items:center;gap:5px;justify-content:center;margin-top:18px;opacity:.4;">
-                       <svg width="11" height="11" fill="none" stroke="#44403C" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                       <span style="font-size:9px;color:#44403C;font-weight:500;letter-spacing:.05em;">No se conservan datos de vídeo</span>
-                   </div>
+                    <p style="text-align:center;font-size:12px;color:#a8a29e;margin:10px 0 0;font-weight:300;">Cámara o galería &middot; 3 ángulos</p>
                </div>
            </div>
 
@@ -305,7 +306,7 @@
                <div id="facescan-mount"></div>
            </div>
 
-           <!-- ══════ MODE 3 : IMPORT MANUEL (hidden until user picks manual) ══════
+           <!-- ══════ MODE 3: MANUAL IMPORT (hidden until user picks manual) ══════
                 The old "Utiliser le scan guidé" affordance is gone — back-to-choice
                 navigation is now handled by the form's btnBack so the user has a
                 single mental model for navigating between the three modes. -->
@@ -404,7 +405,7 @@
                <div class="pt-4">
                    <button type="button" id="toggle-zoom-btn" class="w-full py-3 rounded-2xl border border-dashed border-stone-300 text-stone-400 text-xs font-bold flex items-center justify-center gap-2 hover:border-brand-primary hover:text-brand-primary transition-all uppercase tracking-wide" onclick="toggleZoomArea()">
                        <i data-lucide="plus" class="w-4 h-4"></i>
-                       Añadir zona de detalle (Opcional)
+                        Añadir zona de detalle (Opcional)
                    </button>
 
                    <div id="zoom-area" class="hidden mt-4 animate-fade-in">
@@ -431,10 +432,10 @@
            </div>
 
            <p id="photo-error" class="text-red-500 text-xs text-center mt-6 hidden flex items-center justify-center gap-1 animate-pulse">
-               <i data-lucide="alert-circle" class="w-3 h-3"></i> La foto frontal es obligatoria.
+                <i data-lucide="alert-circle" class="w-3 h-3"></i> La foto frontal es obligatoria.
            </p>
            <p id="file-type-error" class="text-red-500 text-xs text-center mt-2 hidden flex items-center justify-center gap-1 animate-pulse">
-               <i data-lucide="alert-circle" class="w-3 h-3"></i> Este formato de archivo no es compatible.
+                <i data-lucide="alert-circle" class="w-3 h-3"></i> Este formato de archivo no es compatible.
            </p>
        </div>
 
@@ -454,10 +455,10 @@
                                <span class="font-bold text-sm text-brand-dark">Corregir</span>
                            </div>
                            <span class="block text-xs font-medium text-brand-dark/90 italic leading-snug mb-3">
-                               "Tengo acné (regular o persistente) y quiero eliminarlo."
+                                "Tengo acné (regular o persistente) y quiero eliminarlo."
                            </span>
                            <span class="text-xs text-stone-500 block leading-tight">
-                               Reducir granos, marcas e inflamación
+                                Reducir granos, marcas e inflamación
                            </span>
                        </button>
 
@@ -467,10 +468,10 @@
                                <span class="font-bold text-sm text-brand-dark">Mantener/Estabilizar</span>
                            </div>
                            <span class="block text-xs font-medium text-brand-dark/90 italic leading-snug mb-3">
-                               "Mi piel está generalmente bien, pero tengo imperfecciones ocasionales."
+                                "Mi piel está generalmente bien, pero tengo imperfecciones ocasionales."
                            </span>
                            <span class="text-xs text-stone-500 block leading-tight">
-                               Evitar recurrencias, alisar la textura, mantener la piel limpia
+                                Evitar recurrencias, alisar la textura, mantener la piel limpia
                            </span>
                        </button>
                    </div>
@@ -692,7 +693,7 @@
                <div class="bg-stone-50 p-6 rounded-2xl border-2 border-stone-300 shadow-sm" id="privacy-container">
                    <h3 class="font-serif text-lg text-brand-dark mb-2">Privacidad y respeto de tus datos</h3>
                    <p class="text-xs text-stone-500 leading-relaxed mb-4">
-                       Tu información se utiliza para generar tu análisis y contribuye a mejorar nuestra IA (de forma estrictamente anónima). Permanece confidencial.
+                        Tu información se utiliza para generar tu análisis y contribuye a mejorar nuestra IA (de forma estrictamente anónima). Permanece confidencial.
                    </p>
 
                    <label class="flex items-start gap-3 cursor-pointer group">
@@ -707,13 +708,13 @@
    </div>
 
    <span class="text-sm text-stone-700 font-medium group-hover:text-brand-dark transition-colors">
-       He leído y acepto las
-       <a href="https://adermio.com/es/conditions" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 decoration-stone-300 hover:decoration-brand-primary" onclick="event.stopPropagation()">
-           Condiciones de uso
+        He leído y acepto las
+        <a href="https://adermio.com/es/conditions" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 decoration-stone-300 hover:decoration-brand-primary" onclick="event.stopPropagation()">
+            Condiciones de uso
        </a>
-       y la
-       <a href="https://adermio.com/es/confidentialite" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 decoration-stone-300 hover:decoration-brand-primary" onclick="event.stopPropagation()">
-           Política de privacidad
+        y la
+        <a href="https://adermio.com/es/confidentialite" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 decoration-stone-300 hover:decoration-brand-primary" onclick="event.stopPropagation()">
+            Política de privacidad
        </a>.
    </span>
 </label>
@@ -734,10 +735,10 @@
                <h1 class="font-serif text-4xl mb-6 text-brand-dark">¡Gracias!</h1>
 
                <p class="text-lg text-brand-dark font-medium mb-2">
-                   Tus datos se han enviado correctamente.
+                    Tus datos se han enviado correctamente.
                </p>
                <p class="text-stone-500 font-light mb-12">
-                   Análisis en curso, espera la redirección...
+                    Análisis en curso, espera la redirección...
                </p>
            </div>
        </div>
@@ -764,7 +765,7 @@
        else { document.addEventListener('DOMContentLoaded', function() { lucide.createIcons(); }); }
 
        // --- CONFIGURATION ---
-       const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/analyse-gratuite-es-fin-fevrier';
+       const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/free-analysis-web-es-test';
        const PRESIGN_URL = 'https://api.adermio.com/v2/uploads/presign';
 
 
@@ -1542,6 +1543,17 @@ window.handleImageUpload = async function (input, previewId, overlayId, emptyId)
 // --- SUBMISSION TO WEBHOOK ---
 async function submitFormData() {
  if (isSubmitting) return;
+
+  // Hard guard: never submit without a successfully uploaded face photo.
+  // The step-3 gate (validationState.facePhotoUploaded) should make this
+  // unreachable, but a failed background re-upload after a retake could in
+  // theory leave getUrl empty — the analysis would then run without any
+  // usable photo. Belt and braces.
+  if (!formState.photos.face.getUrl) {
+    alert("Tu foto frontal no ha terminado de subirse. Comprueba tu conexión e inténtalo de nuevo — o vuelve a hacer la foto en el paso 3.");
+    return;
+  }
+
  isSubmitting = true;
  btnNext.disabled = true;
 
@@ -1666,6 +1678,12 @@ async function submitFormData() {
  params.append("info_suppl", info_suppl);
 
  params.append("scan_log", formState.scanLog || "");
+
+  // Provenance — parity with the app payload (source/lang) + engine version
+  // for telemetry. n8n ignores unknown fields, so these are additive-safe.
+  params.append("lang", "es");
+  params.append("source", "web");
+  params.append("scan_engine", "web_facescan_v9.1");
 
  params.append("consentement", "yes");
  params.append("formid", "form1380783333");
@@ -1878,7 +1896,11 @@ async function submitFormData() {
                if (typeof window.FaceMesh !== 'function') return;
                var base = window._adermioMediaPipeBase;
                var fm = new window.FaceMesh({ locateFile: function (f) { return base + f; } });
-               fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+                // refineLandmarks predicate MUST match facescan.js's isHighEnd so the
+                // pre-warmed graph is the same one the scan instantiates (a mismatch
+                // would re-initialize the WASM graph at scan start and waste the warm-up).
+                var preWarmHighEnd = (window.devicePixelRatio || 1) >= 3 || (navigator.deviceMemory || 4) >= 6;
+                fm.setOptions({ maxNumFaces: 1, refineLandmarks: preWarmHighEnd, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
                if (typeof fm.initialize === 'function') {
                    fm.initialize().then(function () {
                        window._adermioFaceMeshReady = true;
