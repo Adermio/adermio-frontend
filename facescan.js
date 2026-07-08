@@ -168,16 +168,34 @@
       previewTitle: "Vos captures",
       previewHint: "Tapez sur une photo pour l'agrandir",
 
-      // Preview hero — verbatim app (lib/i18n/fr/scan.json "preview")
+      // Preview — verbatim app (lib/i18n/fr/scan.json "preview"/"errors"/"zoom")
       previewValidated: "Scan validé.",
-      previewFusion: "Adermio a fusionné vos {n} angles en un profil cutané unique.",
-      showCaptures: "Voir mes captures",
-      hideCaptures: "Masquer mes captures",
+      previewFusion: "Adermio a fusionné vos 7 angles en un profil cutané unique.",
+      validateCta: "Valider et continuer",
+      validateHelper: "Une photo de face est requise pour valider",
       preferManual: "Je préfère importer manuellement",
       warnFaceTitle: "Photo de face manquante",
       warnFaceBody: "La photo de face est indispensable pour l'analyse.",
-      warnFaceBtn: "Capturer la face",
-      warnQuality: "Qualité d'image limite — vous pouvez reprendre un angle.",
+      warnQualityTitle: "Qualité d'image limite",
+      warnQualityBody: "Vos photos pourraient être insuffisantes pour une analyse précise. Recommencez sous une meilleure lumière pour de meilleurs résultats.",
+      zoomBadge: "Optionnel",
+      zoomTapReplace: "Tapez pour remplacer",
+
+      // Position (verbatim app "calibration")
+      placeFaceInOval: "Placez votre visage dans l'ovale",
+      adjustPhone: "Ajustez la position de votre téléphone",
+      moveCloserPhoneSub: "Approchez le téléphone",
+      moveBackPhoneSub: "Éloignez le téléphone",
+
+      // Guidance PRO v4 — verbatim app (lib/i18n/fr/scan.json "guidance")
+      almostRight: "Encore un tout petit peu à droite",
+      almostLeft: "Encore un tout petit peu à gauche",
+      almostSub: "Vous y êtes presque",
+      comeBackCenter: "Revenez face à la caméra",
+      comeBackCenterSub: "Regardez l'objectif",
+      comeBackRight: "Tournez légèrement à droite",
+      comeBackLeft: "Tournez légèrement à gauche",
+      comeBackSub: "Ajustez votre position",
 
       // Interrupted screen (resume — verbatim app)
       intSub: "Vos captures sont conservées. Reprenez là où vous en étiez.",
@@ -284,15 +302,31 @@
       previewTitle: "Your captures",
       previewHint: "Tap a photo to enlarge it",
 
-      previewValidated: "Scan validated.",
-      previewFusion: "Adermio merged your {n} angles into a single skin profile.",
-      showCaptures: "View my captures",
-      hideCaptures: "Hide my captures",
-      preferManual: "I'd rather upload manually",
-      warnFaceTitle: "Front photo missing",
-      warnFaceBody: "The front photo is required for the analysis.",
-      warnFaceBtn: "Capture front",
-      warnQuality: "Borderline image quality — you can retake an angle.",
+      previewValidated: "Scan complete.",
+      previewFusion: "Adermio has merged your 7 angles into a unique skin profile.",
+      validateCta: "Validate and continue",
+      validateHelper: "A front photo is required to validate",
+      preferManual: "I'd rather import manually",
+      warnFaceTitle: "Face photo missing",
+      warnFaceBody: "The front-facing photo is required for analysis.",
+      warnQualityTitle: "Borderline image quality",
+      warnQualityBody: "Your photos may not be sufficient for accurate analysis. Try again with better lighting for best results.",
+      zoomBadge: "Optional",
+      zoomTapReplace: "Tap to replace",
+
+      placeFaceInOval: "Place your face inside the oval",
+      adjustPhone: "Adjust your phone position",
+      moveCloserPhoneSub: "Bring the phone closer",
+      moveBackPhoneSub: "Move the phone further",
+
+      almostRight: "Just a tiny bit more to the right",
+      almostLeft: "Just a tiny bit more to the left",
+      almostSub: "You're almost there",
+      comeBackCenter: "Come back facing the camera",
+      comeBackCenterSub: "Look at the lens",
+      comeBackRight: "Turn slightly to the right",
+      comeBackLeft: "Turn slightly to the left",
+      comeBackSub: "Adjust your position",
 
       intSub: "Your captures are saved. Pick up where you left off.",
       btnResume: "Resume scan",
@@ -399,14 +433,30 @@
       previewHint: "Toca una foto para ampliarla",
 
       previewValidated: "Escaneo validado.",
-      previewFusion: "Adermio ha fusionado tus {n} ángulos en un perfil cutáneo único.",
-      showCaptures: "Ver mis capturas",
-      hideCaptures: "Ocultar mis capturas",
+      previewFusion: "Adermio ha fusionado tus 7 ángulos en un perfil cutáneo único.",
+      validateCta: "Validar y continuar",
+      validateHelper: "Se requiere una foto frontal para validar",
       preferManual: "Prefiero subir manualmente",
       warnFaceTitle: "Falta la foto frontal",
       warnFaceBody: "La foto frontal es imprescindible para el análisis.",
-      warnFaceBtn: "Capturar el frente",
-      warnQuality: "Calidad de imagen justa — puedes repetir un ángulo.",
+      warnQualityTitle: "Calidad de imagen justa",
+      warnQualityBody: "Tus fotos podrían ser insuficientes para un análisis preciso. Vuelve a intentarlo con mejor luz para obtener mejores resultados.",
+      zoomBadge: "Opcional",
+      zoomTapReplace: "Toca para reemplazar",
+
+      placeFaceInOval: "Coloca tu rostro dentro del óvalo",
+      adjustPhone: "Ajusta la posición de tu teléfono",
+      moveCloserPhoneSub: "Acerca el teléfono",
+      moveBackPhoneSub: "Aleja el teléfono",
+
+      almostRight: "Un poquito más a la derecha",
+      almostLeft: "Un poquito más a la izquierda",
+      almostSub: "Ya casi estás",
+      comeBackCenter: "Vuelve a mirar a la cámara",
+      comeBackCenterSub: "Mira al objetivo",
+      comeBackRight: "Gira ligeramente a la derecha",
+      comeBackLeft: "Gira ligeramente a la izquierda",
+      comeBackSub: "Ajusta tu posición",
 
       intSub: "Tus capturas se han conservado. Continúa donde lo dejaste.",
       btnResume: "Reanudar el escaneo",
@@ -432,12 +482,14 @@
      CONFIG — synced with mobile app (lib/scan-engine.ts CFG)
      ═══════════════════════════════════════════════════════════ */
   var CFG = {
-    // Real-user testing showed 0.40 was too tight: typical arm-length selfies
-    // (~45 cm) gave faceSize ~0.30-0.36 and the calibration nagged "Rapprochez-
-    // vous" forever. We relax the lower bound to 0.32 so a natural selfie
-    // distance passes immediately, while keeping the upper bound generous
-    // for users who want a true close-up.
-    faceSizeMin: 0.32,  // was 0.40 — accept further-back faces (selfie distance)
+    // 0.40 restored (2026-07-08, retour terrain Antoine) : le web à 0.32
+    // acceptait des visages plus lointains que l'app. Les deux plateformes
+    // partagent le seuil nominal 0.32, mais l'app mesure la BOUNDING BOX
+    // MLKit (plus grande) là où le web mesure la distance front→menton du
+    // mesh MediaPipe (plus petite) — à seuil égal, le web était donc
+    // physiquement plus permissif. 0.40 sur la mesure mesh ≈ 0.32 sur la
+    // bbox MLKit → même distance effective que l'app.
+    faceSizeMin: 0.40,
     faceSizeMax: 0.70,  // unchanged — still allow very close zoom-in
     centerMaxOff: 0.15,
 
@@ -865,13 +917,6 @@
     return lS * 0.35 + tS * 0.30 + aS * 0.35;
   }
 
-  function qLabel(s, t) {
-    if (s >= 0.55) return { l: t.excellent, c: "#14B8A6" };
-    if (s >= 0.35) return { l: t.good, c: "#D4B483" };
-    if (s > 0) return { l: t.ok, c: "#A8A29E" };
-    return { l: t.missing, c: "#EF4444" };
-  }
-
   /* ═══════════════════════════════════════════════════════════
      STATE
      ═══════════════════════════════════════════════════════════ */
@@ -1029,92 +1074,73 @@
     + '</div>'
     + '</div>'
 
-    /* Preview screen — "Scan validé." hero, mirror of the app's biometric
-       redesign: teal check hero + fusion copy + warning banners. The captures
-       grid (a web-only power feature: per-angle retake) is preserved but
-       collapsed behind a discreet text link so the default view matches the
-       app 1:1. */
-    + '<div id="fs-prev" style="display:none;padding:30px 20px 24px;background:#FAFAF9;color:#1f2937;">'
+    /* Preview — exact port of the app's "Scan validé." screen (v2 redesign
+       2026-06-04 in FaceCaptureScreen.tsx): warning banners → BARE teal check
+       ("encoche teal — pas de fond, pas de bordure") → Playfair Italic title →
+       optional close-up card with a floating "Optionnel" badge → footer with
+       VALIDER ET CONTINUER + helper + manual + restart. No captures grid: the
+       app removed it ("cassait la magie du scan en exposant le mécanisme"). */
+    + '<div id="fs-prev" style="display:none;padding:28px 24px 32px;background:#FAFAF9;color:#1f2937;font-family:\'DM Sans\',sans-serif;">'
 
-    /* Hero */
-    + '<div style="text-align:center;margin-bottom:20px;">'
-    +   '<div style="width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:rgba(20,184,166,.10);display:flex;align-items:center;justify-content:center;">'
-    +     '<svg width="34" height="34" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#14B8A6"/><polyline points="8 12 11 15 16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
-    +   '</div>'
-    +   '<p style="font-family:\'Playfair Display\',serif;font-size:27px;color:#0F3D39;margin:0 0 8px;font-weight:600;line-height:1.15;">' + t.previewValidated + '</p>'
-    +   '<p id="fs-prev-sub" style="font-size:13px;color:#78716c;margin:0 auto;max-width:280px;font-weight:400;line-height:1.5;"></p>'
-    + '</div>'
-
-    /* Warning banners (hidden by default, driven by updatePreviewMeta) */
-    + '<div id="fs-warn-face" style="display:none;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:14px;background:#FEF2F2;border:1px solid #FECACA;margin-bottom:12px;">'
-    +   '<svg width="16" height="16" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>'
+    /* Warning banners (app st.warningBanner / warningBannerSoft) */
+    + '<div id="fs-warn-face" style="display:none;flex-direction:row;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;margin-bottom:12px;border:1px solid rgba(239,68,68,.3);background:#FEF2F2;">'
+    +   '<svg width="16" height="16" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>'
     +   '<div style="flex:1;text-align:left;">'
-    +     '<p style="font-size:12px;font-weight:700;color:#991B1B;margin:0 0 2px;">' + t.warnFaceTitle + '</p>'
-    +     '<p style="font-size:11px;color:#B91C1C;margin:0 0 8px;font-weight:400;line-height:1.4;">' + t.warnFaceBody + '</p>'
-    +     '<button id="fs-warn-face-btn" type="button" style="padding:8px 16px;border:none;border-radius:999px;background:#EF4444;color:#fff;font-size:10.5px;font-weight:700;cursor:pointer;letter-spacing:.6px;text-transform:uppercase;">' + t.warnFaceBtn + '</button>'
+    +     '<p style="font-size:12px;font-weight:700;color:#EF4444;margin:0;">' + t.warnFaceTitle + '</p>'
+    +     '<p style="font-size:11px;color:#78716C;margin:2px 0 0;font-weight:400;line-height:15px;">' + t.warnFaceBody + '</p>'
     +   '</div>'
     + '</div>'
-    + '<div id="fs-warn-quality" style="display:none;align-items:center;gap:10px;padding:11px 14px;border-radius:14px;background:#FFFBEB;border:1px solid #FDE68A;margin-bottom:12px;">'
-    +   '<svg width="15" height="15" fill="none" stroke="#D4B483" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
-    +   '<p style="font-size:11px;color:#92400E;margin:0;font-weight:500;text-align:left;line-height:1.4;">' + t.warnQuality + '</p>'
-    + '</div>'
-
-    /* Collapsible captures grid (web-only: per-angle retake) */
-    + '<button id="fs-showgrid" type="button" style="display:block;width:100%;padding:8px;border:none;background:transparent;color:#a8a29e;font-size:11px;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:3px;margin-bottom:6px;font-family:\'DM Sans\',sans-serif;">' + t.showCaptures + '</button>'
-    + '<div id="fs-grid-wrap" style="display:none;margin-bottom:10px;">'
-    +   '<div id="fs-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;"></div>'
-    +   '<p style="font-size:10px;color:#a8a29e;margin:6px 0 10px;text-align:center;font-weight:400;">' + t.previewHint + '</p>'
-    /* Quality legend */
-    +   '<div id="fs-leg" style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;">'
-    +     '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#14B8A6;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.excellent + '</span></div>'
-    +     '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#D4B483;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.good + '</span></div>'
-    +     '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#A8A29E;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.ok + '</span></div>'
-    +     '<div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:#EF4444;display:inline-block;"></span><span style="font-size:9.5px;color:#78716c;font-weight:500;">' + t.missing + '</span></div>'
+    + '<div id="fs-warn-quality" style="display:none;flex-direction:row;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;margin-bottom:12px;border:1px solid rgba(212,180,131,.4);background:#FEFAF3;">'
+    +   '<svg width="16" height="16" fill="none" stroke="#D4B483" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+    +   '<div style="flex:1;text-align:left;">'
+    +     '<p style="font-size:12px;font-weight:700;color:#0F3D39;margin:0;">' + t.warnQualityTitle + '</p>'
+    +     '<p style="font-size:11px;color:#78716C;margin:2px 0 0;font-weight:400;line-height:15px;">' + t.warnQualityBody + '</p>'
     +   '</div>'
     + '</div>'
 
-    + '<div id="fs-zoom-wrap" style="margin-bottom:16px;">'
+    /* Hero — app st.validHero: bare check (no circle), Playfair Italic 30 */
+    + '<div id="fs-valid-hero" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 0;">'
+    +   '<div style="margin-bottom:16px;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>'
+    +   '<p style="font-family:\'Playfair Display\',serif;font-style:italic;font-size:30px;color:#0F3D39;margin:0 0 18px;text-align:center;line-height:38px;font-weight:400;">' + t.previewValidated + '</p>'
+    +   '<p style="font-size:13px;color:#78716C;margin:0 auto;text-align:center;line-height:19px;max-width:320px;font-weight:300;">' + t.previewFusion + '</p>'
+    + '</div>'
+
+    /* Optional close-up — app zoomBlock (floating "Optionnel" badge over a
+       dashed card; filled state = white card + 48px thumb + remove) */
+    + '<div id="fs-zoom-wrap" style="margin-top:16px;">'
     + '<input type="file" id="fs-zoom-input" accept="image/*" capture="environment" style="display:none;"/>'
-    + '<button id="fs-zoom-btn" style="width:100%;padding:12px;border:1px dashed #d6d3d1;border-radius:12px;background:transparent;color:#78716c;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;">'
-    + '<svg width="16" height="16" fill="none" stroke="#a8a29e" stroke-width="1.5" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>'
-    + '<span><span style="display:block;font-size:12px;color:#57534e;">' + t.zoomBtn + '</span><span style="display:block;font-size:10px;color:#a8a29e;font-weight:400;margin-top:1px;">' + t.zoomSub + '</span></span>'
-    + '</button>'
-    + '<div id="fs-zoom-preview" style="display:none;margin-top:8px;position:relative;border-radius:10px;overflow:hidden;border:1px solid #e7e5e4;">'
-    + '<img id="fs-zoom-img" style="width:100%;max-height:160px;object-fit:cover;display:block;"/>'
-    + '<div style="position:absolute;bottom:0;left:0;right:0;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,.4));text-align:center;">'
-    + '<span style="font-size:9px;color:#fff;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">' + t.zoomAdded + '</span>'
-    + '</div></div></div>'
-
-    + '<button id="fs-re" style="width:100%;padding:11px;border:1px solid #e7e5e4;border-radius:2rem;background:transparent;color:#a8a29e;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;">' + t.restart + '</button>'
-    + '<button id="fs-prefmanual" type="button" style="display:block;width:100%;padding:10px;border:none;background:transparent;color:#a8a29e;font-size:11px;font-weight:400;cursor:pointer;margin-top:2px;font-family:\'DM Sans\',sans-serif;">' + t.preferManual + '</button>'
-    + '</div>'
-
-    /* Retake/preview modal — three actions in a 1+2 stack:
-         row 1: Garder (full width, keeps the current capture)
-         row 2: Scan + Photo (split, the two retake modes)
-       The dual retake choice replaces the previous single "Reprendre" button:
-       users can now either re-shoot the angle live OR upload an existing
-       photo for that bin (capture="user" hints the front camera on mobile). */
-    + '<div id="fs-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.85);align-items:center;justify-content:center;flex-direction:column;padding:24px;">'
-    + '<img id="fs-modal-img" style="max-width:100%;max-height:54vh;border-radius:14px;object-fit:contain;display:block;"/>'
-    + '<p id="fs-modal-label" style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;margin:14px 0 16px;text-align:center;"></p>'
-    + '<div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;">'
-    +   '<button id="fs-modal-keep" type="button" style="width:100%;padding:13px;border-radius:999px;border:1px solid rgba(20,184,166,.45);background:rgba(20,184,166,.12);color:#5eead4;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.4px;text-transform:uppercase;">'
-    +     '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' + t.keep
+    + '<div id="fs-zoom-empty-wrap" style="position:relative;">'
+    +   '<span style="position:absolute;top:-8px;left:16px;padding:2px 8px;border-radius:999px;background:#FAFAF9;border:1px solid #CCFBF1;z-index:1;font-size:9px;font-weight:700;color:#0D9488;letter-spacing:.6px;text-transform:uppercase;">' + t.zoomBadge + '</span>'
+    +   '<button id="fs-zoom-btn" type="button" style="width:100%;display:flex;flex-direction:row;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1px dashed #D6D3D1;background:transparent;cursor:pointer;text-align:left;font-family:\'DM Sans\',sans-serif;">'
+    +     '<svg width="18" height="18" fill="none" stroke="#78716C" stroke-width="1.7" stroke-linecap="round" viewBox="0 0 24 24" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>'
+    +     '<span style="flex:1;"><span style="display:block;font-size:13px;font-weight:700;color:#0F3D39;">' + t.zoomBtn + '</span><span style="display:block;font-size:11px;color:#78716C;font-weight:300;margin-top:1px;">' + t.zoomSub + '</span></span>'
     +   '</button>'
-    +   '<div style="display:flex;gap:10px;">'
-    +     '<button id="fs-modal-retake-scan" type="button" style="flex:1;padding:13px;border-radius:999px;border:none;background:#0F3D39;color:#fff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.4px;text-transform:uppercase;">'
-    +       '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>' + t.retakeScanLabel
-    +     '</button>'
-    +     '<button id="fs-modal-retake-manual" type="button" style="flex:1;padding:13px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.4px;text-transform:uppercase;">'
-    +       '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' + t.retakeManualLabel
-    +     '</button>'
-    +   '</div>'
     + '</div>'
-    + '<input type="file" id="fs-modal-retake-input" accept="image/*" capture="user" style="display:none;"/>'
-    + '<button id="fs-modal-close" type="button" style="margin-top:18px;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;padding:8px;">'
-    +   '<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
-    + '</button>'
+    + '<div id="fs-zoom-filled" style="display:none;flex-direction:row;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;border:1px solid #E7E5E4;background:#fff;">'
+    +   '<img id="fs-zoom-img" style="width:48px;height:48px;border-radius:10px;object-fit:cover;display:block;" alt=""/>'
+    +   '<span style="flex:1;text-align:left;"><span style="display:block;font-size:13px;font-weight:700;color:#0F3D39;">' + t.zoomAdded + '</span><span style="display:block;font-size:11px;color:#78716C;font-weight:300;margin-top:1px;">' + t.zoomTapReplace + '</span></span>'
+    +   '<button id="fs-zoom-remove" type="button" style="padding:4px;border:none;background:none;cursor:pointer;color:#A8A29E;flex-shrink:0;">'
+    +     '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>'
+    +   '</button>'
+    + '</div>'
+    + '</div>'
+
+    /* Footer — app st.foot: CTA 56px pill + helper + dashed manual + restart */
+    + '<div style="padding-top:24px;display:flex;flex-direction:column;gap:8px;align-items:center;">'
+    +   '<button id="fs-validate" type="button" style="width:100%;height:56px;border-radius:28px;background:#0F3D39;border:none;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:12px;cursor:pointer;color:#fff;font-family:\'DM Sans\',sans-serif;transition:opacity .2s;">'
+    +     '<span id="fs-validate-txt" style="font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">' + t.validateCta + '</span>'
+    +     '<svg id="fs-validate-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
+    +   '</button>'
+    +   '<p id="fs-validate-helper" style="display:none;font-size:11px;color:#A8A29E;font-weight:300;margin:-2px 0 0;text-align:center;">' + t.validateHelper + '</p>'
+    +   '<button id="fs-prefmanual" type="button" style="width:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;padding:10px;border:1px dashed #D6D3D1;border-radius:16px;background:transparent;cursor:pointer;color:#78716C;font-size:12px;font-weight:500;font-family:\'DM Sans\',sans-serif;">'
+    +     '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>'
+    +     t.preferManual
+    +   '</button>'
+    +   '<button id="fs-re" type="button" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;padding:8px;border:none;background:none;cursor:pointer;color:#78716C;font-size:13px;font-weight:500;font-family:\'DM Sans\',sans-serif;">'
+    +     '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>'
+    +     t.restart
+    +   '</button>'
+    + '</div>'
     + '</div>'
 
     + '<div id="fs-err" style="display:none;padding:52px 28px;text-align:center;background:#FAFAF9;color:#1f2937;">'
@@ -1251,34 +1277,98 @@
   }
 
   /* ═══════════════════════════════════════════════════════════
-     ADAPTIVE GUIDANCE — getGuidance() port from mobile
-     dir: "none" | "right" | "left" — direction of the arrow on the
-     mirrored display. "right" means user must turn physically right.
-     ═══════════════════════════════════════════════════════════ */
-  function adaptiveGuide(S, t) {
-    function has(id) { return S.bins[id].length > 0; }
-    if (!has("face")) return { t1: t.scanFace, t2: t.scanFaceSub, dir: "none" };
-    if (!has("semi_left")) return { t1: t.scanRight1, t2: t.scanRight1Sub, dir: "right" };
-    if (!has("left")) return { t1: t.scanRight2, t2: t.scanRight2Sub, dir: "right" };
-    if (!has("wide_left")) return { t1: t.scanRight3, t2: t.scanRight3Sub, dir: "right" };
-    if (!has("semi_right")) return { t1: t.scanLeft1, t2: t.scanLeft1Sub, dir: "left" };
-    if (!has("right")) return { t1: t.scanLeft2, t2: t.scanLeft2Sub, dir: "left" };
-    if (!has("wide_right")) return { t1: t.scanLeft3, t2: t.scanLeft3Sub, dir: "left" };
-    return { t1: t.scanDone, t2: t.scanDoneSub, dir: "none" };
-  }
+     GUIDANCE PRO v4 — exact port of the app's getGuidance()
+     (lib/scan-engine.ts, "guidance hybride PROGRESSION-AWARE").
 
-  // Retake-only guidance: tells user which angle to reach (uses mobile direction strings)
-  function retakeGuide(binId, t) {
-    switch (binId) {
-      case "face": return { t1: t.scanFace, t2: t.scanFaceSub, dir: "none" };
-      case "semi_left": return { t1: t.scanRight1, t2: t.scanRight1Sub, dir: "right" };
-      case "left": return { t1: t.scanRight2, t2: t.scanRight2Sub, dir: "right" };
-      case "wide_left": return { t1: t.scanRight3, t2: t.scanRight3Sub, dir: "right" };
-      case "semi_right": return { t1: t.scanLeft1, t2: t.scanLeft1Sub, dir: "left" };
-      case "right": return { t1: t.scanLeft2, t2: t.scanLeft2Sub, dir: "left" };
-      case "wide_right": return { t1: t.scanLeft3, t2: t.scanLeft3Sub, dir: "left" };
-      default: return { t1: t.scanFace, t2: t.scanFaceSub, dir: "none" };
+     Rules (in order):
+       1. Face missing: head already turned (|physYaw| ≥ 10°) →
+          "Revenez face à la caméra" ; otherwise "Regardez la caméra".
+       2. Target = first missing bin in web-priority order
+          (semi_left → left → wide_left → semi_right → right → wide_right).
+       3. Current pose ALREADY in the target's range → SILENCE (capture is
+          about to fire; telling the user to hold still mid-gesture confuses
+          more than it helps — founder decision 2026-06-08).
+       4. Direction = sign of (targetPhysYaw − currentPhysYaw) → always the
+          shortest path, even after overshooting a bin.
+       5. Stage: face-range → start · |delta|<12° → "Encore un tout petit
+          peu" · overshoot <30° → "Tournez légèrement" · overshoot ≥30° →
+          start · else 0/1/2 same-side bins captured → start/continue/more.
+     ═══════════════════════════════════════════════════════════ */
+  var BIN_PHYSICAL_YAW = {
+    face: 0,
+    semi_left: 20, left: 38, wide_left: 55,    // chin → user's right
+    semi_right: -20, right: -38, wide_right: -55, // chin → user's left
+  };
+  var GUIDE_PRIORITY = ["semi_left", "left", "wide_left", "semi_right", "right", "wide_right"];
+
+  function toPhysicalYaw(absYaw, showsRight) { return showsRight ? -absYaw : absYaw; }
+
+  function getGuidancePro(bins, currentAbsYaw, showsRight, t) {
+    function has(id) { return bins[id].length > 0; }
+
+    // 1. Face not captured yet
+    if (!has("face")) {
+      var currentPhys0 = toPhysicalYaw(currentAbsYaw, showsRight);
+      if (Math.abs(currentPhys0) >= 10) {
+        return { t1: t.comeBackCenter, t2: t.comeBackCenterSub, dir: currentPhys0 > 0 ? "left" : "right" };
+      }
+      return { t1: t.scanFace, t2: t.scanFaceSub, dir: "none" };
     }
+
+    // 2. Next target
+    var target = null;
+    for (var i = 0; i < GUIDE_PRIORITY.length; i++) {
+      if (!has(GUIDE_PRIORITY[i])) { target = GUIDE_PRIORITY[i]; break; }
+    }
+    if (!target) return { t1: t.scanDone, t2: t.scanDoneSub, dir: "none" };
+
+    // 3. Pose already in target range → silence (capture fires in 1-2 frames)
+    var noseXapprox = showsRight ? 0.7 : 0.3;
+    var currentBin = classifyBin(currentAbsYaw, noseXapprox);
+    if (currentBin === target) return { t1: "", t2: "", dir: "none" };
+
+    // 4. Direction — shortest path to target
+    var currentPhys = toPhysicalYaw(currentAbsYaw, showsRight);
+    var targetPhys = BIN_PHYSICAL_YAW[target];
+    var delta = targetPhys - currentPhys;
+    var absDelta = Math.abs(delta);
+    var physDir = delta > 0 ? "right" : "left";
+
+    // 5. Stage
+    var targetSide = (target === "semi_left" || target === "left" || target === "wide_left") ? "left" : "right";
+    var isOvershoot = targetSide === "left" ? currentPhys > targetPhys : currentPhys < targetPhys;
+
+    var stage;
+    if (currentBin === "face") {
+      stage = "start";
+    } else if (absDelta < 12) {
+      stage = "almost";
+    } else if (isOvershoot) {
+      stage = absDelta < 30 ? "comeBack" : "start";
+    } else {
+      var sameSide = targetSide === "left"
+        ? ["semi_left", "left", "wide_left"]
+        : ["semi_right", "right", "wide_right"];
+      var captured = 0;
+      for (var j = 0; j < sameSide.length; j++) if (has(sameSide[j])) captured++;
+      stage = captured === 0 ? "start" : (captured === 1 ? "continue" : "more");
+    }
+
+    // 6. Message
+    if (stage === "almost") {
+      return { t1: physDir === "right" ? t.almostRight : t.almostLeft, t2: t.almostSub, dir: physDir };
+    }
+    if (stage === "comeBack") {
+      return { t1: physDir === "right" ? t.comeBackRight : t.comeBackLeft, t2: t.comeBackSub, dir: physDir };
+    }
+    if (stage === "continue") {
+      return { t1: physDir === "right" ? t.scanRight2 : t.scanLeft2, t2: physDir === "right" ? t.scanRight2Sub : t.scanLeft2Sub, dir: physDir };
+    }
+    if (stage === "more") {
+      return { t1: physDir === "right" ? t.scanRight3 : t.scanLeft3, t2: physDir === "right" ? t.scanRight3Sub : t.scanLeft3Sub, dir: physDir };
+    }
+    // "start"
+    return { t1: physDir === "right" ? t.scanRight1 : t.scanLeft1, t2: physDir === "right" ? t.scanRight1Sub : t.scanLeft1Sub, dir: physDir };
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -1449,6 +1539,17 @@
       $dotCnt.textContent = filled + "/7";
       $pfill.style.width = (filled / 7 * 100) + "%";
     }
+    // Instruction pill — app parity: when guidance returns empty strings
+    // (pose already in the target bin's range → capture fires immediately),
+    // the pill disappears entirely instead of showing an empty bubble.
+    var $instrWrap = $("#fs-instr-above");
+    function setInstr(t1, t2) {
+      var empty = !t1 && !t2;
+      $instrWrap.style.display = empty ? "none" : "";
+      $t1.textContent = t1 || "";
+      $t2.textContent = t2 || "";
+    }
+
     function setSideArrow(dir) {
       if (!dir || dir === "none") { $arrowSide.style.display = "none"; return; }
       $arrowSide.style.display = "block";
@@ -1743,9 +1844,9 @@
           S._origFaceSizeMin = CFG.faceSizeMin;
           S._origFaceSizeMax = CFG.faceSizeMax;
           // 16:9 cameras (some Android front cameras) crop tighter, so the
-          // face appears proportionally smaller. Scale the new 4:3 thresholds
-          // down by the same ratio (0.32 → 0.27, 0.70 → 0.75 capped).
-          CFG.faceSizeMin = 0.27; CFG.faceSizeMax = 0.75;
+          // face appears proportionally smaller. Scale the 4:3 thresholds
+          // down by the same ~0.845 ratio as before (0.40 → 0.34).
+          CFG.faceSizeMin = 0.34; CFG.faceSizeMax = 0.75;
         }
         if (!S.fm) S.fm = initFM(onRes);
         if (!S.cam) S.cam = startLoop($v, S.fm);
@@ -1763,9 +1864,9 @@
         // resolves, so on a warm cache subsequent scans show calibration immediately.
         var enginePreWarmed = !!window._adermioFaceMeshReady;
         if (enginePreWarmed) {
-          $t1.textContent = t.calibTitle; $t2.textContent = t.calibSub;
+          setInstr(t.calibTitle, t.calibSub);
         } else {
-          $t1.textContent = t.initializingTitle; $t2.textContent = t.initializingSub;
+          setInstr(t.initializingTitle, t.initializingSub);
         }
 
         // Progressive feedback during MediaPipe boot — keeps the user informed
@@ -1790,13 +1891,11 @@
           if (!enginePreWarmed) {
             if (elapsed > 12000 && initStage !== "verySlow") {
               initStage = "verySlow";
-              $t1.textContent = t.initializingTitleVerySlow;
-              $t2.textContent = t.initializingSubVerySlow;
+              setInstr(t.initializingTitleVerySlow, t.initializingSubVerySlow);
               if ($initFallback) $initFallback.style.display = "inline-flex";
             } else if (elapsed > 4000 && initStage === "neutral") {
               initStage = "slow";
-              $t1.textContent = t.initializingTitleSlow;
-              $t2.textContent = t.initializingSubSlow;
+              setInstr(t.initializingTitleSlow, t.initializingSubSlow);
             }
           }
 
@@ -1876,6 +1975,21 @@
       var bl = S.cBl || { s: 30 };
 
       var pos = checkPosition(sz, noseX, pose.pitch, pose.roll, br, t);
+
+      // Vertical placement gate — app parity (FaceCaptureScreen inOvalY):
+      // the nose must sit within ±0.20 of the oval's vertical center (0.46).
+      // Without it a face parked at the very top/bottom of the frame passed
+      // calibration on the web while the app rejected it.
+      var noseY = nose.y;
+      var inOvalY = Math.abs(noseY - 0.46) < 0.20;
+      if (pos.allGood && !inOvalY) {
+        pos = {
+          distOk: pos.distOk, centerOk: pos.centerOk, pitchOk: pos.pitchOk,
+          rollOk: pos.rollOk, lightOk: pos.lightOk, allGood: false,
+          msg: t.placeFaceInOval, sub: t.adjustPhone,
+        };
+      }
+
       S.st.dist = pos.distOk; S.st.light = br.ok; S.st.stab = stab <= CFG.stabMax;
       S.prev = marks; S.prevT = now;
 
@@ -1894,7 +2008,7 @@
         if (S._guideDir && S._guideDir !== "none") {
           setSideArrow("none"); setUnderArrows("none"); S._guideDir = "none";
         }
-        $t1.textContent = pos.msg; $t2.textContent = pos.sub;
+        setInstr(pos.msg, pos.sub);
 
         if (pos.allGood) {
           if (!S.calibSince) S.calibSince = now;
@@ -1902,10 +2016,10 @@
             S.phase = "countdown"; S.countdownStart = now;
             S.logger.log({ type: "calibration_ok", timestamp: Date.now(), durationMs: now - (S.calibSince || now) });
             S.logger.log({ type: "countdown_start", timestamp: Date.now() });
-            $t2.textContent = t.countdownSub;
+            setInstr("", t.countdownSub);
             if (navigator.vibrate) navigator.vibrate(40);
           } else {
-            $t1.textContent = t.calibReady; $t2.textContent = t.calibReadySub;
+            setInstr(t.calibReady, t.calibReadySub);
           }
         } else { S.calibSince = null; }
       }
@@ -1919,15 +2033,14 @@
         var sec = Math.ceil(3 - cdElapsed / 1000);
         if (sec >= 1) {
           showCountdown(sec.toString());
-          $t1.textContent = ""; // Avoid duplicating the digit above
-          $t2.textContent = t.countdownSub;
+          setInstr("", t.countdownSub); // digit lives in the countdown circle
         }
         if (cdElapsed >= 3000) {
           hideCountdown();
           S.phase = "scanning"; S.scanStart = now;
           S.logger.log({ type: "scanning_start", timestamp: Date.now() });
-          var g = S.retake ? retakeGuide(S.retake, t) : adaptiveGuide(S, t);
-          $t1.textContent = g.t1; $t2.textContent = g.t2;
+          var g = getGuidancePro(S.bins, absYaw, noseX > 0.5, t);
+          setInstr(g.t1, g.t2);
           S._guideDir = g.dir;
           setSideArrow(g.dir);
           setUnderArrows(g.dir);
@@ -1942,26 +2055,29 @@
 
         // Quality-hint overrides (after multiple post-capture rejects)
         if (S.qualityHint === "lightDuringScan") {
-          $t1.textContent = t.lightDuringScan; $t2.textContent = t.lightDuringScanSub;
+          setInstr(t.lightDuringScan, t.lightDuringScanSub);
         } else if (S.qualityHint === "qualityLow") {
-          $t1.textContent = t.qualityLow; $t2.textContent = t.qualityLowSub;
+          setInstr(t.qualityLow, t.qualityLowSub);
         } else if (!pos.distOk && sz < CFG.faceSizeMin) {
-          $t1.textContent = t.moveCloser; $t2.textContent = t.moveCloserSub;
+          // App parity: en phase scanning le sous-message parle du TÉLÉPHONE
+          // ("Approchez le téléphone") — l'user est en rotation, c'est le
+          // device qu'il doit bouger, pas lui.
+          setInstr(t.moveCloser, t.moveCloserPhoneSub);
         } else if (!pos.distOk && sz > CFG.faceSizeMax) {
-          $t1.textContent = t.moveBack; $t2.textContent = t.moveBackSub;
+          setInstr(t.moveBack, t.moveBackPhoneSub);
         } else if (br.dark) {
-          $t1.textContent = t.lowLight; $t2.textContent = t.lowLightSub;
+          setInstr(t.lowLight, t.lowLightSub);
         } else if (br.bright) {
-          $t1.textContent = t.strongLight; $t2.textContent = t.strongLightSub;
+          setInstr(t.strongLight, t.strongLightSub);
         } else if (br.bl) {
-          $t1.textContent = t.backlight; $t2.textContent = t.backlightSub;
+          setInstr(t.backlight, t.backlightSub);
         } else if (!pos.pitchOk) {
-          $t1.textContent = t.pitchOff; $t2.textContent = t.pitchOffSub;
+          setInstr(t.pitchOff, t.pitchOffSub);
         } else if (!pos.rollOk) {
-          $t1.textContent = t.rollOff; $t2.textContent = t.rollOffSub;
+          setInstr(t.rollOff, t.rollOffSub);
         } else {
-          var guide = S.retake ? retakeGuide(S.retake, t) : adaptiveGuide(S, t);
-          $t1.textContent = guide.t1; $t2.textContent = guide.t2;
+          var guide = getGuidancePro(S.bins, absYaw, noseX > 0.5, t);
+          setInstr(guide.t1, guide.t2);
           nextDir = guide.dir;
         }
         // Drive the DOM chevrons (both side + under-oval) — they only show when
@@ -2001,7 +2117,7 @@
     }
 
     function noFace() {
-      $t1.textContent = t.noFace; $t2.textContent = t.noFaceSub;
+      setInstr(t.noFace, t.noFaceSub);
       S.st = { dist: null, light: null, stab: null }; S.calibSince = null;
       // Reset the bottom badges visually too (no face → unknown state)
       updateBadge($bdgDist, null);
@@ -2120,7 +2236,7 @@
       // so onRes drops out of the scanning branch without redrawing arrows.
       S.phase = "complete";
       clearGuideUI();
-      $t1.textContent = ""; $t2.textContent = "";
+      setInstr("", "");
       showCompleteOverlay();
       if (navigator.vibrate) navigator.vibrate([50, 25, 50]);
 
@@ -2131,18 +2247,23 @@
       // showPreview → doUpload so the corrected winner is what gets uploaded.
       function verifyWinners() {
         var checks = [];
+        var okCount = 0, filledCount = 0;
         for (var vi = 0; vi < BIN_IDS.length; vi++) {
           (function (binId) {
             var bin = S.bins[binId];
             if (!bin.length) return;
+            filledCount++;
             checks.push(analyzeBlobQuality(bin[0].blob).then(function (q) {
-              if (!q || !blobQualityUnacceptable(q)) return;
-              if (bin.length < 2) return;
+              // Décodage impossible → bénéfice du doute (compte acceptable)
+              if (!q) { okCount++; return; }
+              if (!blobQualityUnacceptable(q)) { okCount++; return; }
+              if (bin.length < 2) return; // winner mauvais, pas de remplaçant
               return analyzeBlobQuality(bin[1].blob).then(function (q2) {
                 if (!q2 || blobQualityUnacceptable(q2)) return;
                 var demoted = bin[0];
                 bin[0] = bin[1];
                 bin[1] = demoted;
+                okCount++;
                 S.logger.log({
                   type: "winner_swap", timestamp: Date.now(), bin: binId,
                   winnerLuma: Math.round(q.luma), winnerLap: Math.round(q.lap * 10) / 10,
@@ -2152,7 +2273,11 @@
             }));
           })(BIN_IDS[vi]);
         }
-        return Promise.all(checks).catch(function () {});
+        return Promise.all(checks).then(function () {
+          // App parity (allWinnersBad) : TOUS les winners restent mauvais
+          // même après swap → bandeau doré "Qualité d'image limite".
+          S._allWinnersBad = filledCount > 0 && okCount === 0;
+        }).catch(function () {});
       }
 
       var overlayDelay = new Promise(function (res) { setTimeout(res, 1500); });
@@ -2172,87 +2297,79 @@
       });
     }
 
-    /* ── Preview ───────────────────────────── */
-
-    // Hero copy + warning banners — shared by showPreview and
-    // rerenderPreviewGrid so a manual retake refreshes the warnings too.
+    /* ── Preview — app-exact "Scan validé." screen ───────────
+       Banner/hero/CTA states mirror FaceCaptureScreen.tsx phase==="preview":
+         - face missing  → red banner, hero hidden, CTA disabled + helper
+         - allWinnersBad → gold banner (face present), hero hidden
+         - otherwise     → hero visible, CTA enabled
+       The captures grid + per-angle retake modal were removed to match the
+       app's v2 redesign (no grid — "Scan validé." hero carries the signal). */
     function updatePreviewMeta() {
-      var filled = 0, worstScore = 1;
-      for (var k = 0; k < BIN_IDS.length; k++) {
-        var b = S.bins[BIN_IDS[k]];
-        if (b.length > 0) { filled++; if (b[0].score < worstScore) worstScore = b[0].score; }
-      }
-      var subEl = $("#fs-prev-sub");
-      subEl.textContent = t.previewFusion.replace("{n}", filled);
-
-      // Face missing → red banner with a direct "capture the front" action.
       var faceMissing = S.bins.face.length === 0;
+      var allBad = !!S._allWinnersBad;
+
       $("#fs-warn-face").style.display = faceMissing ? "flex" : "none";
+      $("#fs-warn-quality").style.display = (!faceMissing && allBad) ? "flex" : "none";
+      $("#fs-valid-hero").style.display = (!faceMissing && !allBad) ? "flex" : "none";
 
-      // Borderline quality → gold banner (any winner below the "Bon"
-      // threshold, or an incomplete set of angles). Hidden when the face
-      // banner is up — one warning at a time, the face one wins.
-      var qualityBorderline = (filled > 0 && filled < 7) || worstScore < 0.35;
-      $("#fs-warn-quality").style.display = (!faceMissing && qualityBorderline) ? "flex" : "none";
-
-      // Auto-expand the captures grid when something needs fixing so the
-      // per-angle retake affordance is one tap away.
-      if (faceMissing || qualityBorderline) setGridOpen(true);
+      var $validate = $("#fs-validate");
+      var disabled = faceMissing || S._validating;
+      $validate.disabled = disabled;
+      $validate.style.opacity = disabled ? "0.4" : "1";
+      $validate.style.cursor = disabled ? "default" : "pointer";
+      $("#fs-validate-helper").style.display = faceMissing ? "" : "none";
     }
 
-    var gridOpen = false;
-    function setGridOpen(open) {
-      gridOpen = open;
-      $("#fs-grid-wrap").style.display = open ? "" : "none";
-      $("#fs-showgrid").textContent = open ? t.hideCaptures : t.showCaptures;
+    /* VALIDER ET CONTINUER — the app's goNext advances the onboarding; on
+       the web the equivalent is the form's own "next" button (which runs the
+       step-3 validation gate). The face photo uploads in the background
+       after the scan, so if the S3 getUrl isn't ready yet we show a short
+       uploading state and poll before advancing. */
+    function onValidate() {
+      if (S.bins.face.length === 0 || S._validating) return;
+      var btnNext = document.getElementById("btn-next");
+      if (!btnNext) return;
+
+      function advance() {
+        S._validating = false;
+        updatePreviewMeta();
+        $("#fs-validate-txt").textContent = t.validateCta;
+        btnNext.click();
+      }
+
+      if (window.validationState && window.validationState.facePhotoUploaded) { advance(); return; }
+
+      // Face still uploading — wait for it (max 30s), mirroring the app's
+      // isFinalizing state ("VALIDER ET CONTINUER…").
+      S._validating = true;
+      updatePreviewMeta();
+      $("#fs-validate-txt").textContent = t.validateCta + "…";
+      var waited = 0;
+      var poll = setInterval(function () {
+        waited += 500;
+        var ok = window.validationState && window.validationState.facePhotoUploaded;
+        if (ok || waited >= 30000 || dead) {
+          clearInterval(poll);
+          if (dead) return;
+          if (ok) { advance(); return; }
+          // Upload genuinely failed — reset the CTA, the photo-error line
+          // (shown by doUpload) explains what to do.
+          S._validating = false;
+          updatePreviewMeta();
+          $("#fs-validate-txt").textContent = t.validateCta;
+        }
+      }, 500);
     }
 
     function showPreview(wasRetake) {
       show("prev");
-      var grid = $("#fs-grid");
-      grid.innerHTML = "";
-
-      for (var i = 0; i < DOT_ORDER.length; i++) {
-        var bin = DOT_ORDER[i];
-        var entry = S.bins[bin][0] || null;
-        grid.appendChild(makeCard(bin, entry));
-      }
-
       updatePreviewMeta();
 
-      // Collapsible grid + secondary actions
-      $("#fs-showgrid").onclick = function () { setGridOpen(!gridOpen); };
-      $("#fs-warn-face-btn").onclick = function () { startRetake("face"); };
+      $("#fs-validate").onclick = onValidate;
       $("#fs-prefmanual").onclick = function () {
         if (window.AdermioFaceScan) window.AdermioFaceScan.destroy();
         if (onFall && !dead) onFall();
       };
-
-      var $zBtn = $("#fs-zoom-btn"), $zIn = $("#fs-zoom-input"), $zPrev = $("#fs-zoom-preview"), $zImg = $("#fs-zoom-img");
-      $zBtn.onclick = function () { $zIn.click(); };
-      $zIn.onchange = function (e) {
-        var f = e.target.files && e.target.files[0]; if (!f) return;
-        S.zoomFile = f;
-        var reader = new FileReader();
-        reader.onload = function (ev) { $zImg.src = ev.target.result; $zPrev.style.display = ""; };
-        reader.readAsDataURL(f);
-        // Upload zoom immediately when selected (with compression + retry)
-        compressBlob(f).then(function (compressed) {
-          var zoomFileObj = new File([compressed], "scan_zoom_" + Date.now() + ".jpg", { type: "image/jpeg" });
-          if (typeof window.uploadToS3Presigned === "function") {
-            withRetry(function () {
-              return window.uploadToS3Presigned({ file: zoomFileObj, jobId: (window.formState && window.formState.jobId) || "", type: "zoom" });
-            }, "zoom_upload")
-              .then(function (result) { if (window.formState) window.formState.photos.zoom = { key: result.key, getUrl: result.getUrl }; })
-              .catch(function () {});
-          }
-        });
-      };
-
-      // "Recommencer le scan" — when the host wires opts.onReturn we hand the
-      // navigation back to it (so the user lands on the form's choice step,
-      // not on a stale fs-perm). Without onReturn we keep the legacy in-widget
-      // restart so existing callers don't break.
       $("#fs-re").onclick = function () {
         if (onReturn) {
           if (window.AdermioFaceScan) window.AdermioFaceScan.destroy();
@@ -2262,184 +2379,53 @@
         if (window.AdermioFaceScan) window.AdermioFaceScan.restart();
       };
 
-      // Modal close button
-      $("#fs-modal-close").onclick = closeModal;
-      var $modal = $("#fs-modal");
-      $modal.onclick = function (e) { if (e.target === $modal) closeModal(); };
-
-      // Manual retake — file input change. Bound once per preview render.
-      var $modalRetakeInput = $("#fs-modal-retake-input");
-      if ($modalRetakeInput) {
-        $modalRetakeInput.onchange = function (e) {
-          var input = e.target;
-          var bin = input.dataset.bin;
-          var f = input.files && input.files[0];
-          if (!f || !bin) return;
-          // Defensive sanity check on file type
-          if (!(f.type || "").toLowerCase().startsWith("image/")) {
-            input.value = "";
-            var photoErr = document.getElementById("file-type-error");
-            if (photoErr) photoErr.classList.remove("hidden");
-            return;
-          }
-          closeModal();
-          manualRetake(bin, f);
-          input.value = "";
-        };
+      // Optional close-up (zoom) — app zoomBlock behaviour: empty card ↔
+      // filled card with thumb + remove; tapping the filled card replaces.
+      var $zIn = $("#fs-zoom-input");
+      var $zEmpty = $("#fs-zoom-empty-wrap"), $zFilled = $("#fs-zoom-filled"), $zImg = $("#fs-zoom-img");
+      function renderZoom() {
+        var hasZoom = !!S.zoomFile;
+        $zEmpty.style.display = hasZoom ? "none" : "";
+        $zFilled.style.display = hasZoom ? "flex" : "none";
       }
+      renderZoom();
+      $("#fs-zoom-btn").onclick = function () { $zIn.click(); };
+      $zFilled.onclick = function (e) {
+        if (e.target.closest && e.target.closest("#fs-zoom-remove")) return;
+        $zIn.click();
+      };
+      $("#fs-zoom-remove").onclick = function (e) {
+        e.stopPropagation();
+        S.zoomFile = null;
+        if (window.formState && window.formState.photos && window.formState.photos.zoom) {
+          window.formState.photos.zoom = { key: "", getUrl: "" };
+        }
+        renderZoom();
+      };
+      $zIn.onchange = function (e) {
+        var f = e.target.files && e.target.files[0]; if (!f) return;
+        S.zoomFile = f;
+        var reader = new FileReader();
+        reader.onload = function (ev) { $zImg.src = ev.target.result; renderZoom(); };
+        reader.readAsDataURL(f);
+        // Upload zoom immediately when selected (with compression + retry)
+        compressBlob(f).then(function (compressed) {
+          var zoomFileObj = new File([compressed], "scan_zoom_" + Date.now() + ".jpg", { type: "image/jpeg" });
+          if (typeof window.uploadToS3Presigned === "function" && !S._debugNoUpload) {
+            withRetry(function () {
+              return window.uploadToS3Presigned({ file: zoomFileObj, jobId: (window.formState && window.formState.jobId) || "", type: "zoom" });
+            }, "zoom_upload")
+              .then(function (result) { if (window.formState) window.formState.photos.zoom = { key: result.key, getUrl: result.getUrl }; })
+              .catch(function () {});
+          }
+        });
+        e.target.value = "";
+      };
 
       // After a retake, run the upload again so the new photo lands on S3
       doUpload(wasRetake);
     }
 
-    function makeCard(bin, entry) {
-      var labelKey = BIN_LABELS[bin];
-      var label = t[labelKey] || bin;
-      var el = document.createElement("div");
-      el.style.cssText = "border-radius:10px;overflow:hidden;background:#fff;border:1px solid #e7e5e4;text-align:center;cursor:pointer;position:relative;transition:transform .12s;";
-      el.onmouseenter = function () { el.style.transform = "scale(1.02)"; };
-      el.onmouseleave = function () { el.style.transform = "scale(1)"; };
-
-      if (entry) {
-        var q = qLabel(entry.score, t);
-        el.innerHTML = '<div style="position:relative;">'
-          + '<img src="' + entry.url + '" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;"/>'
-          + '<div style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:' + q.c + ';box-shadow:0 0 0 1.5px rgba(255,255,255,.85),0 1px 3px rgba(0,0,0,.3);"></div>'
-          + '<div style="position:absolute;bottom:0;left:0;right:0;padding:4px 6px;background:linear-gradient(transparent,rgba(0,0,0,.55));">'
-          +   '<span style="font-size:8.5px;color:#fff;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">' + q.l + '</span>'
-          + '</div>'
-          + '</div>'
-          + '<div style="padding:6px 2px 5px;background:#FAFAF9;border-top:1px solid #f5f5f4;">'
-          + '<p style="font-size:8px;color:#78716c;margin:0;font-weight:600;text-transform:uppercase;letter-spacing:.8px;">' + label + '</p>'
-          + '</div>';
-        el.onclick = function () { openModal(bin, entry, label); };
-      } else {
-        el.innerHTML = '<div style="position:relative;">'
-          + '<div style="width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:#f5f5f4;">'
-          +   '<svg width="20" height="20" fill="none" stroke="#d6d3d1" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>'
-          + '</div>'
-          + '<div style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#EF4444;box-shadow:0 0 0 1.5px rgba(255,255,255,.85);"></div>'
-          + '</div>'
-          + '<div style="padding:6px 2px 5px;background:#FAFAF9;border-top:1px solid #f5f5f4;">'
-          + '<p style="font-size:8px;color:#d6d3d1;margin:0;font-weight:600;text-transform:uppercase;letter-spacing:.8px;">' + label + '</p>'
-          + '</div>';
-        // Tap on empty card → directly retake that angle
-        el.onclick = function () { startRetake(bin); };
-      }
-      return el;
-    }
-
-    function openModal(bin, entry, label) {
-      var $modal = $("#fs-modal");
-      var $img = $("#fs-modal-img");
-      var $lbl = $("#fs-modal-label");
-      $img.src = entry.url;
-      $lbl.textContent = label;
-      $modal.style.display = "flex";
-
-      // Re-bind onclicks every open so they capture the right `bin` in closure
-      // without leaking listeners across opens.
-      $("#fs-modal-keep").onclick = closeModal;
-      $("#fs-modal-retake-scan").onclick = function () {
-        closeModal();
-        startRetake(bin);
-      };
-      $("#fs-modal-retake-manual").onclick = function () {
-        var input = $("#fs-modal-retake-input");
-        // Clear value so picking the same file twice still fires onchange
-        input.value = "";
-        input.dataset.bin = bin;
-        input.click();
-      };
-    }
-
-    function closeModal() {
-      var $modal = $("#fs-modal");
-      $modal.style.display = "none";
-    }
-
-    /* ── Manual retake — replace one bin's photo with a user-picked file ──
-       The new file goes through the same compression + S3 upload path as a
-       scan capture, but we re-render only the affected grid card to avoid
-       triggering a full doUpload (which would re-send every other bin). */
-    function manualRetake(bin, file) {
-      if (!bin || !file) return;
-      compressBlob(file).then(function (compressed) {
-        if (dead) return;
-        var blob = (compressed instanceof Blob) ? compressed : file;
-        var url = URL.createObjectURL(blob);
-
-        // Free the old blob URLs for this bin before overwriting it. The new
-        // entry gets a moderate score (0.5 → "Bon" badge) since we don't have
-        // a face-mesh score for an externally-supplied photo.
-        var oldEntries = S.bins[bin];
-        for (var i = 0; i < oldEntries.length; i++) URL.revokeObjectURL(oldEntries[i].url);
-        S.bins[bin] = [{ blob: blob, url: url, score: 0.5 }];
-        S.logger.log({ type: "capture", timestamp: Date.now(), bin: bin, score: 0.5, wasNew: true });
-
-        // Re-render just this card (and the scan-log/sub line) without
-        // triggering a full background upload sweep over the other bins.
-        rerenderPreviewGrid();
-
-        // Upload the new photo. Same retry/backoff as the scan path.
-        if (typeof window.uploadToS3Presigned === "function") {
-          var f2 = new File(
-            [blob],
-            "scan_" + bin + "_" + Date.now() + ".jpg",
-            { type: "image/jpeg" }
-          );
-          withRetry(function () {
-            return window.uploadToS3Presigned({
-              file: f2,
-              jobId: (window.formState && window.formState.jobId) || "",
-              type: bin,
-            });
-          }, "manual_retake_" + bin)
-            .then(function (result) {
-              if (dead || !result) return;
-              if (window.formState) window.formState.photos[bin] = { key: result.key, getUrl: result.getUrl };
-              if (bin === "face" && window.validationState) window.validationState.facePhotoUploaded = true;
-            })
-            .catch(function () {
-              var photoErr = document.getElementById("photo-error");
-              if (photoErr) {
-                photoErr.classList.remove("hidden");
-                photoErr.textContent = t.uploadFail;
-              }
-            });
-        }
-      });
-    }
-
-    /* Re-render only the grid + hero/warnings after a manual retake, keeping
-       the rest of the preview screen state intact. */
-    function rerenderPreviewGrid() {
-      var grid = $("#fs-grid");
-      if (!grid) return;
-      grid.innerHTML = "";
-      for (var i = 0; i < DOT_ORDER.length; i++) {
-        var bin = DOT_ORDER[i];
-        var entry = S.bins[bin][0] || null;
-        grid.appendChild(makeCard(bin, entry));
-      }
-      updatePreviewMeta();
-    }
-
-    function startRetake(bin) {
-      // Clear that bin (free its blob URLs)
-      var arr = S.bins[bin];
-      for (var j = 0; j < arr.length; j++) URL.revokeObjectURL(arr[j].url);
-      S.bins[bin] = [];
-      // Mark retake target and reset rejection counter
-      S.retake = bin;
-      S.retakeRejects = 0;
-      S.qualityHint = null;
-      S.calibSince = null;
-      S.fc = 0;
-      S.cBr = null; S.cBl = null;
-      // Re-enter calibration → countdown → scan, only that bin will be captured.
-      beginCalibration(false);
-    }
 
     /* ── Upload ───────────────────────────── */
     function doUpload(wasRetake) {
@@ -2535,6 +2521,7 @@
         S._debugNoUpload = true; // never hit the real presign API with synthetic blobs
         var skip = opts2.skipBins || [];
         var lowScore = !!opts2.lowScore;
+        S._allWinnersBad = !!opts2.allBad;
         var colors = { face: "#8aa", semi_right: "#a98", right: "#9a8", wide_right: "#89a", semi_left: "#a89", left: "#98a", wide_left: "#aa8" };
         var pending = 0;
         for (var i = 0; i < BIN_IDS.length; i++) {
