@@ -1545,7 +1545,10 @@
     var $instrWrap = $("#fs-instr-above");
     function setInstr(t1, t2) {
       var empty = !t1 && !t2;
-      $instrWrap.style.display = empty ? "none" : "";
+      // "flex" explicite — le conteneur est stylé inline (display:flex pour
+      // centrer la pilule) : remettre "" retirerait le flex et la pilule
+      // retomberait en block collée en haut à gauche.
+      $instrWrap.style.display = empty ? "none" : "flex";
       $t1.textContent = t1 || "";
       $t2.textContent = t2 || "";
     }
