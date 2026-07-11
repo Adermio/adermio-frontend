@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ua5d07cn1u");
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Sources scientifiques — Adermio</title>
+    <meta name="description" content="Bibliographie scientifique d'Adermio — recommandations de sociétés savantes, essais cliniques et méta-analyses qui fondent les analyses et recommandations de l'app.">
+    <link rel="canonical" href="https://adermio.com/sources">
+    <link rel="alternate" hreflang="fr" href="https://adermio.com/sources">
+    <link rel="alternate" hreflang="en" href="https://adermio.com/en/sources">
+    <link rel="alternate" hreflang="x-default" href="https://adermio.com/sources">
+    <meta property="og:title" content="Sources scientifiques — Adermio">
+    <meta property="og:description" content="Bibliographie scientifique d'Adermio — recommandations de sociétés savantes, essais cliniques et méta-analyses qui fondent les analyses et recommandations de l'app.">
+    <meta property="og:url" content="https://adermio.com/sources">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://adermio.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:site_name" content="Adermio">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sources scientifiques — Adermio">
+    <meta name="twitter:description" content="Bibliographie scientifique d'Adermio — recommandations de sociétés savantes, essais cliniques et méta-analyses qui fondent les analyses et recommandations de l'app.">
+    <meta name="twitter:image" content="https://adermio.com/og-image.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0F3D39">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Adermio">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',
+                            dark: '#0F3D39',
+                            primary: '#14B8A6',
+                            text: '#334155',
+                            muted: '#94A3B8',
+                            surface: '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        a, a:visited, a:hover, a:active {
+            color: inherit;
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-2">
+                 <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-2 py-1 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+                        <img src="https://flagcdn.com/fr.svg" width="16" alt="FR" class="rounded-sm shadow-sm">
+                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+                    </button>
+                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-adermio-dark/5 overflow-hidden z-[80]">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                            <img src="https://flagcdn.com/fr.svg" width="18" alt="Français" class="rounded-sm shadow-sm">
+                            <span>FR</span>
+                        </a>
+                        <a href="https://adermio.com/en/sources" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/us.svg" width="18" alt="English" class="rounded-sm shadow-sm">
+                            <span>EN</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="https://adermio.com/" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Accueil</a>
+            <a href="https://adermio.com/formulaire" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Faire l'analyse</a>
+            <a href="https://adermio.com/about" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">À Propos</a>
+            <a href="https://adermio.com/blog" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Blog</a>
+            <a href="https://adermio.com/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Nous Contacter</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2026</span>
+        </div>
+    </div>
+
+    <header class="relative w-full pt-40 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="fade-up inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/50 border border-adermio-dark/5 text-[10px] uppercase tracking-[0.2em] font-medium text-adermio-dark shadow-sm mb-6">
+                <span>Science</span>
+            </div>
+            <h1 class="font-serif text-3xl md:text-5xl text-adermio-dark mb-4 fade-up" style="animation-delay: 0.1s;">
+                Sources scientifiques
+            </h1>
+            <p class="text-adermio-muted text-sm fade-up" style="animation-delay: 0.2s;">
+                Mise à jour : juillet 2026
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10 fade-up" style="animation-delay: 0.3s;">
+        <div class="bg-white rounded-[2rem] p-8 md:p-16 shadow-soft border border-adermio-dark/5">
+
+            <div class="mb-12">
+                <p class="text-adermio-text/80 font-light leading-relaxed">Les analyses, scores et recommandations d&#x27;Adermio s&#x27;appuient sur la littérature dermatologique et nutritionnelle publiée : recommandations de sociétés savantes, essais cliniques randomisés, revues systématiques et méta-analyses. Touchez une référence pour la consulter.</p>
+                <div class="mt-6 p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark">Adermio fournit une information cosmétique et de bien-être. L&#x27;application n&#x27;établit aucun diagnostic médical et ne remplace pas la consultation d&#x27;un professionnel de santé.</div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">Acné — compréhension &amp; prise en charge</h2>
+                <ul class="divide-y divide-adermio-dark/5">
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/38300170/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Guidelines of care for the management of acne vulgaris <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Reynolds RV, Yeung H, Cheng CE, et al. — <em>J Am Acad Dermatol</em>, 2024</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/26897386/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Guidelines of care for the management of acne vulgaris <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Zaenglein AL, Pathy AL, Schlosser BJ, et al. — <em>J Am Acad Dermatol</em>, 2016</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/27514932/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">European evidence-based (S3) guideline for the treatment of acne — update 2016 <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Nast A, Dréno B, Bettoli V, et al. — <em>J Eur Acad Dermatol Venereol</em>, 2016</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/20456560/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Development and evaluation of a Global Acne Severity Scale (GEA Scale) suitable for France and Europe <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Dréno B, Poli F, Pawin H, et al. — <em>J Eur Acad Dermatol Venereol</em>, 2011</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/21880356/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Acne vulgaris <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Williams HC, Dellavalle RP, Garner S — <em>Lancet</em>, 2012</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/30726466/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Adult female acne: a guide to clinical practice <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Bagatin E, Freitas THP, Rivitti-Machado MC, et al. — <em>An Bras Dermatol</em>, 2019</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">Actifs cosmétiques</h2>
+                <ul class="divide-y divide-adermio-dark/5">
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/12095880/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Randomised, controlled trial of the efficacy and safety of adapalene gel 0.1% and tretinoin cream 0.05% in patients with acne vulgaris <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Cunliffe WJ, Danby FW, Dunlap F, et al. — <em>Eur J Dermatol</em>, 2002</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/32175593/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Topical benzoyl peroxide for acne <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Yang Z, Zhang Y, Lazic Mosler E, et al. — <em>Cochrane Database Syst Rev</em>, 2020</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/7657446/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Topical nicotinamide compared with clindamycin gel in the treatment of inflammatory acne vulgaris <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Shalita AR, Smith JG, Parish LC, et al. — <em>Int J Dermatol</em>, 1995</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/37550898/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">A systematic review to evaluate the efficacy of azelaic acid in the management of acne, rosacea, melasma and skin aging <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">King S, Campbell J, Rowe R, et al. — <em>J Cosmet Dermatol</em>, 2023</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/29705755/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Chemical peels for acne vulgaris: a systematic review of randomised controlled trials <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Chen X, Wang S, Yang M, Li L — <em>BMJ Open</em>, 2018</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/37128827/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Efficacy of topical vitamin C in melasma and photoaging: a systematic review <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Correia G, Magina S — <em>J Cosmet Dermatol</em>, 2023</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">Comédogénicité des ingrédients</h2>
+                <ul class="divide-y divide-adermio-dark/5">
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/6229554/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Comedogenicity of current therapeutic products, cosmetics, and ingredients in the rabbit ear <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Fulton JE Jr, Pay SR, Fulton JE III — <em>J Am Acad Dermatol</em>, 1984</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/16488305/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">A re-evaluation of the comedogenicity concept <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Draelos ZD, DiNardo JC — <em>J Am Acad Dermatol</em>, 2006</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/6461674/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Is the rabbit ear model, in its present state, prophetic of acnegenicity? <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Frank SB — <em>J Am Acad Dermatol</em>, 1982</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">Photoprotection</h2>
+                <ul class="divide-y divide-adermio-dark/5">
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/23732711/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Sunscreen and prevention of skin aging: a randomized trial <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Hughes MCB, Williams GM, Baker P, Green AC — <em>Ann Intern Med</em>, 2013</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://doi.org/10.1016/j.jaad.2021.12.019" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Photoprotection for skin of all color: consensus and clinical guidance from an expert panel <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Rigel DS, Taylor SC, Lim HW, et al. — <em>J Am Acad Dermatol</em>, 2022</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/35250287/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">A randomized, double blinded, split-face study of the efficacy of using a broad spectrum sunscreen with anti-inflammatory agent to reduce post inflammatory hyperpigmentation after picosecond laser <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Puaratanaarunkon T, Asawanonda P — <em>Clin Cosmet Investig Dermatol</em>, 2022</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">Hydratation &amp; barrière cutanée</h2>
+                <ul class="divide-y divide-adermio-dark/5">
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/23467280/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Hyaluronic acid: a key molecule in skin aging <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Papakonstantinou E, Roth M, Karakiulakis G — <em>Dermatoendocrinol</em>, 2012</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/29229630/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">The role of moisturizers in addressing various kinds of dermatitis: a review <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Purnamawati S, Indrastuti N, Danarti R, Saefudin T — <em>Clin Med Res</em>, 2017</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">Grossesse &amp; sécurité des soins</h2>
+                <ul class="divide-y divide-adermio-dark/5">
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/21673209/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Safety of skin care products during pregnancy <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Bozzo P, Chua-Gocheco A, Einarson A — <em>Can Fam Physician</em>, 2011</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">Alimentation &amp; peau</h2>
+                <ul class="divide-y divide-adermio-dark/5">
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/17616769/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">A low-glycemic-load diet improves symptoms in acne vulgaris patients: a randomized controlled trial <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Smith RN, Mann NJ, Braue A, et al. — <em>Am J Clin Nutr</em>, 2007</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/22678562/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Clinical and histological effect of a low glycaemic load diet in treatment of acne vulgaris in Korean patients: a randomized, controlled trial <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Kwon HH, Yoon JY, Hong JS, et al. — <em>Acta Derm Venereol</em>, 2012</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/30096883/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Dairy intake and acne vulgaris: a systematic review and meta-analysis of 78,529 children, adolescents, and young adults <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Juhl CR, Bergholdt HKM, Miller IM, et al. — <em>Nutrients</em>, 2018</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/32748305/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Effects of diet on acne and its response to treatment <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Baldwin H, Tan J — <em>Am J Clin Dermatol</em>, 2021</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/24553997/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Effect of dietary supplementation with omega-3 fatty acid and gamma-linolenic acid on acne vulgaris: a randomised, double-blind, controlled trial <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Jung JY, Kwon HH, Hong JS, et al. — <em>Acta Derm Venereol</em>, 2014</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">Sommeil, stress &amp; peau</h2>
+                <ul class="divide-y divide-adermio-dark/5">
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/25266053/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">Does poor sleep quality affect skin ageing? <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Oyetakin-White P, Suggs A, Koo B, et al. — <em>Clin Exp Dermatol</em>, 2015</p>
+                            </a>
+                        </li>
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/12873885/" target="_blank" rel="noopener noreferrer" class="group/ref block">
+                                <p class="text-adermio-dark font-medium leading-snug group-hover/ref:text-teal-700 transition-colors">The response of skin disease to stress: changes in the severity of acne vulgaris as affected by examination stress <i data-lucide="external-link" class="inline w-3.5 h-3.5 align-baseline opacity-40"></i></p>
+                                <p class="text-sm text-adermio-text/70 font-light mt-1">Chiu A, Chon SY, Kimball AB — <em>Arch Dermatol</em>, 2003</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <p class="text-xs text-adermio-muted font-light pt-4 border-t border-adermio-dark/5">Bibliographie vérifiée — chaque lien pointe vers l&#x27;article original (PubMed ou éditeur). Mise à jour : juillet 2026.</p>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="/logo_Adermio.png"
+                     alt="Adermio Logo"
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                La dermatologie réinventée par l'intelligence artificielle.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="https://adermio.com/" class="hover:text-teal-600 transition-colors !text-adermio-dark">Accueil</a>
+                <a href="https://adermio.com/formulaire" class="hover:text-teal-600 transition-colors !text-adermio-dark">Faire l'analyse</a>
+                <a href="https://adermio.com/about" class="hover:text-teal-600 transition-colors !text-adermio-dark">À Propos</a>
+                <a href="https://adermio.com/blog" class="hover:text-teal-600 transition-colors !text-adermio-dark">Blog</a>
+                <a href="https://adermio.com/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Nous Contacter</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="https://adermio.com/conditions" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Conditions d'utilisation</a>
+                <a href="https://adermio.com/cgv" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Conditions de vente</a>
+                <a href="https://adermio.com/mentions-legales" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Mentions Légales</a>
+                <a href="https://adermio.com/confidentialite" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Politique de Confidentialité</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2026 Adermio. Tous droits réservés.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+    <script src="/js/pwa.js" defer></script>
+</body>
+</html>

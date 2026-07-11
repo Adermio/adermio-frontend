@@ -59,6 +59,15 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://adermio.com/sources</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/sources"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/sources"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/sources"/>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://adermio.com/mentions-legales</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
@@ -135,6 +144,15 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite"/>
     <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/en/sources</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/sources"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/sources"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/sources"/>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
