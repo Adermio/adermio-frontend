@@ -936,7 +936,7 @@
     for (var i = 0; i < BIN_IDS.length; i++) bins[BIN_IDS[i]] = [];
     return {
       phase: "idle", bins: bins, calibSince: null,
-      countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0,
+      countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0, lastNewBinAt: 0,
       prev: null, prevT: null,
       noFaceT: null, fc: 0,
       cBr: null, cBl: null,
@@ -2038,7 +2038,7 @@
         }
         if (cdElapsed >= 3000) {
           hideCountdown();
-          S.phase = "scanning"; S.scanStart = now;
+          S.phase = "scanning"; S.scanStart = now; S.lastNewBinAt = now;
           S.logger.log({ type: "scanning_start", timestamp: Date.now() });
           var g = getGuidancePro(S.bins, absYaw, noseX > 0.5, t);
           setInstr(g.t1, g.t2);
@@ -2105,11 +2105,16 @@
         if (S.retake && S.bins[S.retake].length > 0) { finish(); return; }
 
         if (filled >= 7) { finish(); return; }
-        // Early finish: 3+ essential bins after 20s
+        // Early finish: 3+ essential bins after 20s, ONLY once the user has
+        // stalled (no NEW bin filled for 12s). Without the stall guard this
+        // fired the instant the first right-side bin landed (guidance does the
+        // left side first), truncating active scans at 5/7 — telemetry
+        // 2026-07-11: wide_right missing in 69/100 scans, left side complete.
         var hasEssential = S.bins.face.length > 0
           && (S.bins.right.length > 0 || S.bins.semi_right.length > 0 || S.bins.wide_right.length > 0)
           && (S.bins.left.length > 0 || S.bins.semi_left.length > 0 || S.bins.wide_left.length > 0);
-        if (hasEssential && filled >= 3 && scanElapsed > 20000 && !S.retake) { finish(); return; }
+        var stalledMs = now - (S.lastNewBinAt || S.scanStart);
+        if (hasEssential && filled >= 3 && scanElapsed > 20000 && stalledMs > 12000 && !S.retake) { finish(); return; }
         if (scanElapsed > CFG.timeoutMs) { S.logger.logTimeout(filled); finish(); return; }
       }
 
@@ -2217,6 +2222,7 @@
         while (bin.length > CFG.binTopN) { var rm = bin.pop(); URL.revokeObjectURL(rm.url); }
 
         S.logger.logCapture(binId, adjustedScore, wasEmpty);
+        if (wasEmpty) S.lastNewBinAt = Date.now();
         if (wasEmpty && navigator.vibrate) navigator.vibrate(25);
         S.capturing = false;
       }).catch(function (e) {
