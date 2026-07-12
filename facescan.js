@@ -865,12 +865,20 @@
      ═══════════════════════════════════════════════════════════ */
   function ScanLogger() {
     this.events = [];
+    this.samples = [];
     this.sessionStart = 0;
   }
   ScanLogger.prototype.start = function (tier) {
     this.events = [];
+    this.samples = [];
     this.sessionStart = Date.now();
     this.events.push({ type: "scan_start", timestamp: this.sessionStart, deviceTier: tier });
+  };
+  // Échantillon de pose (1 point / 2s pendant le scan, cap 60) : diagnostic
+  // sans image des scans qui stagnent — dit si l'utilisateur n'a jamais
+  // tourné, a tourné trop loin, est sorti du cadre ou a posé le téléphone.
+  ScanLogger.prototype.logPoseSample = function (s) {
+    if (this.samples.length < 60) this.samples.push(s);
   };
   ScanLogger.prototype.log = function (e) { this.events.push(e); };
   ScanLogger.prototype.logCapture = function (bin, score, wasNew) {
@@ -912,6 +920,7 @@
       sessionStart: this.sessionStart,
       summary: this.getSummary(),
       events: this.events,
+      samples: this.samples,
     });
   };
 
@@ -936,7 +945,7 @@
     for (var i = 0; i < BIN_IDS.length; i++) bins[BIN_IDS[i]] = [];
     return {
       phase: "idle", bins: bins, calibSince: null,
-      countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0, lastNewBinAt: 0,
+      countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0, lastNewBinAt: 0, lastPoseSample: 0,
       prev: null, prevT: null,
       noFaceT: null, fc: 0,
       cBr: null, cBl: null,
@@ -2054,6 +2063,20 @@
         var scanElapsed = now - S.scanStart;
         var nextDir = "none";
 
+        // Échantillonnage de pose (1/2s) : yaw physique signé (droite < 0),
+        // bin classifié, distance ok, visage vu. Le pendant "face perdue"
+        // est loggé dans noFace().
+        if (now - S.lastPoseSample >= 2000) {
+          S.lastPoseSample = now;
+          S.logger.logPoseSample({
+            t: Math.round(scanElapsed / 1000),
+            yaw: Math.round(toPhysicalYaw(absYaw, noseX > 0.5)),
+            bin: classifyBin(absYaw, noseX) || "none",
+            dist: pos.distOk ? 1 : 0,
+            face: 1,
+          });
+        }
+
         // Quality-hint overrides (after multiple post-capture rejects)
         if (S.qualityHint === "lightDuringScan") {
           setInstr(t.lightDuringScan, t.lightDuringScanSub);
@@ -2123,6 +2146,16 @@
     }
 
     function noFace() {
+      // Échantillon "visage perdu" pendant le scan (pendant de l'échantillon
+      // de pose du branch scanning) — sans lui, un scan où l'utilisateur sort
+      // du cadre serait indistinguable d'un scan où il ne tourne pas.
+      if (S.phase === "scanning" && S.scanStart) {
+        var nfNow = Date.now();
+        if (nfNow - S.lastPoseSample >= 2000) {
+          S.lastPoseSample = nfNow;
+          S.logger.logPoseSample({ t: Math.round((nfNow - S.scanStart) / 1000), face: 0 });
+        }
+      }
       setInstr(t.noFace, t.noFaceSub);
       S.st = { dist: null, light: null, stab: null }; S.calibSince = null;
       // Reset the bottom badges visually too (no face → unknown state)
