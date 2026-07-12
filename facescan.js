@@ -30,6 +30,18 @@
  *  - 90s timeout (was 40s) — more permissive for low-end devices
  *  - ScanLogger event tracking (saved to formState.scanLog and submitted with the form)
  *
+ * v9.3 (light metering rework, 2026-07):
+ *  - analyzeBright is now a PURE single-pass measurement: legacy face/bg
+ *    means + histograms (percentiles, dark/clipped pixel shares) + 3×3 SKIN
+ *    patches anchored on FaceMesh landmarks (forehead/nose/cheeks/chin) read
+ *    from the same ImageData — measures actual skin, immune to dark hair /
+ *    bright background polluting the bounding-box mean
+ *  - evalLight(): EMA smoothing (α=0.35) + hysteresis on dark/bright/backlit
+ *    flags — ENTRY thresholds unchanged (brightMin/Max/backlightRatio), only
+ *    the EXIT requires a margin → no more flag flicker under webcam
+ *    auto-exposure. Rich metrics ride along in telemetry only; decisions
+ *    still run on the legacy metric until phase-2 calibration
+ *
  * v9.2 (light telemetry + escape hatch, 2026-07):
  *  - Light telemetry: "light" events (face/bg luma, 1/3s, cap 40) during
  *    calibration+scanning, luma stamped on pose samples and capture events —
@@ -654,27 +666,103 @@
      ═══════════════════════════════════════════════════════════ */
   var _bc = null, _bx = null, _lc = null, _lx = null, _cc = null, _cx = null, _blurBuf = null;
 
+  // v9.3 — Mesure de lumière enrichie, UNE seule passe sur la frame 120×90 :
+  //   • moyennes visage/fond (métrique LEGACY — les seuils actuels s'y réfèrent)
+  //   • histogrammes → percentiles + part de pixels sombres (<30) / cramés
+  //     (>250) sur le visage : détecte le demi-visage dans l'ombre et le flash
+  //     cramé que la MOYENNE ne voit pas (100 uniforme ≠ moitié 30 / moitié 170)
+  //   • patchs de PEAU 3×3 ancrés sur les landmarks (front/nez/joues/menton),
+  //     lus dans la MÊME ImageData : mesure la peau réelle, insensible aux
+  //     cheveux foncés / fond clair que la bounding box mélange à la moyenne
+  // Fonction PURE (mesure only) : les décisions dark/bright/bl sont prises par
+  // evalLight() — lissage + hystérèse (l'auto-exposition webcam fait osciller
+  // la mesure brute, les flags ne doivent pas clignoter).
+  var SKIN_LM = [151, 6, 50, 280, 200]; // front, arête du nez, joue G, joue D, menton
+
+  function patchLuma(d, sw, sh, nx, ny) {
+    var cx = Math.max(1, Math.min(sw - 2, Math.round(nx * sw)));
+    var cy = Math.max(1, Math.min(sh - 2, Math.round(ny * sh)));
+    var s = 0;
+    for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) {
+      var i = ((cy + dy) * sw + (cx + dx)) * 4;
+      s += d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
+    }
+    return s / 9;
+  }
+
+  function percentileFromHist(hist, total, p) {
+    if (total <= 0) return 0;
+    var target = total * p, acc = 0;
+    for (var b = 0; b < 64; b++) { acc += hist[b]; if (acc >= target) return b * 4 + 2; }
+    return 254;
+  }
+
+  var NEUTRAL_BRIGHT = { face: 128, bg: 128, r: 1, skinMed: 128, skinMin: 128, darkShare: 0, clipShare: 0, asym: 0, bgP90: 128, faceP10: 128 };
+
   function analyzeBright(video, m) {
     if (!_bc) { _bc = document.createElement("canvas"); _bx = _bc.getContext("2d", { willReadFrequently: true }); }
     var sw = 120, sh = 90; _bc.width = sw; _bc.height = sh;
     try { _bx.drawImage(video, 0, 0, sw, sh); var d = _bx.getImageData(0, 0, sw, sh).data; }
-    catch (e) { return { face: 128, bg: 128, r: 1, ok: true, dark: false, bright: false, bl: false }; }
+    catch (e) { return NEUTRAL_BRIGHT; }
     var fb = faceBounds(m);
-    var fs = 0, fp = 0, bs = 0, bp = 0;
+    var fs = 0, fp = 0, bs = 0, bp = 0, fDark = 0, fClip = 0;
+    var fHist = new Int32Array(64), bHist = new Int32Array(64);
     for (var y = 0; y < sh; y++) for (var x = 0; x < sw; x++) {
       var i = (y * sw + x) * 4;
       var l = d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
       var nx2 = x / sw, ny2 = y / sh;
-      if (nx2 >= fb.x0 && nx2 <= fb.x1 && ny2 >= fb.y0 && ny2 <= fb.y1) { fs += l; fp++; }
-      else { bs += l; bp++; }
+      if (nx2 >= fb.x0 && nx2 <= fb.x1 && ny2 >= fb.y0 && ny2 <= fb.y1) {
+        fs += l; fp++; fHist[Math.min(63, l >> 2)]++;
+        if (l < 30) fDark++; else if (l > 250) fClip++;
+      } else { bs += l; bp++; bHist[Math.min(63, l >> 2)]++; }
     }
     var face = fp > 0 ? fs / fp : 128, bg = bp > 0 ? bs / bp : 128;
-    var r = bg > 1 ? face / bg : 1;
+    // Patchs peau : lus dans la même ImageData (les landmarks sont normalisés
+    // 0..1 sur la frame vidéo, exactement comme faceBounds → même mapping).
+    var patches = [];
+    if (m && m.length > 280) {
+      for (var k = 0; k < SKIN_LM.length; k++) {
+        var lm = m[SKIN_LM[k]];
+        if (lm) patches.push(patchLuma(d, sw, sh, lm.x, lm.y));
+      }
+    }
+    var sorted = patches.slice().sort(function (a, b2) { return a - b2; });
     return {
-      face: face, bg: bg, r: r,
-      ok: face >= CFG.brightMin && face <= CFG.brightMax && !(r < CFG.backlightRatio && bg > 80),
-      dark: face < CFG.brightMin, bright: face > CFG.brightMax, bl: r < CFG.backlightRatio && bg > 80,
+      face: face, bg: bg, r: bg > 1 ? face / bg : 1,
+      skinMed: sorted.length ? sorted[Math.floor(sorted.length / 2)] : face,
+      skinMin: sorted.length ? sorted[0] : face,
+      darkShare: fp > 0 ? fDark / fp : 0,
+      clipShare: fp > 0 ? fClip / fp : 0,
+      asym: patches.length === 5 ? Math.abs(patches[2] - patches[3]) : 0,
+      bgP90: percentileFromHist(bHist, bp, 0.9),
+      faceP10: percentileFromHist(fHist, fp, 0.1),
     };
+  }
+
+  // v9.3 — Décision lissée + hystérèse. Les seuils d'ENTRÉE en état mauvais
+  // sont EXACTEMENT les seuils historiques (brightMin/brightMax/backlightRatio
+  // — aucun resserrage de facto) ; seule la SORTIE exige une marge (+8 luma /
+  // +0.08 ratio) et la mesure est lissée (EMA α=0.35, ~0.5s de constante de
+  // temps au rythme des probes) → les flags ne clignotent plus au rythme de
+  // l'auto-exposition. Les métriques riches (patchs peau, percentiles, parts
+  // sombres/cramées) sont TRANSPORTÉES pour la télémétrie mais ne décident
+  // encore rien : c'est la calibration phase 2 qui fera ce basculement.
+  // `face` reste la valeur BRUTE instantanée (analyzePhotoQuality juge LA
+  // frame capturée, pas une moyenne glissante).
+  function evalLight(S, raw) {
+    var a = 0.35;
+    S._lEmaF = S._lEmaF == null ? raw.face : S._lEmaF + a * (raw.face - S._lEmaF);
+    S._lEmaB = S._lEmaB == null ? raw.bg : S._lEmaB + a * (raw.bg - S._lEmaB);
+    var emaR = S._lEmaB > 1 ? S._lEmaF / S._lEmaB : 1;
+    var fl = S._lFlags || { dark: false, bright: false, bl: false };
+    var dark = fl.dark ? S._lEmaF < CFG.brightMin + 8 : S._lEmaF < CFG.brightMin;
+    var bright = fl.bright ? S._lEmaF > CFG.brightMax - 8 : S._lEmaF > CFG.brightMax;
+    var bgHigh = S._lEmaB > 80;
+    var bl = fl.bl ? (emaR < CFG.backlightRatio + 0.08 && bgHigh) : (emaR < CFG.backlightRatio && bgHigh);
+    S._lFlags = { dark: dark, bright: bright, bl: bl };
+    raw.ok = !dark && !bright && !bl;
+    raw.dark = dark; raw.bright = bright; raw.bl = bl;
+    return raw;
   }
 
   function analyzeBlur(video, m) {
@@ -895,8 +983,8 @@
     if (this.samples.length < 60) this.samples.push(s);
   };
   ScanLogger.prototype.log = function (e) { this.events.push(e); };
-  ScanLogger.prototype.logCapture = function (bin, score, wasNew, f, b) {
-    this.events.push({ type: "capture", timestamp: Date.now(), bin: bin, score: score, wasNew: wasNew, f: f, b: b });
+  ScanLogger.prototype.logCapture = function (bin, score, wasNew, f, b, sm) {
+    this.events.push({ type: "capture", timestamp: Date.now(), bin: bin, score: score, wasNew: wasNew, f: f, b: b, sm: sm });
   };
   ScanLogger.prototype.logRejected = function (bin, reason) {
     this.events.push({ type: "capture_rejected", timestamp: Date.now(), bin: bin, reason: reason });
@@ -973,6 +1061,7 @@
       qualityHint: null,   // "qualityLow" | "lightDuringScan" | null
       // v9.2 — lumière : cumul du temps en éclairage jugé mauvais + télémétrie.
       badLightMs: 0, _lightFrameT: 0, _lastLightEvt: 0, lightEvts: 0, lightPillShown: false,
+      _lEmaF: null, _lEmaB: null, _lFlags: null, // v9.3 — lissage + hystérèse lumière
     };
   }
 
@@ -1998,11 +2087,11 @@
       var needsProbe = !S.cBr || (S.fc % CFG.expensiveEvery === 0) ||
         (S.phase === "scanning" && (now - S.lastProbe) > CFG.lightProbeMs);
       if (needsProbe) {
-        S.cBr = analyzeBright($v, marks);
+        S.cBr = evalLight(S, analyzeBright($v, marks));
         S.cBl = analyzeBlur($v, marks);
         S.lastProbe = now;
       }
-      var br = S.cBr || { ok: true, face: 128, dark: false, bright: false, bl: false };
+      var br = S.cBr || { ok: true, face: 128, bg: 128, dark: false, bright: false, bl: false, skinMed: 128, skinMin: 128, darkShare: 0, clipShare: 0, asym: 0, bgP90: 128, faceP10: 128 };
       var bl = S.cBl || { s: 30 };
 
       var pos = checkPosition(sz, noseX, pose.pitch, pose.roll, br, t);
@@ -2043,7 +2132,7 @@
         if (!br.ok) S.badLightMs += lightDt;
         if (now - S._lastLightEvt >= CFG.lightSampleMs && S.lightEvts < 40) {
           S._lastLightEvt = now; S.lightEvts++;
-          S.logger.log({ type: "light", timestamp: Date.now(), f: Math.round(br.face), b: Math.round(br.bg), ok: br.ok ? 1 : 0, ph: S.phase === "calibrating" ? "c" : "s" });
+          S.logger.log({ type: "light", timestamp: Date.now(), f: Math.round(br.face), b: Math.round(br.bg), sm: Math.round(br.skinMed), sn: Math.round(br.skinMin), ds: Math.round(br.darkShare * 100), cs: Math.round(br.clipShare * 100), ay: Math.round(br.asym), b9: Math.round(br.bgP90), p1: Math.round(br.faceP10), ok: br.ok ? 1 : 0, ph: S.phase === "calibrating" ? "c" : "s" });
         }
         if (!S.lightPillShown && S.badLightMs >= CFG.lightFallbackMs) {
           S.lightPillShown = true;
@@ -2305,7 +2394,7 @@
         bin.sort(function (a, b) { return b.score - a.score; });
         while (bin.length > CFG.binTopN) { var rm = bin.pop(); URL.revokeObjectURL(rm.url); }
 
-        S.logger.logCapture(binId, adjustedScore, wasEmpty, Math.round(br.face), Math.round(br.bg));
+        S.logger.logCapture(binId, adjustedScore, wasEmpty, Math.round(br.face), Math.round(br.bg), Math.round(br.skinMed));
         if (wasEmpty) S.lastNewBinAt = Date.now();
         if (wasEmpty && navigator.vibrate) navigator.vibrate(25);
         S.capturing = false;
