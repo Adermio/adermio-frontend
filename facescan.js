@@ -30,6 +30,18 @@
  *  - 90s timeout (was 40s) — more permissive for low-end devices
  *  - ScanLogger event tracking (saved to formState.scanLog and submitted with the form)
  *
+ * v9.2 (light telemetry + escape hatch, 2026-07):
+ *  - Light telemetry: "light" events (face/bg luma, 1/3s, cap 40) during
+ *    calibration+scanning, luma stamped on pose samples and capture events —
+ *    feeds real-data threshold calibration BEFORE any tightening (phase 2)
+ *  - Persistent escape hatch: after 12s of CUMULATIVE bad light, the existing
+ *    "Importer manuellement" pill appears — the scan keeps running (no cutoff)
+ *  - Neutral light guidance: state the problem ("Ajustez votre éclairage"),
+ *    never prescribe the remedy (window vs lamp vs turn around)
+ *  - No capture attempt while brightness is out of bounds (same thresholds as
+ *    post-capture rejection = no de-facto tightening); force-accept after 15
+ *    rejects no longer applies to light rejects (blur only)
+ *
  * Dependencies: @mediapipe/face_mesh (CDN, loaded by formulaire2.html)
  * Public API: window.AdermioFaceScan.{init, destroy, restart}
  */
@@ -114,11 +126,11 @@
       moveBack: "Reculez légèrement",
       moveBackSub: "Votre visage est trop proche",
       lowLight: "Éclairage insuffisant",
-      lowLightSub: "Trouvez un endroit plus lumineux",
+      lowLightSub: "Ajustez votre éclairage",
       strongLight: "Lumière trop forte",
-      strongLightSub: "Déplacez-vous",
+      strongLightSub: "Ajustez votre éclairage",
       backlight: "Contre-jour détecté",
-      backlightSub: "Tournez-vous",
+      backlightSub: "Ajustez votre éclairage",
       centerFace: "Centrez votre visage",
       centerFaceSub: "Placez-vous dans l'ovale",
       pitchOff: "Regardez droit devant",
@@ -153,9 +165,9 @@
 
       // Quality feedback during scan
       qualityLow: "Qualité insuffisante",
-      qualityLowSub: "Tenez-vous stable, face à la lumière",
+      qualityLowSub: "Tenez-vous stable",
       lightDuringScan: "Éclairage insuffisant",
-      lightDuringScanSub: "Placez-vous près d'une fenêtre ou allumez la lumière",
+      lightDuringScanSub: "Ajustez votre éclairage",
 
       // Retake-only mode (one bin)
       retakeFor: "Reprise de l'angle",
@@ -251,11 +263,11 @@
       moveBack: "Move slightly back",
       moveBackSub: "Your face is too close",
       lowLight: "Insufficient lighting",
-      lowLightSub: "Find a brighter spot",
+      lowLightSub: "Adjust your lighting",
       strongLight: "Too much light",
-      strongLightSub: "Move away from the light",
+      strongLightSub: "Adjust your lighting",
       backlight: "Backlight detected",
-      backlightSub: "Turn around",
+      backlightSub: "Adjust your lighting",
       centerFace: "Center your face",
       centerFaceSub: "Place yourself in the oval",
       pitchOff: "Look straight ahead",
@@ -288,9 +300,9 @@
       scanDoneSub: "Analyzing your captures…",
 
       qualityLow: "Quality too low",
-      qualityLowSub: "Hold still, face the light",
+      qualityLowSub: "Hold still",
       lightDuringScan: "Insufficient lighting",
-      lightDuringScanSub: "Move near a window or turn on the light",
+      lightDuringScanSub: "Adjust your lighting",
 
       retakeFor: "Retaking",
 
@@ -381,11 +393,11 @@
       moveBack: "Aléjate un poco",
       moveBackSub: "Tu rostro está demasiado cerca",
       lowLight: "Iluminación insuficiente",
-      lowLightSub: "Busca un lugar más iluminado",
+      lowLightSub: "Ajusta tu iluminación",
       strongLight: "Demasiada luz",
-      strongLightSub: "Aléjate de la luz",
+      strongLightSub: "Ajusta tu iluminación",
       backlight: "Contraluz detectado",
-      backlightSub: "Date la vuelta",
+      backlightSub: "Ajusta tu iluminación",
       centerFace: "Centra tu rostro",
       centerFaceSub: "Colócate dentro del óvalo",
       pitchOff: "Mira al frente",
@@ -418,9 +430,9 @@
       scanDoneSub: "Analizando tus capturas…",
 
       qualityLow: "Calidad insuficiente",
-      qualityLowSub: "Mantente quieto, frente a la luz",
+      qualityLowSub: "Mantente quieto",
       lightDuringScan: "Iluminación insuficiente",
-      lightDuringScanSub: "Acércate a una ventana o enciende la luz",
+      lightDuringScanSub: "Ajusta tu iluminación",
 
       retakeFor: "Repitiendo el ángulo",
 
@@ -531,6 +543,8 @@
     jpegQ: 0.92,             // canvas → blob quality
     expensiveEvery: isHighEnd ? 4 : 6,
     lightProbeMs: 3000,      // periodic light status refresh during scan
+    lightSampleMs: 3000,     // v9.2 — télémétrie lumière : 1 event / 3s (calibration + scan)
+    lightFallbackMs: 12000,  // v9.2 — lumière mauvaise CUMULÉE avant d'offrir l'import manuel
   };
 
   /* ═══════════════════════════════════════════════════════════
@@ -881,8 +895,8 @@
     if (this.samples.length < 60) this.samples.push(s);
   };
   ScanLogger.prototype.log = function (e) { this.events.push(e); };
-  ScanLogger.prototype.logCapture = function (bin, score, wasNew) {
-    this.events.push({ type: "capture", timestamp: Date.now(), bin: bin, score: score, wasNew: wasNew });
+  ScanLogger.prototype.logCapture = function (bin, score, wasNew, f, b) {
+    this.events.push({ type: "capture", timestamp: Date.now(), bin: bin, score: score, wasNew: wasNew, f: f, b: b });
   };
   ScanLogger.prototype.logRejected = function (bin, reason) {
     this.events.push({ type: "capture_rejected", timestamp: Date.now(), bin: bin, reason: reason });
@@ -957,6 +971,8 @@
       idleDraw: null,
       logger: new ScanLogger(),
       qualityHint: null,   // "qualityLow" | "lightDuringScan" | null
+      // v9.2 — lumière : cumul du temps en éclairage jugé mauvais + télémétrie.
+      badLightMs: 0, _lightFrameT: 0, _lastLightEvt: 0, lightEvts: 0, lightPillShown: false,
     };
   }
 
@@ -1926,6 +1942,11 @@
           $initFallback.onclick = function () {
             if (S.idleDraw) { clearInterval(S.idleDraw); S.idleDraw = null; }
             $initFallback.style.display = "none";
+            // v9.2 — trace la sortie (boot lent OU lumière) + persiste le
+            // scanLog : les sessions qui basculent en manuel sont précieuses
+            // pour la calibration des seuils.
+            S.logger.log({ type: "fallback_manual", timestamp: Date.now(), badLightMs: Math.round(S.badLightMs || 0), phase: S.phase });
+            try { if (window.formState) window.formState.scanLog = S.logger.toJSON(); } catch (_) {}
             stopCam(S); exitFullscreen(); S.phase = "idle";
             if (onFall && !dead) onFall();
           };
@@ -2010,6 +2031,29 @@
       updateBadge($bdgStab, S.st.stab);
       updateDots();
 
+      // ── v9.2 : télémétrie lumière + échappatoire persistante ──
+      // (a) 1 event "light" / lightSampleMs (cap 40) : luminance visage/fond
+      //     réelle → base de calibration des seuils (phase 2, données prod).
+      // (b) Cumul du temps passé en lumière jugée mauvaise. Au-delà de
+      //     lightFallbackMs, on AFFICHE le bouton d'import manuel existant
+      //     (fs-init-fallback) sans couper le scan — échappatoire, pas
+      //     couperet : l'utilisateur choisit de continuer ou de basculer.
+      if (S.phase === "calibrating" || S.phase === "scanning") {
+        var lightDt = S._lightFrameT ? Math.min(now - S._lightFrameT, 500) : 0;
+        if (!br.ok) S.badLightMs += lightDt;
+        if (now - S._lastLightEvt >= CFG.lightSampleMs && S.lightEvts < 40) {
+          S._lastLightEvt = now; S.lightEvts++;
+          S.logger.log({ type: "light", timestamp: Date.now(), f: Math.round(br.face), b: Math.round(br.bg), ok: br.ok ? 1 : 0, ph: S.phase === "calibrating" ? "c" : "s" });
+        }
+        if (!S.lightPillShown && S.badLightMs >= CFG.lightFallbackMs) {
+          S.lightPillShown = true;
+          S.logger.log({ type: "light_fallback_shown", timestamp: Date.now(), badLightMs: Math.round(S.badLightMs) });
+          var $fbLight = $("#fs-init-fallback");
+          if ($fbLight) $fbLight.style.display = "inline-flex";
+        }
+      }
+      S._lightFrameT = now;
+
       // ── CALIBRATION ──
       if (S.phase === "calibrating") {
         // Defensive cleanup of overlays in case the user is re-entering
@@ -2073,6 +2117,7 @@
             yaw: Math.round(toPhysicalYaw(absYaw, noseX > 0.5)),
             bin: classifyBin(absYaw, noseX) || "none",
             dist: pos.distOk ? 1 : 0,
+            l: Math.round(br.face), b: Math.round(br.bg),
             face: 1,
           });
         }
@@ -2184,6 +2229,10 @@
     function tryCapture(marks, pose, br, bl, stab, absYaw, noseX, now) {
       var detectedBin = classifyBin(absYaw, noseX);
       if (!detectedBin) return;
+      // v9.2 — lumière hors bornes : on ne TENTE même pas la capture (mêmes
+      // seuils que le rejet post-capture → aucun resserrage de facto). Le
+      // contre-jour (br.bl) reste warn-only jusqu'à la calibration phase 2.
+      if (br.dark || br.bright) return;
       if (S.retake) {
         // Retake mode: only the explicitly retaken bin is eligible
         if (detectedBin !== S.retake) return;
@@ -2230,8 +2279,10 @@
             S.qualityHint = "qualityLow";
           }
 
-          if (S.retakeRejects >= CFG.rejectForceAfter) {
-            // Force-accept this one to avoid infinite loop
+          if (S.retakeRejects >= CFG.rejectForceAfter && !isLight) {
+            // Force-accept this one to avoid infinite loop — SAUF la lumière
+            // (v9.2) : une photo à lumière rejetée n'est JAMAIS force-acceptée,
+            // l'échappatoire manuelle (pill) prend le relais.
             S.retakeRejects = 0;
             S.qualityHint = null;
             // fall through to add to bin
@@ -2254,7 +2305,7 @@
         bin.sort(function (a, b) { return b.score - a.score; });
         while (bin.length > CFG.binTopN) { var rm = bin.pop(); URL.revokeObjectURL(rm.url); }
 
-        S.logger.logCapture(binId, adjustedScore, wasEmpty);
+        S.logger.logCapture(binId, adjustedScore, wasEmpty, Math.round(br.face), Math.round(br.bg));
         if (wasEmpty) S.lastNewBinAt = Date.now();
         if (wasEmpty && navigator.vibrate) navigator.vibrate(25);
         S.capturing = false;
@@ -2333,6 +2384,10 @@
         S.retake = null;
         S.retakeRejects = 0;
         S.qualityHint = null;
+        // v9.2 — preview atteint : l'échappatoire lumière n'a plus lieu d'être,
+        // et un éventuel retake repart avec un budget lumière neuf.
+        try { var $fbDone = $("#fs-init-fallback"); if ($fbDone) $fbDone.style.display = "none"; } catch (_) {}
+        S.lightPillShown = false; S.badLightMs = 0;
         showPreview(wasRetake);
       });
     }
