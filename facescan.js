@@ -30,6 +30,22 @@
  *  - 90s timeout (was 40s) — more permissive for low-end devices
  *  - ScanLogger event tracking (saved to formState.scanLog and submitted with the form)
  *
+ * v9.3.1 (audit fixes, 2026-07):
+ *  - Capture path reverted to v9.1-identical (pre-capture light gate removed,
+ *    force-accept restored) — the audit showed the 35-48 luma band stalled
+ *  - Hysteresis guaranteed-exit: 3 consecutive raw-OK probes force-unlatch
+ *    (stable light in the margin band could latch forever after the webcam
+ *    auto-exposure ramp)
+ *  - Error frames (getImageData throw) no longer pollute the EMA nor mutate
+ *    a shared singleton; out-of-frame landmarks no longer pollute skin
+ *    patches (pv = valid patch count + yaw shipped in telemetry)
+ *  - Pill: re-derivable visibility (auto-hides 4s after light recovers,
+ *    survives resume), hidden BEFORE the complete overlay, click guarded in
+ *    complete/preview, moved below the guidance chevrons (+58px)
+ *  - noFace frames stamp _lightFrameT (no more 500ms phantom badLightMs) and
+ *    use performance.now (pre-existing clock mix killed pose samples after
+ *    the first face loss)
+ *
  * v9.3 (light metering rework, 2026-07):
  *  - analyzeBright is now a PURE single-pass measurement: legacy face/bg
  *    means + histograms (percentiles, dark/clipped pixel shares) + 3×3 SKIN
@@ -50,9 +66,9 @@
  *    "Importer manuellement" pill appears — the scan keeps running (no cutoff)
  *  - Neutral light guidance: state the problem ("Ajustez votre éclairage"),
  *    never prescribe the remedy (window vs lamp vs turn around)
- *  - No capture attempt while brightness is out of bounds (same thresholds as
- *    post-capture rejection = no de-facto tightening); force-accept after 15
- *    rejects no longer applies to light rejects (blur only)
+ *  - (v9.2 gated captures on light and exempted light from the force-accept;
+ *    the v9.3.1 audit proved both were de-facto tightenings that could stall
+ *    scans v9.1 completed — REVERTED, capture path is v9.1-identical)
  *
  * Dependencies: @mediapipe/face_mesh (CDN, loaded by formulaire2.html)
  * Public API: window.AdermioFaceScan.{init, destroy, restart}
@@ -697,13 +713,20 @@
     return 254;
   }
 
-  var NEUTRAL_BRIGHT = { face: 128, bg: 128, r: 1, skinMed: 128, skinMin: 128, darkShare: 0, clipShare: 0, asym: 0, bgP90: 128, faceP10: 128 };
+  function neutralBright() {
+    // Objet FRAIS à chaque appel — JAMAIS un singleton : evalLight écrit les
+    // flags dans l'objet retourné, un singleton serait muté et S.cBr en
+    // deviendrait un alias partagé entre frames (audit v9.3.1). `err:true`
+    // signale à evalLight que les valeurs sont FABRIQUÉES (frame en échec) et
+    // ne doivent pas entrer dans l'EMA.
+    return { face: 128, bg: 128, r: 1, skinMed: 128, skinMin: 128, darkShare: 0, clipShare: 0, asym: 0, bgP90: 128, faceP10: 128, pv: 0, err: true };
+  }
 
   function analyzeBright(video, m) {
     if (!_bc) { _bc = document.createElement("canvas"); _bx = _bc.getContext("2d", { willReadFrequently: true }); }
     var sw = 120, sh = 90; _bc.width = sw; _bc.height = sh;
     try { _bx.drawImage(video, 0, 0, sw, sh); var d = _bx.getImageData(0, 0, sw, sh).data; }
-    catch (e) { return NEUTRAL_BRIGHT; }
+    catch (e) { return neutralBright(); }
     var fb = faceBounds(m);
     var fs = 0, fp = 0, bs = 0, bp = 0, fDark = 0, fClip = 0;
     var fHist = new Int32Array(64), bHist = new Int32Array(64);
@@ -719,13 +742,21 @@
     var face = fp > 0 ? fs / fp : 128, bg = bp > 0 ? bs / bp : 128;
     // Patchs peau : lus dans la même ImageData (les landmarks sont normalisés
     // 0..1 sur la frame vidéo, exactement comme faceBounds → même mapping).
-    var patches = [];
+    var patchVals = [null, null, null, null, null];
     if (m && m.length > 280) {
       for (var k = 0; k < SKIN_LM.length; k++) {
         var lm = m[SKIN_LM[k]];
-        if (lm) patches.push(patchLuma(d, sw, sh, lm.x, lm.y));
+        // Landmark hors cadre (MediaPipe renvoie x/y <0 ou >1 au bord) : le
+        // clamp de patchLuma mesurerait le BORD (fond/cheveux) au lieu de la
+        // peau → patch INVALIDÉ (audit v9.3.1). `pv` (nb de patchs valides)
+        // part en télémétrie pour que la calibration phase 2 filtre.
+        if (lm && lm.x >= 0 && lm.x <= 1 && lm.y >= 0 && lm.y <= 1) {
+          patchVals[k] = patchLuma(d, sw, sh, lm.x, lm.y);
+        }
       }
     }
+    var patches = [];
+    for (var k2 = 0; k2 < patchVals.length; k2++) if (patchVals[k2] != null) patches.push(patchVals[k2]);
     var sorted = patches.slice().sort(function (a, b2) { return a - b2; });
     return {
       face: face, bg: bg, r: bg > 1 ? face / bg : 1,
@@ -733,7 +764,9 @@
       skinMin: sorted.length ? sorted[0] : face,
       darkShare: fp > 0 ? fDark / fp : 0,
       clipShare: fp > 0 ? fClip / fp : 0,
-      asym: patches.length === 5 ? Math.abs(patches[2] - patches[3]) : 0,
+      // Asymétrie : uniquement si les DEUX joues sont des patchs valides.
+      asym: (patchVals[2] != null && patchVals[3] != null) ? Math.abs(patchVals[2] - patchVals[3]) : 0,
+      pv: patches.length,
       bgP90: percentileFromHist(bHist, bp, 0.9),
       faceP10: percentileFromHist(fHist, fp, 0.1),
     };
@@ -750,15 +783,35 @@
   // `face` reste la valeur BRUTE instantanée (analyzePhotoQuality juge LA
   // frame capturée, pas une moyenne glissante).
   function evalLight(S, raw) {
+    var fl = S._lFlags || { dark: false, bright: false, bl: false };
+    // Frame en échec (getImageData a jeté) : valeurs fabriquées (128) — ne
+    // JAMAIS les injecter dans l'EMA, sinon un hiccup vidéo fait sortir un
+    // vrai état sombre de l'hystérèse (EMA 30 → 64 sans changement de
+    // lumière, audit v9.3.1). On rejoue les flags courants tels quels.
+    if (raw.err) {
+      raw.dark = fl.dark; raw.bright = fl.bright; raw.bl = fl.bl;
+      raw.ok = !fl.dark && !fl.bright && !fl.bl;
+      return raw;
+    }
     var a = 0.35;
     S._lEmaF = S._lEmaF == null ? raw.face : S._lEmaF + a * (raw.face - S._lEmaF);
     S._lEmaB = S._lEmaB == null ? raw.bg : S._lEmaB + a * (raw.bg - S._lEmaB);
     var emaR = S._lEmaB > 1 ? S._lEmaF / S._lEmaB : 1;
-    var fl = S._lFlags || { dark: false, bright: false, bl: false };
+    // Verdict BRUT v9.1 (sans lissage) : sert d'override de sortie garanti.
+    var rawOk = raw.face >= CFG.brightMin && raw.face <= CFG.brightMax && !(raw.r < CFG.backlightRatio && raw.bg > 80);
+    S._lRawOkStreak = rawOk ? (S._lRawOkStreak || 0) + 1 : 0;
     var dark = fl.dark ? S._lEmaF < CFG.brightMin + 8 : S._lEmaF < CFG.brightMin;
     var bright = fl.bright ? S._lEmaF > CFG.brightMax - 8 : S._lEmaF > CFG.brightMax;
     var bgHigh = S._lEmaB > 80;
     var bl = fl.bl ? (emaR < CFG.backlightRatio + 0.08 && bgHigh) : (emaR < CFG.backlightRatio && bgHigh);
+    // Anti-piège du régime permanent (audit v9.3.1) : une lumière STABLE dans
+    // la bande de marge (ex. luma 44 ∈ [40,48)) restait latchée POUR TOUJOURS
+    // — la rampe d'auto-exposition au boot garantissait le latch initial, et
+    // la v9.1 considérait 44 comme OK. Règle : 3 probes consécutives au
+    // verdict BRUT v9.1 bon ⇒ déverrouillage forcé. En régime permanent les
+    // flags convergent donc vers la sémantique v9.1 (<1s) ; seuls les
+    // transitoires (spikes d'auto-exposition) restent lissés.
+    if (S._lRawOkStreak >= 3) { dark = false; bright = false; bl = false; }
     S._lFlags = { dark: dark, bright: bright, bl: bl };
     raw.ok = !dark && !bright && !bl;
     raw.dark = dark; raw.bright = bright; raw.bl = bl;
@@ -1060,8 +1113,8 @@
       logger: new ScanLogger(),
       qualityHint: null,   // "qualityLow" | "lightDuringScan" | null
       // v9.2 — lumière : cumul du temps en éclairage jugé mauvais + télémétrie.
-      badLightMs: 0, _lightFrameT: 0, _lastLightEvt: 0, lightEvts: 0, lightPillShown: false,
-      _lEmaF: null, _lEmaB: null, _lFlags: null, // v9.3 — lissage + hystérèse lumière
+      badLightMs: 0, _lightFrameT: 0, _lastLightEvt: 0, lightEvts: 0, lightPillShown: false, _lastBadT: 0, _pillLogged: false,
+      _lEmaF: null, _lEmaB: null, _lFlags: null, _lRawOkStreak: 0, // v9.3 — lissage + hystérèse lumière
     };
   }
 
@@ -1183,7 +1236,7 @@
     /* Inline manual-upload fallback shown during the "very slow connection"
        phase of init (after 12s with no first frame) — lets the user bail out
        to the manual upload flow without backing out of the scan entirely. */
-    + '<button id="fs-init-fallback" style="display:none;position:absolute;top:calc(46% + 45.9vw + 30px);left:50%;transform:translateX(-50%);padding:11px 22px;border-radius:999px;border:1px solid rgba(20,184,166,.45);background:rgba(20,184,166,.14);color:#5eead4;font-size:12px;font-weight:600;cursor:pointer;z-index:7;letter-spacing:.4px;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;gap:6px;">'
+    + '<button id="fs-init-fallback" style="display:none;position:absolute;top:calc(46% + 45.9vw + 58px);left:50%;transform:translateX(-50%);padding:11px 22px;border-radius:999px;border:1px solid rgba(20,184,166,.45);background:rgba(20,184,166,.14);color:#5eead4;font-size:12px;font-weight:600;cursor:pointer;z-index:7;letter-spacing:.4px;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;gap:6px;">'
     +   '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>'
     +   t.initFallbackBtn
     + '</button>'
@@ -1835,6 +1888,11 @@
       S.fc = 0;
       S.cBr = null; S.cBl = null;
       S.prev = null; S.prevT = null;
+      // v9.3.1 — l'environnement lumineux a pu changer pendant l'interruption
+      // (lampe allumée/éteinte) : mesure vierge, et le pill redevient
+      // re-dérivable au lieu d'être tué par l'idleDraw du resume.
+      S._lEmaF = null; S._lEmaB = null; S._lFlags = null; S._lRawOkStreak = 0;
+      S._lightFrameT = 0; S.lightPillShown = false;
       S.logger.log({ type: "scan_resumed", timestamp: Date.now() });
       beginCalibration(false);
     });
@@ -1995,7 +2053,7 @@
         S.idleDraw = setInterval(function () {
           if (S.fc > 0 || dead) {
             clearInterval(S.idleDraw); S.idleDraw = null;
-            if ($initFallback) $initFallback.style.display = "none";
+            if ($initFallback) { $initFallback.style.display = "none"; S.lightPillShown = false; }
             return;
           }
           var elapsed = performance.now() - bootStart;
@@ -2016,7 +2074,7 @@
 
           if (elapsed > firstFrameTimeoutMs) {
             clearInterval(S.idleDraw); S.idleDraw = null;
-            if ($initFallback) $initFallback.style.display = "none";
+            if ($initFallback) { $initFallback.style.display = "none"; S.lightPillShown = false; }
             if (!dead) showErr(t.initializingTimeout);
             return;
           }
@@ -2029,6 +2087,9 @@
         // same path as the gallery shortcut and the cancel-after-no-face case.
         if ($initFallback) {
           $initFallback.onclick = function () {
+            // v9.3.1 — jamais pendant complete/preview : le scan est acquis,
+            // un tap tardif ne doit pas le jeter.
+            if (dead || S.phase === "complete" || S.phase === "preview") return;
             if (S.idleDraw) { clearInterval(S.idleDraw); S.idleDraw = null; }
             $initFallback.style.display = "none";
             // v9.2 — trace la sortie (boot lent OU lumière) + persiste le
@@ -2091,7 +2152,7 @@
         S.cBl = analyzeBlur($v, marks);
         S.lastProbe = now;
       }
-      var br = S.cBr || { ok: true, face: 128, bg: 128, dark: false, bright: false, bl: false, skinMed: 128, skinMin: 128, darkShare: 0, clipShare: 0, asym: 0, bgP90: 128, faceP10: 128 };
+      var br = S.cBr || { ok: true, face: 128, bg: 128, dark: false, bright: false, bl: false, skinMed: 128, skinMin: 128, darkShare: 0, clipShare: 0, asym: 0, bgP90: 128, faceP10: 128, pv: 0 };
       var bl = S.cBl || { s: 30 };
 
       var pos = checkPosition(sz, noseX, pose.pitch, pose.roll, br, t);
@@ -2129,16 +2190,26 @@
       //     couperet : l'utilisateur choisit de continuer ou de basculer.
       if (S.phase === "calibrating" || S.phase === "scanning") {
         var lightDt = S._lightFrameT ? Math.min(now - S._lightFrameT, 500) : 0;
-        if (!br.ok) S.badLightMs += lightDt;
+        if (!br.ok) { S.badLightMs += lightDt; S._lastBadT = now; }
         if (now - S._lastLightEvt >= CFG.lightSampleMs && S.lightEvts < 40) {
           S._lastLightEvt = now; S.lightEvts++;
-          S.logger.log({ type: "light", timestamp: Date.now(), f: Math.round(br.face), b: Math.round(br.bg), sm: Math.round(br.skinMed), sn: Math.round(br.skinMin), ds: Math.round(br.darkShare * 100), cs: Math.round(br.clipShare * 100), ay: Math.round(br.asym), b9: Math.round(br.bgP90), p1: Math.round(br.faceP10), ok: br.ok ? 1 : 0, ph: S.phase === "calibrating" ? "c" : "s" });
+          S.logger.log({ type: "light", timestamp: Date.now(), f: Math.round(br.face), b: Math.round(br.bg), sm: Math.round(br.skinMed), sn: Math.round(br.skinMin), ds: Math.round(br.darkShare * 100), cs: Math.round(br.clipShare * 100), ay: Math.round(br.asym), b9: Math.round(br.bgP90), p1: Math.round(br.faceP10), pv: br.pv || 0, y: Math.round(Math.abs(pose.yaw)), ok: br.ok ? 1 : 0, ph: S.phase === "calibrating" ? "c" : "s" });
         }
-        if (!S.lightPillShown && S.badLightMs >= CFG.lightFallbackMs) {
-          S.lightPillShown = true;
-          S.logger.log({ type: "light_fallback_shown", timestamp: Date.now(), badLightMs: Math.round(S.badLightMs) });
+        // Pill RE-DÉRIVABLE (audit v9.3.1) : visible ⟺ budget dépassé ET
+        // lumière mauvaise récente (≤4s). Il se cache donc tout seul quand
+        // l'utilisateur corrige son éclairage (fini le tap accidentel dans la
+        // zone des chevrons qui jetait les angles capturés), réapparaît
+        // instantanément si ça replonge, et survit à un resume (l'ancien
+        // one-shot `!lightPillShown` était tué à jamais par l'idleDraw).
+        var pillShould = S.badLightMs >= CFG.lightFallbackMs && (now - S._lastBadT) <= 4000;
+        if (pillShould !== S.lightPillShown) {
+          S.lightPillShown = pillShould;
           var $fbLight = $("#fs-init-fallback");
-          if ($fbLight) $fbLight.style.display = "inline-flex";
+          if ($fbLight) $fbLight.style.display = pillShould ? "inline-flex" : "none";
+          if (pillShould && !S._pillLogged) {
+            S._pillLogged = true;
+            S.logger.log({ type: "light_fallback_shown", timestamp: Date.now(), badLightMs: Math.round(S.badLightMs) });
+          }
         }
       }
       S._lightFrameT = now;
@@ -2283,8 +2354,15 @@
       // Échantillon "visage perdu" pendant le scan (pendant de l'échantillon
       // de pose du branch scanning) — sans lui, un scan où l'utilisateur sort
       // du cadre serait indistinguable d'un scan où il ne tourne pas.
+      // v9.3.1 — horodater AUSSI les frames sans visage : sinon le retour du
+      // visage facturait jusqu'à 500ms de « mauvaise lumière » fantôme à
+      // badLightMs sur la foi de flags figés d'avant la perte.
+      S._lightFrameT = now;
       if (S.phase === "scanning" && S.scanStart) {
-        var nfNow = Date.now();
+        // v9.3.1 — même horloge que la branche scanning (performance.now) :
+        // le Date.now() historique rendait lastPoseSample incomparable et
+        // tuait TOUS les pose samples après la première perte de visage.
+        var nfNow = now;
         if (nfNow - S.lastPoseSample >= 2000) {
           S.lastPoseSample = nfNow;
           S.logger.logPoseSample({ t: Math.round((nfNow - S.scanStart) / 1000), face: 0 });
@@ -2318,10 +2396,12 @@
     function tryCapture(marks, pose, br, bl, stab, absYaw, noseX, now) {
       var detectedBin = classifyBin(absYaw, noseX);
       if (!detectedBin) return;
-      // v9.2 — lumière hors bornes : on ne TENTE même pas la capture (mêmes
-      // seuils que le rejet post-capture → aucun resserrage de facto). Le
-      // contre-jour (br.bl) reste warn-only jusqu'à la calibration phase 2.
-      if (br.dark || br.bright) return;
+      // (v9.3.1) Le gate lumière pré-capture introduit en v9.2 a été RETIRÉ :
+      // l'audit a montré un resserrage de facto (seuils live 40/235 + sortie
+      // d'hystérèse 48/227 vs rejet post-capture 35/240 → la bande 35-48,
+      // acceptée en v9.1, ne produisait plus AUCUNE tentative) et la perte de
+      // la garantie de progression. Chemin de capture = v9.1 bit-identique
+      // jusqu'à la calibration phase 2.
       if (S.retake) {
         // Retake mode: only the explicitly retaken bin is eligible
         if (detectedBin !== S.retake) return;
@@ -2368,10 +2448,12 @@
             S.qualityHint = "qualityLow";
           }
 
-          if (S.retakeRejects >= CFG.rejectForceAfter && !isLight) {
-            // Force-accept this one to avoid infinite loop — SAUF la lumière
-            // (v9.2) : une photo à lumière rejetée n'est JAMAIS force-acceptée,
-            // l'échappatoire manuelle (pill) prend le relais.
+          if (S.retakeRejects >= CFG.rejectForceAfter) {
+            // Force-accept this one to avoid infinite loop.
+            // (v9.3.1 : l'exemption lumière tentée en v9.2 supprimait la
+            // garantie de progression — un scan v9.1 finissait TOUJOURS,
+            // au pire avec le bandeau « qualité limite » en preview. Restauré
+            // à l'identique ; à re-trancher en phase 2 avec seuils calibrés.)
             S.retakeRejects = 0;
             S.qualityHint = null;
             // fall through to add to bin
@@ -2406,6 +2488,12 @@
 
     function finish() {
       if (S.phase === "preview" || S.phase === "complete") return;
+      // v9.3.1 — cacher le pill AVANT l'overlay « Scan terminé » : l'overlay
+      // est pointer-events:none, un tap le TRAVERSAIT vers le pill resté
+      // visible dessous → onFall en pleine séquence de finish = scan complet
+      // jeté silencieusement.
+      try { var $fbFin = $("#fs-init-fallback"); if ($fbFin) $fbFin.style.display = "none"; } catch (_) {}
+      S.lightPillShown = false;
       var binsFilled = 0;
       for (var i = 0; i < BIN_IDS.length; i++) if (S.bins[BIN_IDS[i]].length > 0) binsFilled++;
       S.logger.logComplete(binsFilled);
