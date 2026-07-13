@@ -2498,7 +2498,10 @@
         while (bin.length > CFG.binTopN) { var rm = bin.pop(); URL.revokeObjectURL(rm.url); }
 
         S.logger.logCapture(binId, adjustedScore, wasEmpty, Math.round(br.face), Math.round(br.bg), Math.round(br.skinMed));
-        if (wasEmpty) S.lastNewBinAt = Date.now();
+        // performance.now OBLIGATOIRE : même horloge que `now`/scanStart/stalledMs.
+        // (Le Date.now historique rendait stalledMs négatif dès la 1re capture →
+        // filet de stagnation mort, tous les bloqués partaient au timeout 90s.)
+        if (wasEmpty) S.lastNewBinAt = performance.now();
         if (wasEmpty && navigator.vibrate) navigator.vibrate(25);
         S.capturing = false;
       }).catch(function (e) {
