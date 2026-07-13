@@ -1100,7 +1100,7 @@
     for (var i = 0; i < BIN_IDS.length; i++) bins[BIN_IDS[i]] = [];
     return {
       phase: "idle", bins: bins, calibSince: null,
-      countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0, lastNewBinAt: 0, lastPoseSample: 0,
+      countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0, lastNewBinAt: 0, lastPoseSample: 0, _capturingSince: 0, _capGen: 0,
       prev: null, prevT: null,
       noFaceT: null, fc: 0,
       cBr: null, cBl: null,
@@ -2322,6 +2322,21 @@
         // can sustain 150ms intervals for finer top-K selection; low/mid-end
         // devices throttle to 300ms to avoid frame drops during analysis.
         var captureInterval = isHighEnd ? CFG.captureMs : CFG.captureMs * 2;
+
+        // Watchdog du verrou de capture : si une promesse capFrame ne se
+        // règle JAMAIS (canvas.toBlob qui ne rappelle pas — observé en prod :
+        // scan …6l51kcy2 muet après sa 4e capture, poses valides côté droit,
+        // 0 tentative/0 rejet/0 erreur pendant 40s), S.capturing reste true
+        // et bloque toutes les captures suivantes en silence. Au-delà de 3s
+        // (une capture normale se règle en <300ms), on libère le verrou et
+        // on le trace — diagnostic et remède en un.
+        if (S.capturing && S._capturingSince && now - S._capturingSince > 3000) {
+          S.capturing = false;
+          S._capGen = (S._capGen || 0) + 1; // invalide la promesse zombie
+          S.logger.log({ type: "capture_watchdog", timestamp: Date.now(), stuckMs: Math.round(now - S._capturingSince) });
+          S._capturingSince = 0;
+        }
+
         if (now - S.lastCapt >= captureInterval && !S.capturing && pos.distOk) {
           tryCapture(marks, pose, br, bl, stab, absYaw, noseX, now);
         }
@@ -2424,8 +2439,14 @@
       var bestPossibleAdjusted = preScore * 0.6 + 0.4;
       if (bin.length >= CFG.binTopN && bestPossibleAdjusted <= bin[bin.length - 1].score) return;
 
-      S.capturing = true; S.lastCapt = now;
+      S.capturing = true; S.lastCapt = now; S._capturingSince = now;
+      // Génération de capture : si le watchdog a libéré le verrou pendant que
+      // cette promesse traînait, sa résolution tardive est ignorée (le canvas
+      // _cc est partagé — un blob tardif peut contenir la frame d'une capture
+      // plus récente).
+      var capGen = (S._capGen = (S._capGen || 0) + 1);
       capFrame($v).then(function (blob) {
+        if (capGen !== S._capGen) return;
         if (!blob || dead) { S.capturing = false; return; }
 
         // Post-capture quality validation. We use the cached pre-capture brightness
@@ -2481,6 +2502,7 @@
         if (wasEmpty && navigator.vibrate) navigator.vibrate(25);
         S.capturing = false;
       }).catch(function (e) {
+        if (capGen !== S._capGen) return;
         S.logger.logError(e && e.message ? e.message : "capFrame_failed");
         S.capturing = false;
       });
