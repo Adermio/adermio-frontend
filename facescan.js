@@ -2372,12 +2372,12 @@
       // v9.3.1 — horodater AUSSI les frames sans visage : sinon le retour du
       // visage facturait jusqu'à 500ms de « mauvaise lumière » fantôme à
       // badLightMs sur la foi de flags figés d'avant la perte.
-      S._lightFrameT = now;
+      // `now` n'existe QUE dans onRes — le référencer ici jetait une
+      // ReferenceError au premier frame sans visage et tuait toute la boucle
+      // MediaPipe (message figé, captures mortes → bascules en manuel).
+      var nfNow = performance.now();
+      S._lightFrameT = nfNow;
       if (S.phase === "scanning" && S.scanStart) {
-        // v9.3.1 — même horloge que la branche scanning (performance.now) :
-        // le Date.now() historique rendait lastPoseSample incomparable et
-        // tuait TOUS les pose samples après la première perte de visage.
-        var nfNow = now;
         if (nfNow - S.lastPoseSample >= 2000) {
           S.lastPoseSample = nfNow;
           S.logger.logPoseSample({ t: Math.round((nfNow - S.scanStart) / 1000), face: 0 });
