@@ -2125,7 +2125,30 @@
     }
 
     /* ── MediaPipe results callback ────────── */
+    // Garde anti-crash : une exception dans le traitement d'UN frame ne doit
+    // JAMAIS tuer la boucle (vécu : ReferenceError dans noFace → scan gelé,
+    // instruction figée, bascules massives en manuel la nuit du 12-13/07).
+    // L'erreur devient un événement de télémétrie (cap 20) et le frame
+    // suivant repart. Filet ultime : si les erreurs empêchent la branche
+    // scanning d'atteindre son propre check de timeout, on force la fin.
     function onRes(results) {
+      try {
+        onResInner(results);
+      } catch (e) {
+        S._frameErrs = (S._frameErrs || 0) + 1;
+        if (S._frameErrs <= 20) {
+          try { S.logger.log({ type: "frame_error", timestamp: Date.now(), error: String((e && e.message) || e).slice(0, 140), n: S._frameErrs }); } catch (_) {}
+        }
+        try {
+          if (S.phase === "scanning" && S.scanStart && performance.now() - S.scanStart > CFG.timeoutMs + 5000) {
+            S.logger.logTimeout(0);
+            finish();
+          }
+        } catch (_) {}
+      }
+    }
+
+    function onResInner(results) {
       if (dead || (S.phase !== "calibrating" && S.phase !== "scanning" && S.phase !== "countdown")) return;
       var now = performance.now();
       var marks = results.multiFaceLandmarks && results.multiFaceLandmarks[0];
