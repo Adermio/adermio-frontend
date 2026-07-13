@@ -1100,7 +1100,7 @@
     for (var i = 0; i < BIN_IDS.length; i++) bins[BIN_IDS[i]] = [];
     return {
       phase: "idle", bins: bins, calibSince: null,
-      countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0, lastNewBinAt: 0, lastPoseSample: 0, _capturingSince: 0, _capGen: 0,
+      countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0, lastNewBinAt: 0, lastActivityAt: 0, lastPoseSample: 0, _capturingSince: 0, _capGen: 0,
       prev: null, prevT: null,
       noFaceT: null, fc: 0,
       cBr: null, cBl: null,
@@ -2274,7 +2274,7 @@
         }
         if (cdElapsed >= 3000) {
           hideCountdown();
-          S.phase = "scanning"; S.scanStart = now; S.lastNewBinAt = now;
+          S.phase = "scanning"; S.scanStart = now; S.lastNewBinAt = now; S.lastActivityAt = now;
           S.logger.log({ type: "scanning_start", timestamp: Date.now() });
           var g = getGuidancePro(S.bins, absYaw, noseX > 0.5, t);
           setInstr(g.t1, g.t2);
@@ -2290,6 +2290,24 @@
         var scanElapsed = now - S.scanStart;
         var nextDir = "none";
 
+        var liveBin = classifyBin(absYaw, noseX);
+
+        // Activité réelle : une pose dans la zone d'un bin ENCORE VIDE compte
+        // comme de la progression pour le filet de stagnation, même si la
+        // capture est bloquée (distance, verrou). Vécu job_mrj3d57k : yaw -70°
+        // pile sur wide_right à t=44s, capture refusée (dist), et la fin
+        // anticipée a coupé à t=45s pendant la tentative.
+        if (liveBin && S.bins[liveBin] && !S.bins[liveBin].length) S.lastActivityAt = now;
+
+        // Tolérance distance en profil LARGE (capture uniquement, pas la
+        // calibration) : la mesure front→menton MediaPipe se dégrade en
+        // rotation profonde et l'utilisateur recule naturellement en tournant
+        // — 2 scans télémétrés montrent dist KO exactement aux yaw profonds.
+        var capDistOk = pos.distOk;
+        if (!capDistOk && absYaw >= CFG.wideYawMin - 4) {
+          capDistOk = sz >= CFG.faceSizeMin * 0.85 && sz <= CFG.faceSizeMax;
+        }
+
         // Échantillonnage de pose (1/2s) : yaw physique signé (droite < 0),
         // bin classifié, distance ok, visage vu. Le pendant "face perdue"
         // est loggé dans noFace().
@@ -2298,7 +2316,7 @@
           S.logger.logPoseSample({
             t: Math.round(scanElapsed / 1000),
             yaw: Math.round(toPhysicalYaw(absYaw, noseX > 0.5)),
-            bin: classifyBin(absYaw, noseX) || "none",
+            bin: liveBin || "none",
             dist: pos.distOk ? 1 : 0,
             l: Math.round(br.face), b: Math.round(br.bg),
             face: 1,
@@ -2360,7 +2378,7 @@
           S._capturingSince = 0;
         }
 
-        if (now - S.lastCapt >= captureInterval && !S.capturing && pos.distOk) {
+        if (now - S.lastCapt >= captureInterval && !S.capturing && capDistOk) {
           tryCapture(marks, pose, br, bl, stab, absYaw, noseX, now);
         }
 
@@ -2379,7 +2397,7 @@
         var hasEssential = S.bins.face.length > 0
           && (S.bins.right.length > 0 || S.bins.semi_right.length > 0 || S.bins.wide_right.length > 0)
           && (S.bins.left.length > 0 || S.bins.semi_left.length > 0 || S.bins.wide_left.length > 0);
-        var stalledMs = now - (S.lastNewBinAt || S.scanStart);
+        var stalledMs = now - Math.max(S.lastNewBinAt || S.scanStart, S.lastActivityAt || 0);
         if (hasEssential && filled >= 3 && scanElapsed > 20000 && stalledMs > 12000 && !S.retake) { finish(); return; }
         if (scanElapsed > CFG.timeoutMs) { S.logger.logTimeout(filled); finish(); return; }
       }
