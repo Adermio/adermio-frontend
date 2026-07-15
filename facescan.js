@@ -1487,6 +1487,33 @@
     ctx.strokeStyle = "rgba(244,63,94," + M.op.toFixed(3) + ")";   // rouge #F43F5E (essai)
     ctx.lineWidth = 0.7;
     ctx.stroke();
+
+    // ── Ligne de balayage « analyse en cours » ──
+    // Va-et-vient vertical sur la hauteur de l'ovale. Purement décoratif :
+    // aucune donnée, aucun timing de capture n'en dépend — c'est un métronome
+    // visuel qui dit « ça travaille ». On est déjà dans le clip ovale.
+    var SWEEP_MS = 2400;                                  // un aller = 2,4 s
+    var ph = (now % (SWEEP_MS * 2)) / SWEEP_MS;           // 0 → 2
+    var k = ph > 1 ? 2 - ph : ph;                         // va-et-vient 0 → 1 → 0
+    k = k * k * (3 - 2 * k);                              // smoothstep : ralentit aux extrémités
+    var sy = (cy - ry) + 2 * ry * k;
+    var band = ry * 0.20;                                 // demi-hauteur du halo
+    var sOp = M.op * 1.5; if (sOp > 0.75) sOp = 0.75;     // suit le fondu du maillage
+
+    var g = ctx.createLinearGradient(0, sy - band, 0, sy + band);
+    g.addColorStop(0,   "rgba(244,63,94,0)");
+    g.addColorStop(0.5, "rgba(244,63,94," + (sOp * 0.40).toFixed(3) + ")");
+    g.addColorStop(1,   "rgba(244,63,94,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(cx - rx, sy - band, rx * 2, band * 2);
+
+    // cœur lumineux
+    ctx.beginPath();
+    ctx.moveTo(cx - rx, sy); ctx.lineTo(cx + rx, sy);
+    ctx.strokeStyle = "rgba(255,140,160," + (sOp * 0.9).toFixed(3) + ")";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
     ctx.restore();
   }
 
