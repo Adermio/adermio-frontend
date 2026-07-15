@@ -1,5 +1,13 @@
 /**
- * Adermio Face Scan v9.4 — Production Release
+ * Adermio Face Scan v9.5 — Production Release
+ *
+ * v9.5 — FACE MESH OVERLAY (cosmétique) : trace le maillage des 468 landmarks
+ * que MediaPipe calcule déjà à chaque frame (coût de calcul nul, 0 Ko de
+ * dépendance : FACEMESH_TESSELATION est déjà dans face_mesh.js). Teal
+ * #14B8A6, clippé à l'ovale, fondu doux, plus visible au placement qu'au
+ * scan. Gate `MESH_ON = isHighEnd` : aucun travail par frame sur les
+ * téléphones lents (ceux qui subissent les timeouts). Télémétrie
+ * `mesh_overlay_on` dans scan_log. AUCUNE décision de capture n'en dépend.
  *
  * Multi-angle guided scan via MediaPipe Face Mesh (468 landmarks).
  *
@@ -118,6 +126,14 @@
   })();
 
   var deviceTier = isUltra ? "ultra" : (isHighEnd ? "high" : (navigator.deviceMemory && navigator.deviceMemory <= 2 ? "low" : "mid"));
+
+  /* Face mesh overlay (v9.5) — RÉSERVÉ aux appareils capables.
+     Le scan a connu deux incidents récents (« scan muet » v9.4, timeouts) qui
+     frappent surtout les téléphones lents : on n'ajoute AUCUN travail par
+     frame sur ces appareils. Le tracé est batché (un seul beginPath/stroke
+     pour ~2556 segments, ~1,5 ms mesuré), mais la règle reste : high-end
+     only, et jamais au prix d'une capture. */
+  var MESH_ON = isHighEnd;
 
   var CAM_W = isUltra ? 1920 : (isHighEnd ? 1280 : 640);
   var CAM_H = isUltra ? 1440 : (isHighEnd ? 960 : 480);
@@ -1122,6 +1138,8 @@
       phase: "idle", bins: bins, calibSince: null,
       countdownStart: null, scanStart: null, lastCapt: 0, lastProbe: 0, lastNewBinAt: 0, lastPoseSample: 0, _capturingSince: 0, _capGen: 0,
       prev: null, prevT: null,
+      // Face mesh overlay (v9.5) — cosmétique, aucune décision n'en dépend
+      mesh: { lm: null, t: 0, vw: 0, vh: 0, op: 0, logged: false },
       noFaceT: null, fc: 0,
       cBr: null, cBl: null,
       st: { dist: null, light: null, stab: null },
@@ -1413,6 +1431,65 @@
        ry = container width × 0.459 (gives 1.35 aspect ratio — face-shaped,
             independent of container height so the oval looks the same on any phone)
      ═══════════════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════════════
+     FACE MESH OVERLAY (v9.5)
+
+     Trace le maillage des 468 landmarks MediaPipe déjà calculés par onRes.
+     Signale visuellement « l'IA cadre ton visage » pendant le placement.
+     Purement cosmétique : AUCUNE décision de capture n'en dépend.
+
+     Deux pièges de mapping, tous deux obligatoires pour que le maillage
+     colle au visage affiché :
+       1. `object-fit: cover` — la vidéo native (vw×vh) est mise à l'échelle
+          pour COUVRIR le conteneur (w×h), le débord est rogné. Les landmarks
+          sont normalisés [0,1] dans le repère NATIF, pas dans le conteneur.
+       2. `transform: scaleX(-1)` — la vidéo est affichée en MIROIR, le canvas
+          ne l'est pas → on inverse x à la main (w - x).
+
+     Perf : un seul beginPath/stroke pour ~2556 segments (~1,5 ms mesuré sur
+     banc d'essai ; 2556 strokes individuels ne passeraient pas). Gate
+     MESH_ON = high-end only.
+     ═══════════════════════════════════════════════════════════ */
+  function drawMesh(ctx, w, h, S, cx, cy, rx, ry, now) {
+    if (!MESH_ON) return;
+    var M = S.mesh;
+    var TESS = window.FACEMESH_TESSELATION;
+    if (!TESS || !M.lm || !M.vw || !M.vh) return;
+
+    // Opacité arbitrée sur planche comparative (vraie photo, géométrie réelle) :
+    // .22 était invisible, .55 masquait la peau — or on vend une analyse de
+    // PEAU, elle doit rester lisible sous le maillage.
+    var target = 0;
+    if (now - M.t < 250) {  // landmarks frais uniquement (sinon maillage figé)
+      if (S.phase === "calibrating" || S.phase === "countdown") target = 0.38;
+      else if (S.phase === "scanning") target = 0.20;
+    }
+    M.op += (target - M.op) * 0.12;   // fondu ~400 ms
+    if (M.op < 0.004) { M.op = 0; return; }
+
+    var scale = Math.max(w / M.vw, h / M.vh);
+    var dw = M.vw * scale, dh = M.vh * scale;
+    var ox = (w - dw) / 2, oy = (h - dh) / 2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+    ctx.clip();   // le maillage ne déborde jamais sur le masque sombre
+
+    var lm = M.lm;
+    ctx.beginPath();
+    for (var i = 0; i < TESS.length; i++) {
+      var a = lm[TESS[i][0]], b = lm[TESS[i][1]];
+      if (!a || !b) continue;
+      ctx.moveTo(w - (ox + a.x * dw), oy + a.y * dh);   // miroir X
+      ctx.lineTo(w - (ox + b.x * dw), oy + b.y * dh);
+    }
+    ctx.strokeStyle = "rgba(20,184,166," + M.op.toFixed(3) + ")";   // teal #14B8A6
+    ctx.lineWidth = 0.7;
+    ctx.stroke();
+    ctx.restore();
+  }
+
   function drawOverlay(ctx, w, h, S, t) {
     ctx.clearRect(0, 0, w, h);
     if (S.phase !== "calibrating" && S.phase !== "scanning" && S.phase !== "countdown" && S.phase !== "complete") return;
@@ -1428,6 +1505,10 @@
     ctx.beginPath(); ctx.rect(0, 0, w, h);
     ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2, true);
     fillEvenOdd(ctx);
+
+    // Maillage — après le masque (donc sur la vidéo claire de l'ovale),
+    // avant l'ovale/l'arc qui doivent rester au-dessus.
+    drawMesh(ctx, w, h, S, cx, cy, rx, ry, performance.now());
 
     // Oval border — teal when allGood during calibration, dim white otherwise.
     // During scanning we always show the dim base ring (the progress arc carries
@@ -2263,6 +2344,20 @@
 
       if (!marks || marks.length < 468) { noFace(); return; }
       if (S.noFaceT) { clearTimeout(S.noFaceT); S.noFaceT = null; }
+
+      // Face mesh overlay (v9.5) — on mémorise les landmarks DÉJÀ calculés par
+      // MediaPipe (coût de calcul nul : on ne faisait que les jeter). Les dims
+      // natives de la vidéo servent au mapping object-fit:cover de drawMesh.
+      if (MESH_ON) {
+        S.mesh.lm = marks;
+        S.mesh.t = now;
+        S.mesh.vw = $v.videoWidth || 0;
+        S.mesh.vh = $v.videoHeight || 0;
+        if (!S.mesh.logged) {
+          S.mesh.logged = true;
+          S.logger.log({ type: "mesh_overlay_on", timestamp: Date.now(), tier: deviceTier });
+        }
+      }
 
       S.fc++;
       var dt = S.prevT ? now - S.prevT : 33;
