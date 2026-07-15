@@ -1,5 +1,7 @@
 /**
- * Adermio Face Scan v9.6 — Production Release
+ * Adermio Face Scan v9.7 — Production Release
+ *
+ * v9.7 — faisceau affiné (band .11→.07, traits et halo en proportion).
  *
  * v9.6 — VAGUE D'ANALYSE : la lumière court SUR le maillage le long de l'axe
  * menton→front (suit l'inclinaison/rotation de la tête), z = volume, arêtes
@@ -1527,7 +1529,10 @@
     // le pire moment passe à 124 arêtes (5×) et la pause se fait sur la
     // mâchoire puis le front — là où il y a de la matière.
     var sweep = 0.10 + k * 0.82;
-    var BAND = 0.11;                                // faisceau étroit = précision
+    // Largeur arbitrée au banc : 0.11 faisait « tache », 0.05 s'effilochait
+    // aux extrémités (54 arêtes au pire moment). 0.07 = trait net qui garde
+    // de la matière partout (83 au pire moment, 3× au-dessus du trou v9.6).
+    var BAND = 0.07;
 
     for (i = 0; i < MESH_NB; i++) _mBuckets[i].length = 0;
 
@@ -1557,7 +1562,7 @@
       ctx.moveTo(PX(a1), PY(a1)); ctx.lineTo(PX(b1), PY(b1));
     }
     ctx.strokeStyle = "rgba(244,63,94," + (M.op * 0.85).toFixed(3) + ")";
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 0.4;
     ctx.stroke();
 
     // 2. Vague — un tracé par paquet (6 au lieu de 2556)
@@ -1575,9 +1580,9 @@
       // mesure ». Un faisceau rouge dirait « alerte » — et ajouterait du rouge
       // sur une peau à rougeurs, exactement ce qu'on ne veut pas.
       ctx.strokeStyle = "rgba(255,235,240," + op.toFixed(3) + ")";
-      ctx.lineWidth = 0.5 + lvl * 1.0;
+      ctx.lineWidth = 0.4 + lvl * 0.7;
       ctx.shadowColor = "rgba(255,235,240," + (op * 0.8).toFixed(3) + ")";
-      ctx.shadowBlur = lvl * 6;
+      ctx.shadowBlur = lvl * 4;
       ctx.stroke();
       ctx.shadowBlur = 0;
     }
