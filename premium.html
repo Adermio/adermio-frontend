@@ -340,7 +340,8 @@
 <style>
   #app-banner {
     position: fixed; top: 12px; left: 50%; transform: translate(-50%, -130%);
-    width: calc(100% - 16px); max-width: 560px; z-index: 99990;
+    /* au-dessus du rapport (#premium-container 999998), sous les modales (1000000+) */
+    width: calc(100% - 16px); max-width: 560px; z-index: 999999;
     background: #F0FDFA; border: 1px solid #99F6E4; border-radius: 14px;
     box-shadow: 0 8px 30px rgba(15, 61, 57, 0.18);
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
