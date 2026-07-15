@@ -1,7 +1,27 @@
 /**
- * Adermio Face Scan v9.1 — Production Release
+ * Adermio Face Scan v9.4 — Production Release
  *
  * Multi-angle guided scan via MediaPipe Face Mesh (468 landmarks).
+ *
+ * v9.4 (fix du scan muet, 2026-07-15) — mesuré sur 30% des scans web :
+ *  0 capture, 18-29 capture_watchdog, ~100 s d'attente, puis repli manuel
+ *  à 3 photos (analyse dégradée). Cause : `canvas.toBlob` ne rappelait
+ *  JAMAIS son callback (aucune erreur, juste le silence) → la promesse de
+ *  capFrame restait pendante à vie et `S.capturing` bloquait tout ; le
+ *  watchdog libérait le verrou à 3 s mais la capture suivante
+ *  REDIMENSIONNAIT le canvas partagé `_cc` sous l'encodeur encore en vol
+ *  → WebKit lâchait aussi celui-là → cascade infinie (le filet nourrissait
+ *  la panne).
+ *  - capFrame : un canvas NEUF par capture (plus de `_cc` partagé
+ *    redimensionné sous un encodeur zombie) → isolation totale
+ *  - capFrame : règlement GARANTI — toBlob a CAP_BLOB_MS (1200 ms), sinon
+ *    bascule sur `toDataURL` (synchrone : rend ou jette, jamais de silence).
+ *    On ne dépend plus du bon vouloir du navigateur.
+ *  - `logger` passé en PARAMÈTRE (capFrame est module-level, `S` vit dans le
+ *    scope de session — y référencer `S` = ReferenceError dans le callback =
+ *    promesse pendante, soit le bug qu'on corrige ; cf. incident noFace v9.3.1)
+ *  - Télémétrie `capture_sync_fallback` : mesure en prod la fréquence réelle
+ *    du silence toBlob
  *
  * v9.1 (app-parity pass, 2026-07):
  *  - Preview redesigned to match the app's "Scan validé." hero (Face ID style):
@@ -680,7 +700,7 @@
   /* ═══════════════════════════════════════════════════════════
      IMAGE ANALYSIS — pre-capture (live frame)
      ═══════════════════════════════════════════════════════════ */
-  var _bc = null, _bx = null, _lc = null, _lx = null, _cc = null, _cx = null, _blurBuf = null;
+  var _bc = null, _bx = null, _lc = null, _lx = null, _blurBuf = null;
 
   // v9.3 — Mesure de lumière enrichie, UNE seule passe sur la frame 120×90 :
   //   • moyennes visage/fond (métrique LEGACY — les seuils actuels s'y réfèrent)
@@ -1585,17 +1605,105 @@
     if (S.idleDraw) { clearInterval(S.idleDraw); S.idleDraw = null; }
   }
 
-  function capFrame(video) {
+  /* Conversion dataURL → Blob, 100% synchrone (aucune API async, donc
+     aucun risque de silence). Retourne null si le dataURL est inexploitable. */
+  function dataURLToBlob(durl) {
+    if (typeof durl !== "string") return null;
+    var comma = durl.indexOf(",");
+    if (comma < 0) return null;
+    var meta = durl.slice(0, comma);
+    var mm = meta.match(/^data:([^;,]+)/);
+    var mime = mm ? mm[1] : "image/jpeg";
+    var body = durl.slice(comma + 1);
+    var bin;
+    try {
+      bin = meta.indexOf(";base64") >= 0 ? atob(body) : decodeURIComponent(body);
+    } catch (e) { return null; }
+    var n = bin.length;
+    var u8 = new Uint8Array(n);
+    for (var i = 0; i < n; i++) u8[i] = bin.charCodeAt(i);
+    var blob;
+    try { blob = new Blob([u8], { type: mime }); } catch (e) { return null; }
+    return blob && blob.size > 0 ? blob : null;
+  }
+
+  /* Délai au-delà duquel on cesse d'attendre toBlob et on encode en
+     synchrone. Une capture normale se règle en <300 ms ; 1200 ms laisse
+     de la marge aux appareils lents sans jamais atteindre le watchdog (3 s). */
+  var CAP_BLOB_MS = 1200;
+
+  /* ═══ capFrame — v9.4 (2026-07-15), fix du scan muet ═══
+     Deux bugs corrigés, mesurés sur 30% des scans web (0 capture, 18-29
+     watchdogs, ~100 s d'attente puis repli manuel à 3 photos) :
+
+     1. CANVAS PARTAGÉ. `_cc` était réutilisé et REDIMENSIONNÉ à chaque
+        capture (`_cc.width = vw`). Quand un toBlob précédent encodait
+        encore (cas du watchdog qui libère le verrou à 3 s), le redimension-
+        nement invalidait son backing store : WebKit lâchait son callback
+        EN SILENCE, et l'encodeur zombie contaminait la capture suivante →
+        cascade infinie. Chaque capture a désormais SON canvas : aucun
+        encodeur en vol ne peut être perturbé par la capture suivante.
+
+     2. PROMESSE JAMAIS RÉGLÉE. `toBlob` est asynchrone et peut ne jamais
+        rappeler (aucune erreur, juste le silence) → la promesse restait
+        pendante à vie et `S.capturing` bloquait tout. On lui laisse
+        CAP_BLOB_MS, puis on bascule sur `toDataURL` : synchrone, donc il
+        rend ou il jette — jamais de silence. La promesse se règle TOUJOURS.
+
+     On ne cherche plus à savoir POURQUOI le navigateur se tait : on cesse
+     d'en dépendre.
+
+     `logger` est passé en PARAMÈTRE : capFrame est module-level alors que
+     l'état de session `S` vit dans le scope de la session (var S = mkState()).
+     Y référencer `S` lèverait un ReferenceError DANS le callback → la promesse
+     ne se règlerait jamais = le bug qu'on corrige (cf. incident noFace v9.3.1). */
+  function capFrame(video, logger) {
     return new Promise(function (res) {
       var rawW = video.videoWidth || 640, rawH = video.videoHeight || 480;
       var scale = rawW > CAP_MAX ? CAP_MAX / rawW : 1;
       var vw = Math.round(rawW * scale), vh = Math.round(rawH * scale);
-      if (!_cc) { _cc = document.createElement("canvas"); _cx = _cc.getContext("2d"); }
-      _cc.width = vw; _cc.height = vh;
-      _cx.setTransform(-1, 0, 0, 1, vw, 0);
-      try { _cx.drawImage(video, 0, 0, vw, vh); } catch (e) { res(null); return; }
-      _cx.setTransform(1, 0, 0, 1, 0, 0);
-      _cc.toBlob(function (b) { res(b); }, "image/jpeg", CFG.jpegQ);
+
+      var cv = document.createElement("canvas");
+      cv.width = vw; cv.height = vh;
+      var cx = cv.getContext("2d");
+      if (!cx) { res(null); return; }
+      cx.setTransform(-1, 0, 0, 1, vw, 0);
+      try { cx.drawImage(video, 0, 0, vw, vh); } catch (e) { res(null); return; }
+      cx.setTransform(1, 0, 0, 1, 0, 0);
+
+      var settled = false, timer = 0;
+      function done(blob, viaSync) {
+        if (settled) return;
+        settled = true;
+        if (timer) { clearTimeout(timer); timer = 0; }
+        // Télémétrie : mesure en prod combien de captures ne doivent leur
+        // survie qu'au repli synchrone (= fréquence réelle du silence toBlob).
+        // Entièrement sous try/catch : la télémétrie ne doit JAMAIS empêcher
+        // le res() ci-dessous (sinon promesse pendante = le bug d'origine).
+        try {
+          if (viaSync && logger && logger.log) {
+            logger.log({ type: "capture_sync_fallback", timestamp: Date.now(), ok: !!blob });
+          }
+        } catch (e) { /* no-op */ }
+        res(blob || null);
+      }
+
+      timer = setTimeout(function () {
+        if (settled) return;
+        var b = null;
+        try { b = dataURLToBlob(cv.toDataURL("image/jpeg", CFG.jpegQ)); } catch (e) { b = null; }
+        done(b, true);
+      }, CAP_BLOB_MS);
+
+      try {
+        cv.toBlob(function (b) { done(b, false); }, "image/jpeg", CFG.jpegQ);
+      } catch (e) {
+        // toBlob indisponible/jette : on n'attend pas, on encode tout de suite.
+        if (timer) { clearTimeout(timer); timer = 0; }
+        var bs = null;
+        try { bs = dataURLToBlob(cv.toDataURL("image/jpeg", CFG.jpegQ)); } catch (e2) { bs = null; }
+        done(bs, true);
+      }
     });
   }
 
@@ -2463,12 +2571,13 @@
       if (bin.length >= CFG.binTopN && bestPossibleAdjusted <= bin[bin.length - 1].score) return;
 
       S.capturing = true; S.lastCapt = now; S._capturingSince = now;
-      // Génération de capture : si le watchdog a libéré le verrou pendant que
-      // cette promesse traînait, sa résolution tardive est ignorée (le canvas
-      // _cc est partagé — un blob tardif peut contenir la frame d'une capture
-      // plus récente).
+      // Génération de capture — défense en profondeur : si le watchdog avait
+      // libéré le verrou pendant qu'une promesse traînait, sa résolution
+      // tardive s'appliquerait à un état de bins périmé. Depuis v9.4 capFrame
+      // se règle toujours en <1,2 s (repli synchrone) donc le watchdog (3 s)
+      // ne devrait plus jamais firer — on garde la garde par sécurité.
       var capGen = (S._capGen = (S._capGen || 0) + 1);
-      capFrame($v).then(function (blob) {
+      capFrame($v, S.logger).then(function (blob) {
         if (capGen !== S._capGen) return;
         if (!blob || dead) { S.capturing = false; return; }
 
@@ -2846,7 +2955,7 @@
     restart: function () {
       if (this._el && this._o) {
         if (this._i) this._i.destroy();
-        _bc = null; _bx = null; _lc = null; _lx = null; _cc = null; _cx = null; _blurBuf = null;
+        _bc = null; _bx = null; _lc = null; _lx = null; _blurBuf = null;
         this._i = createScanner(this._el, this._o);
       }
     },
