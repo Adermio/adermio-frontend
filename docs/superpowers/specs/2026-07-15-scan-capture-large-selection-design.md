@@ -39,6 +39,7 @@ exposition_réelle = max(0, 1 − |luma − 130| / 130)          // 130 = CFG.br
 ```
 
 - La **stabilité disparaît du score** (elle n'était qu'un proxy du flou, désormais mesuré directement). Elle reste utilisable dans les gates pré-capture.
+- **Amendement audit adversarial (2026-07-15, implémenté)** : le verdict accept/reject **FLOU** utilise le lap réel du JPEG (le but du jalon — même fonction/échelle/seuil que le check vainqueurs en prod depuis v9.1) ; le verdict **LUMIÈRE** reste sur `br.face` (luminance *visage*, population calibrée v9.1→v9.7) — la luma d'`analyzeBlobQuality` est une moyenne de *scène* (crop central 60 %) qui, sur fond sombre, rejetterait des visages corrects et resserrerait de facto le gate lumière avant la calibration phase 2. La luma scène reste stockée/loggée comme donnée de calibration. Un candidat **mesuré** utilisable prime toujours sur un **provisoire** (échelles de score incomparables) ; le provisoire reste un repli utilisable.
 - Candidat stocké immédiatement avec un score **provisoire** (proxy actuel) ; à la résolution d'`analyzeBlobQuality` (~15 ms), score réel remplace le provisoire, re-tri du bin, éviction éventuelle.
 - Décodage impossible (`null`) → le score provisoire est conservé (bénéfice du doute, comportement actuel).
 - Garde anti-course : `capGen` existant + les résolutions tardives sur un bin réinitialisé (mode reprise) sont ignorées.
@@ -67,7 +68,7 @@ exposition_réelle = max(0, 1 − |luma − 130| / 130)          // 130 = CFG.br
 ### 3.4 Micro-reprise frontale
 
 - Déclenchée automatiquement, **au plus une fois par scan**, entre l'overlay « Scan terminé » et la preview, uniquement si le bin frontal n'a aucun candidat utilisable.
-- Réutilise le flux de retake par angle existant (`S.retake = "face"`), ~2-3 s, capture face uniquement.
+- ⚠️ **Correction (audit 2026-07-15)** : le flux de retake par angle est du **code mort** (`S.retake` n'est plus jamais assigné — seuls la plomberie et les libellés i18n subsistent). Le jalon 3 devra **re-câbler** ce flux, pas juste le déclencher — coût revu à la hausse.
 - Message **neutre** (règle produit : jamais culpabilisant, pas de conseil d'éclairage directif) : « Reprenons la vue de face — quelques secondes ».
 - Échec de la reprise → moins-pire + bandeau doré. **La garantie de progression est absolue : le scan finit toujours.**
 
@@ -105,7 +106,7 @@ Nouveaux événements :
 ## 6. Livraison — 3 jalons indépendants, chacun mesurable
 
 1. **Scoring réel + sélection finale exhaustive + télémétrie** — corrige la cause racine, risque minimal, ne touche pas à `getAllowedBins`. Au jalon 1, un bin sans candidat utilisable (frontal compris) garde le comportement actuel : moins-pire + bandeau doré — l'omission et la micro-reprise n'arrivent qu'au jalon 3. Livrer, puis **2 semaines de données** avant de décider la suite.
-2. **Entonnoir élargi** (`getAllowedBins` assoupli + top-6/4) — si les données du jalon 1 montrent que le pool de candidats est le facteur limitant.
+2. **Entonnoir élargi** (`getAllowedBins` assoupli + top-6/4) — si les données du jalon 1 montrent que le pool de candidats est le facteur limitant. **Prérequis identifiés par l'audit 2026-07-15** : (a) recalibrer `blurIdeal=45` — la composante netteté du score sature (net lap 879 et flou de mouvement lap 447 donnent le même score) → le classement multi-candidats ne discriminerait pas le flou modéré ; (b) l'éviction au-delà de topN doit tenir compte de l'utilisabilité (un force-accepté bien scoré ne doit pas évincer un utilisable terne) ; (c) noter que `proxyRank ≡ 1` au jalon 1 (1 candidat/bin) — le KPI du jalon 1 est le taux/raison des `capture_rejected` et la distribution des `lap`, proxyRank ne devient parlant qu'au jalon 2.
 3. **Omission des profils + micro-reprise frontale** — si les données montrent des bins entiers inutilisables.
 
 ## 7. Tests

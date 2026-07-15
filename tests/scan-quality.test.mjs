@@ -19,7 +19,7 @@ function extract(name) {
 }
 
 const fns = {};
-for (const n of ["scoreCandidateReal", "realQualityVerdict", "bestPossibleRealScore"])
+for (const n of ["scoreCandidateReal", "realQualityVerdict", "bestPossibleRealScore", "quality0to1"])
   fns[n] = new Function("return (" + extract(n) + ")")();
 // selectBinFinal référence realQualityVerdict → injection explicite.
 fns.selectBinFinal = new Function(
@@ -51,6 +51,13 @@ test("realQualityVerdict : seuils durs actuels", () => {
   assert.equal(v(7, 34, VC), "lowLight"); // priorité lumière (parité analyzePhotoQuality)
 });
 
+test("quality0to1 : réplique exacte de l'overallScore proxy (formule 50/50)", () => {
+  const q = fns.quality0to1;
+  approx(q(45, 130, SC), 1);        // idéal des deux côtés
+  approx(q(0, 130, SC), 0.5);       // netteté nulle
+  approx(q(45, 40, SC), 0.5);       // luminance à 90 de l'idéal → composante 0
+});
+
 test("bestPossibleRealScore : borne sup atteignable", () => {
   const b = fns.bestPossibleRealScore;
   approx(b(0, 0), 1);                                       // angle parfait → 1.0
@@ -71,9 +78,13 @@ test("selectBinFinal : meilleur utilisable, sinon moins-pire", () => {
   // aucun utilisable → moins-pire (idx 0), winnerUsable false
   const bin3 = [c(5, 130, 0.6, 0.6), c(4, 20, 0.3, 0.3)];
   assert.deepEqual(sel(bin3, VC), { winnerIdx: 0, winnerUsable: false, proxyRank: 1 });
-  // provisoire = bénéfice du doute (utilisable)
+  // provisoire = bénéfice du doute : repli utilisable quand AUCUN mesuré ne passe
   const bin4 = [c(5, 130, 0.8, 0.8), c(0, 0, 0.5, 0.5, true)];
   assert.deepEqual(sel(bin4, VC), { winnerIdx: 1, winnerUsable: true, proxyRank: 2 });
+  // mais un MESURÉ net bat toujours un provisoire mieux trié (audit 2026-07-15 :
+  // les deux échelles de score sont incomparables, la photo vérifiée prime)
+  const bin6 = [c(0, 0, 0.93, 0.93, true), c(30, 130, 0.84, 0.6)];
+  assert.deepEqual(sel(bin6, VC), { winnerIdx: 1, winnerUsable: true, proxyRank: 2 });
   // proxyRank 1 quand le proxy aurait choisi pareil
   const bin5 = [c(30, 130, 0.9, 0.9), c(20, 130, 0.5, 0.4)];
   assert.equal(sel(bin5, VC).proxyRank, 1);

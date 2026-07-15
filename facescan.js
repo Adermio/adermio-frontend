@@ -1022,16 +1022,26 @@
   }
 
   // Sélection finale d'un bin : meilleur candidat UTILISABLE (candidats déjà
-  // triés score desc), sinon moins-pire (idx 0). Un provisoire (blob non
-  // décodé) est utilisable — bénéfice du doute, comme aujourd'hui.
+  // triés score desc), sinon moins-pire (idx 0).
+  // Audit 2026-07-15 : un candidat MESURÉ net passe AVANT tout provisoire —
+  // un provisoire (blob non décodé, pScore d'échelle différente) ne doit pas
+  // voler la place d'une photo vérifiée. Le provisoire reste un repli
+  // utilisable (bénéfice du doute) quand AUCUN mesuré ne passe les seuils.
   // proxyRank = rang qu'aurait eu le vainqueur sous l'ancien score proxy →
   // mesure directe, dans scan_log, de ce que le scoring réel change.
   function selectBinFinal(cands, C) {
-    var winnerIdx = 0, winnerUsable = false;
+    var winnerIdx = -1, winnerUsable = false;
     for (var i = 0; i < cands.length; i++) {
-      var u = cands[i].provisional || realQualityVerdict(cands[i].lap, cands[i].luma, C) === null;
-      if (u) { winnerIdx = i; winnerUsable = true; break; }
+      if (!cands[i].provisional && realQualityVerdict(cands[i].lap, cands[i].luma, C) === null) {
+        winnerIdx = i; winnerUsable = true; break;
+      }
     }
+    if (winnerIdx === -1) {
+      for (var p = 0; p < cands.length; p++) {
+        if (cands[p].provisional) { winnerIdx = p; winnerUsable = true; break; }
+      }
+    }
+    if (winnerIdx === -1) winnerIdx = 0; // aucun utilisable → moins-pire
     var rank = 1;
     for (var j = 0; j < cands.length; j++) {
       if (j !== winnerIdx && cands[j].pScore > cands[winnerIdx].pScore) rank++;
@@ -1039,11 +1049,12 @@
     return { winnerIdx: winnerIdx, winnerUsable: winnerUsable, proxyRank: rank };
   }
 
-  // Équivalent overallScore d'analyzePhotoQuality, sur mesures réelles —
+  // Équivalent overallScore d'analyzePhotoQuality (même formule 50/50) —
   // sert uniquement à pScore (télémétrie proxyRank de final_selection).
-  function quality0to1(lap, luma) {
-    var b = Math.max(0, 1 - Math.abs(luma - CFG.brightIdeal) / 90);
-    var s = Math.min(1, lap / CFG.blurIdeal);
+  // PURE (audit 2026-07-15) : C passé en paramètre, extractable par le harnais.
+  function quality0to1(lap, luma, C) {
+    var b = Math.max(0, 1 - Math.abs(luma - C.brightIdeal) / 90);
+    var s = Math.min(1, lap / C.blurIdeal);
     return b * 0.5 + s * 0.5;
   }
 
@@ -2877,12 +2888,25 @@
           // Génération périmée → le watchdog a repris le verrou (une capture
           // plus récente le détient peut-être) : NE PAS y toucher, sortir.
           if (capGen !== S._capGen) return;
+          // Anti-course (audit 2026-07-15) : si le scan a fini pendant le
+          // décodage (early-finish/timeout dans le même tick), ne PAS banker
+          // — un candidat surgissant pendant l'overlay fausserait
+          // final_selection/_allWinnersBad déjà calculés.
+          if (S.phase !== "scanning") { S.capturing = false; return; }
 
           var quality, realLap, realLuma, provisional;
           if (q) {
             provisional = false;
             realLap = q.lap; realLuma = q.luma;
-            var reason = realQualityVerdict(q.lap, q.luma, CFG);
+            // Verdict FLOU sur le lap RÉEL du JPEG (le but du jalon 1 :
+            // même fonction/échelle/seuil que le check vainqueurs en prod
+            // depuis v9.1). Verdict LUMIÈRE sur br.face (luminance VISAGE,
+            // population calibrée v9.1→v9.7) : q.luma est une moyenne de
+            // SCÈNE (crop central 60 %) — sur fond sombre elle rejetterait
+            // des visages corrects, resserrant de facto le gate lumière
+            // AVANT la calibration phase 2 (audit 2026-07-15). q.luma reste
+            // stocké/loggé comme donnée de calibration.
+            var reason = realQualityVerdict(q.lap, br.face, CFG);
             quality = { isAcceptable: reason === null, rejectReason: reason };
           } else {
             // Décodage impossible → bénéfice du doute : comportement proxy
@@ -2927,11 +2951,14 @@
             }
           }
 
-          // Score stocké = RÉEL ; pScore = l'ancien score proxy, conservé pour
-          // la télémétrie proxyRank de final_selection (provisoire : quality
-          // EST le résultat d'analyzePhotoQuality → réutiliser son overallScore).
+          // Score stocké = RÉEL ; pScore = l'ancien score proxy À L'IDENTIQUE
+          // (audit 2026-07-15 : il DOIT être calculé sur les valeurs PREVIEW
+          // bl.s/br.face, pas les réelles, sinon proxyRank — le KPI du
+          // jalon — est contaminé à 40 % par la mesure réelle).
+          // (provisoire : quality EST le résultat d'analyzePhotoQuality →
+          // réutiliser son overallScore, même formule.)
           var pScore = preScore * 0.6 +
-            ((provisional ? quality.overallScore : quality0to1(realLap, realLuma)) * 0.4);
+            ((provisional ? quality.overallScore : quality0to1(bl.s, br.face, CFG)) * 0.4);
           var realScore = provisional
             ? pScore
             : scoreCandidateReal(realLap, realLuma, absYaw, BIN_IDEAL_YAW[binId], CFG);
