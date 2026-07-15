@@ -1140,8 +1140,10 @@
     if (this.samples.length < 60) this.samples.push(s);
   };
   ScanLogger.prototype.log = function (e) { this.events.push(e); };
-  ScanLogger.prototype.logCapture = function (bin, score, wasNew, f, b, sm) {
-    this.events.push({ type: "capture", timestamp: Date.now(), bin: bin, score: score, wasNew: wasNew, f: f, b: b, sm: sm });
+  ScanLogger.prototype.logCapture = function (bin, score, wasNew, f, b, sm, lap) {
+    var e = { type: "capture", timestamp: Date.now(), bin: bin, score: score, wasNew: wasNew, f: f, b: b, sm: sm };
+    if (lap !== undefined) e.lap = lap; // v9.8 : netteté réelle du JPEG banké
+    this.events.push(e);
   };
   ScanLogger.prototype.logRejected = function (bin, reason) {
     this.events.push({ type: "capture_rejected", timestamp: Date.now(), bin: bin, reason: reason });
@@ -2839,11 +2841,11 @@
       var preScore = computeScore(bl, stab, absYaw, BIN_IDEAL_YAW[binId]);
       var bin = S.bins[binId];
 
-      // Pre-flight rejection: stored scores are adjusted (preScore*0.6 + qualityBonus*0.4).
-      // Best possible adjusted score for this candidate = preScore*0.6 + 1.0*0.4. If even
-      // that can't beat the lowest stored, skip — saves a takePhoto.
-      var bestPossibleAdjusted = preScore * 0.6 + 0.4;
-      if (bin.length >= CFG.binTopN && bestPossibleAdjusted <= bin[bin.length - 1].score) return;
+      // Pre-flight rejection (v9.8) : les scores stockés sont RÉELS. Borne
+      // supérieure du candidat = angle connu, netteté/expo optimistes à 1.
+      // Si même ça ne bat pas le pire stocké, on économise un takePhoto.
+      var bestPossible = bestPossibleRealScore(absYaw, BIN_IDEAL_YAW[binId]);
+      if (bin.length >= CFG.binTopN && bestPossible <= bin[bin.length - 1].score) return;
 
       S.capturing = true; S.lastCapt = now; S._capturingSince = now;
       // Génération de capture — défense en profondeur : si le watchdog avait
@@ -2856,61 +2858,91 @@
         if (capGen !== S._capGen) return;
         if (!blob || dead) { S.capturing = false; return; }
 
-        // Post-capture quality validation. We use the cached pre-capture brightness
-        // and blur values which were computed within the last few frames — they
-        // accurately describe the captured frame because <100ms elapsed.
-        var quality = analyzePhotoQuality(br, bl);
+        // v9.8 — verdict et score sur les PIXELS RÉELS du JPEG capturé
+        // (le proxy vidéo mesuré ~100 ms avant la capture était aveugle au
+        // flou de mouvement créé pendant la rotation de tête).
+        // analyzeBlobQuality ≈ 15 ms (bitmap 120×120) ; le verrou S.capturing
+        // reste posé pendant ce temps, très en-deçà du watchdog 3 s.
+        // RETURN obligatoire : le .catch existant de capFrame doit attraper
+        // toute erreur d'ici (sinon verrou coincé jusqu'au watchdog).
+        return analyzeBlobQuality(blob).then(function (q) {
+          // Génération périmée → le watchdog a repris le verrou (une capture
+          // plus récente le détient peut-être) : NE PAS y toucher, sortir.
+          if (capGen !== S._capGen) return;
 
-        if (!quality.isAcceptable) {
-          S.retakeRejects++;
-          S.logger.logRejected(binId, quality.rejectReason || "quality_low");
-          if (DEBUG) console.log("[FaceScan] Rejected " + binId + ": " + quality.rejectReason +
-            " (face=" + br.face.toFixed(0) + ", lap=" + bl.s.toFixed(1) + ")");
-
-          var isLight = (quality.rejectReason === "lowLight" || quality.rejectReason === "strongLight");
-
-          if (isLight) {
-            S.qualityHint = "lightDuringScan";
-            if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
-          } else if (S.retakeRejects >= CFG.rejectGuidanceAfter) {
-            S.qualityHint = "qualityLow";
-          }
-
-          if (S.retakeRejects >= CFG.rejectForceAfter) {
-            // Force-accept this one to avoid infinite loop.
-            // (v9.3.1 : l'exemption lumière tentée en v9.2 supprimait la
-            // garantie de progression — un scan v9.1 finissait TOUJOURS,
-            // au pire avec le bandeau « qualité limite » en preview. Restauré
-            // à l'identique ; à re-trancher en phase 2 avec seuils calibrés.)
-            S.retakeRejects = 0;
-            S.qualityHint = null;
-            // fall through to add to bin
+          var quality, realLap, realLuma, provisional;
+          if (q) {
+            provisional = false;
+            realLap = q.lap; realLuma = q.luma;
+            var reason = realQualityVerdict(q.lap, q.luma, CFG);
+            quality = { isAcceptable: reason === null, rejectReason: reason };
           } else {
-            S.capturing = false;
-            return;
+            // Décodage impossible → bénéfice du doute : comportement proxy
+            // intégral (verdict + valeurs preview), marqué provisoire.
+            provisional = true;
+            realLap = bl.s; realLuma = br.face;
+            quality = analyzePhotoQuality(br, bl);
           }
-        } else {
-          if (S.retakeRejects > 0) {
-            S.retakeRejects = 0;
-            S.qualityHint = null;
+
+          if (!quality.isAcceptable) {
+            S.retakeRejects++;
+            S.logger.logRejected(binId, quality.rejectReason || "quality_low");
+            if (DEBUG) console.log("[FaceScan] Rejected " + binId + ": " + quality.rejectReason +
+              " (luma=" + realLuma.toFixed(0) + ", lap=" + realLap.toFixed(1) + (provisional ? ", proxy" : "") + ")");
+
+            var isLight = (quality.rejectReason === "lowLight" || quality.rejectReason === "strongLight");
+
+            if (isLight) {
+              S.qualityHint = "lightDuringScan";
+              if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+            } else if (S.retakeRejects >= CFG.rejectGuidanceAfter) {
+              S.qualityHint = "qualityLow";
+            }
+
+            if (S.retakeRejects >= CFG.rejectForceAfter) {
+              // Force-accept this one to avoid infinite loop.
+              // (v9.3.1 : l'exemption lumière tentée en v9.2 supprimait la
+              // garantie de progression — un scan v9.1 finissait TOUJOURS,
+              // au pire avec le bandeau « qualité limite » en preview. Restauré
+              // à l'identique ; à re-trancher en phase 2 avec seuils calibrés.)
+              S.retakeRejects = 0;
+              S.qualityHint = null;
+              // fall through to add to bin
+            } else {
+              S.capturing = false;
+              return;
+            }
+          } else {
+            if (S.retakeRejects > 0) {
+              S.retakeRejects = 0;
+              S.qualityHint = null;
+            }
           }
-        }
 
-        // Adjusted score: 60% pre-capture (blur+stab+angle) + 40% post-capture quality bonus
-        var adjustedScore = preScore * 0.6 + quality.overallScore * 0.4;
+          // Score stocké = RÉEL ; pScore = l'ancien score proxy, conservé pour
+          // la télémétrie proxyRank de final_selection (provisoire : quality
+          // EST le résultat d'analyzePhotoQuality → réutiliser son overallScore).
+          var pScore = preScore * 0.6 +
+            ((provisional ? quality.overallScore : quality0to1(realLap, realLuma)) * 0.4);
+          var realScore = provisional
+            ? pScore
+            : scoreCandidateReal(realLap, realLuma, absYaw, BIN_IDEAL_YAW[binId], CFG);
 
-        var wasEmpty = bin.length === 0;
-        bin.push({ blob: blob, url: URL.createObjectURL(blob), score: adjustedScore });
-        bin.sort(function (a, b) { return b.score - a.score; });
-        while (bin.length > CFG.binTopN) { var rm = bin.pop(); URL.revokeObjectURL(rm.url); }
+          var wasEmpty = bin.length === 0;
+          bin.push({ blob: blob, url: URL.createObjectURL(blob), score: realScore,
+                     pScore: pScore, lap: realLap, luma: realLuma, provisional: provisional });
+          bin.sort(function (a, b) { return b.score - a.score; });
+          while (bin.length > CFG.binTopN) { var rm = bin.pop(); URL.revokeObjectURL(rm.url); }
 
-        S.logger.logCapture(binId, adjustedScore, wasEmpty, Math.round(br.face), Math.round(br.bg), Math.round(br.skinMed));
-        // performance.now OBLIGATOIRE : même horloge que `now`/scanStart/stalledMs.
-        // (Le Date.now historique rendait stalledMs négatif dès la 1re capture →
-        // filet de stagnation mort, tous les bloqués partaient au timeout 90s.)
-        if (wasEmpty) S.lastNewBinAt = performance.now();
-        if (wasEmpty && navigator.vibrate) navigator.vibrate(25);
-        S.capturing = false;
+          S.logger.logCapture(binId, realScore, wasEmpty, Math.round(br.face), Math.round(br.bg),
+            Math.round(br.skinMed), Math.round(realLap * 10) / 10);
+          // performance.now OBLIGATOIRE : même horloge que `now`/scanStart/stalledMs.
+          // (Le Date.now historique rendait stalledMs négatif dès la 1re capture →
+          // filet de stagnation mort, tous les bloqués partaient au timeout 90s.)
+          if (wasEmpty) S.lastNewBinAt = performance.now();
+          if (wasEmpty && navigator.vibrate) navigator.vibrate(25);
+          S.capturing = false;
+        });
       }).catch(function (e) {
         if (capGen !== S._capGen) return;
         S.logger.logError(e && e.message ? e.message : "capFrame_failed");
