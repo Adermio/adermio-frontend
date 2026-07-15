@@ -1,5 +1,13 @@
 /**
- * Adermio Face Scan v9.7 — Production Release
+ * Adermio Face Scan v9.8 — Production Release
+ *
+ * v9.8 (jalon 1 capture-quali, 2026-07-15) — verdict + score des candidats
+ * sur les pixels RÉELS du JPEG (analyzeBlobQuality à la capture, ~15 ms) au
+ * lieu du proxy vidéo aveugle au flou de mouvement ; sélection finale
+ * exhaustive (selectBinFinal remplace verifyWinners) ; télémétrie
+ * final_selection (proxyRank = ce que le scoring réel a changé). Fonctions
+ * pures testées par tests/scan-quality.test.mjs. Spec : docs/superpowers/
+ * specs/2026-07-15-scan-capture-large-selection-design.md
  *
  * v9.7 — faisceau affiné (band .11→.07, traits et halo en proportion).
  *
