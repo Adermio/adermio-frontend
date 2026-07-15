@@ -1484,7 +1484,7 @@
       ctx.moveTo(w - (ox + a.x * dw), oy + a.y * dh);   // miroir X
       ctx.lineTo(w - (ox + b.x * dw), oy + b.y * dh);
     }
-    ctx.strokeStyle = "rgba(20,184,166," + M.op.toFixed(3) + ")";   // teal #14B8A6
+    ctx.strokeStyle = "rgba(244,63,94," + M.op.toFixed(3) + ")";   // rouge #F43F5E (essai)
     ctx.lineWidth = 0.7;
     ctx.stroke();
     ctx.restore();
