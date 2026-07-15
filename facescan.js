@@ -1,5 +1,14 @@
 /**
- * Adermio Face Scan v9.8 — Production Release
+ * Adermio Face Scan v9.9 — Production Release
+ *
+ * v9.9 (visibilité du maillage, 2026-07-15) — retour terrain Antoine : la
+ * trame était invisible sur peau claire éclairée (alpha ~0.17, trait 0.4 px,
+ * rouge sans contraste) et n'existait PAS sur les appareils non-high-end
+ * (gate v9.5). Fix : trame sur tous les tiers sauf "low" (vague/shadowBlur
+ * reste high-end only, calcul inclus), double passe ombre sombre (1.1 px)
+ * + rose-400 lumineux (0.5 px) — l'ombre porte le contraste sur peau
+ * claire, la luminance du rose sur peau foncée (équité vérifiée sur
+ * planche 3 fonds) ; opacité scanning 0.20 → 0.30.
  *
  * v9.8 (jalon 1 capture-quali, 2026-07-15) — verdict + score des candidats
  * sur les pixels RÉELS du JPEG (analyzeBlobQuality à la capture, ~15 ms) au
@@ -142,13 +151,18 @@
 
   var deviceTier = isUltra ? "ultra" : (isHighEnd ? "high" : (navigator.deviceMemory && navigator.deviceMemory <= 2 ? "low" : "mid"));
 
-  /* Face mesh overlay (v9.5) — RÉSERVÉ aux appareils capables.
-     Le scan a connu deux incidents récents (« scan muet » v9.4, timeouts) qui
-     frappent surtout les téléphones lents : on n'ajoute AUCUN travail par
-     frame sur ces appareils. Le tracé est batché (un seul beginPath/stroke
-     pour ~2556 segments, ~1,5 ms mesuré), mais la règle reste : high-end
-     only, et jamais au prix d'une capture. */
-  var MESH_ON = isHighEnd;
+  /* Face mesh overlay (v9.5, élargi v9.9) — gradué par tier.
+     v9.5 réservait le maillage au high-end (incidents « scan muet »/timeouts
+     sur téléphones lents : zéro travail par frame ajouté). v9.9 gradue :
+       - TRAME (2 tracés batchés ~1,5 ms) : tous les tiers SAUF "low"
+         (deviceMemory ≤ 2 Go, la population des incidents — toujours zéro
+         travail ajouté pour elle). Retour terrain Antoine 2026-07-15 : le
+         tracé est un signal produit (« on découpe votre visage ») — il
+         n'existait pas du tout pour la majorité des appareils.
+       - VAGUE (6 tracés + shadowBlur, la partie coûteuse) : high-end only,
+         comme avant. Jamais au prix d'une capture. */
+  var MESH_ON = deviceTier !== "low";
+  var MESH_WAVE_ON = isHighEnd;
 
   var CAM_W = isUltra ? 1920 : (isHighEnd ? 1280 : 640);
   var CAM_H = isUltra ? 1440 : (isHighEnd ? 960 : 480);
@@ -1585,10 +1599,13 @@
 
     // Opacités arbitrées sur planche comparative (vraie photo, géométrie réelle).
     // On vend une analyse de PEAU : elle doit rester lisible sous la trame.
+    // v9.9 : scanning 0.20 → 0.30 — à 0.20 la trame sortait à alpha ~0.17,
+    // invisible sur peau claire éclairée (retour terrain Antoine, capture ES) ;
+    // le contraste vient surtout de la passe d'ombre, pas de l'alpha seul.
     var target = 0;
     if (now - M.t < 250) {   // landmarks frais uniquement (sinon trame figée)
       if (S.phase === "calibrating" || S.phase === "countdown") target = 0.38;
-      else if (S.phase === "scanning") target = 0.20;
+      else if (S.phase === "scanning") target = 0.30;
     }
     M.op += (target - M.op) * 0.12;                 // fondu ~400 ms
     if (M.op < 0.004) { M.op = 0; return; }
@@ -1601,6 +1618,9 @@
     function PX(p) { return w - (ox + p.x * dw); }
     function PY(p) { return oy + p.y * dh; }
 
+    // v9.9 : tout le calcul de la vague (axe, projections, buckets) est
+    // gated — sur tier "mid" seule la trame est rendue, zéro calcul inutile.
+    if (MESH_WAVE_ON) {
     // Axe du visage : menton → front. C'est lui qui fait suivre la tête.
     var chin = lm[152], brow = lm[10];
     if (!chin || !brow) return;
@@ -1650,6 +1670,7 @@
       b = (inten * MESH_NB) | 0; if (b > MESH_NB - 1) b = MESH_NB - 1;
       _mBuckets[b].push(ia, ib);
     }
+    } // fin if (MESH_WAVE_ON) — calcul vague
 
     ctx.save();
     ctx.beginPath();
@@ -1663,11 +1684,25 @@
       if (!a1 || !b1) continue;
       ctx.moveTo(PX(a1), PY(a1)); ctx.lineTo(PX(b1), PY(b1));
     }
-    ctx.strokeStyle = "rgba(244,63,94," + (M.op * 0.85).toFixed(3) + ")";
-    ctx.lineWidth = 0.4;
+    // v9.9 — DOUBLE PASSE sur le MÊME path (pas de rebuild) : une ombre
+    // sombre large dessous, le rouge fin dessus. C'est l'ombre qui rend le
+    // rouge lisible sur peau claire éclairée (le rouge seul n'a quasi aucun
+    // contraste chromatique sur peau rosée) ; sur fond sombre elle est
+    // invisible. Coût : +1 stroke batché (~0,3 ms).
+    ctx.strokeStyle = "rgba(15,23,42," + (M.op * 0.45).toFixed(3) + ")";
+    ctx.lineWidth = 1.1;
+    ctx.stroke();
+    // Rose-400 (251,113,133) et non rose-500 : plus LUMINEUX — sur peau
+    // foncée c'est la luminance du trait qui porte le contraste (l'ombre y
+    // est invisible), sur peau claire c'est l'ombre. Équité phototypes
+    // vérifiée sur planche 3 fonds (2026-07-15).
+    ctx.strokeStyle = "rgba(251,113,133," + (M.op * 0.95).toFixed(3) + ")";
+    ctx.lineWidth = 0.5;
     ctx.stroke();
 
-    // 2. Vague — un tracé par paquet (6 au lieu de 2556)
+    // 2. Vague — un tracé par paquet (6 au lieu de 2556) ; high-end only
+    // (shadowBlur = la partie coûteuse du rendu, cf. MESH_WAVE_ON).
+    if (!MESH_WAVE_ON) { ctx.restore(); return; }
     for (b = 0; b < MESH_NB; b++) {
       var arr = _mBuckets[b];
       if (!arr.length) continue;
