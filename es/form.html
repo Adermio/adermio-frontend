@@ -1689,6 +1689,12 @@ async function submitFormData() {
 
   // Provenance — parity with the app payload (source/lang) + engine version
   // for telemetry. n8n ignores unknown fields, so these are additive-safe.
+  // Pays résolu par Vercel (/api/geo) pour le geo-pricing. Borné à
+  // ~600ms et tolérant à l'échec ("") — ne bloque JAMAIS le submit.
+  var country = "";
+  try { country = (window.AdermioGeo && await window.AdermioGeo.get()) || ""; }
+  catch (e) { country = ""; }
+  params.append("country", country);
   params.append("lang", "es");
   params.append("source", "web");
   params.append("scan_engine", "web_facescan_v9.3");
@@ -1862,6 +1868,7 @@ async function submitFormData() {
        }
    })();
    </script>
+   <script src="/js/geo.js" defer></script>
    <script src="/js/pwa.js" defer></script>
 
    <!-- MediaPipe FaceMesh — self-hosted on Vercel.
