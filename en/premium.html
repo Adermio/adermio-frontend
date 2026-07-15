@@ -387,6 +387,62 @@
 </style>
 </head>
 <body>
+<!-- ══ Adermio app banner — dismissible overlay, fail-safe (spec docs/superpowers/specs/2026-07-15-bandeau-app-premium-design.md) ══ -->
+<style>
+  #app-banner {
+    position: fixed; top: 12px; left: 50%; transform: translate(-50%, -130%);
+    width: calc(100% - 16px); max-width: 560px; z-index: 99990;
+    background: #F0FDFA; border: 1px solid #99F6E4; border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(15, 61, 57, 0.18);
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    font-family: inherit;
+  }
+  #app-banner.app-banner-visible { transform: translate(-50%, 0); }
+  .app-banner-inner { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; }
+  .app-banner-icon { font-size: 22px; line-height: 1.2; }
+  .app-banner-body { flex: 1; min-width: 0; }
+  .app-banner-title { margin: 0 0 2px; font-weight: 700; font-size: 14px; color: #0F3D39; }
+  .app-banner-sub { margin: 0 0 10px; font-size: 13px; color: #134E4A; }
+  .app-banner-code-val { font-weight: 800; letter-spacing: 1.5px; color: #0F3D39; white-space: nowrap; }
+  .app-banner-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .app-banner-btn {
+    appearance: none; border: 1px solid #14B8A6; background: #fff; color: #0F766E;
+    font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 9px;
+    cursor: pointer; text-decoration: none; display: inline-block; line-height: 1.2;
+  }
+  .app-banner-btn-primary { background: #0F766E; border-color: #0F766E; color: #fff; }
+  .app-banner-close {
+    appearance: none; border: none; background: transparent; color: #64748B;
+    font-size: 22px; line-height: 1; padding: 2px 4px; cursor: pointer; flex: none;
+  }
+  @media (max-width: 480px) {
+    #app-banner { top: 8px; }
+    .app-banner-inner { padding: 12px; gap: 10px; }
+  }
+</style>
+<div id="app-banner" style="display:none" role="region" aria-label="Adermio app">
+  <div class="app-banner-inner">
+    <div class="app-banner-icon">📱</div>
+    <div class="app-banner-body">
+      <div id="app-banner-with-code" style="display:none">
+        <p class="app-banner-title">Your analysis is waiting in the Adermio app</p>
+        <p class="app-banner-sub">Enter this code in the app to retrieve it:&nbsp;<strong id="app-banner-code" class="app-banner-code-val"></strong></p>
+        <div class="app-banner-actions">
+          <button id="app-banner-copy" type="button" class="app-banner-btn">Copy code</button>
+          <a class="app-banner-btn app-banner-btn-primary app-banner-store-link" href="https://apps.apple.com/app/adermio/id6768772221" target="_blank" rel="noopener">Get the app</a>
+        </div>
+      </div>
+      <div id="app-banner-no-code" style="display:none">
+        <p class="app-banner-title">The Adermio app is now available</p>
+        <p class="app-banner-sub">Unlimited scans, a personalized routine and skin progress tracking.</p>
+        <div class="app-banner-actions">
+          <a class="app-banner-btn app-banner-btn-primary app-banner-store-link" href="https://apps.apple.com/app/adermio/id6768772221" target="_blank" rel="noopener">Discover the app</a>
+        </div>
+      </div>
+    </div>
+    <button id="app-banner-close" type="button" class="app-banner-close" aria-label="Close">×</button>
+  </div>
+</div>
 
 <div id="premium-loading">Loading your premium analysis...</div>
 <div id="premium-error"></div>
@@ -731,6 +787,8 @@
 
       // PRE-LOAD CONTEXT FOR FORM
       fetchUserContext();
+      // App banner: must NEVER be able to break the report loading path.
+      try { if (window.__showAppBanner) window.__showAppBanner(data.job_id); } catch (e) { /* no-op */ }
 
     } catch (e) {
       console.error(e);
@@ -1443,5 +1501,120 @@
     `;
     document.head.appendChild(styleSheet);
 
+})();
+</script>
+
+<script>
+// ══ Adermio app banner ═══════════════════════════════════════════════
+// Called by init() via window.__showAppBanner(job_id) once the report has
+// loaded. ABSOLUTE RULE: fully fail-safe — any error leaves the banner
+// hidden and never affects the report display.
+//
+// Variants:
+//  - eligible (free_analysis.diagnosis_json present — same test as the
+//    redemption edge) → personal code ADR-XXXXXXXX (derived from ?token=,
+//    same formula as paid_reports.app_redeem_code and the email block)
+//  - otherwise / in doubt → "app available" without a code (no retrieval promise)
+//
+// Dismissal: cross = current visit (sessionStorage); copying the code or
+// opening the store = permanent (localStorage).
+(function () {
+  'use strict';
+
+  var SB_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+  var SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
+  var LS_DONE = "adermio_app_banner_done";
+  var SS_CLOSED = "adermio_app_banner_closed";
+  var COPY_LABEL_DONE = "Copied ✓";
+
+  function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k) { try { window.localStorage.setItem(k, "1"); } catch (e) { /* no-op */ } }
+  function ssGet(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }
+  function ssSet(k) { try { window.sessionStorage.setItem(k, "1"); } catch (e) { /* no-op */ } }
+
+  function copyText(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)["catch"](function () { /* no-op */ });
+        return;
+      }
+    } catch (e) { /* fallback below */ }
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    } catch (e) { /* the code stays visible anyway */ }
+  }
+
+  function reveal(banner, eligible) {
+    try {
+      var token = "";
+      try { token = new URLSearchParams(window.location.search).get("token") || ""; } catch (e) { token = ""; }
+      var code = (eligible && token && token.length >= 8)
+        ? "ADR-" + token.slice(0, 8).toUpperCase()
+        : "";
+
+      if (code) {
+        var codeEl = document.getElementById("app-banner-code");
+        if (!codeEl) return;
+        codeEl.textContent = code;
+        var withEl = document.getElementById("app-banner-with-code");
+        if (withEl) withEl.style.display = "";
+        var copyBtn = document.getElementById("app-banner-copy");
+        if (copyBtn) copyBtn.addEventListener("click", function () {
+          copyText(code);
+          try { copyBtn.textContent = COPY_LABEL_DONE; } catch (e) { /* no-op */ }
+          lsSet(LS_DONE); // message received → never shown again
+        });
+      } else {
+        var noEl = document.getElementById("app-banner-no-code");
+        if (noEl) noEl.style.display = "";
+      }
+
+      var links = document.querySelectorAll(".app-banner-store-link");
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener("click", function () { lsSet(LS_DONE); });
+      }
+
+      var closeBtn = document.getElementById("app-banner-close");
+      if (closeBtn) closeBtn.addEventListener("click", function () {
+        ssSet(SS_CLOSED); // hidden for this visit only
+        banner.classList.remove("app-banner-visible");
+        setTimeout(function () {
+          try { banner.style.display = "none"; } catch (e) { /* no-op */ }
+        }, 500);
+      });
+
+      banner.style.display = "block";
+      void banner.offsetWidth; // reflow → entry transition plays
+      banner.classList.add("app-banner-visible");
+    } catch (e) { /* never break the report */ }
+  }
+
+  window.__showAppBanner = function (jobId) {
+    try {
+      if (lsGet(LS_DONE) || ssGet(SS_CLOSED)) return;
+      var banner = document.getElementById("app-banner");
+      if (!banner) return;
+
+      if (!jobId) { reveal(banner, false); return; }
+      // Eligibility = the job's free_analysis row carries a diagnosis_json
+      // (migrated data ≥ 2026-07-13) — same criterion as the redemption edge.
+      fetch(SB_URL + "/rest/v1/free_analysis?jobId=eq." + encodeURIComponent(jobId)
+            + "&diagnosis_json=not.is.null&select=jobId&limit=1", {
+        headers: { apikey: SB_ANON, Authorization: "Bearer " + SB_ANON },
+        cache: "no-store"
+      })
+        .then(function (r) { return r.ok ? r.json() : []; })
+        .then(function (rows) { reveal(banner, !!(rows && rows.length)); })
+        ["catch"](function () { reveal(banner, false); });
+    } catch (e) { /* total fail-safe */ }
+  };
 })();
 </script>
