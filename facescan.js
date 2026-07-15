@@ -1,5 +1,10 @@
 /**
- * Adermio Face Scan v9.5 — Production Release
+ * Adermio Face Scan v9.6 — Production Release
+ *
+ * v9.6 — VAGUE D'ANALYSE : la lumière court SUR le maillage le long de l'axe
+ * menton→front (suit l'inclinaison/rotation de la tête), z = volume, arêtes
+ * groupées par paquets d'intensité (6 tracés, ~1,1 ms/frame). Remplace la
+ * barre horizontale plate de la v9.5 (2D devant un visage 3D = cheap).
  *
  * v9.5 — FACE MESH OVERLAY (cosmétique) : trace le maillage des 468 landmarks
  * que MediaPipe calcule déjà à chaque frame (coût de calcul nul, 0 Ko de
@@ -1432,88 +1437,150 @@
             independent of container height so the oval looks the same on any phone)
      ═══════════════════════════════════════════════════════════ */
   /* ═══════════════════════════════════════════════════════════
-     FACE MESH OVERLAY (v9.5)
+     FACE MESH + VAGUE D'ANALYSE (v9.6)
 
-     Trace le maillage des 468 landmarks MediaPipe déjà calculés par onRes.
-     Signale visuellement « l'IA cadre ton visage » pendant le placement.
+     Le maillage des 468 landmarks MediaPipe (déjà calculés par onResInner)
+     sert de trame ; une VAGUE DE LUMIÈRE la parcourt du menton au front.
+
+     Pourquoi ce design plutôt qu'une barre horizontale (v9.5, jugée « cheap ») :
+     une barre est un objet 2D posé DEVANT un visage 3D — elle traverse le nez
+     et les orbites à plat. Ici, ce sont les ARÊTES DU MAILLAGE qui s'illuminent :
+     comme le maillage épouse le relief, la lumière plonge dans les orbites,
+     contourne le nez et longe la mâchoire. C'est la surface qui est révélée.
+
+     L'axe de balayage est le vecteur menton(152) → front(10) EN ESPACE ÉCRAN :
+     la vague suit donc l'inclinaison et la rotation de la tête sans aucune
+     correction — c'est la géométrie qui s'en charge. Le z de MediaPipe module
+     l'intensité (ce qui est près de la caméra brille plus) → volume.
+
+     Perf (mesurée au banc d'essai, ~1,1 ms/frame — budget 33 ms à 30 fps) :
+     une opacité par arête imposerait 2556 stroke() → intenable. On GROUPE donc
+     les arêtes par paquet d'intensité (MESH_NB) → 1 tracé pour la trame + 6
+     tracés pour la vague. Les tampons sont alloués UNE fois (zéro GC par frame).
+
+     Deux pièges de mapping, obligatoires pour coller au visage affiché :
+       1. object-fit:cover — les landmarks sont normalisés dans le repère NATIF
+          de la vidéo, pas dans le conteneur.
+       2. transform:scaleX(-1) — la vidéo est en miroir, le canvas non.
+
      Purement cosmétique : AUCUNE décision de capture n'en dépend.
-
-     Deux pièges de mapping, tous deux obligatoires pour que le maillage
-     colle au visage affiché :
-       1. `object-fit: cover` — la vidéo native (vw×vh) est mise à l'échelle
-          pour COUVRIR le conteneur (w×h), le débord est rogné. Les landmarks
-          sont normalisés [0,1] dans le repère NATIF, pas dans le conteneur.
-       2. `transform: scaleX(-1)` — la vidéo est affichée en MIROIR, le canvas
-          ne l'est pas → on inverse x à la main (w - x).
-
-     Perf : un seul beginPath/stroke pour ~2556 segments (~1,5 ms mesuré sur
-     banc d'essai ; 2556 strokes individuels ne passeraient pas). Gate
-     MESH_ON = high-end only.
      ═══════════════════════════════════════════════════════════ */
+  var MESH_NB = 6;                                  // paquets d'intensité
+  var _mBuckets = (function () {                    // alloués une seule fois
+    var a = []; for (var i = 0; i < MESH_NB; i++) a.push([]);
+    return a;
+  })();
+  var _mS = new Float32Array(468);                  // projection sur l'axe du visage
+  var _mZ = new Float32Array(468);                  // profondeur
+
   function drawMesh(ctx, w, h, S, cx, cy, rx, ry, now) {
     if (!MESH_ON) return;
     var M = S.mesh;
     var TESS = window.FACEMESH_TESSELATION;
     if (!TESS || !M.lm || !M.vw || !M.vh) return;
 
-    // Opacité arbitrée sur planche comparative (vraie photo, géométrie réelle) :
-    // .22 était invisible, .55 masquait la peau — or on vend une analyse de
-    // PEAU, elle doit rester lisible sous le maillage.
+    // Opacités arbitrées sur planche comparative (vraie photo, géométrie réelle).
+    // On vend une analyse de PEAU : elle doit rester lisible sous la trame.
     var target = 0;
-    if (now - M.t < 250) {  // landmarks frais uniquement (sinon maillage figé)
+    if (now - M.t < 250) {   // landmarks frais uniquement (sinon trame figée)
       if (S.phase === "calibrating" || S.phase === "countdown") target = 0.38;
       else if (S.phase === "scanning") target = 0.20;
     }
-    M.op += (target - M.op) * 0.12;   // fondu ~400 ms
+    M.op += (target - M.op) * 0.12;                 // fondu ~400 ms
     if (M.op < 0.004) { M.op = 0; return; }
 
+    var lm = M.lm;
     var scale = Math.max(w / M.vw, h / M.vh);
     var dw = M.vw * scale, dh = M.vh * scale;
     var ox = (w - dw) / 2, oy = (h - dh) / 2;
+    // miroir X (vidéo scaleX(-1), canvas non)
+    function PX(p) { return w - (ox + p.x * dw); }
+    function PY(p) { return oy + p.y * dh; }
+
+    // Axe du visage : menton → front. C'est lui qui fait suivre la tête.
+    var chin = lm[152], brow = lm[10];
+    if (!chin || !brow) return;
+    var cxp = PX(chin), cyp = PY(chin);
+    var ax = PX(brow) - cxp, ay = PY(brow) - cyp;
+    var alen = Math.sqrt(ax * ax + ay * ay) || 1;
+    ax /= alen; ay /= alen;
+
+    var zMin = 1e9, zMax = -1e9, i, p, z;
+    for (i = 0; i < 468; i++) {
+      p = lm[i]; if (!p) { _mS[i] = -9; _mZ[i] = 0; continue; }
+      _mS[i] = ((PX(p) - cxp) * ax + (PY(p) - cyp) * ay) / alen;   // 0 menton → 1 front
+      z = p.z || 0; _mZ[i] = z;
+      if (z < zMin) zMin = z; if (z > zMax) zMax = z;
+    }
+    var zRange = (zMax - zMin) || 1;
+
+    // Vague : va-et-vient lent et adouci (la lenteur fait le premium).
+    var SWEEP_MS = 3600;
+    var ph = (now % (SWEEP_MS * 2)) / SWEEP_MS;     // 0 → 2
+    var k = ph > 1 ? 2 - ph : ph;                   // 0 → 1 → 0
+    k = k * k * (3 - 2 * k);                        // smoothstep : ralentit aux extrémités
+    // Course recadrée sur la ZONE DENSE du maillage (mesuré au banc : la trame
+    // compte ~700-880 arêtes entre s=0.2 et 0.7, mais seulement 48 au sommet du
+    // front et 109 au menton). Le smoothstep ralentit aux extrémités : sur une
+    // course 0→1 il faisait donc traîner la vague là où il n'y a rien à
+    // éclairer (pire moment : 26 arêtes = trou visuel). Recadrée en 0.10→0.92,
+    // le pire moment passe à 124 arêtes (5×) et la pause se fait sur la
+    // mâchoire puis le front — là où il y a de la matière.
+    var sweep = 0.10 + k * 0.82;
+    var BAND = 0.11;                                // faisceau étroit = précision
+
+    for (i = 0; i < MESH_NB; i++) _mBuckets[i].length = 0;
+
+    var ia, ib, sm, d, inten, zn, b;
+    for (i = 0; i < TESS.length; i++) {
+      ia = TESS[i][0]; ib = TESS[i][1];
+      sm = (_mS[ia] + _mS[ib]) * 0.5;
+      d = sm - sweep; if (d < 0) d = -d;
+      if (d > BAND) continue;
+      inten = 1 - (d / BAND); inten *= inten;       // falloff quadratique
+      zn = 1 - (((_mZ[ia] + _mZ[ib]) * 0.5 - zMin) / zRange);   // 1 = proche caméra
+      inten *= (0.55 + 0.45 * zn);
+      b = (inten * MESH_NB) | 0; if (b > MESH_NB - 1) b = MESH_NB - 1;
+      _mBuckets[b].push(ia, ib);
+    }
 
     ctx.save();
     ctx.beginPath();
     ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
-    ctx.clip();   // le maillage ne déborde jamais sur le masque sombre
+    ctx.clip();                                     // jamais de débord sur le masque
 
-    var lm = M.lm;
+    // 1. Trame — un seul tracé batché pour les 2556 arêtes
     ctx.beginPath();
-    for (var i = 0; i < TESS.length; i++) {
-      var a = lm[TESS[i][0]], b = lm[TESS[i][1]];
-      if (!a || !b) continue;
-      ctx.moveTo(w - (ox + a.x * dw), oy + a.y * dh);   // miroir X
-      ctx.lineTo(w - (ox + b.x * dw), oy + b.y * dh);
+    for (i = 0; i < TESS.length; i++) {
+      var a1 = lm[TESS[i][0]], b1 = lm[TESS[i][1]];
+      if (!a1 || !b1) continue;
+      ctx.moveTo(PX(a1), PY(a1)); ctx.lineTo(PX(b1), PY(b1));
     }
-    ctx.strokeStyle = "rgba(244,63,94," + M.op.toFixed(3) + ")";   // rouge #F43F5E (essai)
-    ctx.lineWidth = 0.7;
+    ctx.strokeStyle = "rgba(244,63,94," + (M.op * 0.85).toFixed(3) + ")";
+    ctx.lineWidth = 0.5;
     ctx.stroke();
 
-    // ── Ligne de balayage « analyse en cours » ──
-    // Va-et-vient vertical sur la hauteur de l'ovale. Purement décoratif :
-    // aucune donnée, aucun timing de capture n'en dépend — c'est un métronome
-    // visuel qui dit « ça travaille ». On est déjà dans le clip ovale.
-    var SWEEP_MS = 2400;                                  // un aller = 2,4 s
-    var ph = (now % (SWEEP_MS * 2)) / SWEEP_MS;           // 0 → 2
-    var k = ph > 1 ? 2 - ph : ph;                         // va-et-vient 0 → 1 → 0
-    k = k * k * (3 - 2 * k);                              // smoothstep : ralentit aux extrémités
-    var sy = (cy - ry) + 2 * ry * k;
-    var band = ry * 0.20;                                 // demi-hauteur du halo
-    var sOp = M.op * 1.5; if (sOp > 0.75) sOp = 0.75;     // suit le fondu du maillage
-
-    var g = ctx.createLinearGradient(0, sy - band, 0, sy + band);
-    g.addColorStop(0,   "rgba(244,63,94,0)");
-    g.addColorStop(0.5, "rgba(244,63,94," + (sOp * 0.40).toFixed(3) + ")");
-    g.addColorStop(1,   "rgba(244,63,94,0)");
-    ctx.fillStyle = g;
-    ctx.fillRect(cx - rx, sy - band, rx * 2, band * 2);
-
-    // cœur lumineux
-    ctx.beginPath();
-    ctx.moveTo(cx - rx, sy); ctx.lineTo(cx + rx, sy);
-    ctx.strokeStyle = "rgba(255,140,160," + (sOp * 0.9).toFixed(3) + ")";
-    ctx.lineWidth = 1.4;
-    ctx.stroke();
-
+    // 2. Vague — un tracé par paquet (6 au lieu de 2556)
+    for (b = 0; b < MESH_NB; b++) {
+      var arr = _mBuckets[b];
+      if (!arr.length) continue;
+      var lvl = (b + 0.5) / MESH_NB;
+      ctx.beginPath();
+      for (i = 0; i < arr.length; i += 2) {
+        var a2 = lm[arr[i]], b2 = lm[arr[i + 1]];
+        ctx.moveTo(PX(a2), PY(a2)); ctx.lineTo(PX(b2), PY(b2));
+      }
+      var op = M.op * 1.9 * lvl; if (op > 0.95) op = 0.95;
+      // Lumière BLANCHE qui révèle la trame rouge : registre « instrument de
+      // mesure ». Un faisceau rouge dirait « alerte » — et ajouterait du rouge
+      // sur une peau à rougeurs, exactement ce qu'on ne veut pas.
+      ctx.strokeStyle = "rgba(255,235,240," + op.toFixed(3) + ")";
+      ctx.lineWidth = 0.5 + lvl * 1.0;
+      ctx.shadowColor = "rgba(255,235,240," + (op * 0.8).toFixed(3) + ")";
+      ctx.shadowBlur = lvl * 6;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
     ctx.restore();
   }
 
