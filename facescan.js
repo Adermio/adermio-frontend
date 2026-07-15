@@ -979,6 +979,67 @@
   }
 
   /* ═══════════════════════════════════════════════════════════
+     v9.8 — SCORING SUR PIXELS RÉELS (jalon 1, spec 2026-07-15)
+     Fonctions PURES (aucune capture de CFG/S) : extraites telles
+     quelles par tests/scan-quality.test.mjs. Ne pas les faire
+     dépendre de l'extérieur — passer les constantes en paramètre.
+     ═══════════════════════════════════════════════════════════ */
+
+  // Score d'un candidat sur les mesures RÉELLES de son JPEG.
+  // Remplace le proxy vidéo (aveugle au flou de mouvement créé dans les
+  // ~100 ms entre la mesure preview et la capture). La stabilité sort du
+  // score : elle n'était qu'un proxy du flou, désormais mesuré.
+  function scoreCandidateReal(lap, luma, absYaw, idealYaw, C) {
+    var sharp = Math.min(1, lap / C.blurIdeal);
+    var angle = Math.max(0, 1 - Math.abs(absYaw - idealYaw) / 25);
+    var expo = Math.max(0, 1 - Math.abs(luma - C.brightIdeal) / C.brightIdeal);
+    return sharp * 0.45 + angle * 0.35 + expo * 0.20;
+  }
+
+  // Verdict accept/reject sur mesures réelles — mêmes seuils durs et même
+  // priorité (lumière avant flou) que analyzePhotoQuality, qui reste le
+  // repli quand le blob ne se décode pas.
+  function realQualityVerdict(lap, luma, C) {
+    if (luma < C.postBrightMinReject) return "lowLight";
+    if (luma > C.postBrightMaxReject) return "strongLight";
+    if (lap < C.postBlurMinReject) return "blur";
+    return null;
+  }
+
+  // Borne supérieure du score réel quand netteté/expo sont encore inconnues
+  // (pré-flight : l'angle, lui, est connu avant capture).
+  function bestPossibleRealScore(absYaw, idealYaw) {
+    var angle = Math.max(0, 1 - Math.abs(absYaw - idealYaw) / 25);
+    return 0.45 + angle * 0.35 + 0.20;
+  }
+
+  // Sélection finale d'un bin : meilleur candidat UTILISABLE (candidats déjà
+  // triés score desc), sinon moins-pire (idx 0). Un provisoire (blob non
+  // décodé) est utilisable — bénéfice du doute, comme aujourd'hui.
+  // proxyRank = rang qu'aurait eu le vainqueur sous l'ancien score proxy →
+  // mesure directe, dans scan_log, de ce que le scoring réel change.
+  function selectBinFinal(cands, C) {
+    var winnerIdx = 0, winnerUsable = false;
+    for (var i = 0; i < cands.length; i++) {
+      var u = cands[i].provisional || realQualityVerdict(cands[i].lap, cands[i].luma, C) === null;
+      if (u) { winnerIdx = i; winnerUsable = true; break; }
+    }
+    var rank = 1;
+    for (var j = 0; j < cands.length; j++) {
+      if (j !== winnerIdx && cands[j].pScore > cands[winnerIdx].pScore) rank++;
+    }
+    return { winnerIdx: winnerIdx, winnerUsable: winnerUsable, proxyRank: rank };
+  }
+
+  // Équivalent overallScore d'analyzePhotoQuality, sur mesures réelles —
+  // sert uniquement à pScore (télémétrie proxyRank de final_selection).
+  function quality0to1(lap, luma) {
+    var b = Math.max(0, 1 - Math.abs(luma - CFG.brightIdeal) / 90);
+    var s = Math.min(1, lap / CFG.blurIdeal);
+    return b * 0.5 + s * 0.5;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
      COMPRESSION — resize to 1500px max + reencode at 85% JPEG
      before upload. Matches the React Native app's expo-image-manipulator
      output to keep payloads reasonable for n8n / Gemini.
