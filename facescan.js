@@ -1259,6 +1259,26 @@
     + '</div>'
 
     /* Triple chevrons under the oval (1.0/0.5/0.2 opacity, animated) */
+    /* Capteurs Distance/Lumière/Stabilité — ancrés JUSTE SOUS L'OVALE
+       (même repère que les chevrons : 46% = centre, 45.9vw = rayon), là où
+       l'œil est déjà posé. Ils étaient collés en bas de l'écran en 9px : à
+       l'opposé du regard et illisibles. Icône + libellé + pastille colorée :
+       on lit l'état d'un coup d'œil sans décoder un point de 5px. */
+    + '<div id="fs-badges-row">'
+    +   '<div class="fs-badge" id="fs-bdg-dist">'
+    +     '<svg class="fs-bico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>'
+    +     '<span class="fs-blbl">' + t.distance + '</span>'
+    +   '</div>'
+    +   '<div class="fs-badge" id="fs-bdg-light">'
+    +     '<svg class="fs-bico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></svg>'
+    +     '<span class="fs-blbl">' + t.light + '</span>'
+    +   '</div>'
+    +   '<div class="fs-badge" id="fs-bdg-stab">'
+    +     '<svg class="fs-bico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>'
+    +     '<span class="fs-blbl">' + t.stability + '</span>'
+    +   '</div>'
+    + '</div>'
+
     + '<div id="fs-arrow-under" class="fs-arrow-under" style="display:none;">'
     +   '<svg width="22" height="22" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:1;"><polyline points="9 18 15 12 9 6"/></svg>'
     +   '<svg width="22" height="22" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="opacity:.5;margin-left:-8px;"><polyline points="9 18 15 12 9 6"/></svg>'
@@ -1289,11 +1309,6 @@
     /* Bottom: progress bar + Distance/Lumière/Stabilité badges */
     + '<div id="fs-bot" style="position:absolute;bottom:calc(16px + env(safe-area-inset-bottom, 0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 24px;z-index:6;pointer-events:none;">'
     +   '<div id="fs-pbar" style="width:100%;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;"><div id="fs-pfill" style="width:0;height:100%;background:#14B8A6;border-radius:2px;transition:width .25s;"></div></div>'
-    +   '<div id="fs-badges-row" style="display:flex;gap:6px;">'
-    +     '<div class="fs-badge" id="fs-bdg-dist"><span class="fs-bdot"></span><span class="fs-blbl">' + t.distance + '</span></div>'
-    +     '<div class="fs-badge" id="fs-bdg-light"><span class="fs-bdot"></span><span class="fs-blbl">' + t.light + '</span></div>'
-    +     '<div class="fs-badge" id="fs-bdg-stab"><span class="fs-bdot"></span><span class="fs-blbl">' + t.stability + '</span></div>'
-    +   '</div>'
     + '</div>'
     + '</div>'
 
@@ -1393,13 +1408,18 @@
     + '.fs-dot.done{background:#14B8A6;}'
     + '.fs-dot-cnt{font-size:11px;font-weight:700;color:rgba(255,255,255,.5);margin-left:6px;font-family:\'DM Sans\',sans-serif;}'
     /* Bottom badges (parity with mobile sB / sOk / sBad) */
-    + '.fs-badge{display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:10px;background:rgba(255,255,255,.04);font-family:\'DM Sans\',sans-serif;}'
-    + '.fs-badge.ok{background:rgba(20,184,166,.15);}'
-    + '.fs-badge.bad{background:rgba(239,68,68,.10);}'
-    + '.fs-bdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.25);}'
-    + '.fs-badge.ok .fs-bdot{background:#14B8A6;}'
-    + '.fs-badge.bad .fs-bdot{background:#ef4444;}'
-    + '.fs-blbl{font-size:9px;font-weight:500;color:rgba(255,255,255,.7);}'
+    + '#fs-badges-row{position:absolute;top:calc(46% + 45.9vw + 18px);left:0;right:0;display:flex;justify-content:center;gap:7px;z-index:7;pointer-events:none;padding:0 12px;}'
+    /* Fond sombre + flou : lisible quel que soit l\'arrière-plan (mur clair,
+       fenêtre, contre-jour) — l\'ancien fond à 4% disparaissait sur clair. */
+    + '.fs-badge{display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:999px;background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:rgba(255,255,255,.55);font-family:\'DM Sans\',sans-serif;transition:background .25s,border-color .25s,color .25s;}'
+    + '.fs-badge.ok{background:rgba(20,184,166,.26);border-color:rgba(20,184,166,.6);color:#5eead4;}'
+    + '.fs-badge.bad{background:rgba(239,68,68,.26);border-color:rgba(239,68,68,.65);color:#fca5a5;}'
+    /* Le capteur en défaut pulse : c\'est LUI qu\'il faut corriger, il doit
+       attirer l\'œil sans qu\'on ait à comparer trois pastilles. */
+    + '.fs-badge.bad{animation:fsBdgPulse 1.5s ease-in-out infinite;}'
+    + '@keyframes fsBdgPulse{0%,100%{opacity:1;}50%{opacity:.62;}}'
+    + '.fs-bico{width:13px;height:13px;flex:0 0 auto;}'
+    + '.fs-blbl{font-size:11px;font-weight:600;letter-spacing:.2px;white-space:nowrap;}'
     /* Side chevron arrow — vertically centred on the oval, slides on the X axis */
     + '.fs-arrow-side{position:absolute;top:46%;z-index:7;pointer-events:none;}'
     + '.fs-arrow-side.dir-right{right:14px;left:auto;animation:fsArrowSlideR 1.4s ease-in-out infinite;}'
@@ -1408,7 +1428,7 @@
     + '@keyframes fsArrowSlideR{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(12px)}}'
     + '@keyframes fsArrowSlideL{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(-12px)}}'
     /* Triple chevrons under the oval — same X slide animation */
-    + '.fs-arrow-under{position:absolute;top:calc(46% + 45.9vw + 16px);left:0;right:0;display:none;align-items:center;justify-content:center;z-index:7;pointer-events:none;}'
+    + '.fs-arrow-under{position:absolute;top:calc(46% + 45.9vw + 66px);left:0;right:0;display:none;align-items:center;justify-content:center;z-index:7;pointer-events:none;}'
     + '.fs-arrow-under.dir-right{display:flex;animation:fsArrowSlideUR 1.4s ease-in-out infinite;}'
     + '.fs-arrow-under.dir-left{display:flex;animation:fsArrowSlideUL 1.4s ease-in-out infinite;}'
     + '.fs-arrow-under.dir-left>svg{transform:scaleX(-1);}'
