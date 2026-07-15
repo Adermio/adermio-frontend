@@ -1,5 +1,9 @@
 /**
- * Adermio Face Scan v9.9 — Production Release
+ * Adermio Face Scan v9.9.1 — Production Release
+ *
+ * v9.9.1 — trame en ROUGE franc (255,84,88) sur ombre chaude neutre : le
+ * couple rose-400 + ombre slate bleutée de v9.9 était perçu VIOLET (retour
+ * Antoine). Équité phototypes re-vérifiée (planche 3 fonds).
  *
  * v9.9 (visibilité du maillage, 2026-07-15) — retour terrain Antoine : la
  * trame était invisible sur peau claire éclairée (alpha ~0.17, trait 0.4 px,
@@ -1689,15 +1693,17 @@
     // rouge lisible sur peau claire éclairée (le rouge seul n'a quasi aucun
     // contraste chromatique sur peau rosée) ; sur fond sombre elle est
     // invisible. Coût : +1 stroke batché (~0,3 ms).
-    ctx.strokeStyle = "rgba(15,23,42," + (M.op * 0.45).toFixed(3) + ")";
+    // v9.9.1 : ombre CHAUDE neutre (le slate bleuté + rose donnait une
+    // perception VIOLETTE — retour Antoine) …
+    ctx.strokeStyle = "rgba(40,8,10," + (M.op * 0.45).toFixed(3) + ")";
     ctx.lineWidth = 1.1;
     ctx.stroke();
-    // Rose-400 (251,113,133) et non rose-500 : plus LUMINEUX — sur peau
-    // foncée c'est la luminance du trait qui porte le contraste (l'ombre y
-    // est invisible), sur peau claire c'est l'ombre. Équité phototypes
-    // vérifiée sur planche 3 fonds (2026-07-15).
-    ctx.strokeStyle = "rgba(251,113,133," + (M.op * 0.95).toFixed(3) + ")";
-    ctx.lineWidth = 0.5;
+    // … + ROUGE franc et lumineux (255,84,88) : assez rouge pour être lu
+    // « rouge », assez lumineux pour rester visible sur peau foncée où
+    // l'ombre ne porte pas (équité re-vérifiée sur planche 3 fonds).
+    var mop = M.op * 1.15; if (mop > 1) mop = 1;
+    ctx.strokeStyle = "rgba(255,84,88," + mop.toFixed(3) + ")";
+    ctx.lineWidth = 0.55;
     ctx.stroke();
 
     // 2. Vague — un tracé par paquet (6 au lieu de 2556) ; high-end only
