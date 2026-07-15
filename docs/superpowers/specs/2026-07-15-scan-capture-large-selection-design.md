@@ -61,7 +61,7 @@ exposition_réelle = max(0, 1 − |luma − 130| / 130)          // 130 = CFG.br
 2. **Vainqueur d'un bin** = meilleur score parmi les utilisables.
 3. **Bin de profil sans aucun utilisable → omis** (photo non uploadée, clé absente de `formState.photos`). On n'omet jamais au niveau « warning » (`lap < 20`) — uniquement en dessous du seuil « sévèrement flou » actuel : on n'omet que ce qui serait parti inutilisable de toute façon.
 4. **Bin frontal sans aucun utilisable → micro-reprise** (§3.4).
-5. **Photo zoom** : re-dérivée du vainqueur frontal **final** (après sélection et éventuelle reprise, jamais avant).
+5. **Photo zoom** : ~~re-dérivée du vainqueur frontal~~ — hypothèse invalidée à l'implémentation (2026-07-15) : le zoom est une photo **optionnelle ajoutée manuellement par l'utilisateur** en preview (« Ajouter un gros plan »), indépendante des bins. Aucune dépendance d'ordre, rien à faire.
 6. Bandeau doré « qualité limite » (`_allWinnersBad`) conservé, recalculé sur la sélection finale.
 
 ### 3.4 Micro-reprise frontale

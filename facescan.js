@@ -2977,43 +2977,50 @@
       // real JPEG pixels, swap in the runner-up when the winner is
       // unacceptable and the runner-up is clean. Must complete before
       // showPreview → doUpload so the corrected winner is what gets uploaded.
-      function verifyWinners() {
-        var checks = [];
+      // v9.8 — sélection finale exhaustive : les scores réels sont déjà
+      // connus (mesurés à la capture) → plus AUCUN décodage ici, juste un
+      // choix + un log. Remplace verifyWinners (qui ne re-mesurait que le
+      // vainqueur + son dauphin pendant l'overlay de 1,5 s). L'événement
+      // winner_swap est remplacé par final_selection (proxyRank > 1 = le
+      // scoring réel a changé la photo envoyée).
+      function selectFinal() {
         var okCount = 0, filledCount = 0;
-        for (var vi = 0; vi < BIN_IDS.length; vi++) {
-          (function (binId) {
+        var summary = {};
+        try {
+          for (var vi = 0; vi < BIN_IDS.length; vi++) {
+            var binId = BIN_IDS[vi];
             var bin = S.bins[binId];
-            if (!bin.length) return;
+            if (!bin.length) continue;
             filledCount++;
-            checks.push(analyzeBlobQuality(bin[0].blob).then(function (q) {
-              // Décodage impossible → bénéfice du doute (compte acceptable)
-              if (!q) { okCount++; return; }
-              if (!blobQualityUnacceptable(q)) { okCount++; return; }
-              if (bin.length < 2) return; // winner mauvais, pas de remplaçant
-              return analyzeBlobQuality(bin[1].blob).then(function (q2) {
-                if (!q2 || blobQualityUnacceptable(q2)) return;
-                var demoted = bin[0];
-                bin[0] = bin[1];
-                bin[1] = demoted;
-                okCount++;
-                S.logger.log({
-                  type: "winner_swap", timestamp: Date.now(), bin: binId,
-                  winnerLuma: Math.round(q.luma), winnerLap: Math.round(q.lap * 10) / 10,
-                  runnerLuma: Math.round(q2.luma), runnerLap: Math.round(q2.lap * 10) / 10,
-                });
-              });
-            }));
-          })(BIN_IDS[vi]);
-        }
-        return Promise.all(checks).then(function () {
-          // App parity (allWinnersBad) : TOUS les winners restent mauvais
-          // même après swap → bandeau doré "Qualité d'image limite".
+            var sel = selectBinFinal(bin, CFG);
+            if (sel.winnerIdx !== 0) {
+              var w = bin.splice(sel.winnerIdx, 1)[0];
+              bin.unshift(w); // l'upload et la preview lisent bin[0]
+            }
+            if (sel.winnerUsable) okCount++;
+            summary[binId] = {
+              n: bin.length,
+              winner: { lap: Math.round(bin[0].lap * 10) / 10, luma: Math.round(bin[0].luma),
+                        score: Math.round(bin[0].score * 100) / 100, prov: bin[0].provisional ? 1 : 0 },
+              usable: sel.winnerUsable ? 1 : 0,
+              proxyRank: sel.proxyRank,
+              cands: bin.map(function (c) { return [Math.round(c.lap * 10) / 10, Math.round(c.luma)]; }),
+            };
+          }
+          // App parity (allWinnersBad) : AUCUN vainqueur utilisable →
+          // bandeau doré "Qualité d'image limite".
           S._allWinnersBad = filledCount > 0 && okCount === 0;
-        }).catch(function () {});
+          S.logger.log({ type: "final_selection", timestamp: Date.now(), bins: summary });
+        } catch (e) {
+          // La sélection ne doit JAMAIS bloquer la fin du scan : en cas de
+          // pépin, bin[0] (déjà trié score desc) part tel quel.
+          S.logger.logError("selectFinal: " + (e && e.message ? e.message : "unknown"));
+        }
+        return Promise.resolve();
       }
 
       var overlayDelay = new Promise(function (res) { setTimeout(res, 1500); });
-      Promise.all([verifyWinners(), overlayDelay]).then(function () {
+      Promise.all([selectFinal(), overlayDelay]).then(function () {
         if (dead) return;
         hideCompleteOverlay();
         S.phase = "preview";
