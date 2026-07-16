@@ -17,7 +17,7 @@
 // IMPORTANT: when upgrading the vendored MediaPipe binaries, BUMP CACHE_VERSION
 // — /vendor/ is cache-first with no revalidation, so the only way returning
 // users pick up new files is the activate-handler purge of the previous cache.
-const CACHE_VERSION = 'adermio-v3-24';
+const CACHE_VERSION = 'adermio-v3-25';
 const OFFLINE_URL = '/offline.html';
 
 // Static assets to pre-cache on install
@@ -129,6 +129,26 @@ self.addEventListener('fetch', (event) => {
                 url.hostname.includes('fonts.gstatic.com');
 
   if (!isSameOrigin && !isCDN) return;
+
+  // TikTok pixel: network-first. Le pixel doit TOUJOURS refléter la dernière
+  // config (ID, événements) sans délai. En stale-while-revalidate (comme les
+  // autres JS), un changement de pixel avait une visite de retard, ce qui
+  // faisait partir les events vers l'ancien pixel. Réseau d'abord, cache
+  // seulement en secours hors-ligne.
+  if (isSameOrigin && url.pathname === '/js/ttq.js') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_VERSION).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
 
   // HTML pages: network-first.
   // Only cache successful (200) same-origin "basic" responses. Skipping
