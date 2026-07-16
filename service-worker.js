@@ -17,7 +17,7 @@
 // IMPORTANT: when upgrading the vendored MediaPipe binaries, BUMP CACHE_VERSION
 // — /vendor/ is cache-first with no revalidation, so the only way returning
 // users pick up new files is the activate-handler purge of the previous cache.
-const CACHE_VERSION = 'adermio-v3-25';
+const CACHE_VERSION = 'adermio-v3-26';
 const OFFLINE_URL = '/offline.html';
 
 // Static assets to pre-cache on install
