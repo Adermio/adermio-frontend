@@ -17,7 +17,7 @@
 // IMPORTANT: when upgrading the vendored MediaPipe binaries, BUMP CACHE_VERSION
 // — /vendor/ is cache-first with no revalidation, so the only way returning
 // users pick up new files is the activate-handler purge of the previous cache.
-const CACHE_VERSION = 'adermio-v3-21';
+const CACHE_VERSION = 'adermio-v3-22';
 const OFFLINE_URL = '/offline.html';
 
 // Static assets to pre-cache on install
@@ -27,7 +27,8 @@ const PRECACHE_ASSETS = [
   '/android-chrome-512x512.png',
   '/apple-touch-icon.png',
   '/favicon.ico',
-  '/logo_Adermio.png'
+  '/logo_Adermio.png',
+  '/js/ttq.js'
 ];
 
 // Install: pre-cache essential assets.

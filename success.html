@@ -429,6 +429,7 @@
             .btn-premium-access { width: 100%; justify-content: center; padding: 20px; }
         }
     </style>
+    <script src="/js/ttq.js"></script>
 </head>
 <body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
 
@@ -682,6 +683,20 @@
           }
        
           // --- CONFIGURATION SUPABASE ---
+          // ── TikTok Pixel : conversion (paiement Stripe confirmé) ──
+          // On arrive ici uniquement si jobId est présent (garde ci-dessus) :
+          // c'est la redirection Stripe post-paiement. Dédup sessionStorage
+          // pour ne pas re-compter sur un rechargement de la page.
+          try {
+            if (window.ttq && !sessionStorage.getItem("ttq_paid_" + jobId)) {
+              ttq.track("CompletePayment", {
+                value: 5.99, currency: "EUR",
+                contents: [{ content_id: "analyse_premium", content_type: "product", content_name: "Analyse premium Adermio" }]
+              }, { event_id: jobId });
+              sessionStorage.setItem("ttq_paid_" + jobId, "1");
+            }
+          } catch (e) {}
+
           const SUPABASE_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
           const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
           
