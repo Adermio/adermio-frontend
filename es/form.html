@@ -259,7 +259,11 @@
                  manual button as a white bordered pill + subtitle. Both
                  buttons keep their slot (the form's CONTINUE/back nav sits
                  below, content centered). -->
-           <div id="prescan-choice-mode">
+           <!-- ES = manual-only (décision 2026-07-18) : l'écran de choix reste
+                dans le DOM mais caché en permanence — le scan est inaccessible
+                sur cette page (pas de facescan.js ni de MediaPipe chargés).
+                La variante scan-first vit sur /es/form2. -->
+           <div id="prescan-choice-mode" class="hidden">
                <div class="text-center mb-8">
                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-primary mb-2 block animate-pulse">Tecnología Adermio Scan&trade;</span>
                     <h2 class="font-serif text-3xl text-brand-dark" style="line-height:1.15;">Análisis en alta<br><em style="color:#14B8A6;font-style:italic;">definición</em></h2>
@@ -325,7 +329,7 @@
                 The old "Utiliser le scan guidé" affordance is gone — back-to-choice
                 navigation is now handled by the form's btnBack so the user has a
                 single mental model for navigating between the three modes. -->
-           <div id="manual-upload-container" class="hidden space-y-4 animate-fade-in max-w-sm mx-auto">
+           <div id="manual-upload-container" class="space-y-4 animate-fade-in max-w-sm mx-auto">
 
                <div class="relative w-10/12 mx-auto sm:w-full">
                    <div class="flex justify-between items-center mb-2 px-1">
@@ -1179,7 +1183,9 @@
            // between scan and manual without losing their place in the funnel.
            if (currentStep === 3 && typeof window.getStep3Mode === 'function') {
                var mode = window.getStep3Mode();
-               if (mode === 'scan' || mode === 'manual') {
+               // ES manual-only : le mode "manual" est l'écran par défaut du
+               // step 3, "Back" doit donc remonter au step 2 (pas de choix).
+               if (mode === 'scan') {
                    window.showPrescanChoice();
                    return;
                }
@@ -1760,7 +1766,6 @@ async function submitFormData() {
    </script>
 
    <!-- Face Scan Module -->
-   <script src="/facescan.js"></script>
    <script>
    // ── Mode switching: Scan ↔ Manual Upload ──
    // ── Step-3 mode machine ─────────────────────────────────────────────
@@ -1877,71 +1882,6 @@ async function submitFormData() {
    </script>
    <script src="/js/geo.js" defer></script>
    <script src="/js/pwa.js" defer></script>
-
-   <!-- MediaPipe FaceMesh — self-hosted on Vercel.
-        The library + its WASM/data assets are served from /vendor/mediapipe/
-        instead of jsdelivr. This buys us:
-          - HTTP/2 multiplexing on the same origin (no extra DNS / TLS / TCP)
-          - Service-Worker-controlled caching (long-lived, deterministic)
-          - Resilience to CDN outages or mobile carriers blocking jsdelivr
-        camera_utils.js was loaded but never used — dropped to save a request.
-        Kept the same async background pre-warm so the engine is hot by the
-        time the user reaches step 3 of the form. -->
-   <script>
-   (function() {
-       var WASM_BASE = "/vendor/mediapipe/face_mesh/";
-       // Expose for facescan.js so it uses the same locateFile target
-       window._adermioMediaPipeBase = WASM_BASE;
-
-       function loadMediaPipe() {
-           var s1 = document.createElement('script');
-           s1.src = WASM_BASE + 'face_mesh.js';
-           s1.async = true;
-           s1.onload = preWarmFaceMesh;
-           s1.onerror = function () {
-               // Fallback to jsdelivr if our vendored copy somehow 404s.
-               var fallback = document.createElement('script');
-               fallback.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js';
-               fallback.async = true;
-               fallback.crossOrigin = 'anonymous';
-               fallback.onload = function () {
-                   window._adermioMediaPipeBase = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/';
-                   preWarmFaceMesh();
-               };
-               document.head.appendChild(fallback);
-           };
-           document.head.appendChild(s1);
-       }
-
-       function preWarmFaceMesh() {
-           try {
-               if (typeof window.FaceMesh !== 'function') return;
-               var base = window._adermioMediaPipeBase;
-               var fm = new window.FaceMesh({ locateFile: function (f) { return base + f; } });
-                // refineLandmarks predicate MUST match facescan.js's isHighEnd so the
-                // pre-warmed graph is the same one the scan instantiates (a mismatch
-                // would re-initialize the WASM graph at scan start and waste the warm-up).
-                var preWarmHighEnd = (window.devicePixelRatio || 1) >= 3 || (navigator.deviceMemory || 4) >= 6;
-                fm.setOptions({ maxNumFaces: 1, refineLandmarks: preWarmHighEnd, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
-               if (typeof fm.initialize === 'function') {
-                   fm.initialize().then(function () {
-                       window._adermioFaceMeshReady = true;
-                       try { fm.close(); } catch (_) {}
-                   }).catch(function () {
-                       try { fm.close(); } catch (_) {}
-                   });
-               }
-           } catch (_) {}
-       }
-       window._adermioFaceMeshReady = false;
-
-       if (document.readyState === 'loading') {
-           document.addEventListener('DOMContentLoaded', loadMediaPipe);
-       } else {
-           loadMediaPipe();
-       }
-   })();
-   </script>
 
 </body>
 </html>
