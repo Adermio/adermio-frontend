@@ -4,7 +4,7 @@
 //    (CompletePayment sur success) partent automatiquement vers le pixel chargé.
 //  - PageView : toutes les pages.
 //  - ViewContent : arrivée sur le formulaire de scan (/formulaire, /formulaire2,
-//    /en/form, /en/form2).
+//    /formulaire3 [variante 100% manuelle], /en/form, /en/form2).
 //    C'est le DERNIER événement fiablement attribuable pour le trafic TikTok :
 //    il se déclenche dans le navigateur in-app AVANT que l'utilisateur bascule
 //    vers Safari/Chrome pour scanner (bascule qui casse le clic-ID ttclid).
@@ -24,7 +24,7 @@
   // normalisé (retire .html et le / final) pour matcher les clean URLs.
   try {
     var p = (w.location.pathname || '').replace(/\.html$/, '').replace(/\/+$/, '') || '/';
-    var FORM_PAGES = ['/formulaire', '/formulaire2', '/en/form', '/en/form2'];
+    var FORM_PAGES = ['/formulaire', '/formulaire2', '/formulaire3', '/en/form', '/en/form2'];
     if (FORM_PAGES.indexOf(p) !== -1 && !w.sessionStorage.getItem('ttq_vc_' + p)) {
       ttq.track('ViewContent', {
         contents: [{ content_id: 'free_scan', content_type: 'product', content_name: isEN ? 'Adermio free skin analysis' : 'Analyse gratuite Adermio' }]
