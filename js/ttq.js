@@ -24,7 +24,7 @@
   // normalisé (retire .html et le / final) pour matcher les clean URLs.
   try {
     var p = (w.location.pathname || '').replace(/\.html$/, '').replace(/\/+$/, '') || '/';
-    var FORM_PAGES = ['/formulaire', '/formulaire2', '/formulaire3', '/en/form', '/en/form2'];
+    var FORM_PAGES = ['/formulaire', '/formulaire2', '/formulaire3', '/en/form', '/en/form2', '/en/form3'];
     if (FORM_PAGES.indexOf(p) !== -1 && !w.sessionStorage.getItem('ttq_vc_' + p)) {
       ttq.track('ViewContent', {
         contents: [{ content_id: 'free_scan', content_type: 'product', content_name: isEN ? 'Adermio free skin analysis' : 'Analyse gratuite Adermio' }]
