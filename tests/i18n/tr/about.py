@@ -1,0 +1,56 @@
+# Table de traduction it/about.html (source about.html). Chaque FR doit exister tel quel.
+TARGET = 'it/about.html'
+TR = [
+    # --- head / SEO
+    ("À propos d'Adermio — Notre mission en dermatologie IA", "Chi siamo — La missione di Adermio nella dermatologia con l'IA", 3),
+    ("Découvrez Adermio, l'application qui combine expertise dermatologique et intelligence artificielle pour offrir des analyses de peau personnalisées et accessibles à tous.",
+     "Scopri Adermio, l'applicazione che unisce competenza dermatologica e intelligenza artificiale per offrire analisi della pelle personalizzate e accessibili a tutti.", 3),
+    # --- nav / menu / footer (identiques à home)
+    (">Accueil</a>", ">Home</a>", 2),
+    (">Faire l'analyse</a>", ">Inizia l'analisi</a>", 2),
+    (">À Propos</a>", ">Chi siamo</a>", 2),
+    (">Nous Contacter</a>", ">Contattaci</a>", 2),
+    (">Conditions d'utilisation</a>", ">Condizioni d'uso</a>", 1),
+    (">Mentions Légales</a>", ">Note legali</a>", 1),
+    (">Politique de Confidentialité</a>", ">Informativa sulla privacy</a>", 1),
+    ("© 2026 Adermio. Tous droits réservés.", "© 2026 Adermio. Tutti i diritti riservati.", 1),
+    ("La dermatologie réinventée par l'intelligence artificielle.", "La dermatologia reinventata dall'intelligenza artificiale.", 1),
+    # --- header
+    ("<span>Notre Mission</span>", "<span>La nostra missione</span>", 1),
+    ('Démocratiser l\'accès <br> <span class="italic text-teal-800/80">à l\'expertise de la peau.</span>',
+     'Democratizzare l\'accesso <br> <span class="italic text-teal-800/80">alla competenza dermatologica.</span>', 1),
+    ("Nous avons créé Adermio pour allier la précision de l'intelligence artificielle à l'exigence dermatologique, au service de tous.",
+     "Abbiamo creato Adermio per unire la precisione dell'intelligenza artificiale al rigore dermatologico, al servizio di tutti.", 1),
+    # --- histoire
+    (">Notre Histoire</span>", ">La nostra storia</span>", 1),
+    (">Une intelligence collective</h2>", ">Un'intelligenza collettiva</h2>", 1),
+    ("L'acné et les problèmes de peau touchent des millions de personnes. Pourtant, obtenir un avis objectif et rapide reste un défi.",
+     "L'acne e i problemi della pelle riguardano milioni di persone. Eppure, ottenere un parere oggettivo e rapido resta una sfida.", 1),
+    ("C'est pourquoi nous avons développé Adermio. Plus qu'une simple application, c'est un système d'apprentissage continu.",
+     "Per questo abbiamo sviluppato Adermio. Più di una semplice applicazione, è un sistema di apprendimento continuo.", 1),
+    ("Notre force réside dans la donnée : chaque analyse réalisée contribue, de manière <strong>anonyme et sécurisée</strong>, à rendre notre modèle plus intelligent et précis pour les futurs utilisateurs. C'est la technologie au service de la communauté.",
+     "La nostra forza sta nei dati: ogni analisi effettuata contribuisce, in modo <strong>anonimo e sicuro</strong>, a rendere il nostro modello più intelligente e preciso per gli utenti futuri. È la tecnologia al servizio della comunità.", 1),
+    (">Notre engagement Adermio</p>", ">L'impegno di Adermio</p>", 1),
+    ("Adermio ne vend aucun produit cosmétique. Nous ne sommes affiliés à aucune marque. Nos recommandations sont 100% neutres, basées sur l'analyse de données objectives.",
+     "Adermio non vende alcun prodotto cosmetico. Non siamo affiliati a nessun marchio. I nostri consigli sono neutrali al 100%, basati sull'analisi di dati oggettivi.", 1),
+    # --- valeurs
+    (">Nos Valeurs</span>", ">I nostri valori</span>", 1),
+    (">Une approche éthique</h2>", ">Un approccio etico</h2>", 1),
+    ("Nous croyons que la technologie doit être au service de votre bien-être, en toute transparence.",
+     "Crediamo che la tecnologia debba essere al servizio del tuo benessere, in totale trasparenza.", 1),
+    (">100% Indépendant</h3>", ">100% indipendente</h3>", 1),
+    ("Nous refusons tout partenariat commercial caché. Nos recommandations sont basées uniquement sur l'efficacité des ingrédients et les résultats de l'IA, pas sur le marketing.",
+     "Rifiutiamo qualsiasi partnership commerciale nascosta. I nostri consigli si basano unicamente sull'efficacia degli ingredienti e sui risultati dell'IA, non sul marketing.", 1),
+    (">Anonymat & Recherche</h3>", ">Anonimato e ricerca</h3>", 1),
+    ("Votre vie privée est sacrée. Vos données sont <strong>anonymisées</strong> pour protéger votre identité, tout en contribuant à la recherche pour rendre notre IA plus performante.",
+     "La tua privacy è sacra. I tuoi dati vengono <strong>anonimizzati</strong> per proteggere la tua identità, contribuendo al tempo stesso alla ricerca per rendere la nostra IA più performante.", 1),
+    (">Bienveillance</h3>", ">Empatia</h3>", 1),
+    ("L'acné a un impact psychologique fort. Notre ton est toujours encourageant, jamais culpabilisant. Nous sommes là pour vous aider.",
+     "L'acne ha un forte impatto psicologico. Il nostro tono è sempre incoraggiante, mai colpevolizzante. Siamo al tuo fianco per aiutarti.", 1),
+    # --- technologie
+    (">Technologie</span>", ">Tecnologia</span>", 1),
+    ("Notre modèle de Deep Learning détecte 12 types d'imperfections avec une précision comparable à l'œil humain d'un expert. Il apprend en continu pour affiner ses diagnostics.",
+     "Il nostro modello di Deep Learning rileva 12 tipi di imperfezioni con una precisione paragonabile all'occhio umano di un esperto. Apprende in continuo per affinare le sue analisi.", 1),
+    (">Précision de détection</div>", ">Precisione di rilevamento</div>", 1),
+    (">Temps d'analyse</div>", ">Tempo di analisi</div>", 1),
+]

@@ -1,0 +1,50 @@
+# Table de traduction it/contact.html (source contact.html). Chaque FR doit exister tel quel.
+TARGET = 'it/contact.html'
+TR = [
+    # --- head / SEO
+    ("Contact — Adermio", "Contatti — Adermio", 3),
+    ("Contactez l'équipe Adermio pour toute question sur votre analyse dermatologique, votre compte ou nos services.",
+     "Contatta il team Adermio per qualsiasi domanda sulla tua analisi dermatologica, sul tuo account o sui nostri servizi.", 3),
+    ("Contactez l'équipe Adermio pour toute question sur votre analyse de peau ou le fonctionnement de notre IA.",
+     "Contatta il team Adermio per qualsiasi domanda sulla tua analisi della pelle o sul funzionamento della nostra IA.", 1),
+    # --- nav / menu / footer (identiques à home)
+    (">Accueil</a>", ">Home</a>", 2),
+    (">Faire l'analyse</a>", ">Inizia l'analisi</a>", 2),
+    (">À Propos</a>", ">Chi siamo</a>", 2),
+    (">Nous Contacter</a>", ">Contattaci</a>", 2),
+    (">Conditions d'utilisation</a>", ">Condizioni d'uso</a>", 1),
+    (">Politique de Confidentialité</a>", ">Informativa sulla privacy</a>", 1),
+    ("© 2025 Adermio. Tous droits réservés.", "© 2025 Adermio. Tutti i diritti riservati.", 1),
+    ("La dermatologie réinventée par l'intelligence artificielle.", "La dermatologia reinventata dall'intelligenza artificiale.", 1),
+    # --- hero
+    ("<span>Support & Contact</span>", "<span>Supporto e contatti</span>", 1),
+    ("Comment pouvons-nous vous aider ?", "Come possiamo aiutarti?", 1),
+    ("Une question sur votre analyse ou sur le fonctionnement de l'IA ? Remplissez le formulaire ci-dessous.",
+     "Hai una domanda sulla tua analisi o sul funzionamento dell'IA? Compila il modulo in questa pagina.", 1),
+    # --- formulaire
+    ("Remplissez le formulaire ci-dessous :", "Compila il modulo seguente:", 1),
+    ('placeholder="Votre Email"', 'placeholder="La tua email"', 1),
+    (">Nom</label>", ">Nome</label>", 1),
+    ('placeholder="Votre Nom Complet"', 'placeholder="Il tuo nome completo"', 1),
+    (">Objet de la demande</label>", ">Oggetto della richiesta</label>", 1),
+    ("Ex : analyse de peau, assistance technique, autre...", "Es.: analisi della pelle, assistenza tecnica, altro...", 1),
+    (">Message</label>", ">Messaggio</label>", 1),
+    (">Consentement RGPD</span>", ">Consenso GDPR</span>", 1),
+    ("J'accepte que mes données soient utilisées uniquement dans le cadre de ma demande de contact, conformément à la <a",
+     "Accetto che i miei dati vengano utilizzati esclusivamente nell'ambito della mia richiesta di contatto, in conformità con l'<a", 1),
+    (">politique de confidentialité</a>.", ">informativa sulla privacy</a>.", 1),
+    ("\n                        Envoyer\n                    </button>", "\n                        Invia\n                    </button>", 1),
+    (">Message envoyé !</h2>", ">Messaggio inviato!</h2>", 1),
+    ("Merci pour votre message. Notre équipe vous répondra dans les plus brefs délais.",
+     "Grazie per il tuo messaggio. Il nostro team ti risponderà il prima possibile.", 1),
+    (">OU</p>", ">OPPURE</p>", 1),
+    ("Écrivez-nous directement par mail :", "Scrivici direttamente via email:", 1),
+    # --- JS affiché
+    ("'Veuillez remplir tous les champs.'", "'Compila tutti i campi.'", 1),
+    ("'Veuillez entrer une adresse email valide.'", "'Inserisci un indirizzo email valido.'", 1),
+    ("'Veuillez accepter le consentement RGPD pour continuer.'", "'Accetta il consenso GDPR per continuare.'", 1),
+    ("'Envoi en cours...'", "'Invio in corso...'", 1),
+    ("'Une erreur est survenue. Veuillez réessayer ou nous écrire à contact@adermio.com.'",
+     "'Si è verificato un errore. Riprova o scrivici a contact@adermio.com.'", 1),
+    ("textContent = 'Envoyer';", "textContent = 'Invia';", 1),
+]

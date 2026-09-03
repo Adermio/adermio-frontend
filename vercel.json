@@ -23,6 +23,16 @@
       "statusCode": 301
     },
     {
+      "source": "/it",
+      "destination": "/it/home",
+      "statusCode": 301
+    },
+    {
+      "source": "/it/",
+      "destination": "/it/home",
+      "statusCode": 301
+    },
+    {
       "source": "/finalisation",
       "destination": "/success",
       "statusCode": 301

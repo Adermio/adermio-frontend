@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ua5d07cn1u");
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Informativa sulla privacy — Adermio</title>
+    <meta name="description" content="Informativa sulla privacy GDPR di Adermio — dati raccolti, responsabili del trattamento, diritti, durate di conservazione.">
+    <link rel="canonical" href="https://adermio.com/it/confidentialite">
+    <link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite">
+    <link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite">
+    <link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite">
+    <link rel="alternate" hreflang="it" href="https://adermio.com/it/confidentialite">
+    <link rel="alternate" hreflang="x-default" href="https://adermio.com/confidentialite">
+    <meta property="og:title" content="Informativa sulla privacy — Adermio">
+    <meta property="og:description" content="Informativa sulla privacy GDPR di Adermio — dati raccolti, responsabili del trattamento, diritti, durate di conservazione.">
+    <meta property="og:url" content="https://adermio.com/it/confidentialite">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://adermio.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="it_IT">
+    <meta property="og:site_name" content="Adermio">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Informativa sulla privacy — Adermio">
+    <meta name="twitter:description" content="Informativa sulla privacy GDPR di Adermio — dati raccolti, responsabili del trattamento, diritti, durate di conservazione.">
+    <meta name="twitter:image" content="https://adermio.com/og-image.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0F3D39">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Adermio">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',   
+                            dark: '#0F3D39',   
+                            primary: '#14B8A6',
+                            text: '#334155',   
+                            muted: '#94A3B8',  
+                            surface: '#FFFFFF' 
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        a, a:visited, a:hover, a:active {
+            color: inherit; 
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+    <script src="/js/ttq.js"></script>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/it/home" class="flex items-center gap-2">
+                 <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-2 py-1 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+                        <img src="https://flagcdn.com/it.svg" width="16" alt="IT" class="rounded-sm shadow-sm">
+                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+                    </button>
+                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-adermio-dark/5 overflow-hidden z-[80]">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                            <img src="https://flagcdn.com/it.svg" width="18" alt="Italiano" class="rounded-sm shadow-sm">
+                            <span>Italiano</span>
+                        </a>
+                        <a href="https://adermio.com/en/confidentialite" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/us.svg" width="18" alt="English" class="rounded-sm shadow-sm">
+                            <span>English</span>
+                        </a>
+                        <a href="https://adermio.com/es/confidentialite" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/es.svg" width="18" alt="Español" class="rounded-sm shadow-sm">
+                            <span>Español</span>
+                        </a>
+                        <a href="https://adermio.com/confidentialite" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/fr.svg" width="18" alt="Français" class="rounded-sm shadow-sm">
+                            <span>Français</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="/it/home" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Home</a>
+            <a href="https://adermio.com/it/form" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Inizia l'analisi</a>
+            <a href="https://adermio.com/it/about" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Chi siamo</a>
+            <a href="https://adermio.com/it/blog" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Blog</a>
+            <a href="https://adermio.com/it/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Contattaci</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2026</span>
+        </div>
+    </div>
+
+    <header class="relative w-full pt-40 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="fade-up inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/50 border border-adermio-dark/5 text-[10px] uppercase tracking-[0.2em] font-medium text-adermio-dark shadow-sm mb-6">
+                <span>Legale</span>
+            </div>
+            <h1 class="font-serif text-3xl md:text-5xl text-adermio-dark mb-4 fade-up" style="animation-delay: 0.1s;">
+                Informativa sulla privacy
+            </h1>
+            <p class="text-adermio-muted text-sm fade-up" style="animation-delay: 0.2s;">
+                Versione 2.3 — Ultimo aggiornamento: 10/07/2026
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10 fade-up" style="animation-delay: 0.3s;">
+        <div class="bg-white rounded-[2rem] p-8 md:p-16 shadow-soft border border-adermio-dark/5">
+            
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">0. Premessa</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>La presente informativa descrive come Adermio (editore: Antoine Munch, SIRET 999 319 692 00011) raccoglie, utilizza, protegge e condivide i dati personali degli utenti del sito <code>adermio.com</code> e dell'applicazione mobile Adermio, in conformità al <strong>GDPR</strong> (Regolamento UE 2016/679) e alla legge francese <strong>Informatique et Libertés</strong>.</p><div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark"><strong>⚠️ Importante:</strong> Adermio tratta dati relativi alla salute (foto della pelle, stato cutaneo, terapie dermatologiche) — dati “sensibili” ai sensi dell'articolo 9 del GDPR. Il loro trattamento è possibile solo con il tuo consenso esplicito, dato al momento della creazione del tuo account o della tua prima analisi.</div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">1. Titolare del trattamento</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Antoine Munch (imprenditore individuale — micro-impresa)<br>SIRET 999 319 692 00011<br>67120 Ergersheim, Francia<br>Email: <a href="mailto:contact@adermio.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a><br>Telefono: +33 6 22 30 17 31</p><p>Il titolare del trattamento svolge anche la funzione di <strong>punto di contatto GDPR</strong>. Per esercitare i tuoi diritti: <a href="mailto:contact@adermio.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a> — oggetto “GDPR”.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">2. Dati che raccogliamo</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Dati forniti direttamente da te:</strong></p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li><strong>Identità:</strong> nome (facoltativo), cognome (facoltativo), età, sesso</li>
+                        <li><strong>Recapiti:</strong> indirizzo email</li>
+                        <li><strong>Autenticazione:</strong> password sottoposta a hashing (mai accessibile in chiaro) o identificativi OAuth Apple/Google</li>
+                        <li><strong>Salute della pelle:</strong> tipo di pelle, problematiche, allergie, terapie in corso, gravidanza/allattamento, foto del viso</li>
+                        <li><strong>Salute alimentare:</strong> foto dei pasti, diario alimentare, intolleranze (se usi la scheda Nutrizione)</li>
+                        <li><strong>Routine skincare:</strong> prodotti utilizzati (marche, referenze), frequenze</li>
+                        <li><strong>Preferenze:</strong> lingua, fuso orario, preferenze di notifica</li>
+                        <li><strong>Feedback:</strong> risposte ai questionari, messaggi alla chat dermato, segnalazioni</li>
+                    </ul><p><strong>Dati raccolti automaticamente:</strong></p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li><strong>Dati tecnici:</strong> modello del dispositivo, versione del sistema operativo, versione dell'app, lingua, IDFV iOS</li>
+                        <li><strong>Dati di utilizzo:</strong> pagine consultate, funzionalità utilizzate, sequenza delle azioni (PostHog)</li>
+                        <li><strong>Dati di prestazione:</strong> crash, errori, latenza (Sentry)</li>
+                        <li><strong>Indirizzo IP:</strong> temporaneo, non memorizzato al di fuori dei log tecnici</li>
+                        <li><strong>Identificativi di sessione:</strong> token cifrati (Keychain iOS)</li>
+                        <li><strong>Token push:</strong> identificativo Expo che consente l'invio delle notifiche</li>
+                    </ul><p><strong>Dati raccolti dai fornitori di servizi di pagamento:</strong> i dati bancari sono trattati esclusivamente da Apple. Adermio non riceve mai i tuoi dati bancari — solo un identificativo di transazione anonimo, lo stato dell'abbonamento, il prodotto acquistato e la data di acquisto.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">3. Finalità e basi giuridiche</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <div class="overflow-x-auto -mx-2 my-4"><table class="w-full text-sm">
+                        <thead class="border-b border-adermio-dark/10"><tr><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Finalità</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Base giuridica</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Base dati sanitari</th></tr></thead>
+                        <tbody class="divide-y divide-adermio-dark/5"><tr><td class="py-2 pr-4 align-top">Creare e gestire il tuo account</td><td class="py-2 pr-4 align-top">Art. 6.1.b — Esecuzione del contratto</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">Analisi cutanea tramite IA</td><td class="py-2 pr-4 align-top">Art. 6.1.b — Esecuzione del contratto</td><td class="py-2 pr-4 align-top"><strong>Art. 9.2.a — Consenso esplicito</strong></td></tr><tr><td class="py-2 pr-4 align-top">Personalizzazione della routine + consigli</td><td class="py-2 pr-4 align-top">Art. 6.1.b — Esecuzione del contratto</td><td class="py-2 pr-4 align-top">Art. 9.2.a</td></tr><tr><td class="py-2 pr-4 align-top">Notifiche utili</td><td class="py-2 pr-4 align-top">Art. 6.1.a — Consenso</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">Gestione dell'abbonamento Premium</td><td class="py-2 pr-4 align-top">Art. 6.1.b — Esecuzione del contratto</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">Migliorare l'applicazione (analisi di prodotto anonime)</td><td class="py-2 pr-4 align-top">Art. 6.1.f — Interesse legittimo</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">Rilevare e correggere i bug</td><td class="py-2 pr-4 align-top">Art. 6.1.f — Interesse legittimo</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">Obblighi contabili</td><td class="py-2 pr-4 align-top">Art. 6.1.c — Obbligo legale</td><td class="py-2 pr-4 align-top">—</td></tr></tbody>
+                    </table></div><p><strong>Nessun uso pubblicitario.</strong> Adermio non pratica targeting pubblicitario, né vende i tuoi dati, né invia comunicazioni di marketing senza il tuo consenso esplicito.</p><p><strong>Analisi e conservazione delle tue foto.</strong> Le tue foto sono analizzate da modelli di intelligenza artificiale gestiti da Google (API Gemini) e OpenAI (API ChatGPT), che agiscono in qualità di responsabili del trattamento per conto di Adermio, al solo scopo di generare la tua analisi e i tuoi consigli. Sono conservate in modo sicuro nell'Unione europea (Supabase, Francoforte) finché il tuo account è attivo, per consentire il funzionamento del servizio (cronologia, monitoraggio, confronti). Vengono eliminate immediatamente e definitivamente quando elimini il tuo account. Le foto di una scansione mai associata a un account vengono eliminate automaticamente entro 7 giorni.</p><p><strong>Rilevamento del viso in locale.</strong> L'inquadratura della scansione (distanza, luce, stabilità) si basa su un rilevamento del viso eseguito localmente sul tuo dispositivo. Questi dati di geometria facciale sono effimeri: mai memorizzati, mai trasmessi ai nostri server, e in nessun caso costituiscono un modello biometrico di identificazione.</p><p><strong>Nessun addestramento di IA.</strong> Le tue foto e i tuoi dati non vengono mai utilizzati per addestrare modelli di intelligenza artificiale — né i nostri, né quelli dei nostri responsabili del trattamento, che si impegnano contrattualmente in tal senso. Qualsiasi evoluzione futura a tale scopo sarebbe oggetto di una richiesta di consenso esplicito e preventivo, in conformità agli articoli 6 e 9 del GDPR, con possibilità di revoca in qualsiasi momento.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">4. Responsabili del trattamento e destinatari</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio si avvale dei seguenti responsabili del trattamento, in conformità all'articolo 28 del GDPR:</p><div class="overflow-x-auto -mx-2 my-4"><table class="w-full text-sm">
+                        <thead class="border-b border-adermio-dark/10"><tr><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Responsabile del trattamento</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Ruolo</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Localizzazione</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Trasferimento</th></tr></thead>
+                        <tbody class="divide-y divide-adermio-dark/5"><tr><td class="py-2 pr-4 align-top"><strong>Supabase Inc.</strong></td><td class="py-2 pr-4 align-top">Database, auth, storage, edge functions</td><td class="py-2 pr-4 align-top">Francoforte (UE)</td><td class="py-2 pr-4 align-top">Nessun trasferimento fuori dall'UE</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Sentry GmbH</strong></td><td class="py-2 pr-4 align-top">Monitoraggio degli errori</td><td class="py-2 pr-4 align-top">Germania (UE)</td><td class="py-2 pr-4 align-top">Nessun trasferimento fuori dall'UE</td></tr><tr><td class="py-2 pr-4 align-top"><strong>PostHog Inc.</strong> (EU)</td><td class="py-2 pr-4 align-top">Analytics di prodotto</td><td class="py-2 pr-4 align-top">Francoforte (UE)</td><td class="py-2 pr-4 align-top">Nessun trasferimento fuori dall'UE</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Apple Inc.</strong></td><td class="py-2 pr-4 align-top">App Store, IAP, Sign in Apple, push</td><td class="py-2 pr-4 align-top">USA + multi-regione</td><td class="py-2 pr-4 align-top">DPF UE-US</td></tr><tr><td class="py-2 pr-4 align-top"><strong>RevenueCat Inc.</strong></td><td class="py-2 pr-4 align-top">Gestione degli abbonamenti IAP</td><td class="py-2 pr-4 align-top">USA</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Google LLC</strong></td><td class="py-2 pr-4 align-top">API Gemini — analisi IA delle foto della pelle e dei dati di profilo (analisi cutanee, routine, analisi alimentari). Nessun addestramento di modelli sui tuoi dati</td><td class="py-2 pr-4 align-top">USA</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>OpenAI, L.L.C.</strong></td><td class="py-2 pr-4 align-top">API ChatGPT — analisi IA e generazione dei consigli (analisi cutanee, routine, analisi alimentari) tramite la nostra orchestrazione n8n. Nessun addestramento di modelli sui tuoi dati</td><td class="py-2 pr-4 align-top">USA</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Amazon Web Services</strong></td><td class="py-2 pr-4 align-top">Archiviazione temporanea delle foto della scansione effettuata sul sito web adermio.com (eliminazione entro 7 giorni) — non utilizzato dall'applicazione mobile</td><td class="py-2 pr-4 align-top">Parigi (UE)</td><td class="py-2 pr-4 align-top">Nessun trasferimento fuori dall'UE</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Vercel Inc.</strong></td><td class="py-2 pr-4 align-top">Hosting di adermio.com</td><td class="py-2 pr-4 align-top">Multi-regione</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Expo Inc.</strong></td><td class="py-2 pr-4 align-top">Notifiche push</td><td class="py-2 pr-4 align-top">USA</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>n8n</strong> (self-hosted)</td><td class="py-2 pr-4 align-top">Orchestrazione delle analisi IA (elaborazione delle foto, generazione dei report)</td><td class="py-2 pr-4 align-top">Germania (UE)</td><td class="py-2 pr-4 align-top">—</td></tr></tbody>
+                    </table></div><p>I responsabili del trattamento con sede negli Stati Uniti beneficiano di una decisione di adeguatezza europea (<strong>Data Privacy Framework UE-USA</strong>) oppure di Clausole contrattuali tipo. Verificabile su <a href="https://www.dataprivacyframework.gov/" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">dataprivacyframework.gov</a>.</p><p><strong>Protezione equivalente garantita.</strong> Ogni responsabile del trattamento — inclusi Google (API Gemini) e OpenAI (API ChatGPT), ai quali le tue foto e i tuoi dati sulla pelle vengono trasmessi per l'analisi — è vincolato da un contratto di nomina a responsabile del trattamento (articolo 28 del GDPR) che lo obbliga a proteggere i tuoi dati con un livello di sicurezza e riservatezza equivalente a quello garantito da Adermio, a trattarli esclusivamente sulla base delle nostre istruzioni documentate e a non riutilizzarli per finalità proprie (in particolare, nessun addestramento di modelli di IA).</p><p><strong>Nessun terzo commerciale.</strong> Adermio non condivide i tuoi dati con data broker, partner di marketing o reti pubblicitarie.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">5. Durate di conservazione</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <div class="overflow-x-auto -mx-2 my-4"><table class="w-full text-sm">
+                        <thead class="border-b border-adermio-dark/10"><tr><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Categoria</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Durata</th></tr></thead>
+                        <tbody class="divide-y divide-adermio-dark/5"><tr><td class="py-2 pr-4 align-top">Account attivo (email, profilo)</td><td class="py-2 pr-4 align-top">Finché l'account è attivo</td></tr><tr><td class="py-2 pr-4 align-top">Foto della pelle (analisi e monitoraggio)</td><td class="py-2 pr-4 align-top">Finché l'account è attivo — eliminazione immediata e definitiva insieme all'account</td></tr><tr><td class="py-2 pr-4 align-top">Foto di una scansione mai associata a un account</td><td class="py-2 pr-4 align-top">7 giorni (eliminazione automatica)</td></tr><tr><td class="py-2 pr-4 align-top">Analisi cutanee, routine, bilanci IA</td><td class="py-2 pr-4 align-top">Finché l'account è attivo</td></tr><tr><td class="py-2 pr-4 align-top">Tracking quotidiano (umore, pelle, alimentazione)</td><td class="py-2 pr-4 align-top">Finché l'account è attivo</td></tr><tr><td class="py-2 pr-4 align-top">Log Sentry</td><td class="py-2 pr-4 align-top">90 giorni</td></tr><tr><td class="py-2 pr-4 align-top">Analytics PostHog</td><td class="py-2 pr-4 align-top">12 mesi</td></tr><tr><td class="py-2 pr-4 align-top">Autenticazione Supabase</td><td class="py-2 pr-4 align-top">Account attivo + 30 giorni dopo l'eliminazione</td></tr><tr><td class="py-2 pr-4 align-top">Fatture e dati contabili</td><td class="py-2 pr-4 align-top">10 anni (art. L123-22 del Codice di commercio francese)</td></tr></tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">6. Sicurezza dei dati</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li><strong>Cifratura in transito:</strong> TLS 1.3 obbligatorio su tutti gli endpoint</li>
+                        <li><strong>Cifratura a riposo:</strong> AES-256 (Supabase), Keychain iOS cifrato</li>
+                        <li><strong>Autenticazione:</strong> OAuth 2.0 PKCE, bcrypt + HaveIBeenPwned</li>
+                        <li><strong>Controllo degli accessi:</strong> Row-Level Security PostgreSQL su tutte le tabelle sensibili</li>
+                        <li><strong>Monitoraggio:</strong> avvisi in tempo reale tramite Sentry</li>
+                        <li><strong>Backup:</strong> Supabase cifrati, giornalieri (7 giorni)</li>
+                    </ul><p>In caso di <strong>violazione dei dati</strong> suscettibile di presentare un rischio per i diritti e le libertà, Adermio notificherà la <strong>CNIL entro 72 ore</strong> (art. 33 GDPR) e, se necessario, informerà gli utenti interessati (art. 34).</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">7. I tuoi diritti</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <div class="overflow-x-auto -mx-2 my-4"><table class="w-full text-sm">
+                        <thead class="border-b border-adermio-dark/10"><tr><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Diritto</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Descrizione</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Come esercitarlo</th></tr></thead>
+                        <tbody class="divide-y divide-adermio-dark/5"><tr><td class="py-2 pr-4 align-top"><strong>Accesso</strong> (art. 15)</td><td class="py-2 pr-4 align-top">Ottenere una copia dei tuoi dati</td><td class="py-2 pr-4 align-top">Impostazioni → “Esporta i miei dati” (JSON completo)</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Rettifica</strong> (art. 16)</td><td class="py-2 pr-4 align-top">Correggere un dato inesatto</td><td class="py-2 pr-4 align-top">Modifica nel tuo profilo, oppure via email</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Cancellazione</strong> (art. 17)</td><td class="py-2 pr-4 align-top">Eliminare account + dati</td><td class="py-2 pr-4 align-top">Impostazioni → “Elimina il mio account” (immediato)</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Limitazione</strong> (art. 18)</td><td class="py-2 pr-4 align-top">Sospendere temporaneamente il trattamento</td><td class="py-2 pr-4 align-top">Richiesta via email</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Portabilità</strong> (art. 20)</td><td class="py-2 pr-4 align-top">Formato riutilizzabile</td><td class="py-2 pr-4 align-top">L'esportazione JSON soddisfa questo obbligo</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Opposizione</strong> (art. 21)</td><td class="py-2 pr-4 align-top">Opporsi a un trattamento (interesse legittimo)</td><td class="py-2 pr-4 align-top">Richiesta via email con motivazione</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Revoca del consenso</strong> (art. 7.3)</td><td class="py-2 pr-4 align-top">Revocare il consenso prestato</td><td class="py-2 pr-4 align-top">Impostazioni → disattiva le notifiche, oppure email</td></tr></tbody>
+                    </table></div><p><strong>Tempi di risposta:</strong> Adermio si impegna a rispondere entro <strong>un mese</strong> dalla richiesta, prorogabile di 2 mesi in caso di complessità (con notifica della proroga).</p><p><strong>Reclamo alla CNIL:</strong> in caso di violazione, puoi presentare un reclamo alla CNIL (autorità francese per la protezione dei dati) — 3 Place de Fontenoy, 75007 Paris — <a href="https://www.cnil.fr" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">www.cnil.fr</a>.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">8. Cookie e tracciatori</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Applicazione mobile:</strong> nessun cookie. Archiviazione locale sul dispositivo: token di sessione Supabase (Keychain iOS cifrato), cache React Query (MMKV cifrata), identificativo anonimo PostHog.</p><p><strong>Sito web:</strong> solo cookie strettamente necessari (sessione, lingua). Se in futuro verranno aggiunti cookie analitici o di marketing, sarà implementato un banner di consenso conforme alla delibera CNIL n. 2020-091.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">9. Minori</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>L'applicazione Adermio è destinata alle persone <strong>di età pari o superiore a 16 anni</strong> (art. 8 GDPR, età del consenso digitale in Francia). Se hai meno di 16 anni, non devi utilizzare l'applicazione senza il consenso esplicito preventivo di chi esercita la responsabilità genitoriale. Se Adermio scopre che un account appartiene a un minore senza consenso dei genitori, l'account verrà eliminato.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">10. Modifiche</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio si riserva il diritto di modificare la presente informativa in qualsiasi momento. Qualsiasi modifica sostanziale sarà notificata tramite <strong>email e un banner nell'applicazione almeno 15 giorni prima</strong> della sua entrata in vigore.</p><p>La cronologia delle versioni è mantenuta nel repository di codice pubblico di Adermio.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="/logo_Adermio.png" 
+                     alt="Adermio Logo" 
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                La dermatologia reinventata dall'intelligenza artificiale.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="/it/home" class="hover:text-teal-600 transition-colors !text-adermio-dark">Home</a>
+                <a href="https://adermio.com/it/form" class="hover:text-teal-600 transition-colors !text-adermio-dark">Inizia l'analisi</a>
+                <a href="https://adermio.com/it/about" class="hover:text-teal-600 transition-colors !text-adermio-dark">Chi siamo</a>
+                <a href="https://adermio.com/it/blog" class="hover:text-teal-600 transition-colors !text-adermio-dark">Blog</a>
+                <a href="https://adermio.com/it/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Contattaci</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="https://adermio.com/it/conditions" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Condizioni d'uso</a>
+                <a href="https://adermio.com/cgv" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Condizioni di vendita</a>
+                <a href="https://adermio.com/it/legal-notice" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Note legali</a>
+                <a href="https://adermio.com/it/confidentialite" class="!text-adermio-dark font-medium transition-colors">Informativa sulla privacy</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2026 Adermio. Tutti i diritti riservati.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Logique du Menu
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+    <script src="/js/pwa.js" defer></script>
+</body>
+</html>
