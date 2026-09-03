@@ -9,7 +9,7 @@ TR = [
     ("D'après 107 840 analyses, voici où l'acné apparaît vraiment — et ce que la localisation de vos boutons révèle sur leur cause.",
      "In base a 107.840 analisi, ecco dove compare davvero l'acne — e cosa rivela la posizione dei tuoi brufoli sulla loro causa.", 2),
     ("D'après 107 840 analyses, voici où l'acné apparaît vraiment — et ce que sa localisation révèle sur sa cause.",
-     "In base a 107.840 analisi, ecco dove compare davvero l'acne — e cosa rivela la sua posizione sulla sua causa.", 1),
+     "In base a 107.840 analisi, ecco dove compare davvero l'acne — e cosa rivela la sua posizione sulla causa.", 1),
     # --- nav / menu / footer (cohérence it/home.html)
     ("<span>Commencer l'analyse</span>", "<span>Inizia l'analisi</span>", 1),
     (">Accueil</a>", ">Home</a>", 3),
@@ -22,9 +22,9 @@ TR = [
     ("© 2026 Adermio. Tous droits réservés.", "© 2026 Adermio. Tutti i diritti riservati.", 1),
     ("La dermatologie réinventée par l'intelligence artificielle.", "La dermatologia reinventata dall'intelligenza artificiale.", 1),
     (">Analyser ma peau</span>", ">Analizza la mia pelle</span>", 2),
-    ("<span>Faire mon analyse gratuite</span>", "<span>Inizia l'analisi gratuita</span>", 1),
+    ("<span>Faire mon analyse gratuite</span>", "<span>Fai la tua analisi gratuita</span>", 1),
     # --- en-tête article
-    ("Data & Dermatologie", "Dati e dermatologia", 1),
+    ("Data & Dermatologie", "Dati & dermatologia", 1),
     ('Où apparaît l\'acné —<br class="hidden md:block"> et ce que ça révèle', 'Dove compare l\'acne —<br class="hidden md:block"> e cosa significa', 1),
     ("La localisation de vos boutons n'a rien d'aléatoire. D'après 107 840 analyses, voici où l'acné apparaît vraiment — et ce que chaque zone dit de sa cause.",
      "La posizione dei tuoi brufoli non è casuale. In base a 107.840 analisi, ecco dove compare davvero l'acne — e cosa dice ogni zona sulla sua causa.", 1),

@@ -4,7 +4,7 @@ TR = [
     # --- head / SEO
     ("Mentions légales — Adermio", "Note legali — Adermio", 3),
     ("Mentions légales du site adermio.com et de l'application Adermio — éditeur, hébergeurs, contact, LCEN.",
-     "Note legali del sito adermio.com e dell'applicazione Adermio — editore, hosting, contatti, LCEN.", 3),
+     "Note legali del sito adermio.com e dell'applicazione Adermio — editore, fornitori di hosting, contatti, LCEN.", 3),
     # --- nav / menu / footer (identiques à it/home.html)
     (">Accueil</a>", ">Home</a>", 2),
     (">Faire l'analyse</a>", ">Inizia l'analisi</a>", 2),

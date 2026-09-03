@@ -26,7 +26,7 @@ TR = [
     ("L'analyse n'a pas pu être traitée en raison d'une trop forte demande. Merci de réessayer.",
      "Non è stato possibile completare l'analisi a causa del numero elevato di richieste. Ti invitiamo a riprovare.", 1),
     ("Recommencer l'analyse", "Ricomincia l'analisi", 1),
-    ("Cette fois-ci sera peut-être la bonne !", "Questa volta sarà quella buona!", 1),
+    ("Cette fois-ci sera peut-être la bonne !", "Forse questa sarà la volta buona!", 1),
     ("Analyse terminée avec succès !", "Analisi completata con successo!", 1),
     ("Ouvrir mon analyse", "Apri la mia analisi", 1),
     # --- popups erreur
@@ -74,12 +74,12 @@ TR = [
     ("Le cycle de 28 jours", "Il ciclo di 28 giorni", 1),
     ("Votre peau se renouvelle entièrement environ tous les 28 jours. La patience et la régularité sont les clés du succès.",
      "La tua pelle si rinnova completamente circa ogni 28 giorni. Pazienza e costanza sono le chiavi del successo.", 1),
-    ("Le mythe du 'trop propre'", "Il mito del 'troppo pulito'", 1),
+    ("Le mythe du 'trop propre'", "Il mito del “troppo pulito”", 1),
     ("Nettoyer sa peau trop souvent détruit la barrière cutanée et peut paradoxalement causer plus d'acné.",
      "Detergere la pelle troppo spesso distrugge la barriera cutanea e può paradossalmente causare più acne.", 1),
     ("L'impact du stress", "L'impatto dello stress", 1),
     ("Le cortisol (hormone du stress) stimule la production de sébum. La relaxation fait partie intégrante du soin de la peau.",
-     "Il cortisolo (l'ormone dello stress) stimola la produzione di sebo. Il relax è parte integrante della skincare.", 1),
+     "Il cortisolo (l'ormone dello stress) stimola la produzione di sebo. Il relax è parte integrante della cura della pelle.", 1),
     # --- JS : avis (mêmes traductions que it/home.html)
     ("Top merci ! Ma peau commence être de mieux en mieux", "Grazie mille! La mia pelle sta sempre meglio", 1),
     ("c'est vraiment pas cher", "costa davvero poco", 1),

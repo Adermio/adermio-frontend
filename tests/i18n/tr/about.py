@@ -50,7 +50,7 @@ TR = [
     # --- technologie
     (">Technologie</span>", ">Tecnologia</span>", 1),
     ("Notre modèle de Deep Learning détecte 12 types d'imperfections avec une précision comparable à l'œil humain d'un expert. Il apprend en continu pour affiner ses diagnostics.",
-     "Il nostro modello di Deep Learning rileva 12 tipi di imperfezioni con una precisione paragonabile all'occhio umano di un esperto. Apprende in continuo per affinare le sue analisi.", 1),
+     "Il nostro modello di Deep Learning rileva 12 tipi di imperfezioni con una precisione paragonabile all'occhio umano di un esperto. Apprende di continuo per affinare le sue analisi.", 1),
     (">Précision de détection</div>", ">Precisione di rilevamento</div>", 1),
     (">Temps d'analyse</div>", ">Tempo di analisi</div>", 1),
 ]

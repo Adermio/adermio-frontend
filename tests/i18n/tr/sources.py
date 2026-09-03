@@ -31,7 +31,7 @@ TR = [
     (">Comédogénicité des ingrédients</h2>", ">Comedogenicità degli ingredienti</h2>", 1),
     (">Photoprotection</h2>", ">Fotoprotezione</h2>", 1),
     (">Hydratation &amp; barrière cutanée</h2>", ">Idratazione &amp; barriera cutanea</h2>", 1),
-    (">Grossesse &amp; sécurité des soins</h2>", ">Gravidanza &amp; sicurezza dei prodotti</h2>", 1),
+    (">Grossesse &amp; sécurité des soins</h2>", ">Gravidanza &amp; sicurezza dei cosmetici</h2>", 1),
     (">Alimentation &amp; peau</h2>", ">Alimentazione &amp; pelle</h2>", 1),
     (">Sommeil, stress &amp; peau</h2>", ">Sonno, stress &amp; pelle</h2>", 1),
     # --- note de bas de page (avant la date d'en-tête : contient la même chaîne de date)

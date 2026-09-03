@@ -17,9 +17,22 @@ from prep_it import PAGES, ROOT
 FR_WORDS = r"\b(votre|vos|vous|nous|les|des|une|est|pour|avec|sur|dans|pas|plus|sont|peau|analyse|gratuit|gratuite|merci|bonjour|cliquez|envoyer|réessayer|erreur|chargement|veuillez|ans|mois|jour|jours|semaine|semaines|et|ou|ce|cette|ces|aux|au|du|de la|qui|que|mais|très|bien|tout|tous|toutes|sans|avant|après|prix|paiement|retour|suivant|précédent|oui|non|autre|autres|votre peau|routine personnalisée|résultats|photos|photo|conseils|produits|dossier|complet|complète|sévérité|boutons|points noirs|rougeurs|taches|cicatrices|pores)\b"
 FR_RE = re.compile(FR_WORDS, re.I)
 # mots italiens/anglais homographes à ignorer (faux positifs)
-IGNORE = {'non', 'ou', 'et', 'ce', 'des', 'les', 'pas', 'plus', 'est', 'au', 'du', 'ans', 'photo', 'photos', 'routine', 'ca', 'pores', 'sont'}
+IGNORE = {'qui', 'non', 'ou', 'et', 'ce', 'des', 'les', 'pas', 'plus', 'est', 'au', 'du', 'ans', 'photo', 'photos', 'routine', 'ca', 'pores', 'sont'}
 # "non" est italien ; "plus", "est", "et" apparaissent dans du code ; on les garde seulement en contexte de phrase
 STRONG = re.compile(r"\b(votre|vos|vous|nous|une|pour|avec|dans|sur|peau|analyse|gratuite|merci|cliquez|veuillez|réessayer|erreur|chargement|semaine|semaines|jours|mois|très|sans|avant|après|paiement|résultats|conseils|produits|dossier|complète|sévérité|boutons|rougeurs|taches|cicatrices|aux|qui|que|mais|tout|tous|toutes|autre|autres|cette|ces|mon|mes|leur|leurs|notre|nos|ici|déjà|encore|toujours|aussi|ainsi|puis|donc|selon|chez|depuis|pendant|vers|entre|parmi|afin|lorsque|quand|comment|pourquoi|combien|quel|quelle|quels|quelles)\b", re.I)
+
+# Morphologie impossible en italien : verbes FR en -ez, adverbes en -ement, adjectifs en -eux,
+# plus quelques mots de formulaire. Attrape les phrases à MOITIÉ traduites, que les deux autres
+# tests laissaient passer (ex. « Remplissez le formulaire ci-dessous » au milieu d'un texte italien).
+FR_MORPHO = re.compile(r"\b(\w{3,}ez|\w{4,}ement|\w{3,}eux|ci-dessous|ci-dessus|ci-joint|formulaire|"
+                       r"courriel|veuillez|merci d|s'il vous pla)\b", re.I)
+FR_MORPHO_OK = {'chez', 'assez', 'nez',
+                'management', 'improvement', 'treatment', 'assessment', 'development', 'engagement'}  # anglais en -ement
+
+def has_fr_morphology(seg):
+    for m in FR_MORPHO.finditer(seg):
+        if m.group(0).lower() not in FR_MORPHO_OK: return m.group(0)
+    return None
 
 def strip_selector(s):
     s = '\n'.join(l for l in s.split('\n') if 'hreflang=' not in l)
@@ -55,6 +68,8 @@ def visible_segments(s):
     def js_strings(m):
         out = []
         code = re.sub(r'^\s*//.*$', '', m.group(0), flags=re.M)  # commentaires de code ignorés
+        code = re.sub(r'console\.(log|warn|error|info|debug)\([^;]{0,400}?\)', '', code, flags=re.S)  # logs : jamais affichés
+        code = re.sub(r'new Error\([^;]{0,200}?\)', '', code, flags=re.S)  # messages d'exception internes
         for q in re.finditer(r"(['\"`])((?:\\.|(?!\1).)*)\1", code):
             v = q.group(2)
             if len(v) >= 6 and re.search(r'[a-zA-Zàéèìòù]{3,}\s+[a-zA-Zàéèìòù]{2,}', v) and not re.match(r'^[\w./:#?=&%+-]+$', v):
@@ -74,8 +89,31 @@ def visible_segments(s):
             segs.append((ln, t))
     return segs
 
+# segments légitimement identiques en FR et en IT (marques, mentions, unités)
+# pages dont des segments sont légitimement identiques au FR (références bibliographiques)
+SAME_OK_PAGES = {'it/sources.html'}
+
+CSS_ISH = re.compile(r'\b\d+(\.\d+)?(s|ms|px|rem|em|vh|vw)\b|\b(ease|infinite|linear|alternate|translate|opacity)\b'
+                     r'|\b(flex|grid|items|justify|gap|mb|mt|px|py|text|bg|border|rounded|hover|w|h)-')
+
+def is_human_text(seg):
+    """Écarte ce qui n'est pas une phrase destinée au lecteur : attributs techniques, classes CSS,
+    gabarits JS, messages console anglais. Sinon le test « identique au FR » crie pour rien."""
+    if seg.startswith('ATTR:') and not re.match(r'ATTR:[A-ZÀ-Ý]', seg): return False
+    if re.search(r'\$\{|\bfunction\b|=>|\\u[0-9a-f]{4}|[{}=;]|\bclass=', seg): return False
+    if CSS_ISH.search(seg) or seg.startswith(('flex ', 'grid ', 'absolute ', 'relative ')): return False
+    return bool(re.search(r'[A-Za-zÀ-ÿ]{3}', seg))
+
+SAME_OK = {'Adermio Lab © 2025 • Documento riservato • Pagina 1/2', 'Adermio © 2026', '© 2026 Adermio.',
+           'Adermio AI Core™', 'Adermio © 2025'}  # marques et mentions identiques dans les deux langues
+
 # chaînes JS jamais affichées (clés/labels backend en FR canonique), acceptées page par page
-ALLOW = {'it/form.html': {'Changement de produits'}, 'it/form2.html': {'Changement de produits'}}
+BACKEND_FR = {'autour de la bouche', 'Aucune zone spécifique', 'Manque de sommeil', 'Rien de particulier',
+              'Changement de produits', 'Stress élevé', 'Cycle hormonal / Règles', 'Alimentation / Excès',
+              'Transpiration (sport)', 'Frottements / Rasage'}  # valeurs postées au webhook : restent en FR
+BRANDS = {'The INKEY List', 'La Roche-Posay', "Paula's Choice", 'The Ordinary'}
+ALLOW = {'it/form.html': BACKEND_FR | BRANDS, 'it/form2.html': BACKEND_FR | BRANDS,
+         'it/premium.html': BRANDS, 'it/bilan.html': BRANDS, 'it/second-cycle.html': BRANDS}
 
 def check(it_rel):
     fr_rel = [k for k, v in PAGES.items() if v[0] == it_rel][0]
@@ -119,10 +157,23 @@ def check(it_rel):
             if not m_ or m_.group(1) != 'https://adermio.com/' + twin:
                 issues.append(f'sélecteur : lien {flag} = {m_.group(1) if m_ else None!r}, attendu /{twin}')
     fr_hits = []
+    allow = ALLOW.get(it_rel, set())
+    # (a) mots-outils français (attrape les phrases à moitié traduites)
     for ln, t in visible_segments(it):
-        if t.replace('JS:', '') in ALLOW.get(it_rel, set()): continue
-        if STRONG.search(t) or FR_RE.findall(t).__len__() >= 3:
+        if t.replace('JS:', '') in allow: continue
+        if STRONG.search(t) or len(FR_RE.findall(t)) >= 3:
             fr_hits.append((ln, t[:100]))
+        elif is_human_text(t.replace('JS:', '').strip()) and (mm := has_fr_morphology(t)):
+            fr_hits.append((ln, f'morphologie FR ({mm}) : ' + t[:90]))
+    # (b) segment visible resté IDENTIQUE au FR : le test qui attrape tout le reste
+    #     (une phrase française sans mot-outil de la liste passait sinon inaperçue)
+    fr_segs = {t.replace('JS:', '').strip() for _, t in visible_segments(fr)}
+    for ln, t in visible_segments(it):
+        seg = t.replace('JS:', '').strip()
+        if seg in allow or seg in SAME_OK or it_rel in SAME_OK_PAGES: continue
+        if not is_human_text(seg): continue
+        if len(seg.split()) >= 3 and seg in fr_segs:
+            fr_hits.append((ln, 'IDENTIQUE AU FR: ' + seg[:90]))
     return issues, fr_hits
 
 if __name__ == '__main__':

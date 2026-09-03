@@ -71,7 +71,7 @@ TR = [
     ("C'est la technique la plus accessible pour déterminer votre type de peau. Voici comment procéder :",
      "È la tecnica più accessibile per determinare il tuo tipo di pelle. Ecco come procedere:", 1),
     ("<li><strong>Nettoyez votre visage</strong> avec un nettoyant doux et séchez délicatement</li>",
-     "<li><strong>Deterge il viso</strong> con un detergente delicato e asciuga tamponando</li>", 1),
+     "<li><strong>Deterge il viso</strong> con un detergente delicato e asciuga delicatamente</li>", 1),
     ("<li><strong>Attendez 30 minutes</strong> sans appliquer aucun produit</li>",
      "<li><strong>Aspetta 30 minuti</strong> senza applicare alcun prodotto</li>", 1),
     ("<li><strong>Appliquez un mouchoir en papier</strong> sur différentes zones du visage : front, nez, menton, joues</li>",
@@ -142,5 +142,5 @@ TR = [
     ("Connaître son type de peau, c'est poser les fondations d'une routine efficace. Le test du mouchoir est un bon point de départ, mais pour une analyse véritablement précise qui prend en compte votre type de peau, vos imperfections et les spécificités de votre visage, une analyse dermatologique par IA peut faire la différence.",
      "Conoscere il proprio tipo di pelle significa gettare le fondamenta di una routine efficace. Il test del fazzoletto è un buon punto di partenza, ma per un'analisi davvero precisa, che tenga conto del tuo tipo di pelle, delle tue imperfezioni e delle specificità del tuo viso, un'analisi dermatologica con l'IA può fare la differenza.", 1),
     ("L'essentiel est de ne pas traiter votre peau au hasard. Chaque peau est unique et mérite des soins adaptés.",
-     "L'essenziale è non prenderti cura della pelle a caso. Ogni pelle è unica e merita prodotti adatti.", 1),
+     "L'essenziale è non agire a caso sulla tua pelle. Ogni pelle è unica e merita prodotti adatti.", 1),
 ]

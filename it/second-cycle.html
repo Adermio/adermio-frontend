@@ -235,7 +235,7 @@
             <div class="border-t border-stone-200/50 pt-6">
                 <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-3">Prodotti aggiunti da te</label>
                 <p class="text-xs text-stone-500 mb-3">Hai aggiunto prodotti non consigliati durante il Ciclo 1?</p>
-                <textarea id="added-products" rows="3" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Es: Ho aggiunto un siero alla vitamina C la mattina..."></textarea>
+                <textarea id="added-products" rows="3" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Es.: Ho aggiunto un siero alla vitamina C la mattina..."></textarea>
             </div>
         </div>
     </div>
@@ -416,14 +416,14 @@
                         <div class="w-7 h-7 rounded-lg bg-brand-primary flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm"><span class="text-[9px] font-bold text-white">G1</span></div>
                         <div>
                             <p class="text-sm font-medium text-brand-dark">Nuova routine su misura</p>
-                            <p class="text-[11px] text-stone-400">Prodotti + attivi adattati ai tuoi feedback &mdash; accessibile direttamente nella tua area personale</p>
+                            <p class="text-[11px] text-stone-400">Prodotti + attivi adattati ai tuoi feedback &mdash; accessibili direttamente nella tua area personale</p>
                         </div>
                     </div>
                     <div class="w-px h-3 bg-brand-primary/20 ml-3.5"></div>
                     <div class="flex items-start gap-3">
                         <div class="w-7 h-7 rounded-lg bg-brand-primary/80 flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-[9px] font-bold text-white">G7</span></div>
                         <div>
-                            <p class="text-sm font-medium text-brand-dark">Check-in pelle + aggiustamenti</p>
+                            <p class="text-sm font-medium text-brand-dark">Check-in pelle + adattamenti</p>
                             <p class="text-[11px] text-stone-400">Verifichiamo che la tua pelle risponda bene ai nuovi attivi</p>
                         </div>
                     </div>
@@ -431,8 +431,8 @@
                     <div class="flex items-start gap-3">
                         <div class="w-7 h-7 rounded-lg bg-brand-primary/60 flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-[9px] font-bold text-white">G14</span></div>
                         <div>
-                            <p class="text-sm font-medium text-brand-dark">Bilancio di metà percorso</p>
-                            <p class="text-[11px] text-stone-400">Analisi intermedia con foto &mdash; aggiustiamo se necessario</p>
+                            <p class="text-sm font-medium text-brand-dark">Resoconto di metà percorso</p>
+                            <p class="text-[11px] text-stone-400">Analisi intermedia con foto &mdash; adattiamo se necessario</p>
                         </div>
                     </div>
                     <div class="w-px h-3 bg-brand-primary/20 ml-3.5"></div>
@@ -719,7 +719,7 @@ function renderRoutineProducts(products) {
             <div class="bg-stone-50 rounded-xl border border-stone-200 p-5 text-center">
                 <p class="text-sm text-stone-500 mb-3">Nessuna routine trovata dal Ciclo 1.</p>
                 <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-2">Descrivi la tua routine attuale</label>
-                <textarea id="manual-routine" rows="4" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Es: Detergente CeraVe mattina e sera, siero alla niacinamide la sera, crema idratante..."></textarea>
+                <textarea id="manual-routine" rows="4" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Es.: Detergente CeraVe mattina e sera, siero alla niacinamide la sera, crema idratante..."></textarea>
             </div>`;
         return;
     }
@@ -740,7 +740,7 @@ function renderRoutineProducts(products) {
             <div class="grid grid-cols-3 gap-2">
                 <button type="button" onclick="setProductVerdict('${i}', 'keep', this)" class="verdict-btn text-center py-2 rounded-lg border border-stone-200 text-[11px] font-bold uppercase tracking-wide text-stone-400 hover:border-teal-300">&#x2705; Mantieni</button>
                 <button type="button" onclick="setProductVerdict('${i}', 'review', this)" class="verdict-btn text-center py-2 rounded-lg border border-stone-200 text-[11px] font-bold uppercase tracking-wide text-stone-400 hover:border-amber-300">&#x26A0;&#xFE0F; Da rivedere</button>
-                <button type="button" onclick="setProductVerdict('${i}', 'stop', this)" class="verdict-btn text-center py-2 rounded-lg border border-stone-200 text-[11px] font-bold uppercase tracking-wide text-stone-400 hover:border-red-300">&#x274C; Sospeso</button>
+                <button type="button" onclick="setProductVerdict('${i}', 'stop', this)" class="verdict-btn text-center py-2 rounded-lg border border-stone-200 text-[11px] font-bold uppercase tracking-wide text-stone-400 hover:border-red-300">&#x274C; Interrotto</button>
             </div>
         </div>`).join('');
     lucide.createIcons();

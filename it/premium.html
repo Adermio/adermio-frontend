@@ -410,7 +410,7 @@
 
     <div id="adjust-header">
       <div>
-        <h2 class="header-title">Personalizzazione esperta</h2>
+        <h2 class="header-title">Personalizzazione da esperti</h2>
         <p class="header-sub">Configura la tua strategia dermatologica</p>
       </div>
       <button class="close-btn" id="adjust-close-btn">
@@ -433,7 +433,7 @@
           </div>
           <div class="routine-text-block">
             <label style="color:#0f766e;">Prodotti della tua routine attuale che vuoi conservare</label>
-            <textarea id="keep-products-text" class="text-area-sm" placeholder="Es: Voglio assolutamente tenere la mia crema idratante Caudalie perché l'ho comprata da poco..."></textarea>
+            <textarea id="keep-products-text" class="text-area-sm" placeholder="Es.: Voglio assolutamente tenere la mia crema idratante Caudalie perché l'ho comprata da poco..."></textarea>
           </div>
         </div>
         <div class="section">
@@ -513,7 +513,7 @@
               <input type="radio" name="texture" value="trust" checked>
               <div class="budget-tile">
                 <span class="b-title">Nessuna preferenza</span>
-                <span class="b-range">Mi fido di voi</span>
+                <span class="b-range">Mi fido di Adermio</span>
               </div>
             </label>
           </div>
@@ -607,11 +607,11 @@
             <div class="med-grid">
               <div class="med-box">
                 <label>Allergie note</label>
-                <textarea id="allergies-text" class="text-area-sm" placeholder="Es: profumo, oli essenziali..."></textarea>
+                <textarea id="allergies-text" class="text-area-sm" placeholder="Es.: profumo, oli essenziali..."></textarea>
               </div>
               <div class="med-box">
-                <label>Farmaci in uso</label>
-                <textarea id="meds-text" class="text-area-sm" placeholder="Es: isotretinoina, cortisonici..."></textarea>
+                <label>Trattamenti in corso</label>
+                <textarea id="meds-text" class="text-area-sm" placeholder="Es.: isotretinoina, cortisonici..."></textarea>
               </div>
             </div>
             <label class="preg-toggle">
@@ -986,7 +986,7 @@
         const bar = document.getElementById('gen-progress-bar');
         bar.style.transition = 'width 0.5s ease-out';
         bar.style.width = '100%';
-        document.getElementById('gen-desc').textContent = "Finalizzazione del report...";
+        document.getElementById('gen-desc').textContent = "Finalizzazione della stesura del report...";
         setTimeout(() => { showGenerationSuccess(); }, 800);
       }
     } catch (e) { console.error("Polling error:", e); }

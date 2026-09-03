@@ -275,7 +275,7 @@
                     </h4>
                     <ul class="text-xs text-stone-600 space-y-1 font-light">
                         <li>&bull; Viso ben centrato e ben illuminato</li>
-                        <li>&bull; Capelli raccolti, senza occhiali</li>
+                        <li>&bull; Capelli scostati dal viso, senza occhiali</li>
                         <li>&bull; Pelle struccata, se possibile</li>
                         <li>&bull; Preferibilmente luce naturale</li>
                     </ul>
@@ -491,7 +491,7 @@
                                 &ldquo;La mia pelle nel complesso sta bene, ma a volte ho qualche imperfezione.&rdquo;
                             </span>
                             <span class="text-xs text-stone-500 block leading-tight">
-                                Evitare le ricadute, levigare la texture, mantenere la pelle pulita
+                                Evitare le ricadute, levigare la texture, mantenere una pelle senza imperfezioni
                             </span>
                         </button>
                     </div>
@@ -538,8 +538,8 @@
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-brand-dark font-medium leading-snug pr-2" id="lbl-concerns">Cosa ti disturba di pi&ugrave; della tua pelle in questo momento?</label>
                         </div>
-                        <p class="text-xs text-stone-500 mb-3 leading-relaxed">Questa risposta aiuta l'IA a capire come ti senti e gli aspetti meno visibili nelle foto.</p>
-                        <textarea id="skin-concerns" rows="5" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Es: ho dei piccoli brufoli rossi sulle guance e punti neri sul naso. Vorrei anche levigare un po' la texture della pelle sulla fronte..."></textarea>
+                        <p class="text-xs text-stone-500 mb-3 leading-relaxed">Questa risposta aiuta l'IA a capire la tua percezione e gli aspetti meno visibili nelle foto.</p>
+                        <textarea id="skin-concerns" rows="5" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Es.: ho dei piccoli brufoli rossi sulle guance e punti neri sul naso. Vorrei anche levigare un po' la texture della pelle sulla fronte..."></textarea>
                         <p id="concerns-error" class="text-red-500 text-xs mt-2 hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Questo campo &egrave; obbligatorio.</p>
                     </div>
                 </div>
@@ -604,7 +604,7 @@
 
                 <div>
                     <label class="text-xs font-bold uppercase text-stone-400 tracking-widest block mb-2" id="lbl-products">Routine attuale (se vuoi)</label>
-                    <textarea id="current-products" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors" rows="3" placeholder="Es: detergente La Roche-Posay Effaclar, crema idratante CeraVe, ..."></textarea>
+                    <textarea id="current-products" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors" rows="3" placeholder="Es.: detergente La Roche-Posay Effaclar, crema idratante CeraVe, ..."></textarea>
                 </div>
 
                 <div class="mb-10">
@@ -661,7 +661,7 @@
                         </div>
                     </div>
                     <div id="allergies-detail" class="hidden animate-fade-in">
-                        <input type="text" id="allergies-input" placeholder="Specifica (es: aspirina, frutta a guscio...)" class="w-full p-3 rounded-lg bg-white border border-stone-200 text-sm focus:border-brand-primary focus:outline-none">
+                        <input type="text" id="allergies-input" placeholder="Specifica (es.: aspirina, frutta a guscio...)" class="w-full p-3 rounded-lg bg-white border border-stone-200 text-sm focus:border-brand-primary focus:outline-none">
                     </div>
                     <p id="error-allergies" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Rispondi s&igrave; o no.</p>
                     <p id="error-allergies-empty" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Specifica le tue allergie.</p>
@@ -679,7 +679,7 @@
                         </div>
                     </div>
                     <div id="treatment-detail" class="hidden animate-fade-in">
-                        <input type="text" id="treatment-input" placeholder="Specifica (es: Roaccutan 2 anni fa, antibiotici...)" class="w-full p-3 rounded-lg bg-white border border-stone-200 text-sm focus:border-brand-primary focus:outline-none">
+                        <input type="text" id="treatment-input" placeholder="Specifica (es.: Roaccutan 2 anni fa, antibiotici...)" class="w-full p-3 rounded-lg bg-white border border-stone-200 text-sm focus:border-brand-primary focus:outline-none">
                     </div>
                     <p id="error-treatment" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Rispondi s&igrave; o no.</p>
                     <p id="error-treatment-empty" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Specifica il tuo trattamento.</p>
@@ -949,12 +949,12 @@
             if(goal === 'correction') {
                 durationCont.classList.remove('hidden');
                 frequencyCont.classList.add('hidden');
-                concernsTextarea.placeholder = "Es: ho dei piccoli brufoli rossi sulle guance e punti neri sul naso. Vorrei anche levigare un po' la texture della pelle sulla fronte...";
+                concernsTextarea.placeholder = "Es.: ho dei piccoli brufoli rossi sulle guance e punti neri sul naso. Vorrei anche levigare un po' la texture della pelle sulla fronte...";
                 concernsLabel.textContent = "Cosa ti disturba di pi\u00f9 della tua pelle in questo momento?";
             } else {
                 durationCont.classList.add('hidden');
                 frequencyCont.classList.remove('hidden');
-                concernsTextarea.placeholder = "Es: la mia pelle \u00e8 ok, ma mi vengono 1-2 brufoli sul mento prima del ciclo. Voglio levigare la texture ed evitare i brufoli a sorpresa...";
+                concernsTextarea.placeholder = "Es.: la mia pelle \u00e8 ok, ma mi vengono 1-2 brufoli sul mento prima del ciclo. Voglio levigare la texture ed evitare i brufoli a sorpresa...";
                 concernsLabel.textContent = "C'\u00e8 un aspetto della tua pelle che vorresti migliorare?";
             }
 
@@ -982,11 +982,11 @@
             if(goal === 'correction') {
                  factorsLabel.textContent = "Tra questi fattori, quali ti riguardano di più negli ultimi mesi?";
                  treatmentLabel.innerHTML = 'Trattamento per l\u2019acne? <span class="text-brand-primary">*</span>';
-                 treatmentInput.placeholder = "Specifica (es: Roaccutan 2 anni fa, antibiotici...)";
+                 treatmentInput.placeholder = "Specifica (es.: Roaccutan 2 anni fa, antibiotici...)";
             } else {
                  factorsLabel.textContent = "In quali situazioni compaiono più spesso i brufoli?";
-                 treatmentLabel.innerHTML = 'Usi un trattamento farmacologico (es: crema prescritta dal medico)? <span class="text-brand-primary">*</span>';
-                 treatmentInput.placeholder = "Specifica (es: crema antibiotica, perossido di benzoile...)";
+                 treatmentLabel.innerHTML = 'Usi un trattamento farmacologico (es.: crema con ricetta medica)? <span class="text-brand-primary">*</span>';
+                 treatmentInput.placeholder = "Specifica (es.: crema antibiotica, perossido di benzoile...)";
             }
         }
 

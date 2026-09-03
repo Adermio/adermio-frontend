@@ -40,8 +40,8 @@ TR = [
     # --- modale timeout
     ("Une petite minute...", "Un attimo...", 1),
     ("L'analyse Cycle 2 prend un peu plus de temps que pr&#233;vu. Pas d'inqui&#233;tude, votre rapport sera envoy&#233; par email d&#232;s qu'il est pr&#234;t. <br>Vous pouvez aussi nous contacter directement.",
-     "L'analisi Ciclo 2 sta richiedendo un po' più tempo del previsto. Nessun problema: il report ti sarà inviato via email non appena pronto. <br>Puoi anche contattarci direttamente.", 1),
-    ("Contacter le support", "Contatta l'assistenza", 1),
+     "L'analisi Ciclo 2 sta richiedendo un po' più di tempo del previsto. Nessun problema: il report ti sarà inviato via email non appena pronto. <br>Puoi anche contattarci direttamente.", 1),
+    ("Contacter le support", "Contatta il supporto", 1),
     ("Continuer d'attendre", "Continua ad aspettare", 1),
     # --- JS
     ("Erreur : identifiant introuvable.", "Errore: identificativo non trovato.", 1),

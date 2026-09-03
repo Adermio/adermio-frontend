@@ -11,8 +11,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>Bilancio Ciclo 1 — Risultati della tua analisi Adermio</title>
-    <meta name="description" content="Consulta il bilancio completo del tuo primo ciclo di analisi dermatologica Adermio: valutazione, routine e consigli personalizzati.">
+    <title>Resoconto Ciclo 1 — Risultati della tua analisi Adermio</title>
+    <meta name="description" content="Consulta il resoconto completo del tuo primo ciclo di analisi dermatologica Adermio: valutazione, routine e consigli personalizzati.">
     <meta name="robots" content="noindex, nofollow">
     <link rel="canonical" href="https://adermio.com/it/bilan">
     <link rel="alternate" hreflang="fr" href="https://adermio.com/bilan">
@@ -20,8 +20,8 @@
     <link rel="alternate" hreflang="es" href="https://adermio.com/es/bilan">
     <link rel="alternate" hreflang="it" href="https://adermio.com/it/bilan">
     <link rel="alternate" hreflang="x-default" href="https://adermio.com/bilan">
-    <meta property="og:title" content="Bilancio Ciclo 1 — Risultati della tua analisi Adermio">
-    <meta property="og:description" content="Consulta il bilancio completo del tuo primo ciclo di analisi dermatologica Adermio: valutazione, routine e consigli personalizzati.">
+    <meta property="og:title" content="Resoconto Ciclo 1 — Risultati della tua analisi Adermio">
+    <meta property="og:description" content="Consulta il resoconto completo del tuo primo ciclo di analisi dermatologica Adermio: valutazione, routine e consigli personalizzati.">
     <meta property="og:url" content="https://adermio.com/it/bilan">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://adermio.com/og-image.png">
@@ -30,8 +30,8 @@
     <meta property="og:locale" content="it_IT">
     <meta property="og:site_name" content="Adermio">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Bilancio Ciclo 1 — Risultati della tua analisi Adermio">
-    <meta name="twitter:description" content="Consulta il bilancio completo del tuo primo ciclo di analisi dermatologica Adermio: valutazione, routine e consigli personalizzati.">
+    <meta name="twitter:title" content="Resoconto Ciclo 1 — Risultati della tua analisi Adermio">
+    <meta name="twitter:description" content="Consulta il resoconto completo del tuo primo ciclo di analisi dermatologica Adermio: valutazione, routine e consigli personalizzati.">
     <meta name="twitter:image" content="https://adermio.com/og-image.png">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -95,7 +95,7 @@
         <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-teal-400 to-indigo-500 flex items-center justify-center mb-4">
             <i data-lucide="scan-face" class="w-8 h-8 text-white"></i>
         </div>
-        <p class="text-sm font-bold text-slate-700">Caricamento del tuo bilancio...</p>
+        <p class="text-sm font-bold text-slate-700">Caricamento del tuo resoconto...</p>
         <div class="w-48 h-1.5 bg-slate-100 rounded-full mt-3 overflow-hidden">
             <div class="h-full bg-gradient-to-r from-teal-500 to-indigo-500 rounded-full" style="width:0%; transition: width 1.5s ease" id="loading-bar"></div>
         </div>
@@ -113,11 +113,11 @@
                     </div>
                     <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">Adermio</span>
                 </div>
-                <span class="text-[10px] font-bold bg-white/15 px-3 py-1 rounded-full text-white/80">Ciclo 1 — Bilancio finale</span>
+                <span class="text-[10px] font-bold bg-white/15 px-3 py-1 rounded-full text-white/80">Ciclo 1 — Resoconto finale</span>
             </div>
 
             <h1 class="text-2xl font-extrabold mb-1 anim-fade-up" id="hero-name">Caricamento...</h1>
-            <p class="text-sm text-white/70 font-medium mb-8 anim-fade-up" style="animation-delay:0.1s">Ecco il bilancio dei tuoi 28 giorni di monitoraggio</p>
+            <p class="text-sm text-white/70 font-medium mb-8 anim-fade-up" style="animation-delay:0.1s">Ecco il resoconto dei tuoi 28 giorni di monitoraggio</p>
 
             <div class="flex justify-center mb-6">
                 <div class="relative w-44 h-44">
@@ -656,7 +656,7 @@ function renderHero() {
     const score = trackingData.current_score || 0;
     const maxStreak = trackingData.max_streak || 0;
 
-    document.getElementById('hero-name').textContent = clientName ? `${clientName}, il tuo bilancio` : 'Il tuo bilancio';
+    document.getElementById('hero-name').textContent = clientName ? `${clientName}, il tuo resoconto` : 'Il tuo resoconto';
     document.getElementById('hero-days').textContent = `${checks.length}/28gg`;
     document.getElementById('hero-obs').textContent = `${obs}%`;
     document.getElementById('hero-streak').textContent = `${maxStreak}gg`;
@@ -1313,7 +1313,7 @@ async function init() {
         // Load tracking data
         const rows = await sbGet('skin_tracking', `job_id=eq.${JOB_ID}&cycle_number=eq.1&limit=1`);
         if (rows.length === 0) {
-            document.getElementById('hero-name').textContent = 'Bilancio non disponibile';
+            document.getElementById('hero-name').textContent = 'Resoconto non disponibile';
             document.getElementById('loading-screen').style.display = 'none';
             return;
         }

@@ -20,9 +20,9 @@ TR = [
     ("<span>Support & Contact</span>", "<span>Supporto e contatti</span>", 1),
     ("Comment pouvons-nous vous aider ?", "Come possiamo aiutarti?", 1),
     ("Une question sur votre analyse ou sur le fonctionnement de l'IA ? Remplissez le formulaire ci-dessous.",
-     "Hai una domanda sulla tua analisi o sul funzionamento dell'IA? Compila il modulo in questa pagina.", 1),
+     "Hai una domanda sulla tua analisi o sul funzionamento dell'IA? Compila il modulo sottostante.", 1),
     # --- formulaire
-    ("Remplissez le formulaire ci-dessous :", "Compila il modulo seguente:", 1),
+    ("Remplissez le formulaire ci-dessous :", "Compila il modulo sottostante:", 1),
     ('placeholder="Votre Email"', 'placeholder="La tua email"', 1),
     (">Nom</label>", ">Nome</label>", 1),
     ('placeholder="Votre Nom Complet"', 'placeholder="Il tuo nome completo"', 1),

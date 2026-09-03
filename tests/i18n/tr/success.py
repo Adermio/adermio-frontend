@@ -49,7 +49,7 @@ TR = [
     ('"Connexion sécurisée au serveur..."', '"Connessione sicura al server..."', 1),
     ('"Traitement haute définition des images..."', '"Elaborazione delle immagini in alta definizione..."', 1),
     ('"Analyse des imperfections et du grain..."', '"Analisi delle imperfezioni e della grana della pelle..."', 1),
-    ('"Génération du protocole sur-mesure..."', '"Generazione della routine su misura..."', 1),
+    ('"Génération du protocole sur-mesure..."', '"Generazione del protocollo su misura..."', 1),
     ('"Construction de l\'interface..."', '"Costruzione dell\'interfaccia..."', 1),
     ('"Trafic plus dense que prévu : finalisation en cours..."', '"Traffico più intenso del previsto: finalizzazione in corso..."', 1),
 ]

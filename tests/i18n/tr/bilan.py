@@ -1,17 +1,18 @@
-# Table de traduction it/bilan.html (source bilan.html). Bilan J28 → "bilancio del giorno 28".
+# Table de traduction it/bilan.html (source bilan.html). Bilan J28 → "resoconto".
+# ⚠️ JAMAIS "bilancio" (= bilan comptable en italien) pour désigner le document.
 # Convention jours : J1/J28 → G1/G28, "j" → "gg" ; semaines : S1… inchangé (Settimana).
 # Clés de payload (observance_pct, patient_summary…) et regex de parsing intacts.
 TARGET = 'it/bilan.html'
 TR = [
     # --- head / SEO
-    ("Bilan Cycle 1 — Résultats de votre analyse Adermio", "Bilancio Ciclo 1 — Risultati della tua analisi Adermio", 3),
+    ("Bilan Cycle 1 — Résultats de votre analyse Adermio", "Resoconto Ciclo 1 — Risultati della tua analisi Adermio", 3),
     ("Consultez le bilan complet de votre premier cycle d'analyse dermatologique Adermio : diagnostic, routine et recommandations personnalisées.",
-     "Consulta il bilancio completo del tuo primo ciclo di analisi dermatologica Adermio: valutazione, routine e consigli personalizzati.", 3),
+     "Consulta il resoconto completo del tuo primo ciclo di analisi dermatologica Adermio: valutazione, routine e consigli personalizzati.", 3),
     # --- chargement / hero
-    ("Chargement de votre bilan...", "Caricamento del tuo bilancio...", 1),
+    ("Chargement de votre bilan...", "Caricamento del tuo resoconto...", 1),
     (">Chargement...<", ">Caricamento...<", 2),
-    ("Cycle 1 — Bilan Final", "Ciclo 1 — Bilancio finale", 1),
-    ("Voici le bilan de vos 28 jours de suivi", "Ecco il bilancio dei tuoi 28 giorni di monitoraggio", 1),
+    ("Cycle 1 — Bilan Final", "Ciclo 1 — Resoconto finale", 1),
+    ("Voici le bilan de vos 28 jours de suivi", "Ecco il resoconto dei tuoi 28 giorni di monitoraggio", 1),
     ('id="hero-days">0/28j</span>', 'id="hero-days">0/28gg</span>', 1),
     ('id="hero-streak">0j</span>', 'id="hero-streak">0gg</span>', 1),
     # --- avant / après
@@ -84,7 +85,7 @@ TR = [
     ("Lancez votre Cycle 2", "Avvia il tuo Ciclo 2", 1),
     ("Continuer\n            </button>", "Continua\n            </button>", 1),
     # --- JS
-    ("`${clientName}, votre Bilan` : 'Votre Bilan'", "`${clientName}, il tuo bilancio` : 'Il tuo bilancio'", 1),
+    ("`${clientName}, votre Bilan` : 'Votre Bilan'", "`${clientName}, il tuo resoconto` : 'Il tuo resoconto'", 1),
     ("`${checks.length}/28j`", "`${checks.length}/28gg`", 1),
     ("`${maxStreak}j`", "`${maxStreak}gg`", 1),
     ("alert('Photo trop volumineuse (5 Mo max)')", "alert('Foto troppo pesante (5 MB max)')", 1),
@@ -126,7 +127,7 @@ TR = [
     ("{ title: 'Hydratation', description: 'Renforcez l\\'hydratation pour soutenir la barrière cutanée et préparer l\\'introduction de nouveaux actifs.', icon: 'droplets' }",
      "{ title: 'Idratazione', description: 'Rafforza l\\'idratazione per sostenere la barriera cutanea e preparare l\\'introduzione di nuovi attivi.', icon: 'droplets' }", 1),
     ("alert('Erreur lors de la redirection vers le paiement. Veuillez réessayer.')", "alert('Errore durante il reindirizzamento al pagamento. Riprova.')", 1),
-    ("'Bilan non disponible'", "'Bilancio non disponibile'", 1),
+    ("'Bilan non disponible'", "'Resoconto non disponibile'", 1),
     ("'Cher(e) patient(e)'", "'Gentile utente'", 1),
     ("`\"${nameForQuote}, cette analyse n'est qu'un point de départ. Votre peau évolue chaque jour, et son équilibre se construit avec le temps. Adermio est là pour vous accompagner à chaque étape.\"`",
      "`“${nameForQuote}, questa analisi è solo un punto di partenza. La tua pelle evolve ogni giorno e il suo equilibrio si costruisce con il tempo. Adermio è al tuo fianco in ogni fase.”`", 1),
