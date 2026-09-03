@@ -313,4 +313,121 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://adermio.com/it/home</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/home"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/about</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/about"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/form</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/form"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/contact</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/contact"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/conditions</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/conditions"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/confidentialite</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/sources</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/sources"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/legal-notice</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/blog</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/blog"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/blog/come-conoscere-il-tuo-tipo-di-pelle</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/blog/come-conoscere-il-tuo-tipo-di-pelle"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/blog/perche-viene-l-acne</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/blog/perche-viene-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/blog/acne-ormonale</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/blog/acne-ormonale"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/blog/dove-compare-l-acne</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/it/blog/dove-compare-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
