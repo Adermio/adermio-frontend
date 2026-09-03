@@ -3,7 +3,7 @@
 JSON-LD des homes, sitemap.xml, js/ttq.js. Idempotent (ne fait rien si déjà fait).
 Usage : python3 tests/i18n/expose_it.py [--check]
 """
-import os, re, sys
+import os, re, subprocess, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from prep_it import PAGES, ROOT, clean
 
@@ -67,12 +67,19 @@ sm = os.path.join(ROOT, 'sitemap.xml'); s = open(sm, encoding='utf-8').read()
 if 'adermio.com/it/' not in s:
     it_urls = ['it/home', 'it/about', 'it/form', 'it/contact', 'it/conditions', 'it/confidentialite', 'it/sources', 'it/legal-notice', 'it/blog',
                'it/blog/come-conoscere-il-tuo-tipo-di-pelle', 'it/blog/perche-viene-l-acne', 'it/blog/acne-ormonale', 'it/blog/dove-compare-l-acne']
+    # ⚠️ NE PAS cloner un bloc existant en remplaçant seulement le <loc> : les alternates hreflang du
+    # modèle restent ceux de la page copiée, et chaque page italienne se déclare alors comme la version
+    # espagnole d'elle-même. C'est le bug corrigé le 03/09/2026. On ajoute ici des blocs SANS alternates,
+    # puis fix_sitemap_hreflang.py les réécrit tous à partir de sa table de groupes (source unique).
     m = re.search(r'(\s*)<url>\s*<loc>https://adermio.com/es/legal-notice</loc>.*?</url>', s, flags=re.S)
-    tpl = m.group(0); ind = m.group(1)
-    block = ''.join(tpl.replace('https://adermio.com/es/legal-notice', url(u)) for u in it_urls)
+    ind = m.group(1)
+    block = ''.join(f'{ind}<url>{ind}  <loc>{url(u)}</loc>{ind}</url>' for u in it_urls)
     s = s[:m.end()] + block + s[m.end():]
     changes.append('sitemap.xml')
-    if not CHECK: open(sm, 'w', encoding='utf-8').write(s)
+    if not CHECK:
+        open(sm, 'w', encoding='utf-8').write(s)
+        subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                     'fix_sitemap_hreflang.py')], check=True)
 
 # ttq.js : ViewContent sur les formulaires IT (pixel FR par défaut, comme l'ES)
 tq = os.path.join(ROOT, 'js', 'ttq.js'); t = open(tq, encoding='utf-8').read()
