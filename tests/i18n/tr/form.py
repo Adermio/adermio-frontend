@@ -67,9 +67,12 @@ TR = [
     (">Analyse...</div>", ">Analisi...</div>", 1),
     (">Profil Gauche</label>", ">Profilo sinistro</label>", 1),
     (">Profil Droit</label>", ">Profilo destro</label>", 1),
-    (">Optionnel</span>", ">Facoltativa</span>", 2),
+    # profils gauche/droite : tailles en style inline (text-[9px]/[7px] absents du CSS Tailwind compilé) + libellé court pour tenir sur UNE ligne à 375px (symétrie des 2 colonnes)
+    ('<label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Profil Gauche</label>', '<label class="font-bold uppercase text-brand-dark tracking-wide" style="font-size:9px;white-space:nowrap">Profilo sinistro</label>', 1),
+    ('<label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Profil Droit</label>', '<label class="font-bold uppercase text-brand-dark tracking-wide" style="font-size:9px;white-space:nowrap">Profilo destro</label>', 1),
+    ('<span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Optionnel</span>', '<span class="uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded shrink-0" style="font-size:7px">Opzionale</span>', 2),
     (">Ajouter</span>", ">Aggiungi</span>", 2),
-    ("Ajouter zone zoom (Optionnel)", "Aggiungi zona di dettaglio (facoltativo)", 2),
+    ("Ajouter zone zoom (Optionnel)", "Aggiungi zona di dettaglio (opzionale)", 2),
     ("Photo de d&eacute;tail", "Foto di dettaglio", 1),
     ("Masquer la zone", "Nascondi la zona", 1),
     ('"La photo de face est requise."', '"La foto frontale \\u00e8 obbligatoria."', 1),      # JS (d'abord, sinon englobé)

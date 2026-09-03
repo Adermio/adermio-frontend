@@ -38,6 +38,14 @@ def strip_selector(s):
 
 def tags(s): return re.findall(r'<(/?[a-zA-Z0-9]+)', s)
 
+# Écarts de structure VOULUS vs le FR : balises ajoutées, avec leur justification.
+# Toute autre différence reste une erreur.
+STRUCT_ALLOWED = {
+    # en-tête des 2 photos de profil : libellés IT plus longs qu'en FR -> bloc <style> dédié
+    'it/form.html': ['style', '/style'],
+    'it/form2.html': ['style', '/style'],
+}
+
 def visible_segments(s):
     """Retourne (ligne, texte) pour le texte visible, les attributs textuels et les chaînes JS."""
     segs = []
@@ -76,7 +84,13 @@ def check(it_rel):
     issues = []
     ta, tb = tags(strip_selector(fr)), tags(strip_selector(it))
     if ta != tb:
-        issues.append(f'STRUCTURE: {len(ta)} balises FR vs {len(tb)} IT')
+        import difflib
+        added, removed = [], []
+        for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, ta, tb, autojunk=False).get_opcodes():
+            if op in ('insert', 'replace'): added += tb[j1:j2]
+            if op in ('delete', 'replace'): removed += ta[i1:i2]
+        if removed or sorted(added) != sorted(STRUCT_ALLOWED.get(it_rel, [])):
+            issues.append(f'STRUCTURE: {len(ta)} balises FR vs {len(tb)} IT (ajouts {added}, retraits {removed})')
     if '<html lang="it"' not in it: issues.append('lang != it')
     if re.search(r'\slang="fr"', it): issues.append('lang="fr" résiduel')
     for m in re.finditer(r'href="([^"]+)"', it):

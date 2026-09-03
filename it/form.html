@@ -54,6 +54,19 @@
         })(window, document, "clarity", "script", "ua5d07cn1u");
     </script>
     <script src="/js/ttq.js"></script>
+    <style>
+      /* En-tete des 2 photos de profil (IT) : libelles plus longs qu'en FR.
+         A partir de 360px : une seule ligne des deux cotes. En dessous : retour a la ligne autorise,
+         mais hauteur d'en-tete commune pour que les deux vignettes restent alignees. */
+      .profile-side-head { min-height: 15px; }
+      .profile-side-label { font-size: 9px; white-space: nowrap; }
+      .profile-side-badge { font-size: 7px; }
+      @media (max-width: 359px) {
+        .profile-side-head { min-height: 28px; }
+        .profile-side-label { font-size: 8px; white-space: normal; }
+        .profile-side-badge { font-size: 6.5px; }
+      }
+    </style>
 </head>
 <body class="bg-brand-cream text-brand-dark font-sans min-h-screen flex flex-col selection:bg-brand-primary/20">
 
@@ -359,9 +372,9 @@
 
                 <div class="grid grid-cols-2 gap-3 pt-2">
                     <div class="relative">
-                        <div class="flex justify-between items-center mb-2 px-1">
-                            <label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Profilo sinistro</label>
-                            <span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Facoltativa</span>
+                        <div class="flex justify-between items-center mb-2 px-1 profile-side-head">
+                            <label class="font-bold uppercase text-brand-dark tracking-wide profile-side-label">Profilo sinistro</label>
+                            <span class="uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded shrink-0 profile-side-badge">Opzionale</span>
                         </div>
                         <label class="block relative group cursor-pointer w-full aspect-square rounded-[1.5rem] overflow-hidden bg-stone-900 shadow-lg">
                             <input type="file" accept="image/*,.heic,.heif,.heics,.avif,.webp,.bmp,.tif,.tiff,.dng,.cr2,.nef,.arw,.raw" class="absolute inset-0 w-full h-full opacity-0 z-50 cursor-pointer"
@@ -384,9 +397,9 @@
                     </div>
 
                     <div class="relative">
-                        <div class="flex justify-between items-center mb-2 px-1">
-                            <label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Profilo destro</label>
-                            <span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Facoltativa</span>
+                        <div class="flex justify-between items-center mb-2 px-1 profile-side-head">
+                            <label class="font-bold uppercase text-brand-dark tracking-wide profile-side-label">Profilo destro</label>
+                            <span class="uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded shrink-0 profile-side-badge">Opzionale</span>
                         </div>
                         <label class="block relative group cursor-pointer w-full aspect-square rounded-[1.5rem] overflow-hidden bg-stone-900 shadow-lg">
                             <input type="file" accept="image/*,.heic,.heif,.heics,.avif,.webp,.bmp,.tif,.tiff,.dng,.cr2,.nef,.arw,.raw" class="absolute inset-0 w-full h-full opacity-0 z-50 cursor-pointer"
@@ -412,7 +425,7 @@
                 <div class="pt-4">
                     <button type="button" id="toggle-zoom-btn" class="w-full py-3 rounded-2xl border border-dashed border-stone-300 text-stone-400 text-xs font-bold flex items-center justify-center gap-2 hover:border-brand-primary hover:text-brand-primary transition-all uppercase tracking-wide" onclick="toggleZoomArea()">
                         <i data-lucide="plus" class="w-4 h-4"></i>
-                        Aggiungi zona di dettaglio (facoltativo)
+                        Aggiungi zona di dettaglio (opzionale)
                     </button>
 
                     <div id="zoom-area" class="hidden mt-4 animate-fade-in">
@@ -1423,7 +1436,7 @@ window.handleImageUpload = async function (input, previewId, overlayId, emptyId)
                 btn.innerHTML = '<i data-lucide="minus" class="w-4 h-4"></i> Nascondi la zona';
             } else {
                 area.classList.add('hidden');
-                btn.innerHTML = '<i data-lucide="plus" class="w-4 h-4"></i> Aggiungi zona di dettaglio (facoltativo)';
+                btn.innerHTML = '<i data-lucide="plus" class="w-4 h-4"></i> Aggiungi zona di dettaglio (opzionale)';
                 formState.photos.zoom = { key: null, getUrl: null };
             }
             lucide.createIcons();
