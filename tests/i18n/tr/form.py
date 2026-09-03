@@ -65,12 +65,12 @@ TR = [
     (">Photo de face</span>", ">Foto frontale</span>", 1),
     ("Appuyez pour ajouter", "Tocca per aggiungere", 1),
     (">Analyse...</div>", ">Analisi...</div>", 1),
-    (">Profil Gauche</label>", ">Profilo sinistro</label>", 1),
-    (">Profil Droit</label>", ">Profilo destro</label>", 1),
+    # correctif mobile : bloc <style> des en-tetes de profil (classes .profile-side-*)
+    ('</head>', "    <style>\n      /* En-tete des 2 photos de profil (IT) : libelles plus longs qu'en FR.\n         A partir de 360px : une seule ligne des deux cotes. En dessous : retour a la ligne autorise,\n         mais hauteur d'en-tete commune pour que les deux vignettes restent alignees. */\n      .profile-side-head { min-height: 15px; }\n      .profile-side-label { font-size: 9px; white-space: nowrap; }\n      .profile-side-badge { font-size: 7px; }\n      @media (max-width: 359px) {\n        .profile-side-head { min-height: 28px; }\n        .profile-side-label { font-size: 8px; white-space: normal; }\n        .profile-side-badge { font-size: 6.5px; }\n      }\n    </style>\n</head>", 1),
+    ('<div class="flex justify-between items-center mb-2 px-1">\n                            <label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Profil Gauche</label>', '<div class="flex justify-between items-center mb-2 px-1 profile-side-head">\n                            <label class="font-bold uppercase text-brand-dark tracking-wide profile-side-label">Profilo sinistro</label>', 1),
+    ('<div class="flex justify-between items-center mb-2 px-1">\n                            <label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Profil Droit</label>', '<div class="flex justify-between items-center mb-2 px-1 profile-side-head">\n                            <label class="font-bold uppercase text-brand-dark tracking-wide profile-side-label">Profilo destro</label>', 1),
     # profils gauche/droite : tailles en style inline (text-[9px]/[7px] absents du CSS Tailwind compilé) + libellé court pour tenir sur UNE ligne à 375px (symétrie des 2 colonnes)
-    ('<label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Profil Gauche</label>', '<label class="font-bold uppercase text-brand-dark tracking-wide" style="font-size:9px;white-space:nowrap">Profilo sinistro</label>', 1),
-    ('<label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Profil Droit</label>', '<label class="font-bold uppercase text-brand-dark tracking-wide" style="font-size:9px;white-space:nowrap">Profilo destro</label>', 1),
-    ('<span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Optionnel</span>', '<span class="uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded shrink-0" style="font-size:7px">Opzionale</span>', 2),
+    ('<span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Optionnel</span>', '<span class="uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded shrink-0 profile-side-badge">Opzionale</span>', 2),
     (">Ajouter</span>", ">Aggiungi</span>", 2),
     ("Ajouter zone zoom (Optionnel)", "Aggiungi zona di dettaglio (opzionale)", 2),
     ("Photo de d&eacute;tail", "Foto di dettaglio", 1),
@@ -161,8 +161,8 @@ TR = [
     ("Veuillez pr&eacute;ciser vos allergies.", "Specifica le tue allergie.", 1),
     ("Traitement contre l'acn&eacute; ?", "Trattamento per l'acne?", 1),
     ("Pass&eacute; ou actuel", "Passato o attuale", 1),
-    ("Pr&eacute;cisez (ex: Roaccutane il y a 2 ans, antibiotiques...)", "Specifica (es: Roaccutane 2 anni fa, antibiotici...)", 1),
-    ("Pr\\u00e9cisez (ex: Roaccutane il y a 2 ans, antibiotiques...)", "Specifica (es: Roaccutane 2 anni fa, antibiotici...)", 1),
+    ("Pr&eacute;cisez (ex: Roaccutane il y a 2 ans, antibiotiques...)", "Specifica (es: Roaccutan 2 anni fa, antibiotici...)", 1),
+    ("Pr\\u00e9cisez (ex: Roaccutane il y a 2 ans, antibiotiques...)", "Specifica (es: Roaccutan 2 anni fa, antibiotici...)", 1),
     ("Veuillez pr&eacute;ciser votre traitement.", "Specifica il tuo trattamento.", 1),
     ("'Traitement contre l\\u2019acn\\u00e9 ? <span", "'Trattamento per l\\u2019acne? <span", 1),
     ("Dans quelles situations les boutons apparaissent-ils le plus souvent ?", "In quali situazioni compaiono pi\u00f9 spesso i brufoli?", 1),
@@ -221,8 +221,6 @@ TR = [
     ('console.log("\\u2705 jobId g\\u00e9n\\u00e9r\\u00e9 :"', 'console.log("\\u2705 jobId generato:"', 1),
     ('console.error("Erreur validation :", e);', 'console.error("Errore di validazione:", e);', 1),
     ('console.error("Erreur d\'envoi", error);', 'console.error("Errore di invio", error);', 1),
-    # lang envoyé au backend : prep_it ne convertit que `lang: 'fr'`, pas params.append("lang", "fr")
     # (ES/EN envoient bien "es"/"en") — signalé dans le rapport.
-    ('params.append("lang", "fr");', 'params.append("lang", "it");', 1),
 ]
 REGEX = []

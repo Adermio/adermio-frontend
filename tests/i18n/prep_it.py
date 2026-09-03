@@ -118,6 +118,8 @@ def transform(fr_rel):
 
     # 3. hreflang : ajoute la ligne it après la ligne es (si le bloc existe)
     m = re.search(r'([ \t]*)<link rel="alternate" hreflang="es" href="[^"]*">\n', html)
+    if 'hreflang="it"' in html:  # hérité du FR depuis expose_it.py : on repart d'une base propre
+        html = re.sub(r'[ \t]*<link rel="alternate" hreflang="it" href="[^"]*">\n', '', html)
     if m:
         html = html[:m.end()] + f'{m.group(1)}<link rel="alternate" hreflang="it" href="{it_url}">\n' + html[m.end():]
     else:
