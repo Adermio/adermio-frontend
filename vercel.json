@@ -121,6 +121,10 @@
     {
       "source": "/callback/:path*",
       "destination": "/callback.html"
+    },
+    {
+      "source": "/r/av",
+      "destination": "/api/r"
     }
   ],
   "headers": [
