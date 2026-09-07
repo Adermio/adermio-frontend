@@ -44,3 +44,19 @@ export function resolveRedirect(params) {
     segment: SEGMENTS.has(s) ? s : "inconnu",
   };
 }
+
+/**
+ * Construit le corps de la mesure de clic — et seulement lui.
+ *
+ * 🚨 Exactement deux clés, `lang` et `segment` : jamais d'id, jamais
+ * d'email, jamais de jeton. `resolveRedirect` a déjà mis `lang`/`segment`
+ * en liste blanche ; cette fonction ne fait que les remettre en forme pour
+ * l'INSERT Supabase, sans ajouter le moindre champ.
+ *
+ * @param {string} lang
+ * @param {string} segment
+ * @returns {{ lang: string, segment: string }}
+ */
+export function buildClickPayload(lang, segment) {
+  return { lang, segment };
+}

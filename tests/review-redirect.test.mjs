@@ -1,6 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { resolveRedirect, APP_STORE_REVIEW_URL } from "../api/_review-redirect.mjs";
+import {
+  resolveRedirect,
+  APP_STORE_REVIEW_URL,
+  buildClickPayload,
+} from "../api/_review-redirect.mjs";
 
 test("redirige vers la feuille de notation App Store", () => {
   const r = resolveRedirect(new URLSearchParams("l=es&s=abonne_actif"));
@@ -33,4 +37,20 @@ test("le segment de recette est reconnu", () => {
 test("un segment fantaisiste est neutralise, pas propage", () => {
   const r = resolveRedirect(new URLSearchParams("l=fr&s=<script>alert(1)</script>"));
   assert.equal(r.segment, "inconnu");
+});
+
+test("buildClickPayload : produit exactement lang + segment", () => {
+  const payload = buildClickPayload("es", "abonne_actif");
+  assert.deepEqual(payload, { lang: "es", segment: "abonne_actif" });
+});
+
+test("buildClickPayload : aucune donnee personnelle, exactement deux cles", () => {
+  const payload = buildClickPayload("fr", "test");
+  assert.deepEqual(Object.keys(payload).sort(), ["lang", "segment"]);
+});
+
+test("buildClickPayload : reprend les valeurs deja neutralisees par resolveRedirect", () => {
+  const r = resolveRedirect(new URLSearchParams("l=it&s=<script>alert(1)</script>"));
+  const payload = buildClickPayload(r.lang, r.segment);
+  assert.deepEqual(payload, { lang: "en", segment: "inconnu" });
 });
