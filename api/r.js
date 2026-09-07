@@ -70,7 +70,8 @@ export default async function handler(req) {
   let segment = "inconnu";
   try {
     const { searchParams } = new URL(req.url);
-    const r = resolveRedirect(searchParams);
+    const userAgent = req.headers.get("user-agent") || "";
+    const r = resolveRedirect(searchParams, userAgent);
     location = r.location;
     lang = r.lang;
     segment = r.segment;
