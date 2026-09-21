@@ -1059,6 +1059,7 @@ async function runBilanAnalysis() {
         photo_j28_url: photos.j28 ? photos.j28.url : null,
         job_id: JOB_ID,
         client_name: clientName,
+        lang: 'it',
         cycle_data: {
             checks_count: checks.length,
             total_days: CYCLE_DURATION,
@@ -1270,6 +1271,7 @@ async function autoTriggerAnalysis() {
     const payload = {
         job_id: JOB_ID,
         client_name: clientName,
+        lang: 'it',
         cycle_data: {
             checks_count: checks.length,
             total_days: CYCLE_DURATION,
