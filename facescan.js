@@ -585,6 +585,136 @@
       anglesCaptured: "ángulos capturados",
       angleCaptured: "ángulo capturado",
     },
+    de: {
+      permTitle: "Hochauflösende Analyse",
+      permDesc: "7 automatische Aufnahmen aus verschiedenen Blickwinkeln für maximale Genauigkeit. Es werden keine Videodaten gespeichert.",
+      permBtn: "Scan starten",
+      permManualBtn: "Fotos hochladen",
+      permTimeHint: "ca. 15 Sekunden",
+      retakeManualLabel: "Foto",
+      retakeScanLabel: "Scan",
+      denied: "Kamerazugriff verweigert. Bitte laden Sie Ihre Fotos hoch.",
+      notSupported: "Browser nicht unterstützt. Bitte laden Sie Ihre Fotos hoch.",
+      noDevice: "Keine Frontkamera erkannt.",
+      loading: "Gesichtsanalyse wird geladen …",
+      loadTimeout: "Das Laden dauert zu lange. Bitte prüfen Sie Ihre Verbindung.",
+
+      calibTitle: "Gesicht ausrichten",
+      calibSub: "Platzieren Sie Ihr Gesicht im Oval",
+      calibReady: "Perfekt, bitte stillhalten",
+      calibReadySub: "Ideale Position",
+
+      initializingTitle: "Analyse wird gestartet …",
+      initializingSub: "Erkennung wird vorbereitet",
+      initializingTitleSlow: "Langsame Verbindung erkannt",
+      initializingSubSlow: "Gesichtserkennung wird geladen …",
+      initializingTitleVerySlow: "Die Verbindung ist schwach",
+      initializingSubVerySlow: "Sie können stattdessen Fotos hochladen",
+      initFallbackBtn: "Fotos hochladen",
+      initializingTimeout: "Verbindung zu langsam. Bitte laden Sie Ihre Fotos hoch.",
+
+      countdownSub: "Machen Sie sich bereit, der Scan beginnt gleich",
+
+      moveCloser: "Kommen Sie näher",
+      moveCloserSub: "Ihr Gesicht ist zu weit entfernt",
+      moveBack: "Etwas zurück",
+      moveBackSub: "Ihr Gesicht ist zu nah",
+      lowLight: "Zu wenig Licht",
+      lowLightSub: "Passen Sie die Beleuchtung an",
+      strongLight: "Zu viel Licht",
+      strongLightSub: "Passen Sie die Beleuchtung an",
+      backlight: "Gegenlicht erkannt",
+      backlightSub: "Passen Sie die Beleuchtung an",
+      centerFace: "Gesicht mittig ausrichten",
+      centerFaceSub: "Platzieren Sie sich im Oval",
+      pitchOff: "Schauen Sie geradeaus",
+      pitchOffSub: "Kopf nicht heben oder senken",
+      rollOff: "Kopf gerade halten",
+      rollOffSub: "Kopf nicht zur Seite neigen",
+
+      noFace: "Kein Gesicht erkannt",
+      noFaceSub: "Platzieren Sie Ihr Gesicht im Oval",
+      interrupted: "Scan unterbrochen",
+      interruptedSub: "Starten Sie den Scan neu oder laden Sie Fotos hoch",
+      rotateTitle: "Drehen Sie Ihr Handy",
+      rotateSub: "Der Scan funktioniert nur im Hochformat",
+
+      scanFace: "Schauen Sie in die Kamera",
+      scanFaceSub: "Bleiben Sie frontal ausgerichtet",
+      scanRight1: "Drehen Sie den Kopf nach rechts",
+      scanRight1Sub: "Langsam, zeigen Sie Ihr Profil",
+      scanRight2: "Weiter nach rechts drehen",
+      scanRight2Sub: "Zeigen Sie Ihr Profil",
+      scanRight3: "Noch etwas weiter nach rechts",
+      scanRight3Sub: "Zeigen Sie Ihr Ohr",
+      scanLeft1: "Drehen Sie den Kopf nach links",
+      scanLeft1Sub: "Langsam, zeigen Sie Ihr Profil",
+      scanLeft2: "Weiter nach links drehen",
+      scanLeft2Sub: "Zeigen Sie Ihr Profil",
+      scanLeft3: "Noch etwas weiter nach links",
+      scanLeft3Sub: "Zeigen Sie Ihr Ohr",
+      scanDone: "Scan abgeschlossen",
+      scanDoneSub: "Ihre Aufnahmen werden ausgewertet …",
+
+      qualityLow: "Qualität zu gering",
+      qualityLowSub: "Bitte stillhalten",
+      lightDuringScan: "Zu wenig Licht",
+      lightDuringScanSub: "Passen Sie die Beleuchtung an",
+
+      retakeFor: "Neuaufnahme",
+
+      captured: "Erfasst",
+      binFace: "Vorne", binSemiR: "Leicht re.", binRight: "Profil re.", binWideR: "Weit re.",
+      binSemiL: "Leicht li.", binLeft: "Profil li.", binWideL: "Weit li.",
+      distance: "Abstand", light: "Licht", stability: "Stabilität",
+
+      previewTitle: "Ihre Aufnahmen",
+      previewHint: "Tippen Sie auf ein Foto, um es zu vergrößern",
+
+      previewValidated: "Scan bestätigt.",
+      previewFusion: "Adermio hat Ihre 7 Blickwinkel zu einem einzigartigen Hautprofil zusammengeführt.",
+      validateCta: "Bestätigen und weiter",
+      validateHelper: "Zum Bestätigen ist ein Foto von vorne erforderlich",
+      preferManual: "Ich lade meine Fotos lieber selbst hoch",
+      warnFaceTitle: "Foto von vorne fehlt",
+      warnFaceBody: "Das Foto von vorne ist für die Analyse unverzichtbar.",
+      warnQualityTitle: "Bildqualität grenzwertig",
+      warnQualityBody: "Ihre Fotos reichen möglicherweise nicht für eine genaue Analyse aus. Wiederholen Sie den Scan bei besserem Licht, um bessere Ergebnisse zu erhalten.",
+      zoomBadge: "Optional",
+      zoomTapReplace: "Zum Ersetzen tippen",
+
+      placeFaceInOval: "Platzieren Sie Ihr Gesicht im Oval",
+      adjustPhone: "Passen Sie die Position Ihres Handys an",
+      moveCloserPhoneSub: "Handy näher heranführen",
+      moveBackPhoneSub: "Handy weiter weghalten",
+
+      almostRight: "Nur noch ein kleines Stück nach rechts",
+      almostLeft: "Nur noch ein kleines Stück nach links",
+      almostSub: "Fast geschafft",
+      comeBackCenter: "Wieder frontal zur Kamera",
+      comeBackCenterSub: "Schauen Sie in die Kamera",
+      comeBackRight: "Leicht nach rechts drehen",
+      comeBackLeft: "Leicht nach links drehen",
+      comeBackSub: "Passen Sie Ihre Position an",
+
+      intSub: "Ihre Aufnahmen bleiben erhalten. Machen Sie dort weiter, wo Sie aufgehört haben.",
+      btnResume: "Scan fortsetzen",
+
+      excellent: "Ausgezeichnet", good: "Gut", ok: "Ausreichend", missing: "Fehlt",
+      keep: "Behalten", retakeOne: "Neu aufnehmen",
+      retake: "Wiederholen", validate: "Bestätigen und weiter",
+      restart: "Scan neu starten",
+      uploading: "Wird gesendet …",
+      uploadFail: "Senden fehlgeschlagen. Bitte versuchen Sie es erneut.",
+
+      zoomBtn: "Nahaufnahme hinzufügen",
+      zoomSub: "Foto eines bestimmten Bereichs (optional)",
+      zoomAdded: "Nahaufnahme hinzugefügt",
+
+      noDataStored: "Es werden keine Videodaten gespeichert",
+      anglesCaptured: "Blickwinkel erfasst",
+      angleCaptured: "Blickwinkel erfasst",
+    },
   };
 
   /* ═══════════════════════════════════════════════════════════
@@ -2067,6 +2197,7 @@
       var docLang = (document.documentElement.lang || "").substring(0, 2).toLowerCase();
       if (docLang === "en") return "en";
       if (docLang === "es") return "es";
+      if (docLang === "de") return "de";
       return "fr";
     })();
     var t = T[lang] || T.fr;

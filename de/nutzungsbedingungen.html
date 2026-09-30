@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ua5d07cn1u");
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Nutzungsbedingungen — Adermio</title>
+    <meta name="description" content="Allgemeine Nutzungsbedingungen des Dienstes Adermio — Zugangsregeln, Rechte und Pflichten, geistiges Eigentum, Schlichtung.">
+    <link rel="canonical" href="https://adermio.com/de/nutzungsbedingungen">
+    <link rel="alternate" hreflang="fr" href="https://adermio.com/conditions">
+    <link rel="alternate" hreflang="en" href="https://adermio.com/en/conditions">
+    <link rel="alternate" hreflang="es" href="https://adermio.com/es/conditions">
+    <link rel="alternate" hreflang="it" href="https://adermio.com/it/conditions">
+    <link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen">
+    <link rel="alternate" hreflang="x-default" href="https://adermio.com/conditions">
+    <meta property="og:title" content="Nutzungsbedingungen — Adermio">
+    <meta property="og:description" content="Allgemeine Nutzungsbedingungen des Dienstes Adermio — Zugangsregeln, Rechte und Pflichten, geistiges Eigentum, Schlichtung.">
+    <meta property="og:url" content="https://adermio.com/de/nutzungsbedingungen">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://adermio.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:site_name" content="Adermio">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Nutzungsbedingungen — Adermio">
+    <meta name="twitter:description" content="Allgemeine Nutzungsbedingungen des Dienstes Adermio — Zugangsregeln, Rechte und Pflichten, geistiges Eigentum, Schlichtung.">
+    <meta name="twitter:image" content="https://adermio.com/og-image.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0F3D39">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Adermio">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',   
+                            dark: '#0F3D39',   
+                            primary: '#14B8A6',
+                            text: '#334155',   
+                            muted: '#94A3B8',  
+                            surface: '#FFFFFF' 
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        a, a:visited, a:hover, a:active {
+            color: inherit; 
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+    <script src="/js/ttq.js"></script>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/de/home" class="flex items-center gap-2">
+                 <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-2 py-1 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+                        <img src="https://flagcdn.com/de.svg" width="16" alt="DE" class="rounded-sm shadow-sm">
+                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+                    </button>
+                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-adermio-dark/5 overflow-hidden z-[80]">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                            <img src="https://flagcdn.com/de.svg" width="18" alt="Deutsch" class="rounded-sm shadow-sm">
+                            <span>Deutsch</span>
+                        </a>
+                        <a href="https://adermio.com/en/conditions" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/us.svg" width="18" alt="English" class="rounded-sm shadow-sm">
+                            <span>English</span>
+                        </a>
+                        <a href="https://adermio.com/es/conditions" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/es.svg" width="18" alt="Español" class="rounded-sm shadow-sm">
+                            <span>Español</span>
+                        </a>
+                        <a href="https://adermio.com/it/conditions" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/it.svg" width="18" alt="Italiano" class="rounded-sm shadow-sm">
+                            <span>Italiano</span>
+                        </a>
+                        <a href="https://adermio.com/conditions" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/fr.svg" width="18" alt="Français" class="rounded-sm shadow-sm">
+                            <span>Français</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="/de/home" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Startseite</a>
+            <a href="https://adermio.com/de/form" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Analyse starten</a>
+            <a href="https://adermio.com/de/ueber-uns" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Über uns</a>
+            <a href="https://adermio.com/de/blog" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Blog</a>
+            <a href="https://adermio.com/de/kontakt" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Kontakt</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2026</span>
+        </div>
+    </div>
+
+    <header class="relative w-full pt-40 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="fade-up inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/50 border border-adermio-dark/5 text-[10px] uppercase tracking-[0.2em] font-medium text-adermio-dark shadow-sm mb-6">
+                <span>Rechtliches</span>
+            </div>
+            <h1 class="font-serif text-3xl md:text-5xl text-adermio-dark mb-4 fade-up" style="animation-delay: 0.1s;">
+                Allgemeine Nutzungsbedingungen
+            </h1>
+            <p class="text-adermio-muted text-sm fade-up" style="animation-delay: 0.2s;">
+                Version 2.0 — Stand: 18.05.2026 (in Kraft seit diesem Datum)
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10 fade-up" style="animation-delay: 0.3s;">
+        <div class="bg-white rounded-[2rem] p-8 md:p-16 shadow-soft border border-adermio-dark/5">
+            
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">1. Gegenstand des Dienstes</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio ist eine Plattform für <strong>personalisierte kosmetische Hautpflege-Empfehlungen auf Basis künstlicher Intelligenz</strong>, erreichbar über die Website <code>adermio.com</code> und die mobile App Adermio.</p><p>Der Dienst umfasst insbesondere: Hautanalyse durch automatisierte Auswertung von Gesichtsfotos, eine persönliche Auswertung mit Empfehlungen für eine kosmetische Pflegeroutine, tägliche Erfassung des Hautzustands und der Gewohnheiten, KI-Hautchat (Premium) sowie Vergleichsauswertungen zwischen den Analyserunden.</p><div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark"><strong>⚠️ Wichtig:</strong> Der Dienst dient ausschließlich der Information und ist rein kosmetischer Natur. Er stellt keine ärztliche Leistung, keine medizinische Beurteilung, keine Verschreibung und keine telemedizinische Beratung dar. Adermio ist kein Medizinprodukt. Bei einer Hauterkrankung oder im Zweifel wenden Sie sich bitte an einen Hautarzt.</div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">2. Zugangsvoraussetzungen</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Mindestalter:</strong> 16 Jahre (Alter der digitalen Einwilligungsfähigkeit in Frankreich gemäß Art. 8 DSGVO). Minderjährige zwischen 16 und 18 Jahren benötigen die vorherige Zustimmung eines Sorgeberechtigten.</p><p><strong>Geschäftsfähigkeit:</strong> Der Nutzer erklärt, im Sinne der Artikel 1145 ff. des französischen Code civil voll geschäftsfähig zu sein.</p><p><strong>Geltungsbereich:</strong> Der Dienst ist für das französische Festland (France métropolitaine), die französischen Überseegebiete (DOM-TOM) und die Europäische Union konzipiert. Eine Nutzung aus anderen Rechtsordnungen wird geduldet; der Nutzer ist jedoch allein dafür verantwortlich, dass sie mit dem dort geltenden Recht vereinbar ist.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">3. Kontoerstellung</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Ein Konto wird per E-Mail und Passwort (mindestens 10 Zeichen, automatische Prüfung auf bekannte Datenlecks über HaveIBeenPwned), über „Mit Apple anmelden“ oder über „Mit Google anmelden“ erstellt.</p><p>Der Nutzer verpflichtet sich, <strong>zutreffende, wahrheitsgemäße und aktuelle</strong> Angaben zu machen. Er ist allein für die Geheimhaltung seiner Zugangsdaten verantwortlich. Pro Person ist nur ein Konto zulässig – das Anlegen mehrerer Konten sowie die Weitergabe eines Kontos sind untersagt.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">4. Pflichten des Nutzers</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Der Nutzer verpflichtet sich, Folgendes zu unterlassen:</p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li>Versuche, die Sicherheitsmaßnahmen des Dienstes zu umgehen,</li>
+                        <li>Reverse Engineering, Dekompilierung oder Versuche, den Quellcode der App zu rekonstruieren,</li>
+                        <li>die Nutzung des Dienstes zu rechtswidrigen, verleumderischen oder diskriminierenden Zwecken oder unter Verletzung der Rechte Dritter,</li>
+                        <li>das Hochladen von Inhalten (Fotos, Texte), die Dritten gehören, ohne deren Einwilligung, sowie das Hochladen pornografischer, gewaltverherrlichender oder rechtswidriger Inhalte,</li>
+                        <li>die absichtliche Überlastung der Server (DoS, massenhaftes Scraping).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">5. Nutzungsrechte an hochgeladenen Inhalten</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Der Nutzer <strong>bleibt Inhaber sämtlicher Rechte</strong> an den von ihm hochgeladenen Fotos. Er räumt Adermio jedoch ein einfaches, weltweites, unentgeltliches und auf die Dauer seiner Nutzung des Dienstes beschränktes Nutzungsrecht ein, um:</p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li>das Foto mithilfe eines cloudbasierten KI-Modells zu verarbeiten,</li>
+                        <li>es in seiner eigenen Auswertung und in seinem Verlauf anzuzeigen,</li>
+                        <li>es im gesicherten Speicher von Supabase für die in der Datenschutzerklärung festgelegte Dauer aufzubewahren,</li>
+                        <li>die Fotos desselben Nutzers miteinander zu vergleichen (28-Tage-Check und Vergleich zwischen Analyserunden).</li>
+                    </ul><p><strong>Die Fotos der Nutzer werden weder veröffentlicht noch zu kommerziellen oder Marketingzwecken oder zum Training von KI-Modellen verwendet.</strong> Einzelheiten siehe <a href="https://adermio.com/de/datenschutz" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">Datenschutzerklärung</a>.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">6. Premium-Abo</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Bestimmte Funktionen (KI-Hautchat, Fridge-to-Plate, Produktalternativen, Food Insights, Vergleichsauswertungen zwischen Analyserunden, unbegrenzte erneute Scans) sind über ein <strong>Premium-Abo</strong> verfügbar, das über den Apple App Store abgeschlossen wird.</p><p>Preis, Laufzeit, Verlängerung, Widerruf und Verwaltung richten sich nach den <a href="https://adermio.com/cgv" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">Allgemeinen Geschäftsbedingungen (AGB)</a>.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">7. Sperrung und Kündigung</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Kündigung durch den Nutzer:</strong> jederzeit unter Einstellungen → „Konto löschen“ (sofortige Löschung der personenbezogenen Daten, vorbehaltlich gesetzlicher Aufbewahrungspflichten nach Handels- und Steuerrecht). Kündigung des Premium-Abos über den Apple App Store (iOS-Einstellungen → Apple-ID → Abonnements).</p><p><strong>Sperrung durch Adermio:</strong> ohne Vorankündigung bei Verstößen gegen die Nutzungsbedingungen, betrügerischem Verhalten, Nichtzahlung oder bei Inaktivität von mehr als 24 Monaten (mit Benachrichtigung 30 Tage im Voraus).</p><p>Mit Wirksamwerden der Kündigung verliert der Nutzer den Zugang zum Dienst, und seine Daten werden gemäß Abschnitt 5 der Datenschutzerklärung gelöscht. Der Nutzer kann <strong>seine Daten vor der Löschung exportieren</strong>, und zwar unter Einstellungen → „Meine Daten exportieren“.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">8. Verfügbarkeit und Weiterentwicklung des Dienstes</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio bemüht sich nach besten Kräften, die Verfügbarkeit des Dienstes rund um die Uhr (24/7) sicherzustellen. Adermio garantiert jedoch keine uneingeschränkte Verfügbarkeit und haftet nicht für Unterbrechungen aufgrund geplanter Wartungsarbeiten, technischer Störungen bei Dienstleistern, höherer Gewalt oder App-Updates.</p><p>Adermio behält sich das Recht vor, Funktionen nach eigenem Ermessen zu ändern, auszusetzen oder einzustellen. Wesentliche Änderungen werden per In-App-Benachrichtigung oder E-Mail mitgeteilt.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">9. Geistiges Eigentum</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Alle Bestandteile dieses Dienstes (Software, Benutzeroberflächen, Quellcode, Datenbank, Marken, Logos, Texte, Corporate Design) sind <strong>ausschließliches Eigentum von Antoine Munch</strong> oder seiner Partner.</p><p>Jede Vervielfältigung, Änderung, Verbreitung oder kommerzielle Nutzung ohne vorherige schriftliche Genehmigung ist streng untersagt und kann nach Artikel L.335-2 ff. des französischen Code de la propriété intellectuelle (Gesetzbuch über das geistige Eigentum) geahndet werden.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">10. Haftungsbeschränkung</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Der Dienst wird „<strong>wie besehen</strong>“ und „<strong>nach Verfügbarkeit</strong>“ bereitgestellt. Adermio haftet nicht für:</p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li>persönliche Entscheidungen, die der Nutzer auf Grundlage der kosmetischen Empfehlungen trifft,</li>
+                        <li>Hautreaktionen infolge der Verwendung empfohlener kosmetischer Produkte Dritter (Adermio stellt selbst keine Produkte her),</li>
+                        <li>Wechselwirkungen zwischen empfohlenen kosmetischen Produkten und laufenden medizinischen Behandlungen (der Nutzer muss seine Behandlungen über das Formular angeben und im Zweifel einen Hautarzt aufsuchen),</li>
+                        <li>indirekte Schäden (Verlust von Nutzerdaten infolge eines Absturzes usw.), soweit sie über die Daten hinausgehen, die nachweislich durch ein Verschulden von Adermio tatsächlich verloren gegangen sind.</li>
+                    </ul><p>Die Gesamthaftung von Adermio ist, gleich aus welchem Rechtsgrund, auf den <strong>Betrag begrenzt, den der Nutzer in den letzten 12 Monaten für das Premium-Abo gezahlt hat</strong>.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">11. Personenbezogene Daten</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Die Verarbeitung personenbezogener Daten ist in der <a href="https://adermio.com/de/datenschutz" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">Datenschutzerklärung</a> geregelt. Dort findet der Nutzer alle Informationen zu seinen Rechten, zu den Auftragsverarbeitern und zu den Speicherfristen.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">12. Änderung der Nutzungsbedingungen</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio behält sich das Recht vor, diese Nutzungsbedingungen zu ändern. Wesentliche Änderungen werden <strong>per E-Mail an die mit dem Konto verknüpfte Adresse</strong> sowie über ein <strong>Banner in der App mindestens 15 Tage vor</strong> ihrem Inkrafttreten mitgeteilt.</p><p>Die weitere Nutzung des Dienstes nach dem Inkrafttreten einer neuen Fassung gilt als Zustimmung. Ist der Nutzer mit der neuen Fassung nicht einverstanden, kann er sein Konto kostenlos kündigen.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">13. Schlichtung und Streitbeilegung</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Gütliche Einigung:</strong> Im Streitfall wird der Nutzer gebeten, sich unter <a href="mailto:contact@adermio.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a> an Adermio zu wenden, um eine gütliche Lösung zu finden.</p><p><strong>Schlichtung:</strong> Gemäß Art. L. 612-1 des französischen Verbraucherschutzgesetzbuchs (Code de la consommation) kann der Nutzer als Verbraucher kostenlos ein Schlichtungsverfahren in Anspruch nehmen:</p><p><strong>Schlichtungsstelle FEVAD (Médiateur FEVAD)</strong><br>60 rue La Boétie — 75008 Paris<br><a href="https://www.mediateurfevad.fr" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">https://www.mediateurfevad.fr</a></p><p><strong>Europäische OS-Plattform:</strong> <a href="https://ec.europa.eu/consumers/odr" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">ec.europa.eu/consumers/odr</a></p><p><strong>Gerichtsstand:</strong> Kommt keine gütliche Einigung zustande, werden sämtliche Streitigkeiten vor die französischen Gerichte gebracht. Für Nutzer, die Verbraucher sind, gelten die Regeln über die örtliche Zuständigkeit nach dem französischen Verbraucherschutzgesetzbuch.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">14. Anwendbares Recht</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Diese Nutzungsbedingungen unterliegen <strong>französischem Recht</strong> unter Beachtung der zwingenden Verbraucherschutzvorschriften, die innerhalb der Europäischen Union gelten.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="/logo_Adermio.png" 
+                     alt="Adermio-Logo" 
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                Hautanalyse neu gedacht – mit künstlicher Intelligenz.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="/de/home" class="hover:text-teal-600 transition-colors !text-adermio-dark">Startseite</a>
+                <a href="https://adermio.com/de/form" class="hover:text-teal-600 transition-colors !text-adermio-dark">Analyse starten</a>
+                <a href="https://adermio.com/de/ueber-uns" class="hover:text-teal-600 transition-colors !text-adermio-dark">Über uns</a>
+                <a href="https://adermio.com/de/blog" class="hover:text-teal-600 transition-colors !text-adermio-dark">Blog</a>
+                <a href="https://adermio.com/de/kontakt" class="hover:text-teal-600 transition-colors !text-adermio-dark">Kontakt</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="https://adermio.com/de/nutzungsbedingungen" class="!text-adermio-dark font-medium transition-colors">Nutzungsbedingungen</a>
+                <a href="https://adermio.com/cgv" class="!text-slate-500 hover:!text-adermio-dark transition-colors">AGB</a>
+                <a href="https://adermio.com/de/impressum" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Impressum</a>
+                <a href="https://adermio.com/de/datenschutz" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Datenschutz</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2026 Adermio. Alle Rechte vorbehalten.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Logique du Menu
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+    <script src="/js/pwa.js" defer></script>
+</body>
+</html>
