@@ -77,7 +77,7 @@ TR = [
     (">Erreurs fréquentes</h3>", ">Häufige Fehler</h3>", 1),
     ("Les mauvaises habitudes à bannir pour éviter l'aggravation.", "Gewohnheiten, die Sie besser ablegen, damit sich Ihre Haut nicht verschlechtert.", 1),
     (">Évolution & Suivi</h3>", ">Verlauf & Begleitung</h3>", 1),
-    ("Comprendre les phases de guérison et le suivi de votre acné.", "Wie sich Ihre Haut Schritt für Schritt beruhigt – und wie Sie den Verlauf Ihrer Akne verfolgen.", 1),
+    ("Comprendre les phases de guérison et le suivi de votre acné.", "Wie sich Ihre Haut Schritt für Schritt beruhigt – und wie Sie Ihre Fortschritte im Blick behalten.", 1),
     # --- vidéo et aperçu PDF (vidéo et captures en anglais)
     (">Aperçu en 30 sec</span>", ">Vorschau in 30 Sek.</span>", 1),
     ("Cliquez pour découvrir le contenu de votre dossier", "Klicken Sie, um den Inhalt Ihrer Komplettanalyse zu sehen (Video auf Englisch)", 1),
