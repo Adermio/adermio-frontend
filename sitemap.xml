@@ -9,6 +9,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/home"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/home"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/home"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -20,6 +21,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/about"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/about"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/ueber-uns"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -30,6 +32,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/form"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/form"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/form"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/form"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -40,6 +43,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/contact"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/contact"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/contact"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/kontakt"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -50,6 +54,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/conditions"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/conditions"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/conditions"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -60,6 +65,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/datenschutz"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -69,6 +75,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/sources"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/sources"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/sources"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/quellen"/>
     <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -79,6 +86,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/legal-notice"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/impressum"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -91,6 +99,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog"/>
     <lastmod>2026-03-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -101,6 +110,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/how-to-know-your-skin-type"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/como-conocer-tu-tipo-de-piel"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/come-conoscere-il-tuo-tipo-di-pelle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hauttyp-bestimmen"/>
     <lastmod>2026-03-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -111,6 +121,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/why-do-we-have-acne"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/por-que-tenemos-acne"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/perche-viene-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/warum-bekommt-man-akne"/>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -121,6 +132,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/hormonal-acne"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/acne-hormonal"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/acne-ormonale"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hormonelle-akne"/>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -131,6 +143,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/where-acne-appears"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/donde-aparece-el-acne"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/dove-compare-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/wo-tritt-akne-auf"/>
     <lastmod>2026-07-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -143,6 +156,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog"/>
     <lastmod>2026-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -153,6 +167,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/how-to-know-your-skin-type"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/como-conocer-tu-tipo-de-piel"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/come-conoscere-il-tuo-tipo-di-pelle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hauttyp-bestimmen"/>
     <lastmod>2026-03-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -163,6 +178,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/why-do-we-have-acne"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/por-que-tenemos-acne"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/perche-viene-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/warum-bekommt-man-akne"/>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -173,6 +189,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/hormonal-acne"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/acne-hormonal"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/acne-ormonale"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hormonelle-akne"/>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -183,6 +200,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/where-acne-appears"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/donde-aparece-el-acne"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/dove-compare-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/wo-tritt-akne-auf"/>
     <lastmod>2026-07-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -195,6 +213,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog"/>
     <lastmod>2026-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -205,6 +224,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/how-to-know-your-skin-type"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/como-conocer-tu-tipo-de-piel"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/come-conoscere-il-tuo-tipo-di-pelle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hauttyp-bestimmen"/>
     <lastmod>2026-03-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -215,6 +235,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/why-do-we-have-acne"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/por-que-tenemos-acne"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/perche-viene-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/warum-bekommt-man-akne"/>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -225,6 +246,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/hormonal-acne"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/acne-hormonal"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/acne-ormonale"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hormonelle-akne"/>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -235,6 +257,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/where-acne-appears"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/donde-aparece-el-acne"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/dove-compare-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/wo-tritt-akne-auf"/>
     <lastmod>2026-07-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -247,6 +270,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/home"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/home"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/home"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -258,6 +282,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/about"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/about"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/ueber-uns"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -268,6 +293,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/form"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/form"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/form"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/form"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -278,6 +304,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/contact"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/contact"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/contact"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/kontakt"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -288,6 +315,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/conditions"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/conditions"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/conditions"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -298,6 +326,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/datenschutz"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -307,6 +336,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/sources"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/sources"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/sources"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/quellen"/>
     <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -317,6 +347,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/legal-notice"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/impressum"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -329,6 +360,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/home"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/home"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/home"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -340,6 +372,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/about"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/about"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/ueber-uns"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -350,6 +383,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/form"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/form"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/form"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/form"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -360,6 +394,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/contact"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/contact"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/contact"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/kontakt"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -370,6 +405,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/conditions"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/conditions"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/conditions"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -380,6 +416,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/datenschutz"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -390,6 +427,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/legal-notice"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/impressum"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -400,6 +438,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/home"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/home"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/home"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -411,6 +450,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/about"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/about"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/ueber-uns"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -421,6 +461,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/form"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/form"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/form"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/form"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -431,6 +472,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/contact"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/contact"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/contact"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/kontakt"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -441,6 +483,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/conditions"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/conditions"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/conditions"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -451,6 +494,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/datenschutz"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -460,6 +504,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/sources"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/sources"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/sources"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/quellen"/>
     <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -470,6 +515,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/legal-notice"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/impressum"/>
     <lastmod>2026-04-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -480,6 +526,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog"/>
     <lastmod>2026-03-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -490,6 +537,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/how-to-know-your-skin-type"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/como-conocer-tu-tipo-de-piel"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/come-conoscere-il-tuo-tipo-di-pelle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hauttyp-bestimmen"/>
     <lastmod>2026-03-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -500,6 +548,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/why-do-we-have-acne"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/por-que-tenemos-acne"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/perche-viene-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/warum-bekommt-man-akne"/>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -510,6 +559,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/hormonal-acne"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/acne-hormonal"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/acne-ormonale"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hormonelle-akne"/>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -520,6 +570,150 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/where-acne-appears"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/donde-aparece-el-acne"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/dove-compare-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/wo-tritt-akne-auf"/>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/home</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/home"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/home"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/home"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/home"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adermio.com/"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/ueber-uns</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/about"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/ueber-uns"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/form</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/formulaire"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/form"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/form"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/form"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/form"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/kontakt</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/contact"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/contact"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/kontakt"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/nutzungsbedingungen</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/conditions"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/conditions"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/conditions"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/conditions"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/datenschutz</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/datenschutz"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/quellen</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/sources"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/sources"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/sources"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/quellen"/>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/impressum</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/impressum"/>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/blog</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/blog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog"/>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/blog/hauttyp-bestimmen</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/blog/comment-connaitre-son-type-de-peau"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/how-to-know-your-skin-type"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/como-conocer-tu-tipo-de-piel"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/come-conoscere-il-tuo-tipo-di-pelle"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hauttyp-bestimmen"/>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/blog/warum-bekommt-man-akne</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/blog/pourquoi-a-t-on-de-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/why-do-we-have-acne"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/por-que-tenemos-acne"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/perche-viene-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/warum-bekommt-man-akne"/>
+    <lastmod>2026-05-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/blog/hormonelle-akne</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/blog/acne-hormonale"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/hormonal-acne"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/acne-hormonal"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/acne-ormonale"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hormonelle-akne"/>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/de/blog/wo-tritt-akne-auf</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/blog/ou-apparait-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/where-acne-appears"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/donde-aparece-el-acne"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/dove-compare-l-acne"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/wo-tritt-akne-auf"/>
     <lastmod>2026-07-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
