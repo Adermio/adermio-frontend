@@ -27,9 +27,9 @@ TR = [
     # --- étape 1 ---
     ('Diagnostic IA\n', 'KI-Hautanalyse\n', 1),
     ('Votre peau a <br><span class="text-brand-primary italic">une histoire.</span>',
-     'Ihre Haut erzählt <br><span class="text-brand-primary italic">eine Geschichte.</span>', 1),
+     'Ihre Haut hat <br><span class="text-brand-primary italic">eine Geschichte.</span>', 1),
     ('Laissez notre technologie analyser vos besoins uniques pour cr&eacute;er votre protocole sur-mesure.',
-     'Unsere Technologie analysiert Ihre individuellen Bedürfnisse und erstellt daraus Ihre maßgeschneiderte Pflegeroutine.', 1),
+     'Unsere Technologie analysiert Ihre Bedürfnisse und erstellt Ihre maßgeschneiderte Pflegeroutine.', 1),
     ('placeholder="Votre pr&eacute;nom"', 'placeholder="Ihr Vorname"', 1),
     ('</i> Pr&eacute;nom requis</p>', '</i> Bitte geben Sie Ihren Vornamen ein</p>', 1),
 
