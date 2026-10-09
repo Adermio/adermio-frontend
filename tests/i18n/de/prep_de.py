@@ -155,8 +155,12 @@ def transform(fr_rel):
     html = '\n'.join(out).replace('__FR_URL__', fr_url)
 
     # backend : webhooks FR -> DE, lang JS
-    html = re.sub(r'webhook/(form-test-fr-og-v6|form-test-fr-og|form-test-fr|analyse-gratuite-fr-web[a-z0-9-]*|analyse-gratuite-fr-test)',
-                  'webhook/' + DE_FREE_WEBHOOK, html)
+    # Ligne du webhook gratuit ÉPINGLÉE (le webhook FR change au gré des tests : le 05/10, « form-test-fr-og-pur »
+    # donnait « analyse-gratuite-de-web-pur », inexistant). Le motif de secours consomme tout le suffixe.
+    html = re.sub(r"const WEBHOOK_URL = '[^']*';[^\n]*",
+                  "const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/" + DE_FREE_WEBHOOK
+                  + "'; // Analyse gratuite DE : « Analyse Gratuite Allemand web » (4FJGz9wXWJQwYofC)", html)
+    html = re.sub(r'webhook/(form-test-fr[a-z0-9-]*|analyse-gratuite-fr-[a-z0-9-]*)', 'webhook/' + DE_FREE_WEBHOOK, html)
     html = html.replace('webhook/second-cycle-fr', 'webhook/second-cycle-de')
     html = re.sub(r"lang:\s*'fr'", "lang: 'de'", html)
     html = html.replace('params.append("lang", "fr")', 'params.append("lang", "de")')
