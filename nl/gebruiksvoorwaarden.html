@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="nl" class="scroll-smooth">
+<head>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ua5d07cn1u");
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Gebruiksvoorwaarden — Adermio</title>
+    <meta name="description" content="Algemene gebruiksvoorwaarden van de dienst Adermio — toegang, rechten en plichten, intellectueel eigendom, bemiddeling.">
+    <link rel="canonical" href="https://adermio.com/nl/gebruiksvoorwaarden">
+    <link rel="alternate" hreflang="fr" href="https://adermio.com/conditions">
+    <link rel="alternate" hreflang="en" href="https://adermio.com/en/conditions">
+    <link rel="alternate" hreflang="es" href="https://adermio.com/es/conditions">
+    <link rel="alternate" hreflang="it" href="https://adermio.com/it/conditions">
+    <link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen">
+    <link rel="alternate" hreflang="nl" href="https://adermio.com/nl/gebruiksvoorwaarden">
+    <link rel="alternate" hreflang="x-default" href="https://adermio.com/conditions">
+    <meta property="og:title" content="Gebruiksvoorwaarden — Adermio">
+    <meta property="og:description" content="Algemene gebruiksvoorwaarden van de dienst Adermio — toegang, rechten en plichten, intellectueel eigendom, bemiddeling.">
+    <meta property="og:url" content="https://adermio.com/nl/gebruiksvoorwaarden">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://adermio.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="nl_NL">
+    <meta property="og:site_name" content="Adermio">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Gebruiksvoorwaarden — Adermio">
+    <meta name="twitter:description" content="Algemene gebruiksvoorwaarden van de dienst Adermio — toegang, rechten en plichten, intellectueel eigendom, bemiddeling.">
+    <meta name="twitter:image" content="https://adermio.com/og-image.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0F3D39">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Adermio">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',   
+                            dark: '#0F3D39',   
+                            primary: '#14B8A6',
+                            text: '#334155',   
+                            muted: '#94A3B8',  
+                            surface: '#FFFFFF' 
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        a, a:visited, a:hover, a:active {
+            color: inherit; 
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+    <script src="/js/ttq.js"></script>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/nl/home" class="flex items-center gap-2">
+                 <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-2 py-1 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+                        <img src="https://flagcdn.com/nl.svg" width="16" alt="NL" class="rounded-sm shadow-sm">
+                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+                    </button>
+                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-adermio-dark/5 overflow-hidden z-[80]">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                            <img src="https://flagcdn.com/nl.svg" width="18" alt="Nederlands" class="rounded-sm shadow-sm">
+                            <span>Nederlands</span>
+                        </a>
+                        <a href="https://adermio.com/en/conditions" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/us.svg" width="18" alt="English" class="rounded-sm shadow-sm">
+                            <span>English</span>
+                        </a>
+                        <a href="https://adermio.com/es/conditions" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/es.svg" width="18" alt="Español" class="rounded-sm shadow-sm">
+                            <span>Español</span>
+                        </a>
+                        <a href="https://adermio.com/it/conditions" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/it.svg" width="18" alt="Italiano" class="rounded-sm shadow-sm">
+                            <span>Italiano</span>
+                        </a>
+                        <a href="https://adermio.com/de/nutzungsbedingungen" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/de.svg" width="18" alt="Deutsch" class="rounded-sm shadow-sm">
+                            <span>Deutsch</span>
+                        </a>
+                        <a href="https://adermio.com/conditions" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/fr.svg" width="18" alt="Français" class="rounded-sm shadow-sm">
+                            <span>Français</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="/nl/home" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Home</a>
+            <a href="https://adermio.com/nl/form" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Start je analyse</a>
+            <a href="https://adermio.com/nl/over-ons" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Over ons</a>
+            <a href="https://adermio.com/nl/blog" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Blog</a>
+            <a href="https://adermio.com/nl/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Contact</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2026</span>
+        </div>
+    </div>
+
+    <header class="relative w-full pt-40 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="fade-up inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/50 border border-adermio-dark/5 text-[10px] uppercase tracking-[0.2em] font-medium text-adermio-dark shadow-sm mb-6">
+                <span>Juridisch</span>
+            </div>
+            <h1 class="font-serif text-3xl md:text-5xl text-adermio-dark mb-4 fade-up" style="animation-delay: 0.1s;">
+                Algemene gebruiksvoorwaarden
+            </h1>
+            <p class="text-adermio-muted text-sm fade-up" style="animation-delay: 0.2s;">
+                Versie 2.0 — Van kracht sinds 18 mei 2026
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10 fade-up" style="animation-delay: 0.3s;">
+        <div class="bg-white rounded-[2rem] p-8 md:p-16 shadow-soft border border-adermio-dark/5">
+            
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">1. Omschrijving van de dienst</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio is een platform voor <strong>persoonlijke cosmetische begeleiding op basis van kunstmatige intelligentie (AI)</strong>, toegankelijk via de website <code>adermio.com</code> en de mobiele app Adermio.</p><p>De dienst biedt onder meer: een huidanalyse door geautomatiseerde verwerking van gezichtsfoto's, een persoonlijk huidoverzicht met aanbevelingen voor een cosmetische routine, dagelijkse registratie van de toestand van de huid en van gewoontes, een AI-huidchat (Premium) en vergelijkende overzichten tussen analyserondes.</p><div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark"><strong>⚠️ Belangrijk:</strong> de dienst is uitsluitend informatief en cosmetisch van aard. Hij is geen medische handeling, geen medisch advies, geen voorschrift en geen consult op afstand. Adermio is geen medisch hulpmiddel. Heb je een huidaandoening of twijfel je? Raadpleeg dan een dermatoloog.</div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">2. Toegangsvoorwaarden</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Minimumleeftijd:</strong> 16 jaar. Dat is in Frankrijk de leeftijd voor digitale toestemming volgens artikel 8 van de Algemene Verordening Gegevensbescherming (AVG, in het Engels GDPR). Minderjarigen van 16 tot 18 jaar hebben vooraf toestemming nodig van iemand die het ouderlijk gezag over hen uitoefent.</p><p><strong>Handelingsbekwaamheid:</strong> de Gebruiker verklaart handelingsbekwaam te zijn om overeenkomsten te sluiten in de zin van artikel 1145 en volgende van het Franse Burgerlijk Wetboek (Code civil).</p><p><strong>Geografisch bereik:</strong> de dienst is bedoeld voor Europees Frankrijk, de Franse overzeese gebieden (DOM-TOM) en de Europese Unie. Gebruik vanuit andere rechtsgebieden wordt gedoogd, maar de Gebruiker is dan als enige verantwoordelijk voor de naleving van de plaatselijke wetgeving.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">3. Account aanmaken</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Een account wordt aangemaakt met een e-mailadres en wachtwoord (minimaal 10 tekens, met automatische controle op uitgelekte wachtwoorden via HaveIBeenPwned), met “Log in met Apple” of met “Inloggen met Google”.</p><p>De Gebruiker verbindt zich ertoe <strong>juiste, waarheidsgetrouwe en actuele</strong> gegevens te verstrekken. Hij is als enige verantwoordelijk voor de geheimhouding van zijn inloggegevens. Eén account per persoon: meerdere accounts aanmaken of een account delen is verboden.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">4. Verplichtingen van de Gebruiker</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>De Gebruiker verbindt zich ertoe:</p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li>niet te proberen de beveiligingsmaatregelen van de dienst te omzeilen,</li>
+                        <li>de app niet te reverse-engineeren of te decompileren en niet te proberen de broncode ervan te reconstrueren,</li>
+                        <li>de dienst niet te gebruiken voor onrechtmatige, lasterlijke of discriminerende doeleinden, of voor doeleinden die inbreuk maken op de rechten van derden,</li>
+                        <li>geen inhoud (foto, tekst) van een derde te uploaden zonder diens toestemming, en evenmin pornografische, gewelddadige of illegale inhoud,</li>
+                        <li>de servers niet opzettelijk te overbelasten (DoS, grootschalige scraping).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">5. Licentie op geüploade inhoud</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Bij het uploaden van een foto <strong>behoudt de Gebruiker de volledige eigendom</strong> van die foto. Wel verleent hij Adermio een niet-exclusieve, wereldwijde, kosteloze licentie, beperkt tot de duur van zijn gebruik van de dienst, om:</p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li>de foto te verwerken met een AI-model in de cloud,</li>
+                        <li>de foto te tonen in zijn eigen huidoverzicht en geschiedenis,</li>
+                        <li>de foto te bewaren in de beveiligde opslag van Supabase, volgens de termijnen die in de privacyverklaring zijn vastgelegd,</li>
+                        <li>foto's van dezelfde Gebruiker met elkaar te vergelijken (28-dagencheck en vergelijking tussen analyserondes).</li>
+                    </ul><p><strong>Foto's van Gebruikers worden op geen enkele manier openbaar, commercieel of voor marketing gebruikt, en ook niet om AI-modellen te trainen.</strong> Zie de <a href="https://adermio.com/nl/privacyverklaring" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">privacyverklaring</a> voor de details.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">6. Premium-abonnement</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Bepaalde functies (AI-huidchat, fridge-to-plate, productalternatieven, food insights, vergelijkingen tussen analyserondes, onbeperkt opnieuw scannen) zijn beschikbaar met een <strong>Premium-abonnement</strong>, af te sluiten via de App Store van Apple.</p><p>Prijs, looptijd, verlenging, herroeping en beheer van het abonnement zijn geregeld in de <a href="https://adermio.com/cgv" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">algemene verkoopvoorwaarden (CGV)</a>.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">7. Opschorting en beëindiging</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Opzegging door de Gebruiker:</strong> op elk moment via Instellingen → “Account verwijderen” (directe verwijdering van de persoonsgegevens, behalve voor zover wettelijke bewaarplichten voor de boekhouding gelden). Het Premium-abonnement wordt opgezegd via de App Store van Apple (iOS-instellingen → Apple ID → Abonnementen).</p><p><strong>Opschorting door Adermio:</strong> zonder voorafgaande kennisgeving bij schending van deze gebruiksvoorwaarden, frauduleus gedrag, niet-betaling of langdurige inactiviteit van meer dan 24 maanden (met een melding 30 dagen vooraf).</p><p>Na de beëindiging verliest de Gebruiker de toegang tot de dienst en worden zijn gegevens verwijderd volgens § 5 van de privacyverklaring. De Gebruiker kan <strong>zijn gegevens vóór de verwijdering exporteren</strong> via Instellingen → “Mijn gegevens exporteren”.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">8. Beschikbaarheid en ontwikkeling van de dienst</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio spant zich naar beste vermogen in om de dienst 24/7 beschikbaar te houden. Adermio garandeert echter geen absolute beschikbaarheid en kan niet aansprakelijk worden gesteld voor onderbrekingen door gepland onderhoud, technische storingen bij externe dienstverleners, overmacht of updates van de app.</p><p>Adermio behoudt zich het recht voor om naar eigen inzicht functies te wijzigen, op te schorten of te verwijderen. Wezenlijke wijzigingen worden bekendgemaakt via een melding in de app of per e-mail.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">9. Intellectueel eigendom</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Alle onderdelen van de dienst (software, interfaces, broncode, database, merken, logo's, teksten, huisstijl) zijn <strong>exclusief eigendom van Antoine Munch</strong> of van zijn partners.</p><p>Elke verveelvoudiging, wijziging, verspreiding of commercieel gebruik zonder voorafgaande schriftelijke toestemming is strikt verboden en kan worden bestraft met de sancties uit artikel L.335-2 en volgende van de Franse Code de la propriété intellectuelle (wetboek van intellectueel eigendom).</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">10. Beperking van aansprakelijkheid</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>De dienst wordt geleverd “<strong>in de huidige staat</strong>” en “<strong>afhankelijk van beschikbaarheid</strong>”. Adermio is niet aansprakelijk voor:</p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li>persoonlijke beslissingen die de Gebruiker neemt op basis van de cosmetische aanbevelingen,</li>
+                        <li>huidreacties na het gebruik van aanbevolen cosmetische producten van derden (Adermio maakt zelf geen producten),</li>
+                        <li>wisselwerkingen tussen aanbevolen cosmetische producten en lopende medische behandelingen (de Gebruiker moet zijn behandelingen via het formulier doorgeven en bij twijfel een dermatoloog raadplegen),</li>
+                        <li>indirecte schade (verlies van gebruikersgegevens na een crash enz.) die verder gaat dan de gegevens die daadwerkelijk verloren zijn gegaan door een bewezen fout van Adermio.</li>
+                    </ul><p>De totale aansprakelijkheid van Adermio, op welke grond ook, is beperkt tot <strong>het bedrag dat de Gebruiker in de afgelopen 12 maanden voor het Premium-abonnement heeft betaald</strong>.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">11. Persoonsgegevens</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>De verwerking van persoonsgegevens is geregeld in de <a href="https://adermio.com/nl/privacyverklaring" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">privacyverklaring</a>. Daarin vindt de Gebruiker alle informatie over zijn rechten, de verwerkers en de bewaartermijnen.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">12. Wijziging van de gebruiksvoorwaarden</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio behoudt zich het recht voor deze gebruiksvoorwaarden te wijzigen. Elke wezenlijke wijziging wordt gemeld <strong>per e-mail aan het adres dat aan het account is gekoppeld</strong> en via een <strong>banner in de app, ten minste 15 dagen vóór</strong> de inwerkingtreding.</p><p>Wie de dienst blijft gebruiken na de datum waarop een nieuwe versie in werking treedt, aanvaardt die versie. Gaat de Gebruiker niet akkoord met de nieuwe versie, dan kan hij zijn account kosteloos opzeggen.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">13. Bemiddeling en geschillenbeslechting</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Minnelijke regeling:</strong> bij een geschil wordt de Gebruiker verzocht contact op te nemen met Adermio via <a href="mailto:contact@adermio.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a> om samen tot een minnelijke oplossing te komen.</p><p><strong>Bemiddeling:</strong> overeenkomstig artikel L. 612-1 van het Franse consumentenwetboek (Code de la consommation) kan de Gebruiker die consument is kosteloos een beroep doen op bemiddeling:</p><p><strong>Médiateur FEVAD</strong><br>60 rue La Boétie — 75008 Paris<br><a href="https://www.mediateurfevad.fr" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">https://www.mediateurfevad.fr</a></p><p><strong>Europees platform voor onlinegeschillenbeslechting (ODR):</strong> <a href="https://ec.europa.eu/consumers/odr" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">ec.europa.eu/consumers/odr</a></p><p><strong>Bevoegde rechter:</strong> komt er geen minnelijke regeling tot stand, dan wordt elk geschil voorgelegd aan de Franse rechter. Voor Gebruikers die consument zijn, gelden de regels over territoriale bevoegdheid uit het Franse consumentenwetboek.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">14. Toepasselijk recht</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Op deze gebruiksvoorwaarden is het <strong>Franse recht</strong> van toepassing, met inachtneming van de dwingende bepalingen die binnen de Europese Unie voor de consument gelden.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="/logo_Adermio.png" 
+                     alt="Adermio-logo" 
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                Huidverzorging, opnieuw uitgevonden met AI.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="/nl/home" class="hover:text-teal-600 transition-colors !text-adermio-dark">Home</a>
+                <a href="https://adermio.com/nl/form" class="hover:text-teal-600 transition-colors !text-adermio-dark">Start je analyse</a>
+                <a href="https://adermio.com/nl/over-ons" class="hover:text-teal-600 transition-colors !text-adermio-dark">Over ons</a>
+                <a href="https://adermio.com/nl/blog" class="hover:text-teal-600 transition-colors !text-adermio-dark">Blog</a>
+                <a href="https://adermio.com/nl/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Contact</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="https://adermio.com/nl/gebruiksvoorwaarden" class="!text-adermio-dark font-medium transition-colors">Gebruiksvoorwaarden</a>
+                <a href="https://adermio.com/cgv" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Verkoopvoorwaarden</a>
+                <a href="https://adermio.com/nl/juridische-informatie" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Juridische informatie</a>
+                <a href="https://adermio.com/nl/privacyverklaring" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Privacyverklaring</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2026 Adermio. Alle rechten voorbehouden.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Logique du Menu
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+    <script src="/js/pwa.js" defer></script>
+</body>
+</html>

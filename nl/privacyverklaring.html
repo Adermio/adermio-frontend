@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="nl" class="scroll-smooth">
+<head>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ua5d07cn1u");
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Privacyverklaring — Adermio</title>
+    <meta name="description" content="Privacyverklaring van Adermio volgens de AVG — verzamelde gegevens, verwerkers, rechten, bewaartermijnen.">
+    <link rel="canonical" href="https://adermio.com/nl/privacyverklaring">
+    <link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite">
+    <link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite">
+    <link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite">
+    <link rel="alternate" hreflang="it" href="https://adermio.com/it/confidentialite">
+    <link rel="alternate" hreflang="de" href="https://adermio.com/de/datenschutz">
+    <link rel="alternate" hreflang="nl" href="https://adermio.com/nl/privacyverklaring">
+    <link rel="alternate" hreflang="x-default" href="https://adermio.com/confidentialite">
+    <meta property="og:title" content="Privacyverklaring — Adermio">
+    <meta property="og:description" content="Privacyverklaring van Adermio volgens de AVG — verzamelde gegevens, verwerkers, rechten, bewaartermijnen.">
+    <meta property="og:url" content="https://adermio.com/nl/privacyverklaring">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://adermio.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="nl_NL">
+    <meta property="og:site_name" content="Adermio">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Privacyverklaring — Adermio">
+    <meta name="twitter:description" content="Privacyverklaring van Adermio volgens de AVG — verzamelde gegevens, verwerkers, rechten, bewaartermijnen.">
+    <meta name="twitter:image" content="https://adermio.com/og-image.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0F3D39">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Adermio">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adermio: {
+                            base: '#F8FAFC',   
+                            dark: '#0F3D39',   
+                            primary: '#14B8A6',
+                            text: '#334155',   
+                            muted: '#94A3B8',  
+                            surface: '#FFFFFF' 
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
+                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        a, a:visited, a:hover, a:active {
+            color: inherit; 
+            text-decoration: none;
+        }
+        .text-adermio-dark { color: #0F3D39 !important; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
+        }
+
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #full-menu {
+            transition: opacity 0.4s ease, visibility 0.4s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #full-menu.menu-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+    <script src="/js/ttq.js"></script>
+</head>
+<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
+
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/nl/home" class="flex items-center gap-2">
+                 <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain">
+                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-2 py-1 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
+                        <img src="https://flagcdn.com/nl.svg" width="16" alt="NL" class="rounded-sm shadow-sm">
+                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
+                    </button>
+                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-adermio-dark/5 overflow-hidden z-[80]">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
+                            <img src="https://flagcdn.com/nl.svg" width="18" alt="Nederlands" class="rounded-sm shadow-sm">
+                            <span>Nederlands</span>
+                        </a>
+                        <a href="https://adermio.com/en/confidentialite" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/us.svg" width="18" alt="English" class="rounded-sm shadow-sm">
+                            <span>English</span>
+                        </a>
+                        <a href="https://adermio.com/es/confidentialite" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/es.svg" width="18" alt="Español" class="rounded-sm shadow-sm">
+                            <span>Español</span>
+                        </a>
+                        <a href="https://adermio.com/it/confidentialite" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/it.svg" width="18" alt="Italiano" class="rounded-sm shadow-sm">
+                            <span>Italiano</span>
+                        </a>
+                        <a href="https://adermio.com/de/datenschutz" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/de.svg" width="18" alt="Deutsch" class="rounded-sm shadow-sm">
+                            <span>Deutsch</span>
+                        </a>
+                        <a href="https://adermio.com/confidentialite" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/fr.svg" width="18" alt="Français" class="rounded-sm shadow-sm">
+                            <span>Français</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
+        <nav class="flex flex-col items-center gap-8 md:gap-10">
+            <a href="/nl/home" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Home</a>
+            <a href="https://adermio.com/nl/form" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Start je analyse</a>
+            <a href="https://adermio.com/nl/over-ons" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Over ons</a>
+            <a href="https://adermio.com/nl/blog" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Blog</a>
+            <a href="https://adermio.com/nl/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Contact</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 right-0 text-center">
+            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2026</span>
+        </div>
+    </div>
+
+    <header class="relative w-full pt-40 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="fade-up inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/50 border border-adermio-dark/5 text-[10px] uppercase tracking-[0.2em] font-medium text-adermio-dark shadow-sm mb-6">
+                <span>Juridisch</span>
+            </div>
+            <h1 class="font-serif text-3xl md:text-5xl text-adermio-dark mb-4 fade-up" style="animation-delay: 0.1s;">
+                Privacyverklaring
+            </h1>
+            <p class="text-adermio-muted text-sm fade-up" style="animation-delay: 0.2s;">
+                Versie 2.3 — Laatst bijgewerkt: 10 juli 2026
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10 fade-up" style="animation-delay: 0.3s;">
+        <div class="bg-white rounded-[2rem] p-8 md:p-16 shadow-soft border border-adermio-dark/5">
+            
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">0. Inleiding</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Deze privacyverklaring beschrijft hoe Adermio (uitgever: Antoine Munch, SIRET 999 319 692 00011) de persoonsgegevens van gebruikers van de website <code>adermio.com</code> en de mobiele app Adermio verzamelt, gebruikt, beschermt en deelt, in overeenstemming met de <strong>Algemene Verordening Gegevensbescherming (AVG, in het Engels GDPR)</strong>, Verordening (EU) 2016/679, en de Franse privacywet, de <strong>Loi Informatique et Libertés</strong>.</p><div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark"><strong>⚠️ Belangrijk:</strong> Adermio verwerkt gezondheidsgegevens (foto's van je huid, de toestand van je huid, dermatologische behandelingen). Dat zijn “gevoelige” gegevens: bijzondere categorieën van persoonsgegevens in de zin van artikel 9 van de AVG. Ze mogen alleen worden verwerkt met je uitdrukkelijke toestemming, die je geeft bij het aanmaken van je account of bij je eerste analyse.</div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">1. Verwerkingsverantwoordelijke</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Antoine Munch (eenmanszaak — Franse micro-entreprise)<br>SIRET 999 319 692 00011<br>67120 Ergersheim, Frankrijk<br>E-mail: <a href="mailto:contact@adermio.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a><br>Telefoon: +33 6 22 30 17 31</p><p>De verwerkingsverantwoordelijke is ook het <strong>aanspreekpunt voor de AVG</strong>. Wil je je rechten uitoefenen? Mail naar <a href="mailto:contact@adermio.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a> met als onderwerp “AVG”.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">2. Welke gegevens we verzamelen</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Gegevens die je zelf verstrekt:</strong></p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li><strong>Identiteit:</strong> voornaam (optioneel), achternaam (optioneel), leeftijd, geslacht</li>
+                        <li><strong>Contactgegevens:</strong> e-mailadres</li>
+                        <li><strong>Authenticatie:</strong> gehasht wachtwoord (nooit in leesbare vorm toegankelijk) of OAuth-inloggegevens van Apple/Google</li>
+                        <li><strong>Gezondheid van de huid:</strong> huidtype, aandachtspunten, allergieën, lopende behandelingen, zwangerschap/borstvoeding, gezichtsfoto's</li>
+                        <li><strong>Voeding en gezondheid:</strong> foto's van maaltijden, voedingsdagboek, intoleranties (als je het tabblad Voeding gebruikt)</li>
+                        <li><strong>Huidverzorgingsroutine:</strong> gebruikte producten (merken, productnamen), hoe vaak je ze gebruikt</li>
+                        <li><strong>Voorkeuren:</strong> taal, tijdzone, voorkeuren voor meldingen</li>
+                        <li><strong>Feedback:</strong> antwoorden op vragenlijsten, berichten in de AI-huidchat, gemelde problemen</li>
+                    </ul><p><strong>Automatisch verzamelde gegevens:</strong></p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li><strong>Technische gegevens:</strong> apparaatmodel, versie van het besturingssysteem, app-versie, taal, IDFV (iOS)</li>
+                        <li><strong>Gebruiksgegevens:</strong> bekeken pagina's, gebruikte functies, volgorde van handelingen (PostHog)</li>
+                        <li><strong>Prestatiegegevens:</strong> crashes, fouten, responstijd (Sentry)</li>
+                        <li><strong>IP-adres:</strong> tijdelijk, niet opgeslagen buiten technische logbestanden</li>
+                        <li><strong>Sessiegegevens:</strong> versleutelde tokens (iOS-sleutelhanger)</li>
+                        <li><strong>Pushtoken:</strong> Expo-ID waarmee meldingen kunnen worden verstuurd</li>
+                    </ul><p><strong>Gegevens die betaaldienstverleners verzamelen:</strong> bankgegevens worden uitsluitend door Apple verwerkt. Adermio ontvangt nooit je bankgegevens — alleen een anonieme transactie-ID, de abonnementsstatus, het gekochte product en de aankoopdatum.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">3. Doeleinden en rechtsgronden</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <div class="overflow-x-auto -mx-2 my-4"><table class="w-full text-sm">
+                        <thead class="border-b border-adermio-dark/10"><tr><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Doel</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Rechtsgrond</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Grondslag gezondheidsgegevens</th></tr></thead>
+                        <tbody class="divide-y divide-adermio-dark/5"><tr><td class="py-2 pr-4 align-top">Je account aanmaken en beheren</td><td class="py-2 pr-4 align-top">Art. 6 lid 1 sub b — Uitvoering van de overeenkomst</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">AI-huidanalyse</td><td class="py-2 pr-4 align-top">Art. 6 lid 1 sub b — Uitvoering van de overeenkomst</td><td class="py-2 pr-4 align-top"><strong>Art. 9 lid 2 sub a — Uitdrukkelijke toestemming</strong></td></tr><tr><td class="py-2 pr-4 align-top">Routine en aanbevelingen op maat</td><td class="py-2 pr-4 align-top">Art. 6 lid 1 sub b — Uitvoering van de overeenkomst</td><td class="py-2 pr-4 align-top">Art. 9 lid 2 sub a</td></tr><tr><td class="py-2 pr-4 align-top">Nuttige meldingen</td><td class="py-2 pr-4 align-top">Art. 6 lid 1 sub a — Toestemming</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">Beheer van het Premium-abonnement</td><td class="py-2 pr-4 align-top">Art. 6 lid 1 sub b — Uitvoering van de overeenkomst</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">De app verbeteren (anonieme productanalyses)</td><td class="py-2 pr-4 align-top">Art. 6 lid 1 sub f — Gerechtvaardigd belang</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">Bugs opsporen en verhelpen</td><td class="py-2 pr-4 align-top">Art. 6 lid 1 sub f — Gerechtvaardigd belang</td><td class="py-2 pr-4 align-top">—</td></tr><tr><td class="py-2 pr-4 align-top">Wettelijke bewaarplichten (boekhouding)</td><td class="py-2 pr-4 align-top">Art. 6 lid 1 sub c — Wettelijke verplichting</td><td class="py-2 pr-4 align-top">—</td></tr></tbody>
+                    </table></div><p><strong>Geen gebruik voor advertenties.</strong> Adermio doet niet aan gerichte advertenties, verkoopt je gegevens niet en stuurt geen marketingberichten zonder je uitdrukkelijke toestemming.</p><p><strong>Analyse en bewaring van je foto's.</strong> Je foto's worden geanalyseerd door modellen voor kunstmatige intelligentie (AI) van Google (Gemini-API) en OpenAI (ChatGPT-API), die optreden als verwerkers van Adermio, met als enig doel je analyse en je aanbevelingen op te stellen. Ze worden veilig opgeslagen in de Europese Unie (Supabase, Frankfurt) en bewaard zolang je account actief is, zodat de dienst kan werken (geschiedenis, voortgang, vergelijkingen). Als je je account verwijdert, worden ze direct en definitief gewist. Foto's van een scan die nooit aan een account wordt gekoppeld, worden binnen 7 dagen automatisch verwijderd.</p><p><strong>Lokale gezichtsdetectie.</strong> De kadrering van de scan (afstand, licht, stabiliteit) werkt met gezichtsdetectie die lokaal op je apparaat draait. Deze gegevens over de vorm van je gezicht zijn vluchtig: ze worden nooit opgeslagen, nooit naar onze servers verstuurd en vormen geen biometrisch sjabloon waarmee je kunt worden geïdentificeerd.</p><p><strong>Geen AI-training.</strong> Je foto's en gegevens worden nooit gebruikt om AI-modellen te trainen — niet die van ons en niet die van onze verwerkers, die zich daar contractueel toe verplichten. Mocht dat in de toekomst veranderen, dan vragen we je daarvoor vooraf uitdrukkelijk toestemming, overeenkomstig artikel 6 en 9 van de AVG, en kun je die toestemming op elk moment intrekken.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">4. Verwerkers en ontvangers</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio werkt met de volgende verwerkers, overeenkomstig artikel 28 van de AVG:</p><div class="overflow-x-auto -mx-2 my-4"><table class="w-full text-sm">
+                        <thead class="border-b border-adermio-dark/10"><tr><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Verwerker</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Rol</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Locatie</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Doorgifte</th></tr></thead>
+                        <tbody class="divide-y divide-adermio-dark/5"><tr><td class="py-2 pr-4 align-top"><strong>Supabase Inc.</strong></td><td class="py-2 pr-4 align-top">Database, authenticatie, opslag, edge functions</td><td class="py-2 pr-4 align-top">Frankfurt (EU)</td><td class="py-2 pr-4 align-top">Geen doorgifte buiten de EER</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Sentry GmbH</strong></td><td class="py-2 pr-4 align-top">Foutmonitoring</td><td class="py-2 pr-4 align-top">Duitsland (EU)</td><td class="py-2 pr-4 align-top">Geen doorgifte buiten de EER</td></tr><tr><td class="py-2 pr-4 align-top"><strong>PostHog Inc.</strong> (EU)</td><td class="py-2 pr-4 align-top">Productanalyse</td><td class="py-2 pr-4 align-top">Frankfurt (EU)</td><td class="py-2 pr-4 align-top">Geen doorgifte buiten de EER</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Apple Inc.</strong></td><td class="py-2 pr-4 align-top">App Store, in-app-aankopen, Log in met Apple, pushmeldingen</td><td class="py-2 pr-4 align-top">VS + meerdere regio's</td><td class="py-2 pr-4 align-top">DPF EU-VS</td></tr><tr><td class="py-2 pr-4 align-top"><strong>RevenueCat Inc.</strong></td><td class="py-2 pr-4 align-top">Beheer van in-app-abonnementen</td><td class="py-2 pr-4 align-top">VS</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Google LLC</strong></td><td class="py-2 pr-4 align-top">Gemini-API — AI-analyse van huidfoto's en profielgegevens (huidanalyses, routines, voedingsanalyses). Geen training van modellen met je gegevens</td><td class="py-2 pr-4 align-top">VS</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>OpenAI, L.L.C.</strong></td><td class="py-2 pr-4 align-top">ChatGPT-API — AI-analyse en opstellen van aanbevelingen (huidanalyses, routines, voedingsanalyses) via onze n8n-orkestratie. Geen training van modellen met je gegevens</td><td class="py-2 pr-4 align-top">VS</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Amazon Web Services</strong></td><td class="py-2 pr-4 align-top">Tijdelijke opslag van de foto's van de scan op de website adermio.com (verwijderd binnen 7 dagen) — niet gebruikt door de mobiele app</td><td class="py-2 pr-4 align-top">Parijs (EU)</td><td class="py-2 pr-4 align-top">Geen doorgifte buiten de EER</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Vercel Inc.</strong></td><td class="py-2 pr-4 align-top">Hosting van adermio.com</td><td class="py-2 pr-4 align-top">Meerdere regio's</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Expo Inc.</strong></td><td class="py-2 pr-4 align-top">Pushmeldingen</td><td class="py-2 pr-4 align-top">VS</td><td class="py-2 pr-4 align-top">DPF</td></tr><tr><td class="py-2 pr-4 align-top"><strong>n8n</strong> (zelf gehost)</td><td class="py-2 pr-4 align-top">Orkestratie van de AI-analyses (verwerking van de foto's, opstellen van de rapporten)</td><td class="py-2 pr-4 align-top">Duitsland (EU)</td><td class="py-2 pr-4 align-top">—</td></tr></tbody>
+                    </table></div><p>Voor verwerkers in de Verenigde Staten geldt ofwel een Europees adequaatheidsbesluit (<strong>EU-US Data Privacy Framework</strong>), ofwel worden standaardcontractbepalingen gebruikt. Dit is te controleren op <a href="https://www.dataprivacyframework.gov/" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">dataprivacyframework.gov</a>.</p><p><strong>Gelijkwaardige bescherming gewaarborgd.</strong> Elke verwerker — ook Google (Gemini-API) en OpenAI (ChatGPT-API), aan wie je foto's en huidgegevens voor de analyse worden doorgegeven — is gebonden aan een verwerkersovereenkomst (artikel 28 van de AVG). Die verplicht hem je gegevens te beschermen met een beveiligings- en vertrouwelijkheidsniveau dat gelijkwaardig is aan wat Adermio waarborgt, ze alleen te verwerken volgens onze gedocumenteerde instructies en ze niet voor eigen doeleinden te hergebruiken (in het bijzonder geen training van AI-modellen).</p><p><strong>Geen commerciële derden.</strong> Adermio deelt je gegevens niet met datahandelaren, marketingpartners of advertentienetwerken.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">5. Bewaartermijnen</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <div class="overflow-x-auto -mx-2 my-4"><table class="w-full text-sm">
+                        <thead class="border-b border-adermio-dark/10"><tr><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Categorie</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Bewaartermijn</th></tr></thead>
+                        <tbody class="divide-y divide-adermio-dark/5"><tr><td class="py-2 pr-4 align-top">Actief account (e-mail, profiel)</td><td class="py-2 pr-4 align-top">Zolang het account actief is</td></tr><tr><td class="py-2 pr-4 align-top">Huidfoto's (analyse en voortgang)</td><td class="py-2 pr-4 align-top">Zolang het account actief is — direct en definitief verwijderd samen met het account</td></tr><tr><td class="py-2 pr-4 align-top">Foto's van een scan die nooit aan een account is gekoppeld</td><td class="py-2 pr-4 align-top">7 dagen (automatisch verwijderd)</td></tr><tr><td class="py-2 pr-4 align-top">Huidanalyses, routines, AI-overzichten</td><td class="py-2 pr-4 align-top">Zolang het account actief is</td></tr><tr><td class="py-2 pr-4 align-top">Dagelijkse registratie (stemming, huid, voeding)</td><td class="py-2 pr-4 align-top">Zolang het account actief is</td></tr><tr><td class="py-2 pr-4 align-top">Sentry-logs</td><td class="py-2 pr-4 align-top">90 dagen</td></tr><tr><td class="py-2 pr-4 align-top">PostHog-gebruiksstatistieken</td><td class="py-2 pr-4 align-top">12 maanden</td></tr><tr><td class="py-2 pr-4 align-top">Supabase-authenticatie</td><td class="py-2 pr-4 align-top">Actief account + 30 dagen na verwijdering</td></tr><tr><td class="py-2 pr-4 align-top">Facturen en boekhoudgegevens</td><td class="py-2 pr-4 align-top">10 jaar (art. L123-22 Frans Wetboek van Koophandel)</td></tr></tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">6. Beveiliging van gegevens</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+                        <li><strong>Versleuteling tijdens verzending:</strong> TLS 1.3 verplicht op alle endpoints</li>
+                        <li><strong>Versleuteling bij opslag:</strong> AES-256 (Supabase), versleutelde iOS-sleutelhanger</li>
+                        <li><strong>Authenticatie:</strong> OAuth 2.0 PKCE, bcrypt + HaveIBeenPwned</li>
+                        <li><strong>Toegangscontrole:</strong> PostgreSQL Row-Level Security op alle gevoelige tabellen</li>
+                        <li><strong>Monitoring:</strong> realtime meldingen via Sentry</li>
+                        <li><strong>Back-ups:</strong> dagelijkse versleutelde back-ups bij Supabase (7 dagen)</li>
+                    </ul><p>Bij een <strong>datalek</strong> dat een risico kan opleveren voor de rechten en vrijheden van personen, meldt Adermio dit <strong>binnen 72 uur aan de CNIL</strong>, de Franse privacytoezichthouder (art. 33 AVG), en informeert Adermio zo nodig de betrokken gebruikers (art. 34).</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">7. Je rechten</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <div class="overflow-x-auto -mx-2 my-4"><table class="w-full text-sm">
+                        <thead class="border-b border-adermio-dark/10"><tr><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Recht</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Omschrijving</th><th class="text-left py-2 pr-4 font-medium text-adermio-dark">Hoe je het uitoefent</th></tr></thead>
+                        <tbody class="divide-y divide-adermio-dark/5"><tr><td class="py-2 pr-4 align-top"><strong>Inzage</strong> (art. 15)</td><td class="py-2 pr-4 align-top">Een kopie van je gegevens krijgen</td><td class="py-2 pr-4 align-top">Instellingen → “Mijn gegevens exporteren” (volledig JSON-bestand)</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Rectificatie</strong> (art. 16)</td><td class="py-2 pr-4 align-top">Onjuiste gegevens laten corrigeren</td><td class="py-2 pr-4 align-top">Aanpassen in je profiel of per e-mail</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Wissing</strong> (art. 17)</td><td class="py-2 pr-4 align-top">Account + gegevens verwijderen</td><td class="py-2 pr-4 align-top">Instellingen → “Account verwijderen” (direct)</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Beperking van de verwerking</strong> (art. 18)</td><td class="py-2 pr-4 align-top">De verwerking tijdelijk laten stopzetten</td><td class="py-2 pr-4 align-top">Verzoek per e-mail</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Overdraagbaarheid</strong> (art. 20)</td><td class="py-2 pr-4 align-top">Je gegevens in een herbruikbaar formaat</td><td class="py-2 pr-4 align-top">De JSON-export voldoet aan deze verplichting</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Bezwaar</strong> (art. 21)</td><td class="py-2 pr-4 align-top">Bezwaar maken tegen een verwerking (gerechtvaardigd belang)</td><td class="py-2 pr-4 align-top">Verzoek per e-mail, met opgave van redenen</td></tr><tr><td class="py-2 pr-4 align-top"><strong>Intrekking van toestemming</strong> (art. 7 lid 3)</td><td class="py-2 pr-4 align-top">Gegeven toestemming intrekken</td><td class="py-2 pr-4 align-top">Instellingen → meldingen uitschakelen, of per e-mail</td></tr></tbody>
+                    </table></div><p><strong>Reactietermijn:</strong> Adermio verbindt zich ertoe binnen <strong>een maand</strong> na je verzoek te reageren. Bij complexe verzoeken kan die termijn met 2 maanden worden verlengd (je krijgt dan bericht over het uitstel).</p><p><strong>Klacht bij de CNIL:</strong> als we tekortschieten, kun je een klacht indienen bij de CNIL — 3 Place de Fontenoy, 75007 Paris — <a href="https://www.cnil.fr" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">www.cnil.fr</a>.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">8. Cookies en vergelijkbare technieken</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p><strong>Mobiele app:</strong> geen cookies. Lokale opslag op het apparaat: Supabase-sessietoken (versleutelde iOS-sleutelhanger), React Query-cache (versleutelde MMKV-opslag), anonieme PostHog-ID.</p><p><strong>Website:</strong> alleen strikt noodzakelijke cookies (sessie, taal). Als er in de toekomst analytische of marketingcookies bij komen, plaatsen we een toestemmingsbanner die voldoet aan besluit nr. 2020-091 van de CNIL.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">9. Minderjarigen</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>De app Adermio is bedoeld voor personen <strong>van 16 jaar en ouder</strong> (art. 8 AVG, de leeftijd voor digitale toestemming in Frankrijk). Ben je jonger dan 16, dan mag je de app niet gebruiken zonder voorafgaande, uitdrukkelijke toestemming van iemand die het ouderlijk gezag over je uitoefent. Ontdekt Adermio dat een account van een minderjarige is en dat er geen toestemming van een ouder is, dan wordt het account verwijderd.</p>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">10. Wijzigingen</h2>
+                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+                    <p>Adermio behoudt zich het recht voor deze privacyverklaring op elk moment te wijzigen. Elke wezenlijke wijziging wordt <strong>per e-mail en via een banner in de app ten minste 15 dagen vóór</strong> de inwerkingtreding gemeld.</p><p>De versiegeschiedenis wordt bijgehouden in de openbare coderepository van Adermio.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            
+            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
+                <img src="/logo_Adermio.png" 
+                     alt="Adermio-logo" 
+                     class="w-full h-full object-contain relative z-20" loading="lazy">
+            </div>
+
+            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
+            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
+                Huidverzorging, opnieuw uitgevonden met AI.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
+                <a href="/nl/home" class="hover:text-teal-600 transition-colors !text-adermio-dark">Home</a>
+                <a href="https://adermio.com/nl/form" class="hover:text-teal-600 transition-colors !text-adermio-dark">Start je analyse</a>
+                <a href="https://adermio.com/nl/over-ons" class="hover:text-teal-600 transition-colors !text-adermio-dark">Over ons</a>
+                <a href="https://adermio.com/nl/blog" class="hover:text-teal-600 transition-colors !text-adermio-dark">Blog</a>
+                <a href="https://adermio.com/nl/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Contact</a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
+                <a href="https://adermio.com/nl/gebruiksvoorwaarden" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Gebruiksvoorwaarden</a>
+                <a href="https://adermio.com/cgv" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Verkoopvoorwaarden</a>
+                <a href="https://adermio.com/nl/juridische-informatie" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Juridische informatie</a>
+                <a href="https://adermio.com/nl/privacyverklaring" class="!text-adermio-dark font-medium transition-colors">Privacyverklaring</a>
+            </div>
+
+            <div class="text-xs text-adermio-muted/40 font-light">
+                © 2026 Adermio. Alle rechten voorbehouden.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Logique du Menu
+        const menuBtn = document.getElementById('menu-btn');
+        const menuOverlay = document.getElementById('full-menu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                menuBtn.classList.add('text-teal-900');
+            } else {
+                menuOverlay.classList.remove('menu-active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                menuBtn.classList.remove('text-teal-900');
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
+    <script src="/js/pwa.js" defer></script>
+</body>
+</html>

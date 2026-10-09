@@ -56,6 +56,12 @@ Référence unique pour toute traduction FR → NL du site adermio.com. Toute d�
 | Feedback | Feedback |
 | Blog | Blog |
 | Tous droits réservés | Alle rechten voorbehouden |
+| slogan du pied de page « La dermatologie réinventée par l'IA » | Huidverzorging, opnieuw uitgevonden met AI. (jamais « dermatologie » à côté d'AI) |
+| Aide & contact / Consentement (RGPD) | Hulp & contact / Toestemming (AVG) |
+| soins dermatologiques (produits) | dermocosmetica |
+| Envoyer le feedback / Envoi en cours… | Feedback versturen / Bezig met versturen… |
+| note 1 à 5 étoiles | Moet beter / Kan beter / Goed / Heel goed / Uitstekend! |
+| vidéo / captures en anglais (accueil) | (video in het Engels) / (Engelstalige versie) |
 
 ### Produit Adermio
 | FR | NL |

@@ -38,7 +38,7 @@ FR_MORPHO_OK = {'chez', 'assez', 'nez',
 U_RE = re.compile(r"(?<![-\w])([Uu]|[Uu]w|[Uu]we|[Uu]zelf)(?![-\w])")
 # Zéro langage médical (règle Adermio) : Adermio n'établit pas de diagnostic, ne soigne pas, n'a pas de patients,
 # pas de vocabulaire clinique côté Adermio (même arbitrage que l'allemand).
-BANNED_RE = re.compile(r"\b(diagnos\w*|patiënt\w*|patient\w*|therapie\w*|therapeut\w*|genees\w*|genez\w*|klinisch\w*|kliniek\w*)\b", re.I)
+BANNED_RE = re.compile(r"\b(diagnos\w*|patiënt\w*|patient\w*|therapie\w*|therapeut\w*|genez\w*|geneest|geneeskrachtig\w*|klinisch\w*|kliniek\w*)\b", re.I)
 # Mots anglais fréquents (>= 2) : une phrase anglaise restée dans la page.
 EN_RE = re.compile(r"\b(the|your|you|and|with|for|this|that|our|free|skin|analysis|report|please|click|here)\b")
 # Titres d'études en anglais (page Bronnen) : « patients », « therapeutic »… y sont légitimes.
@@ -57,6 +57,10 @@ DERMA_RE = re.compile(r"\b(AI|Adermio)\b[^.!?]{0,40}\bdermatolo\w*|\bdermatolo\w
 JDAY_RE = re.compile(r"\bJ\+?\d{1,3}\b|\b\d+\s?Mo\b|[«»]")
 # Espace (normale, insécable, fine) avant ! ? : ; — vérifié sur le texte SANS balises (sinon « </b> : » ferait un faux positif).
 SPACE_PUNCT_RE = re.compile(r"[\wÀ-ÿ%)”’]\s*[ \u00a0\u202f]+[!?;:](?=\s|$|[“\"’<)])")
+
+def derma_hit(seg):
+    """« dermatoloog/dermatologie » à côté d'AI ou d'Adermio ; « … — Adermio » en fin de titre n'est qu'une signature."""
+    return DERMA_RE.search(re.sub(r'\s*[—–|-]\s*Adermio\s*$', '', seg))
 
 def typo_hits(html):
     body = re.sub(r'<(script|style)\b.*?</\1>', lambda m: '\n' * m.group(0).count('\n'), html, flags=re.S)
@@ -227,7 +231,7 @@ def check(nl_rel):
             hits.append((ln, f'ALLEMAND ? ({mm.group(0)}) : ' + seg[:90]))
         if (mm := STYLE_RE.search(seg)):
             hits.append((ln, f'GLOSSAIRE ({mm.group(0)}) : ' + seg[:90]))
-        if (mm := DERMA_RE.search(seg)):
+        if (mm := derma_hit(seg)):
             hits.append((ln, f'DERMATOLOOG = ADERMIO ? ({mm.group(0)[:40]}) : ' + seg[:90]))
         if (mm := JDAY_RE.search(seg)):
             hits.append((ln, f'TYPO FR ({mm.group(0)}) : ' + seg[:90]))

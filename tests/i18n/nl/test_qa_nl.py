@@ -14,7 +14,7 @@ def en(seg):  return len(q.EN_RE.findall(seg)) >= 2
 def de(seg):  return bool(q.DE_RE.search(seg))
 def u(seg):   return bool(q.U_RE.search(seg))
 def ban(seg): return bool(q.BANNED_RE.search(seg))
-def sty(seg): return bool(q.STYLE_RE.search(seg) or q.DERMA_RE.search(seg) or q.JDAY_RE.search(seg))
+def sty(seg): return bool(q.STYLE_RE.search(seg) or q.derma_hit(seg) or q.JDAY_RE.search(seg))
 def typo(seg): return bool(q.SPACE_PUNCT_RE.search(seg))
 
 MUST_HIT = [
@@ -32,6 +32,7 @@ MUST_HIT = [
     (ban, 'Onze klinische methode'),
     (ban, 'Beste patiënt, je resultaten zijn klaar'),
     (ban, 'Je huid kan genezen in 28 dagen'),
+    (ban, 'Adermio geneest je acne'),
     (sty, 'Je hebt een gecombineerde huid'),
     (sty, 'Vermijd overtollig talg'),
     (sty, 'Gelieve je e-mailadres in te vullen'),
@@ -58,6 +59,8 @@ MUST_PASS = [
     'Hormonale acne: herkennen en aanpakken',
     'Een supplement of het abonnement van de app is niet nodig.',
     'Wist je dat? Je huid vernieuwt zich ongeveer elke 28 dagen.',
+    'Gebruik je geneesmiddelen op recept? Overleg dan met je huisarts.',
+    'Tips over huid, acne en dermatologie — Adermio',
 ]
 
 def main():
