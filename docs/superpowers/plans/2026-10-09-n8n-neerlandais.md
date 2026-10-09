@@ -172,6 +172,21 @@
 - [ ] **Step 4 : contre-épreuves.** `python3 test_compare_nl.py` et `python3 test_audit_nl.py` sur un build DE renommé : chaque défaut injecté (seuil modifié, condition inversée, littéral vidé, champ renommé, nœud ou connexion supprimés, credential changé) doit être détecté.
 - [ ] **Step 5 :** commit.
 
+### Task 8b : Moteur sûr pour les clients néerlandais (ajoutée le 09/10 — trou du plan)
+
+> Trouvé à l'exécution de la Task 8 : la chaîne du payant passe par du code d'`adermio-app` qui ne connaît pas `nl`. Pour l'allemand, le commit `b136cefa` (« moteur sûr pour les clients web allemands ») avait rendu les filets de sécurité capables de lire l'allemand : **sans équivalent néerlandais, une grossesse, une cure d'isotrétinoïne ou une allergie écrites en néerlandais passeraient inaperçues** (actifs contre-indiqués servis). Bloque la Task 9 step 3 (`patch_local.mjs --lang=nl`) et la Task 10.
+
+**Files (dépôt `adermio-app`, branche main — préférence durable d'Antoine) — mêmes fichiers que `b136cefa` :**
+- Modify : `scripts/n8n/patches/skin-engine-web.mjs` (`WEB_LANGS` + `nl`), `scripts/n8n/nodes/skin-engine-format.js` (`LABELS.nl`, `RULES` : étapes de routine en néerlandais, jamais de repli français), `scripts/n8n/patches/gemini-explication.mjs` (+ `nl`)
+- Modify : `supabase/functions/_shared/skin-engine/web-input.ts`, `_shared/skin-engine/context.ts` (grossesse/allaitement NL **avec négation** : *zwanger, zwangerschap, borstvoeding, ik geef borstvoeding, niet zwanger, niet meer zwanger, geen borstvoeding*…), `_shared/medications/free-text.ts` (traitements NL : *geen medicijnen / niets*, *de pil*, *antibiotica*, *zink*, passé *2 jaar geleden / vroeger*, arrêt *gestopt / niet meer / ben gestopt met*, gardes *nog niet gestopt*), `_shared/medications/catalog.ts` (registres NL/BE : CBG / Farmaceutisch Kompas, AFMPS — ex. isotretinoïne, *Roaccutane*, *Differin*, *Epiduo*, *Duac*, *Aknemycin* selon homonymies ; chaque ajout vérifié dans un registre officiel), `supabase/functions/medication-recognize-ai/prompt.ts` (+ néerlandais), miroir du catalogue régénéré
+- Create : `__tests__/lib/skin-engine/web-neerlandais.test.ts` (sur le modèle de `web-allemand.test.ts`) ; Modify : `n8n-format.test.ts`, `n8n-web-patch.test.ts`, `web-prescribe-context.test.ts`, `__tests__/fixtures/medications/saisies-reelles.json` (+ saisies NL)
+
+- [ ] **Step 1 : tests d'abord.** `web-neerlandais.test.ts` : grossesse NL repérée (*ik ben 12 weken zwanger*, *zwanger*, *ik geef borstvoeding*) ; négation respectée (*niet zwanger*, *geen borstvoeding*, *ik ben niet meer zwanger*) ; isotretinoïne en cours vs arrêtée (*ik slik isotretinoïne*, *2 jaar geleden gestopt met Roaccutane*) ; *geen medicijnen* = aucun traitement ; allergie *parfum* / *noten* → tags FR canoniques (`parfum`, `fruits à coque`) ; formateur `nl` = libellés néerlandais (aucune chaîne FR). Run : `npx jest __tests__/lib/skin-engine/web-neerlandais.test.ts` (chemin explicite, jamais une liste vide). Expected : FAIL.
+- [ ] **Step 2 :** implémenter sur le modèle exact de `b136cefa` (lire son diff), sans toucher au comportement FR/EN/ES/IT/DE.
+- [ ] **Step 3 :** Run : les 5 fichiers de test ci-dessus + `web-allemand.test.ts` + la garde du miroir du catalogue + le typecheck des edges (commandes du dépôt : `npm run` correspondants). Expected : tout PASS ; **protection-diff : 0 perte** sur les saisies réelles existantes.
+- [ ] **Step 4 :** commit sur main (`git commit -- <chemins>`).
+- [ ] **Step 5 : accord d'Antoine demandé dans le chat** (moteur de sécurité partagé app + web en prod). Puis déployer `skin-engine` et `medication-recognize-ai` depuis un **instantané de HEAD** (`git archive`), vérifier la version déployée, un appel `prescribe-context` NL réel en lecture (grossesse NL → blocage des rétinoïdes).
+
 ### Task 9 : Traduction du payant
 
 **Files :**
