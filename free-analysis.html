@@ -138,9 +138,10 @@
     const iframe = document.getElementById("reportFrame");
 
     // --- NOUVEAUTÉ : Traduction UX si lang=en ---
-    // Allemand ; toute autre langue non française retombe sur l'anglais (repli = anglais, jamais le français)
+    // Allemand, néerlandais ; toute autre langue non française retombe sur l'anglais (repli = anglais, jamais le français)
     const UX = {
       de: { title: "Ihr Adermio-Bericht", errTitle: "Ungültiger oder abgelaufener Link", errText: "Wir konnten Ihre Analyse nicht finden.", btn: "Analyse neu starten", href: "https://adermio.com/de/form" },
+      nl: { title: "Je Adermio-rapport", errTitle: "Deze link is ongeldig of verlopen", errText: "We konden je analyse niet vinden. Open de link uit je e-mail opnieuw of start een nieuwe analyse.", btn: "Start je gratis huidanalyse", href: "https://adermio.com/nl/form" },
       en: { title: "Your Adermio Report", errTitle: "Invalid or expired link", errText: "We couldn't find your analysis.", btn: "Restart Analysis", href: "https://adermio.com/en/form" },
     };
     if (lang !== "fr") {
