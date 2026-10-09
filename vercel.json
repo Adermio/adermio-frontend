@@ -43,6 +43,16 @@
       "statusCode": 301
     },
     {
+      "source": "/nl",
+      "destination": "/nl/home",
+      "statusCode": 301
+    },
+    {
+      "source": "/nl/",
+      "destination": "/nl/home",
+      "statusCode": 301
+    },
+    {
       "source": "/finalisation",
       "destination": "/success",
       "statusCode": 301
@@ -138,6 +148,15 @@
     }
   ],
   "headers": [
+    {
+      "source": "/nl/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
