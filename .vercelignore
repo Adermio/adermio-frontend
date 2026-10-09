@@ -1,0 +1,6 @@
+# Fichiers internes du dépôt, jamais servis sur adermio.com (outillage de traduction, specs, plans,
+# relectures, points juridiques à valider). Ajouté le 09/10/2026 : ils étaient publics depuis septembre.
+docs/
+tests/
+README.md
+serve.py
