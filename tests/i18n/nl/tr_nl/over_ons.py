@@ -40,7 +40,7 @@ TR = [
     ("C'est pourquoi nous avons développé Adermio. Plus qu'une simple application, c'est un système d'apprentissage continu.",
      'Daarom hebben we Adermio ontwikkeld. Meer dan een app: een systeem dat voortdurend bijleert.', 1),
     ("Notre force réside dans la donnée : chaque analyse réalisée contribue, de manière <strong>anonyme et sécurisée</strong>, à rendre notre modèle plus intelligent et précis pour les futurs utilisateurs. C'est la technologie au service de la communauté.",
-     'Onze kracht zit in data: elke analyse draagt, <strong>anoniem en beveiligd</strong>, bij aan een slimmer en nauwkeuriger model voor toekomstige gebruikers. Technologie in dienst van de gemeenschap.', 1),
+     'Onze kracht zit in data: elke analyse draagt, <strong>anoniem en beveiligd</strong>, bij aan een slimmer en nauwkeuriger model voor toekomstige gebruikers. Zo komt technologie de hele gemeenschap ten goede.', 1),
     ('>Notre engagement Adermio</p>',
      '>Onze belofte</p>', 1),
     ("Adermio ne vend aucun produit cosmétique. Nous ne sommes affiliés à aucune marque. Nos recommandations sont 100% neutres, basées sur l'analyse de données objectives.",
@@ -70,7 +70,7 @@ TR = [
     ('>Précision de détection</div>',
      '>Precisie van detectie</div>', 1),
     ('>&lt; 45s</div>',
-     '>&lt; 45 s</div>', 1),
+     '>&lt; 45 sec.</div>', 1),
     (">Temps d'analyse</div>",
      '>Analysetijd</div>', 1),
 ]

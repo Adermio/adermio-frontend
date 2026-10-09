@@ -92,7 +92,7 @@
         <h1 class="text-3xl font-bold mb-2 relative z-10">Adermio &amp; jij</h1>
         <p class="text-indigo-100 text-sm max-w-md mx-auto relative z-10 leading-relaxed">
           “Bedankt dat je onze volledige analyse hebt geprobeerd. Adermio is nog jong en groeit snel.
-          Jouw mening is het kompas dat ons helpt om beter te worden. Wees eerlijk, dat is het mooiste cadeau
+          Jouw mening is ons kompas om beter te worden. Wees eerlijk, dat is het mooiste cadeau
           dat je ons kunt geven.”
         </p>
       </div>
@@ -107,7 +107,7 @@
         </p>
 
         <div class="text-center space-y-3">
-          <label class="block text-lg font-medium text-slate-700">Alles bij elkaar genomen: hoe tevreden ben je over je Adermio-analyse?</label>
+          <label class="block text-lg font-medium text-slate-700">Hoe tevreden ben je in het algemeen over je Adermio-analyse?</label>
 
           <div class="flex justify-center gap-2 text-3xl cursor-pointer" id="starContainer" aria-label="Totaalscore van 1 tot 5">
             <i class="fas fa-star text-gray-300 transition-colors duration-200 star" data-value="1" role="button" tabindex="0"></i>
@@ -467,7 +467,7 @@
       const btn = document.getElementById('submitBtn');
 
       if (!feedbackState.jobId) return setError("Deze link is ongeldig. Open de link uit je e-mail opnieuw.");
-      if (!feedbackState.rating) return setError("Kies eerst een aantal sterren voordat je verstuurt.");
+      if (!feedbackState.rating) return setError("Kies eerst een aantal sterren.");
 
       setError(null);
 

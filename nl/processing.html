@@ -276,7 +276,7 @@
 
          <div id="delay-fail-content" style="display:none; animation: fadeIn 0.5s forwards;">
            <p style="color:#b91c1c; background: #fef2f2; border: 1px solid #fecaca; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.4; margin-bottom: 15px;">
-             <b>Dit duurt te lang</b><br>
+             <b>Dit duurde te lang</b><br>
              Door de grote drukte kon je analyse niet worden afgerond. Probeer het opnieuw.
            </p>
            <a href="https://adermio.com/nl/form"
@@ -315,7 +315,7 @@
      <div id="quality-error-popup" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:99999;">
        <div style="background:white;padding:35px 30px;border-radius:16px;width:90%;max-width:380px;text-align:center;box-shadow:0 15px 40px rgba(0,0,0,0.2);">
          <h2 style="margin-bottom:12px;font-size:20px;font-weight:700;color:#b45309;">
-           Controle aanbevolen
+           Klopt deze foto?
          </h2>
          <p style="color:#4b5563;font-size:15px;line-height:1.6;margin-bottom:25px;">
            Onze AI ziet <b>weinig onzuiverheden</b> op deze foto. <br><br>
@@ -465,12 +465,12 @@
      // Messages de progression
      const loadingSteps = [
        { pct: 0,  text: "Beveiligde verbinding met de AI..." },
-       { pct: 15, text: "Je foto's verwerken..." },
+       { pct: 15, text: "Je foto's worden verwerkt..." },
        { pct: 30, text: "Onzuiverheden en huidstructuur scannen..." },
        { pct: 50, text: "Huidzones analyseren..." },
        { pct: 70, text: "De ernst van je acne inschatten..." },
-       { pct: 85, text: "Je persoonlijke routine samenstellen..." },
-       { pct: 95, text: "Je rapport afronden..." }
+       { pct: 85, text: "Je persoonlijke routine wordt samengesteld..." },
+       { pct: 95, text: "Je rapport wordt afgerond..." }
      ];
 
      // DOM Elements
@@ -713,7 +713,7 @@
 
  <script>
    const skinFacts = [
-     { title: "Poriën en hydratatie", text: "Zichtbare poriën zijn niet per se vuil. Een goed gehydrateerde huid maakt ze minder zichtbaar, doordat de talgproductie in balans komt." },
+     { title: "Poriën en hydratatie", text: "Zichtbare poriën zijn niet per se vuil. Goed hydrateren helpt om ze minder zichtbaar te maken, doordat de talgproductie beter in balans komt." },
      { title: "De cyclus van 28 dagen", text: "Je huid vernieuwt zich ongeveer elke 28 dagen volledig. Geduld en regelmaat zijn de sleutel tot succes." },
      { title: "De mythe van “te schoon”", text: "Je huid te vaak reinigen beschadigt de huidbarrière en kan juist voor meer acne zorgen." },
      { title: "De invloed van stress", text: "Cortisol (het stresshormoon) stimuleert de talgproductie. Ontspanning is daarom een vast onderdeel van huidverzorging." }

@@ -212,7 +212,7 @@ Référence unique pour toute traduction FR → NL du site adermio.com. Toute d�
 | notes Décevant … Excellent ; Garder / Revoir / Arrêté | Teleurstellend / Onvoldoende / Redelijk / Goed / Uitstekend ; Houden / Aanpassen / Gestopt |
 | L'IA peut faire des erreurs | Adermio AI kan fouten maken. |
 | Paiement réussi / Commande confirmée / paiement sécurisé / reçu / facture / spams | Betaling gelukt / Bestelling bevestigd / Veilig betalen via Stripe / aankoopbewijs / factuur / *Kijk ook in je spammap* |
-| budget / texture légère, riche / baume / au choix | voordelig / licht, rijk / balsem / *Maakt me niet uit* |
+| budget / texture légère, riche / baume / au choix | voordelig / licht, rijk / balsem / *Geen voorkeur* (tuile à 360 px ; « Maakt me niet uit » passait sur 2 lignes — R3) |
 | Télécharger l'app / scans illimités | Download de app / Onbeperkt scannen |
 | FAQ / Comment ça marche / Objet / Nom et prénom / au plus vite / Retour au site | Veelgestelde vragen / Zo werkt het / Onderwerp / Voor- en achternaam / zo snel mogelijk / Terug naar de website |
 | recommandation (NPS) | *Hoe waarschijnlijk is het dat je Adermio aanraadt aan vrienden of familie?* (Zeer onwaarschijnlijk / Zeer waarschijnlijk) |
@@ -220,7 +220,7 @@ Référence unique pour toute traduction FR → NL du site adermio.com. Toute d�
 | Paramètres | Instellingen |
 
 ### Juridique — compléments
-consentement (explicite) → *(uitdrukkelijke) toestemming* ; retirer son consentement → *toestemming intrekken* ; intérêt légitime → *gerechtvaardigd belang* ; exécution du contrat → *uitvoering van de overeenkomst* ; obligation légale → *wettelijke verplichting* ; durée de conservation → *bewaartermijn* ; transfert hors UE → *doorgifte buiten de EER* ; données biométriques → *biometrische gegevens* ; droits d'accès, de rectification, d'effacement, de limitation, de portabilité, d'opposition → *recht op inzage, rectificatie, wissing, beperking van de verwerking, overdraagbaarheid, bezwaar* ; propriété intellectuelle → *intellectueel eigendom* ; responsabilité → *aansprakelijkheid* ; force majeure → *overmacht* ; mineur / autorité parentale → *minderjarige / ouderlijk gezag* ; médiation → *bemiddeling* (« Médiateur FEVAD » : nom propre, non traduit) ; tribunal compétent → *bevoegde rechter*.
+consentement (explicite) → *(uitdrukkelijke) toestemming* ; retirer son consentement → *toestemming intrekken* ; intérêt légitime → *gerechtvaardigd belang* ; exécution du contrat → *uitvoering van de overeenkomst* ; obligation légale → *wettelijke verplichting* ; durée de conservation → *bewaartermijn* ; transfert hors UE → *doorgifte buiten de **EU*** (fidélité : « EER » seulement si le FR dit « EEE ») ; données biométriques → *biometrische gegevens* ; droits d'accès, de rectification, d'effacement, de limitation, de portabilité, d'opposition → *recht op inzage, rectificatie, wissing, beperking van de verwerking, overdraagbaarheid, bezwaar* ; propriété intellectuelle → *intellectueel eigendom* ; responsabilité → *aansprakelijkheid* ; force majeure → *overmacht* ; mineur / autorité parentale → *minderjarige / ouderlijk gezag* ; médiation → *bemiddeling* (« Médiateur FEVAD » : nom propre, non traduit) ; tribunal compétent → *bevoegde rechter*.
 
 ## Ne jamais traduire
 Balises, classes, ids, `name`/`value` des champs (valeurs envoyées au serveur = français canonique), clés JS, URLs, webhooks, commentaires de code, marques, noms de produits, INCI, « Adermio ».
@@ -234,4 +234,5 @@ Balises, classes, ids, `name`/`value` des champs (valeurs envoyées au serveur =
 
 ## Historique
 - 09/10 : glossaire initial (décisions d'Antoine : périmètre site seul et caché, « je/jouw », source FR).
+- 09/10 : 5 relectures natives (R1 copy 8,5/10, R2 terminologie/conformité, R3 microcopie, R4 blog + juridique flamand, R5 retraduction à l'aveugle : 0 contresens sur 672 segments) → 90 corrections appliquées par `apply_corrections.py`, arbitrages dans `revue/ARBITRAGE.py` (dont : « Vérification conseillée » → *Klopt deze foto?* ; juridique sans ajout « huisarts » ; « hors UE » → *buiten de EU* ; jamais « dermatologie van Adermio »).
 - 09/10 : relu par 2 natifs indépendants (Pays-Bas, Flandre) : ~45 corrections intégrées (gemengde huid, overtollige talg, typographie FR, J28 → dag 28, Mo → MB, dermatoloog titre protégé, repli « patient », actieve ingrediënten, opflakkering, geen medisch advies, Matig jamais seul, je avant jouw, belgicismes et tics hollandais, termes complémentaires).

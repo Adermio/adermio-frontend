@@ -1,0 +1,30 @@
+# R5 — retraduction à l'aveugle NL → FR puis comparaison au FR (voir R5_retraduction.md).
+# Généré par script : FR et NL actuels repris PAR VALEUR depuis les tables tr_nl/ (repr).
+# Format : (table, FR exact, NL actuel exact, NL proposé, raison, gravité)
+CORR = [
+    ('bilan',
+     'Nouveaux Actifs Suggérés',
+     'Voorgestelde actieve ingrediënten',
+     'Voorgestelde nieuwe actieve ingrediënten',
+     'PERTE : « Nouveaux » a disparu (ce sont les actifs à introduire au cycle 2)', 'améliore'),
+    ('bilan',
+     'id="stat-streak">0j<',
+     'id="stat-streak">0<',
+     'id="stat-streak">0 dagen<',
+     'PERTE : unité « j » (jours) disparue sous « Langste reeks » (le héros affiche bien « N dagen »)', 'goût'),
+    ('bilan',
+     "(trackingData.max_streak || 0) + 'j'",
+     'String(trackingData.max_streak || 0)',
+     "(trackingData.max_streak || 0) + ((trackingData.max_streak || 0) === 1 ? ' dag' : ' dagen')",
+     'PERTE : unité « j » (jours) disparue dans la tuile « Langste reeks » (même pluriel que le héros)', 'goût'),
+    ('bilan',
+     'soit 0.18&euro;/jour pour transformer votre peau',
+     'dus maar &euro;&nbsp;0,18 per dag om je huid te veranderen',
+     'oftewel &euro;&nbsp;0,18 per dag om je huid te veranderen',
+     'AJOUT : « maar » (= « seulement ») minimise le prix ; le FR dit seulement « soit »', 'goût'),
+    ('bilan',
+     "'Bilan non disponible'",
+     "'Je 28-dagencheck is nog niet beschikbaar'",
+     "'Je 28-dagencheck is niet beschikbaar'",
+     'AJOUT : « nog » promet une disponibilité future ; le FR dit seulement « non disponible »', 'goût'),
+]

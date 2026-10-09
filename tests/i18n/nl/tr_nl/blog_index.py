@@ -10,7 +10,7 @@ TR = [
     ("Retrouvez tous nos articles sur la peau, l'acné, les routines skincare et la dermatologie.",
      'Lees al onze artikelen over je huid, acne, skincareroutines en dermatologie.', 2),
     ('"description": "Conseils peau, acné et dermatologie par Adermio"',
-     '"description": "Tips over je huid, acne en dermatologie"', 1),
+     '"description": "Tips over huid, acne en dermatologie"', 1),
     ("Commencer l'analyse</span>",
      'Start je analyse</span>', 2),
     ('>Accueil</a>',

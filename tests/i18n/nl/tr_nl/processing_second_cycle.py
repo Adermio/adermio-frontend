@@ -29,7 +29,7 @@ TR = [
      '&#169; 2026 Adermio. Alle rechten voorbehouden.', 1),
     # slogan : « dermatologie » évité pour Adermio (titre protégé, décision 2)
     ("La dermatologie r&#233;invent&#233;e par l'intelligence artificielle.",
-     'Huidanalyse opnieuw bedacht, met kunstmatige intelligentie.', 1),
+     'Huidverzorging, opnieuw uitgevonden met AI.', 1),
     # --- en-tête
     ('<h1 class="main-title">Analyse Cycle 2 en cours</h1>',
      '<h1 class="main-title">Ronde 2 wordt geanalyseerd</h1>', 1),
@@ -50,7 +50,7 @@ TR = [
     ('Votre analyse Cycle 2 est pr&#234;te',
      'Je analyse van ronde 2 is klaar', 1),
     ("L'analyse comparative de votre peau est termin&#233;e. D&#233;couvrez votre &#233;volution et votre nouveau protocole.",
-     'De vergelijkende analyse van je huid is klaar. Bekijk hoe je huid is veranderd en wat je nieuwe routine is.', 1),
+     'De vergelijkende analyse van je huid is afgerond. Bekijk hoe je huid is veranderd en wat je nieuwe routine is.', 1),
     ('Ouvrir mon analyse Cycle 2',
      'Bekijk je analyse van ronde 2', 1),
     ('Copie envoy&#233;e par email',
@@ -87,7 +87,7 @@ TR = [
     ('Analyse comparative des photos...',
      "Foto's vergelijken...", 1),
     ('G\\u00e9n\\u00e9ration du diagnostic \\u00e9volutif...',
-     'Je voortgang analyseren...', 1),
+     'Je voortgang wordt geanalyseerd...', 1),
     ('Construction du protocole Cycle 2...',
      'Routine voor ronde 2 samenstellen...', 1),
     ('\\u00c9valuation des progr\\u00e8s cutanés...',
@@ -97,7 +97,7 @@ TR = [
     ('Derni\\u00e8res v\\u00e9rifications...',
      'Laatste controles...', 1),
     ('Trafic plus dense que pr\\u00e9vu : finalisation en cours...',
-     'Het is erg druk: je rapport wordt afgerond...', 1),
+     'Het is drukker dan normaal. We ronden je rapport af...', 1),
     ('Adermio &#169; 2025</span>',
      'Adermio &#169; 2026</span>', 1),
 ]

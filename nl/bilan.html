@@ -143,7 +143,7 @@
             <div class="flex justify-center gap-3 anim-fade-up" style="animation-delay:0.3s">
                 <div class="bg-white/15 backdrop-blur-sm rounded-full px-3.5 py-2 flex items-center gap-1.5">
                     <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-teal-200"></i>
-                    <span class="text-[11px] font-bold" id="hero-days">0/28 dagen</span>
+                    <span class="text-[11px] font-bold" id="hero-days">0/28</span>
                 </div>
                 <div class="bg-white/15 backdrop-blur-sm rounded-full px-3.5 py-2 flex items-center gap-1.5">
                     <i data-lucide="target" class="w-3.5 h-3.5 text-teal-200"></i>
@@ -256,7 +256,7 @@
                         <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center mx-auto mb-2">
                             <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
                         </div>
-                        <p class="text-2xl font-extrabold text-orange-600" id="stat-streak">0</p>
+                        <p class="text-2xl font-extrabold text-orange-600" id="stat-streak">0 dagen</p>
                         <p class="text-[9px] font-bold text-orange-400 uppercase tracking-wider mt-1">Langste reeks</p>
                     </div>
                     <div class="stat-card bg-indigo-50 rounded-2xl p-4 border border-indigo-100 text-center">
@@ -302,7 +302,7 @@
                 </div>
                 <div class="flex-1">
                     <p class="text-[12px] font-extrabold text-red-800 mb-1">Let op: je resultaten zijn nog kwetsbaar</p>
-                    <p class="text-[10px] text-red-700/80 leading-relaxed">Op dag 28 zit je huid nog in de stabilisatiefase. <strong>Zonder vervolg kan je vooruitgang binnen 2 tot 3 weken weer teruglopen.</strong> Je huid heeft minstens 90 dagen nodig om zich te vernieuwen en de resultaten blijvend vast te houden.</p>
+                    <p class="text-[10px] text-red-700/80 leading-relaxed">Op dag 28 zit je huid nog in de stabilisatiefase. <strong>Zonder vervolg kan je vooruitgang binnen 2 tot 3 weken weer teruglopen.</strong> Om je resultaten blijvend vast te houden, zijn minstens 90 dagen huidvernieuwing nodig.</p>
                 </div>
             </div>
             <div class="bg-red-100/50 px-5 py-3 flex items-center gap-4">
@@ -401,7 +401,7 @@
 
             <div id="actives-section" class="px-5 pb-5 hidden">
                 <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
-                    <i data-lucide="flask-round" class="w-3 h-3"></i> Voorgestelde actieve ingrediënten
+                    <i data-lucide="flask-round" class="w-3 h-3"></i> Voorgestelde nieuwe actieve ingrediënten
                 </p>
                 <div id="actives-container" class="space-y-3"></div>
             </div>
@@ -452,7 +452,7 @@
                             <span class="bg-amber-400 text-amber-900 text-[9px] font-extrabold px-2 py-0.5 rounded-full">-50% RONDE 2</span>
                         </div>
                         <p class="text-3xl font-black">&euro;&nbsp;5</p>
-                        <p class="text-[10px] text-white/50 mt-0.5">dus maar &euro;&nbsp;0,18 per dag om je huid te veranderen</p>
+                        <p class="text-[10px] text-white/50 mt-0.5">oftewel &euro;&nbsp;0,18 per dag om je huid te veranderen</p>
                     </div>
 
                     <button onclick="handleCTA()" class="w-full bg-white text-teal-700 font-extrabold py-4 rounded-2xl text-base shadow-lg hover:shadow-xl transition-all active:scale-[0.97] pulse-cta mb-3">
@@ -659,7 +659,7 @@ function renderHero() {
     const maxStreak = trackingData.max_streak || 0;
 
     document.getElementById('hero-name').textContent = clientName ? `Je 28-dagencheck, ${clientName}` : 'Je 28-dagencheck';
-    document.getElementById('hero-days').textContent = `${checks.length}/28 dagen`;
+    document.getElementById('hero-days').textContent = `${checks.length}/28`;
     document.getElementById('hero-obs').textContent = `${obs}%`;
     document.getElementById('hero-streak').textContent = `${maxStreak} ${maxStreak === 1 ? 'dag' : 'dagen'}`;
 
@@ -745,7 +745,7 @@ async function handlePhotoUpload(slot, e) {
         renderCompare();
     } catch (err) {
         console.error('Upload error:', err);
-        alert('Het uploaden is niet gelukt. Probeer het opnieuw.');
+        alert('De foto kon niet worden geüpload. Controleer je internetverbinding en probeer het opnieuw.');
     }
     e.target.value = '';
 }
@@ -831,7 +831,7 @@ function renderStats() {
     const obs = calcObservance(checks, day);
 
     document.getElementById('stat-obs').textContent = obs + '%';
-    document.getElementById('stat-streak').textContent = String(trackingData.max_streak || 0);
+    document.getElementById('stat-streak').textContent = (trackingData.max_streak || 0) + ((trackingData.max_streak || 0) === 1 ? ' dag' : ' dagen');
     document.getElementById('stat-days').textContent = `${checks.length}/28`;
     document.getElementById('stat-score').textContent = trackingData.current_score || 0;
 
@@ -1317,7 +1317,7 @@ async function init() {
         // Load tracking data
         const rows = await sbGet('skin_tracking', `job_id=eq.${JOB_ID}&cycle_number=eq.1&limit=1`);
         if (rows.length === 0) {
-            document.getElementById('hero-name').textContent = 'Je 28-dagencheck is nog niet beschikbaar';
+            document.getElementById('hero-name').textContent = 'Je 28-dagencheck is niet beschikbaar';
             document.getElementById('loading-screen').style.display = 'none';
             return;
         }

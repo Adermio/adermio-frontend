@@ -202,7 +202,7 @@
             <div class="space-y-10 animate-fade-in max-w-xl mx-auto">
                 <div>
                     <h2 class="font-serif text-3xl mb-3 text-brand-dark">Hallo <span class="user-name-display capitalize text-brand-primary">...</span></h2>
-                    <p class="text-stone-500 font-light">Hiermee stemmen we je analyse nauwkeurig af.</p>
+                    <p class="text-stone-500 font-light">Met deze gegevens stemmen we je analyse nauwkeurig af.</p>
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
@@ -268,7 +268,7 @@
 
                 <div class="bg-brand-light/50 border border-brand-primary/20 rounded-xl p-4 mb-6 max-w-sm mx-auto">
                     <h4 class="text-xs font-bold uppercase text-brand-dark mb-2 flex items-center gap-2">
-                        <i data-lucide="info" class="w-3 h-3"></i> Tips voor een perfecte analyse
+                        <i data-lucide="info" class="w-3 h-3"></i> Tips voor de beste analyse
                     </h4>
                     <ul class="text-xs text-stone-600 space-y-1 font-light">
                         <li>&bull; Gezicht in het midden en goed belicht</li>
@@ -434,7 +434,7 @@
 
                             <div id="empty-zoom" class="absolute inset-0 flex items-center justify-center gap-3 text-white/60 pointer-events-none">
                                 <i data-lucide="zoom-in" class="w-5 h-5"></i>
-                                <span class="text-xs font-medium">Detailfoto</span>
+                                <span class="text-xs font-medium">Close-up</span>
                             </div>
 
                             <img id="preview-zoom" class="absolute inset-0 w-full h-full object-cover hidden z-20 pointer-events-none">
@@ -605,7 +605,7 @@
                 </div>
 
                 <div class="mb-10">
-                    <label class="text-xs font-bold uppercase text-stone-400 tracking-widest block mb-3 leading-relaxed" id="lbl-factors">Welke van deze factoren spelen de laatste maanden het meest bij je?</label>
+                    <label class="text-xs font-bold uppercase text-stone-400 tracking-widest block mb-3 leading-relaxed" id="lbl-factors">Welke van deze factoren spelen de laatste maanden bij je de grootste rol?</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <button type="button" onclick="toggleFactor(this, 'stress')" class="zone-item w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left group">
                             <span class="font-medium group-[.selected]:text-brand-dark">Veel stress</span>
@@ -704,11 +704,11 @@
                     <input type="email" id="email-confirm" placeholder="Herhaal je e-mailadres" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-400 focus:border-brand-primary focus:outline-none transition-colors">
 
                     <p id="email-error-empty" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Vul je e-mailadres in.</p>
-                    <p id="email-error-match" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> De e-mailadressen komen niet overeen.</p>
+                    <p id="email-error-match" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Controleer je e-mailadres: het is ongeldig of de twee adressen komen niet overeen.</p>
                 </div>
 
                 <div class="bg-stone-50 p-6 rounded-2xl border-2 border-stone-300 shadow-sm" id="privacy-container">
-                    <h3 class="font-serif text-lg text-brand-dark mb-2">Privacy en respect voor je gegevens</h3>
+                    <h3 class="font-serif text-lg text-brand-dark mb-2">Privacy en zorgvuldig gebruik van je gegevens</h3>
                     <p class="text-xs text-stone-500 leading-relaxed mb-4">
                         We gebruiken je gegevens om je analyse te maken. Ze helpen ook om onze AI te verbeteren (strikt anoniem). Je gegevens blijven vertrouwelijk.
                     </p>
@@ -980,12 +980,12 @@
             const treatmentInput = document.getElementById('treatment-input');
 
             if(goal === 'correction') {
-                 factorsLabel.textContent = "Welke van deze factoren spelen de laatste maanden het meest bij je?";
+                 factorsLabel.textContent = "Welke van deze factoren spelen de laatste maanden bij je de grootste rol?";
                  treatmentLabel.innerHTML = 'Medicijnen tegen acne? <span class="text-brand-primary">*</span>';
                  treatmentInput.placeholder = "Welke? (bijv. Roaccutane 2 jaar geleden, antibiotica...)";
             } else {
                  factorsLabel.textContent = "In welke situaties krijg je het vaakst puistjes?";
-                 treatmentLabel.innerHTML = 'Gebruik je medicijnen tegen acne, bijvoorbeeld een crème op recept? <span class="text-brand-primary">*</span>';
+                 treatmentLabel.innerHTML = 'Medicijnen tegen acne, bijvoorbeeld een crème op recept? <span class="text-brand-primary">*</span>';
                  treatmentInput.placeholder = "Welke? (bijv. antibioticacrème, benzoylperoxide...)";
             }
         }

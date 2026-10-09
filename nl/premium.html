@@ -430,7 +430,7 @@
             <div id="routine-rows"></div>
           </div>
           <div class="routine-text-block">
-            <label>Producten die je al gebruikt (aan te passen)</label>
+            <label>Producten die je al gebruikt (kun je aanpassen)</label>
             <textarea id="current-products-text" class="text-area-sm" style="min-height:50px;"></textarea>
           </div>
           <div class="routine-text-block">
@@ -514,7 +514,7 @@
             <label class="budget-item">
               <input type="radio" name="texture" value="trust" checked>
               <div class="budget-tile">
-                <span class="b-title">Maakt me niet uit</span>
+                <span class="b-title">Geen voorkeur</span>
                 <span class="b-range">Ik laat het aan jullie over</span>
               </div>
             </label>
@@ -749,7 +749,7 @@
       const loadingEl = document.getElementById("premium-loading");
       const errorEl = document.getElementById("premium-error");
       if(loadingEl) loadingEl.style.display = "none";
-      if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Het laden is niet gelukt. Probeer het later opnieuw."; }
+      if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Je analyse kon niet worden geladen. Vernieuw de pagina of stuur een e-mail naar contact@adermio.com."; }
     }
   }
   // --- 2. FETCH CONTEXT (SILENT) ---
@@ -1006,7 +1006,7 @@
     if (pollIntervalId) { clearInterval(pollIntervalId); pollIntervalId = null; }
   }
   function showGenerationSuccess() {
-    document.getElementById('gen-title').textContent = "Je analyse is klaar!";
+    document.getElementById('gen-title').textContent = "Je routine is aangepast!";
     document.getElementById('gen-desc').textContent = "Je nieuwe routine staat klaar.";
     document.getElementById('gen-success-area').style.display = 'block';
   }
