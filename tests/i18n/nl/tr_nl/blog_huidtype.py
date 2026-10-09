@@ -42,7 +42,7 @@ TR = [
     ('<span>6 min de lecture</span>',
      '<span>6 min. leestijd</span>', 1),
     ("Avant de choisir un nettoyant, une crème ou un sérum, il y a une question fondamentale à se poser : <strong>quel est mon type de peau ?</strong> Sans cette information, même les meilleurs produits peuvent s'avérer inefficaces, voire contre-productifs. Voici comment le déterminer avec certitude.",
-     'Voordat je een reiniger, crème of serum kiest, is er één basisvraag die je jezelf moet stellen: <strong>welk huidtype heb ik?</strong> Zonder dat antwoord kunnen zelfs de beste producten weinig uithalen, of zelfs averechts werken. Zo kom je er met zekerheid achter.', 1),
+     'Voordat je een reiniger, crème of serum kiest, is er één basisvraag die je jezelf moet stellen: <strong>welk huidtype heb ik?</strong> Zonder dat antwoord kunnen ook de beste producten weinig uithalen, of zelfs averechts werken. Zo kom je er met zekerheid achter.', 1),
     ('<h2>Les 4 types de peau principaux</h2>',
      '<h2>De 4 belangrijkste huidtypes</h2>', 1),
     ('La dermatologie distingue quatre grands types de peau, déterminés principalement par votre production de sébum. Cette classification est génétique : votre type de peau est en grande partie hérité, même si des facteurs externes peuvent le modifier temporairement.',

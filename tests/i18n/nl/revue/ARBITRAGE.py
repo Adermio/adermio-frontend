@@ -4,8 +4,11 @@
 # - blog hormonale acne « Hydratation non comédogène » : R4 (tournure sans pronom, neutre NL/BE).
 # - R2 sur gebruiksvoorwaarden exclu : le juridique reste une traduction FIDÈLE du FR (pas d'ajout « huisarts »).
 # - blog_index JSON-LD : R4 « dermatologie van Adermio » écarté (= « la dermatologie d'Adermio », Adermio ne fait pas de dermatologie) -> « Tips over huid, acne en dermatologie » (l'éditeur Adermio est déjà déclaré dans le JSON-LD).
+# - blog_huidtype ouverture : double « zelfs » (R6) -> « kunnen ook de beste producten … of zelfs averechts werken » (garde le « kunnen » de R2).
 # - privacyverklaring « buiten de EER » -> « buiten de EU » : le FR dit « hors UE » (fidélité ; l'EER est plus large).
 OVERRIDE = {
+    ('blog_huidtype', "Avant de choisir un nettoyant, une crème ou un sérum, il y a une question fondamentale à se poser : <strong>quel est mon type de peau ?</strong> Sans cette information, même les meilleurs produits peuvent s'avérer inefficaces, voire contre-productifs. Voici comment le déterminer avec certitude."):
+        'Voordat je een reiniger, crème of serum kiest, is er één basisvraag die je jezelf moet stellen: <strong>welk huidtype heb ik?</strong> Zonder dat antwoord kunnen ook de beste producten weinig uithalen, of zelfs averechts werken. Zo kom je er met zekerheid achter.',
     ('blog_index', '"description": "Conseils peau, acné et dermatologie par Adermio"'):
         '"description": "Tips over huid, acne en dermatologie"',
     ('processing', 'Vérification conseillée'):

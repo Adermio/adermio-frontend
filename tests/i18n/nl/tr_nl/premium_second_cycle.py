@@ -8,9 +8,9 @@ TR = [
     ("Analyse Cycle 2 — Suivi d'évolution Adermio",
      'Analyse ronde 2 — Je voortgang bijhouden met Adermio', 3),
     ("Comparez l'évolution de votre peau avec l'analyse comparative Cycle 2 d'Adermio. Mesurez vos progrès après 28 jours de routine.",
-     'Zie hoe je huid is veranderd met de vergelijkende analyse van ronde 2 van Adermio. Meet je vooruitgang na 28 dagen met je routine.', 3),
+     'Bekijk met de vergelijkende analyse van Adermio hoe je huid in ronde 2 is veranderd. Meet je vooruitgang na 28 dagen routine.', 3),
     ('<title>Adermio - Analyse Cycle 2</title>',
-     '<title>Adermio - Analyse ronde 2</title>', 1),
+     '<title>Analyse ronde 2 — Adermio</title>', 1),
     # --- chargement / erreurs
     ('Chargement de votre analyse Cycle 2...',
      'Je analyse van ronde 2 wordt geladen...', 1),

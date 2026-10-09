@@ -51,7 +51,7 @@ TR = [
     ('> Avant / Après',
      '> Voor / Na', 1),
     ('Comparez J1 et J28 pour voir vos progrès',
-     'Vergelijk dag 1 en dag 28 en zie je vooruitgang', 1),
+     'Vergelijk dag 1 met dag 28 en bekijk je vooruitgang', 1),
     ('>Photo J1</p>',
      '>Foto dag 1</p>', 1),
     ('De face, lumière naturelle',

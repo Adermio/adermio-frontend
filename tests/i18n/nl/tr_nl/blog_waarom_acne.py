@@ -108,7 +108,7 @@ TR = [
     ("<h3>« Le soleil guérit l'acné »</h3>",
      '<h3>“De zon is goed tegen acne”</h3>', 1),
     ("Trompeur. Le soleil assèche temporairement les boutons et masque les rougeurs : on a l'impression que la peau s'améliore. Mais à moyen terme, l'épaississement de la couche cornée provoqué par les UV obstrue les pores et déclenche un <strong>effet rebond post-vacances</strong>, souvent plus sévère que l'état initial.",
-     'Misleidend. De zon droogt puistjes tijdelijk uit en maskeert roodheid, waardoor je huid beter lijkt te worden. Maar op middellange termijn maakt uv-straling de hoornlaag dikker. Dat verstopt de poriën en zorgt voor een <strong>reboundeffect na de vakantie</strong>, vaak heftiger dan hoe je huid ervoor was.', 1),
+     'Misleidend. De zon droogt puistjes tijdelijk uit en maskeert roodheid, waardoor je huid beter lijkt te worden. Maar op middellange termijn maakt uv-straling de hoornlaag dikker. Dat verstopt de poriën en zorgt voor een <strong>reboundeffect na de vakantie</strong>, vaak heftiger dan je acne daarvoor was.', 1),
     ("<h3>« L'acné finira par partir toute seule »</h3>",
      '<h3>“Acne gaat vanzelf weer over”</h3>', 1),
     ("Pas toujours. Chez beaucoup, oui. Mais l'acné non traitée laisse souvent des marques (rouges, brunes ou cicatrices) qui, elles, peuvent rester des années. Plus on agit tôt, moins le risque de séquelles est élevé.",

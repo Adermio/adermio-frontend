@@ -12,7 +12,7 @@ TR = [
     ('Cycle 2 — Suivi de votre évolution cutanée — Adermio',
      'Tweede ronde — De voortgang van je huid — Adermio', 3),
     ("Lancez votre deuxième cycle d'analyse Adermio pour mesurer l'évolution de votre peau et ajuster votre routine dermatologique.",
-     'Start je tweede ronde met Adermio: zie hoe je huid is veranderd en stem je routine opnieuw af.', 2),
+     'Start je tweede ronde met Adermio: bekijk hoe je huid is veranderd en stem je routine opnieuw af.', 2),
     # --- overlay / en-tête
     ('>Envoi en cours...</p>',
      '>Bezig met versturen...</p>', 1),
@@ -80,7 +80,7 @@ TR = [
     ('Avez-vous ajout&eacute; des produits non recommand&eacute;s pendant le Cycle 1 ?',
      'Heb je tijdens ronde 1 producten gebruikt die we niet hadden aanbevolen?', 1),
     ('placeholder="Ex: J\'ai ajout&eacute; un s&eacute;rum vitamine C le matin..."',
-     'placeholder="Bijv. Ik gebruik sinds kort \'s ochtends een vitamine C-serum..."', 1),
+     'placeholder="Bijv. ik gebruik sinds kort \'s ochtends een vitamine C-serum..."', 1),
     ('Aucune routine trouv&eacute;e depuis le Cycle 1.',
      'Geen routine uit ronde 1 gevonden.', 1),
     ('D&eacute;crivez votre routine actuelle',

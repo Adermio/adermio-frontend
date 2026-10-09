@@ -66,7 +66,7 @@ TR = [
     ('>Une petite minute...</h3>',
      '>Nog heel even...</h3>', 1),
     ("Vous n'avez pas reçu votre analyse ? Aucun problème. Notre serveur est peut-être surchargé. <br>Envoyez-nous un message et nous vous la renverrons immédiatement par mail.",
-     'Nog geen analyse ontvangen? Geen probleem. Misschien is het erg druk op onze server. <br>Stuur ons een bericht, dan mailen we je analyse meteen opnieuw.', 1),
+     'Nog geen analyse ontvangen? Geen zorgen. Misschien is het erg druk op onze server. <br>Stuur ons een bericht, dan mailen we je analyse meteen opnieuw.', 1),
     ('Contacter le support',
      'Contact opnemen', 1),
     ("Continuer d'attendre",
