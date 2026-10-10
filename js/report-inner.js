@@ -9,7 +9,10 @@
     var start = function () {
       try {
         var pages = d.querySelectorAll('.pdf-page');
-        say({ event: 'ready', pages: pages.length, variant: d.querySelector('.o2p') ? 'page2-ancienne' : 'page2-standard' });
+        // Page 2 abonnement (bouton « Commencer mon suivi ») d'abord : elle reprend aussi les pages floutées .o2p.
+        var variant = d.querySelector('[data-cta="subscription"]') ? 'page2-abonnement'
+          : d.querySelector('.o2p') ? 'page2-ancienne' : 'page2-standard';
+        say({ event: 'ready', pages: pages.length, variant: variant });
         var p2 = pages[1];
         if (p2 && w.IntersectionObserver) {
           var io = new IntersectionObserver(function (es) {

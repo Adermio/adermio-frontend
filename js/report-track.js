@@ -1,8 +1,9 @@
 // Adermio — suivi anonyme du rapport gratuit (09/10/2026), chargé sur /free-analysis (page qui encadre le rapport S3
 // dans une iframe, pour les 5 langues). N'ÉCRIT RIEN dans la page et ne change aucune logique : il OBSERVE
 //   - l'ouverture du rapport (chargement de l'iframe) ou le lien invalide (pas de jobId) ;
-//   - les messages que le rapport envoie à cette page : OPEN_STRIPE (clic « Débloquer », déjà en place) et
-//     ADERMIO_TRACK (envoyés par js/report-inner.js, chargé dans le rapport : prêt, page 2 atteinte, profondeur) ;
+//   - les messages que le rapport envoie à cette page : OPEN_STRIPE (clic « Débloquer », déjà en place ; formule
+//     choisie sur la page 2 abonnement) et ADERMIO_TRACK (envoyés par js/report-inner.js, chargé dans le rapport :
+//     prêt, page 2 atteinte, profondeur ; et par le bouton abonnement : paiement impossible à ouvrir) ;
 //   - le retour sur la page après être parti vers Stripe sans payer ;
 //   - l'application quittée / revenue, la page fermée (temps de lecture = ms).
 // Même table que le questionnaire (web_form_funnel, insert seul) : la jointure se fait par job_id.
@@ -64,13 +65,16 @@
         if (ev.origin !== S3 || !ev.data) return;
         if (ev.data.type === 'OPEN_STRIPE') {
           var n = 1; try { n = (parseInt(w.sessionStorage.getItem(cKey) || '0', 10) || 0) + 1; w.sessionStorage.setItem(cKey, String(n)); } catch (e) {}
-          track('cta_click', { detail: cut('clic n°' + n, 120) });
+          // Page 2 abonnement : la formule choisie voyage avec le message (monthly | quarterly).
+          var plan = ev.data.plan === 'monthly' || ev.data.plan === 'quarterly' ? ' · ' + ev.data.plan : '';
+          track('cta_click', { detail: cut('clic n°' + n + plan, 120) });
         } else if (ev.data.type === 'ADERMIO_TRACK') {
           var e = String(ev.data.event || ''), k = e + ':' + (ev.data.pct || '');
           if (seen[k]) return; seen[k] = 1;
           if (e === 'ready') track('report_ready', { total_steps: ev.data.pages || null, detail: cut(ev.data.variant, 120) });
           else if (e === 'page2') track('report_page2');
           else if (e === 'scroll') track('report_scroll', { detail: cut(String(ev.data.pct), 10) });
+          else if (e === 'checkout_error') { seen[k] = 0; track('checkout_error', { detail: cut(ev.data.detail, 120) }); }
         }
       } catch (err) {}
     });
