@@ -54,6 +54,15 @@ FR_PATHS = sorted([k for k in LINKMAP if k], key=len, reverse=True)
 
 SEL_BTN = re.compile(r'(<img src="https://flagcdn\.com/)fr(\.svg" width="1[0-9]" alt=")FR(")')
 
+# Jumelles allemandes et néerlandaises (FR -> URL propre), lues dans prep_de / prep_nl : source unique.
+def _twins(sub, mod):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(mod, os.path.join(os.path.dirname(os.path.abspath(__file__)), sub, mod + '.py'))
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    return {fr: m.clean(v[0]) for fr, v in m.PAGES.items()}
+TWINS = {'de': _twins('de', 'prep_de'), 'nl': _twins('nl', 'prep_nl')}
+_CUR = [None]   # page FR en cours (posée par transform)
+
 def rebuild_dropdown(html, en_twin, es_twin, fr_url):
     """Remplace le contenu du <div class="lang-dropdown ..."> par 4 entrées (IT courant + EN/ES/FR)."""
     start = html.find('<div class="lang-dropdown')
@@ -91,7 +100,10 @@ def rebuild_dropdown(html, en_twin, es_twin, fr_url):
     body = (entry('#', 'it', 'Italiano', 'Italiano', True)
             + entry(f'https://adermio.com/{en_twin}', 'us', 'English', 'English', False)
             + entry(f'https://adermio.com/{es_twin}', 'es', 'Español', 'Español', False)
-            + entry('__FR_URL__', 'fr', 'Français', 'Français', False))  # placeholder : protégé de la carte de liens
+            + entry('__FR_URL__', 'fr', 'Français', 'Français', False)  # placeholder : protégé de la carte de liens
+            # Deutsch (01/10) puis Nederlands (10/10) : sinon perdus au prochain rebuild (ajoutés par expose_de / expose_nl)
+            + (entry(f'https://adermio.com/{TWINS["de"][_CUR[0]]}', 'de', 'Deutsch', 'Deutsch', False) if _CUR[0] in TWINS['de'] else '')
+            + (entry(f'https://adermio.com/{TWINS["nl"][_CUR[0]]}', 'nl', 'Nederlands', 'Nederlands', False) if _CUR[0] in TWINS['nl'] else ''))
     closing_ind = ind[:-4] if len(ind) >= 4 else ''
     new_block = head + '\n' + body + closing_ind + '</div>'
     return html[:start] + new_block + html[end:], True
@@ -126,6 +138,7 @@ def transform(fr_rel):
         notes.append('pas de bloc hreflang')
 
     # 4. sélecteur de langue
+    _CUR[0] = fr_rel
     html, ok = rebuild_dropdown(html, en_twin, es_twin, fr_url)
     if not ok: notes.append('pas de lang-dropdown')
     html, n = SEL_BTN.subn(r'\1it\2IT\3', html)

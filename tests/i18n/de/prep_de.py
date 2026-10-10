@@ -84,8 +84,16 @@ def block_end(html, start):
         else: depth -= 1; pos = c + 6
     return pos
 
-def rebuild_dropdown(html, en_twin, es_twin, it_twin):
-    """Remplace le contenu du <div class="lang-dropdown ..."> : DE courant + EN/ES/IT/FR."""
+# Jumelles néerlandaises (entrée « Nederlands » du sélecteur, ouverture du 10/10/2026) : lues dans prep_nl, source unique.
+def _nl_twins():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('prep_nl', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'nl', 'prep_nl.py'))
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    return {fr: m.clean(v[0]) for fr, v in m.PAGES.items()}
+NL_TWIN = _nl_twins()
+
+def rebuild_dropdown(html, en_twin, es_twin, it_twin, nl_twin=None):
+    """Remplace le contenu du <div class="lang-dropdown ..."> : DE courant + EN/ES/IT/FR (+ NL depuis l'ouverture du 10/10/2026)."""
     start = html.find('<div class="lang-dropdown')
     if start < 0: return html, False
     end = block_end(html, start)
@@ -107,7 +115,8 @@ def rebuild_dropdown(html, en_twin, es_twin, it_twin):
             + entry(f'https://adermio.com/{en_twin}', 'us', 'English', 'English', False)
             + entry(f'https://adermio.com/{es_twin}', 'es', 'Español', 'Español', False)
             + entry(f'https://adermio.com/{it_twin}', 'it', 'Italiano', 'Italiano', False)
-            + entry('__FR_URL__', 'fr', 'Français', 'Français', False))
+            + entry('__FR_URL__', 'fr', 'Français', 'Français', False)
+            + (entry(f'https://adermio.com/{nl_twin}', 'nl', 'Nederlands', 'Nederlands', False) if nl_twin else ''))
     closing_ind = ind[:-4] if len(ind) >= 4 else ''
     return html[:start] + head + '\n' + body + closing_ind + '</div>' + html[end:], True
 
@@ -134,7 +143,7 @@ def transform(fr_rel):
     else:
         notes.append('pas de bloc hreflang')
 
-    html, ok = rebuild_dropdown(html, en_twin, es_twin, it_twin)
+    html, ok = rebuild_dropdown(html, en_twin, es_twin, it_twin, NL_TWIN.get(fr_rel))
     if not ok: notes.append('pas de lang-dropdown')
     html, n = SEL_BTN.subn(r'\1de\2DE\3', html)
     if not n and ok: notes.append('bouton sélecteur non trouvé')

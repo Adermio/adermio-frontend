@@ -19,21 +19,21 @@ BASE = 'https://adermio.com/'
 
 # Un groupe = la même page dans chaque langue. None = cette langue n'a pas la page.
 GROUPS = [
-    {'fr': '',                                      'en': 'en/home',            'es': 'es/home',            'it': 'it/home', 'de': 'de/home', 'xdefault': True},
-    {'fr': 'about',                                 'en': 'en/about',           'es': 'es/about',           'it': 'it/about', 'de': 'de/ueber-uns'},
-    {'fr': 'formulaire',                            'en': 'en/form',            'es': 'es/form',            'it': 'it/form', 'de': 'de/form'},
-    {'fr': 'contact',                               'en': 'en/contact',         'es': 'es/contact',         'it': 'it/contact', 'de': 'de/kontakt'},
-    {'fr': 'conditions',                            'en': 'en/conditions',      'es': 'es/conditions',      'it': 'it/conditions', 'de': 'de/nutzungsbedingungen'},
-    {'fr': 'confidentialite',                       'en': 'en/confidentialite', 'es': 'es/confidentialite', 'it': 'it/confidentialite', 'de': 'de/datenschutz'},
-    {'fr': 'sources',                               'en': 'en/sources',         'es': None,                 'it': 'it/sources', 'de': 'de/quellen'},
-    {'fr': 'mentions-legales',                      'en': 'en/legal-notice',    'es': 'es/legal-notice',    'it': 'it/legal-notice', 'de': 'de/impressum'},
-    {'fr': 'blog',                                  'en': 'en/blog',            'es': 'es/blog',            'it': 'it/blog', 'de': 'de/blog'},
-    {'fr': 'blog/comment-connaitre-son-type-de-peau','en': 'en/blog/how-to-know-your-skin-type', 'es': 'es/blog/como-conocer-tu-tipo-de-piel', 'it': 'it/blog/come-conoscere-il-tuo-tipo-di-pelle', 'de': 'de/blog/hauttyp-bestimmen'},
-    {'fr': 'blog/pourquoi-a-t-on-de-l-acne',        'en': 'en/blog/why-do-we-have-acne',        'es': 'es/blog/por-que-tenemos-acne',        'it': 'it/blog/perche-viene-l-acne', 'de': 'de/blog/warum-bekommt-man-akne'},
-    {'fr': 'blog/acne-hormonale',                   'en': 'en/blog/hormonal-acne',              'es': 'es/blog/acne-hormonal',               'it': 'it/blog/acne-ormonale', 'de': 'de/blog/hormonelle-akne'},
-    {'fr': 'blog/ou-apparait-l-acne',               'en': 'en/blog/where-acne-appears',         'es': 'es/blog/donde-aparece-el-acne',       'it': 'it/blog/dove-compare-l-acne', 'de': 'de/blog/wo-tritt-akne-auf'},
+    {'fr': '',                                      'en': 'en/home',            'es': 'es/home',            'it': 'it/home', 'de': 'de/home', 'nl': 'nl/home', 'xdefault': True},
+    {'fr': 'about',                                 'en': 'en/about',           'es': 'es/about',           'it': 'it/about', 'de': 'de/ueber-uns', 'nl': 'nl/over-ons'},
+    {'fr': 'formulaire',                            'en': 'en/form',            'es': 'es/form',            'it': 'it/form', 'de': 'de/form', 'nl': 'nl/form'},
+    {'fr': 'contact',                               'en': 'en/contact',         'es': 'es/contact',         'it': 'it/contact', 'de': 'de/kontakt', 'nl': 'nl/contact'},
+    {'fr': 'conditions',                            'en': 'en/conditions',      'es': 'es/conditions',      'it': 'it/conditions', 'de': 'de/nutzungsbedingungen', 'nl': 'nl/gebruiksvoorwaarden'},
+    {'fr': 'confidentialite',                       'en': 'en/confidentialite', 'es': 'es/confidentialite', 'it': 'it/confidentialite', 'de': 'de/datenschutz', 'nl': 'nl/privacyverklaring'},
+    {'fr': 'sources',                               'en': 'en/sources',         'es': None,                 'it': 'it/sources', 'de': 'de/quellen', 'nl': 'nl/bronnen'},
+    {'fr': 'mentions-legales',                      'en': 'en/legal-notice',    'es': 'es/legal-notice',    'it': 'it/legal-notice', 'de': 'de/impressum', 'nl': 'nl/juridische-informatie'},
+    {'fr': 'blog',                                  'en': 'en/blog',            'es': 'es/blog',            'it': 'it/blog', 'de': 'de/blog', 'nl': 'nl/blog'},
+    {'fr': 'blog/comment-connaitre-son-type-de-peau','en': 'en/blog/how-to-know-your-skin-type', 'es': 'es/blog/como-conocer-tu-tipo-de-piel', 'it': 'it/blog/come-conoscere-il-tuo-tipo-di-pelle', 'de': 'de/blog/hauttyp-bestimmen', 'nl': 'nl/blog/huidtype-bepalen'},
+    {'fr': 'blog/pourquoi-a-t-on-de-l-acne',        'en': 'en/blog/why-do-we-have-acne',        'es': 'es/blog/por-que-tenemos-acne',        'it': 'it/blog/perche-viene-l-acne', 'de': 'de/blog/warum-bekommt-man-akne', 'nl': 'nl/blog/waarom-krijg-je-acne'},
+    {'fr': 'blog/acne-hormonale',                   'en': 'en/blog/hormonal-acne',              'es': 'es/blog/acne-hormonal',               'it': 'it/blog/acne-ormonale', 'de': 'de/blog/hormonelle-akne', 'nl': 'nl/blog/hormonale-acne'},
+    {'fr': 'blog/ou-apparait-l-acne',               'en': 'en/blog/where-acne-appears',         'es': 'es/blog/donde-aparece-el-acne',       'it': 'it/blog/dove-compare-l-acne', 'de': 'de/blog/wo-tritt-akne-auf', 'nl': 'nl/blog/waar-ontstaat-acne'},
 ]
-LANGS = ('fr', 'en', 'es', 'it', 'de')
+LANGS = ('fr', 'en', 'es', 'it', 'de', 'nl')
 url = lambda p: BASE + p
 
 def alternates(group, indent):
@@ -68,7 +68,7 @@ def main():
             if p is None: continue
             loc = url(p); b = by_loc[loc]; old = b.group(0)
             indent = re.match(r'[ \t]*', old).group(0) + '  '
-            lm, cf, pr = meta[loc] if lg not in ('it', 'de') else fr_meta
+            lm, cf, pr = meta[loc] if lg not in ('it', 'de', 'nl') else fr_meta
             body = [f'{indent[:-2]}<url>', f'{indent}<loc>{loc}</loc>', alternates(g, indent)]
             if lm: body.append(f'{indent}<lastmod>{lm}</lastmod>')
             if cf: body.append(f'{indent}<changefreq>{cf}</changefreq>')
