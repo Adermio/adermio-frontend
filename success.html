@@ -745,7 +745,7 @@
           }
        
           // Abonnement web : seul le paiement d'abonnement ajoute ?abonnement=monthly|quarterly à cette page.
-          const ABO_PRICES = { monthly: 12.99, quarterly: 24.99 };
+          const ABO_PRICES = { monthly: 9.99, quarterly: 19.99 };
           const abo = Object.prototype.hasOwnProperty.call(ABO_PRICES, params.get("abonnement")) ? params.get("abonnement") : null;
           if (abo) document.getElementById("abo-app-block").hidden = false;
 
