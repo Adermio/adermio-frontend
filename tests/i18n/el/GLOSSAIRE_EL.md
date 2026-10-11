@@ -18,6 +18,8 @@ Référence unique pour toute traduction FR → EL du site adermio.com. Toute d�
 9. **Visuels** de l'accueil (captures, vidéo) = versions **anglaises** : ne jamais promettre qu'ils sont en grec (« (βίντεο στα αγγλικά) »).
 10. **Textes juridiques** : là où le FR parle de « l'Utilisateur » à la 3e personne, garder **ο Χρήστης** (3e personne) ; RGPD → **ΓΚΠΔ** (Γενικός Κανονισμός για την Προστασία Δεδομένων) ; CNIL : garder « CNIL » et ajouter l'autorité grecque seulement si le FR cite « l'autorité de contrôle de votre pays » (Αρχή Προστασίας Δεδομένων Προσωπικού Χαρακτήρα). Ne rien inventer de juridique.
 
+11. **Point Repère** (fonction Premium de l'app) → *Σημείο Αναφοράς* ; « enquête » → *διερεύνηση*, « pistes » → *υποθέσεις*, « verdicts » → *συμπεράσματα*, « dossier » → *φάκελος* (fixé le 11/10 avec la politique de confidentialité v2.4).
+
 ## Typographie grecque
 
 - **Point d'interrogation = « ; »** (point-virgule latin U+003B). « · » (άνω τελεία, U+00B7) avec parcimonie. Aucune espace avant `! ; : ·`.
