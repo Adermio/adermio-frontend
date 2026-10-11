@@ -178,7 +178,12 @@ Référence unique pour toute traduction FR → NL du site adermio.com. Toute d�
 | données personnelles | persoonsgegevens |
 | données de santé | gezondheidsgegevens |
 | droit de rétractation | herroepingsrecht |
-| conditions générales de vente | algemene verkoopvoorwaarden |
+| conditions générales de vente | algemene verkoopvoorwaarden (page `/nl/algemene-voorwaarden`, terme défini : de “Verkoopvoorwaarden”) |
+| résilier / résiliation (abonnement) | opzeggen / opzegging (bouton iOS : *Annuleer abonnement*) |
+| renoncer expressément au droit de rétractation | uitdrukkelijk afstand doen van het herroepingsrecht |
+| formule (mensuelle / trimestrielle) | formule : maandabonnement / kwartaalabonnement |
+| renouvellement automatique / échéance / prélèvement | automatische verlenging / vervaldatum / afschrijving |
+| franchise en base de TVA | Franse btw-vrijstellingsregeling voor kleine ondernemers (franchise en base de TVA) |
 | conditions générales d'utilisation | algemene gebruiksvoorwaarden |
 | éditeur du site | uitgever van de website |
 | hébergeur | hostingprovider |
@@ -233,6 +238,7 @@ Balises, classes, ids, `name`/`value` des champs (valeurs envoyées au serveur =
 - **iDEAL** (orthographe exacte) est le moyen de paiement n°1 aux Pays-Bas (Bancontact en Belgique) : vérifier qu'ils sont activés dans Stripe Checkout avant l'ouverture.
 
 ## Historique
+- 11/10 : algemene verkoopvoorwaarden v1.1 (`tr_nl/algemene_voorwaarden.py`) + opzegpagina verborgen `/nl/opzeggen` (`tr_nl/opzeggen.py`) ; libellés de l'app cités en néerlandais (*Aankopen herstellen*, *Ik heb een Adermio-code*) alors que l'app s'affiche en anglais aux Pays-Bas : à aligner à l'ouverture de l'abonnement.
 - 09/10 : glossaire initial (décisions d'Antoine : périmètre site seul et caché, « je/jouw », source FR).
 - 09/10 : 5 relectures natives (R1 copy 8,5/10, R2 terminologie/conformité, R3 microcopie, R4 blog + juridique flamand, R5 retraduction à l'aveugle : 0 contresens sur 672 segments) → 90 corrections appliquées par `apply_corrections.py`, arbitrages dans `revue/ARBITRAGE.py` (dont : « Vérification conseillée » → *Klopt deze foto?* ; juridique sans ajout « huisarts » ; « hors UE » → *buiten de EU* ; jamais « dermatologie van Adermio »).
 - 09/10 : relu par 2 natifs indépendants (Pays-Bas, Flandre) : ~45 corrections intégrées (gemengde huid, overtollige talg, typographie FR, J28 → dag 28, Mo → MB, dermatoloog titre protégé, repli « patient », actieve ingrediënten, opflakkering, geen medisch advies, Matig jamais seul, je avant jouw, belgicismes et tics hollandais, termes complémentaires).

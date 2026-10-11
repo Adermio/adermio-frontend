@@ -54,6 +54,9 @@ TR = [
     (">Précision de détection</div>", ">Erkennungsgenauigkeit</div>", 1),
     (">&lt; 45s</div>", ">&lt; 45 Sek.</div>", 1),
     (">Temps d'analyse</div>", ">Analysedauer</div>", 1),
+    # 11/10/2026 : lien « AGB » ajouté au pied de page FR (CGV v1.1) -> /de/agb
+    ('>Conditions de vente</a>',
+     '>AGB</a>', 1),
 ]
 
 # --- Relecture native 30/09 (R1–R5 + arbitrages PDG) : ajouts ---

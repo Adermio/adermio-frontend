@@ -31,7 +31,8 @@ FR_MORPHO = re.compile(r"\b(\w{3,}ez|\w{4,}ement|\w{3,}eux|ci-dessous|ci-dessus|
 FR_MORPHO_OK = {'chez', 'assez', 'nez',
                 'management', 'improvement', 'treatment', 'assessment', 'development', 'engagement',  # anglais en -ement
                 'abonnement', 'supplement', 'reglement', 'complement', 'temperament', 'fundament',     # néerlandais en -ement
-                'departement', 'medicament', 'element', 'testament', 'parlement', 'sentiment'}
+                'departement', 'medicament', 'element', 'testament', 'parlement', 'sentiment',
+                'maandabonnement', 'kwartaalabonnement'}  # verkoopvoorwaarden (11/10/2026)
 
 # Registre « je / jouw » (décision du client, 09/10) : le vouvoiement néerlandais est interdit.
 # « U-zone » / « T-zone » restent permis (lettre suivie d'un tiret).
@@ -79,7 +80,8 @@ def has_fr_morphology(seg):
     return None
 
 def strip_selector(s):
-    s = '\n'.join(l for l in s.split('\n') if 'hreflang=' not in l)
+    # lien « Résilier » du pied de page FR : retiré par prep (abonnement web ouvert en FR seulement)
+    s = '\n'.join(l for l in s.split('\n') if 'hreflang=' not in l and 'adermio.com/resilier" class="!text-slate-500' not in l)
     i = s.find('<div class="lang-dropdown')
     if i >= 0:
         depth, pos = 1, s.find('>', i) + 1

@@ -58,6 +58,17 @@ TR = [
     ('content_name: "Analyse premium Adermio"', 'content_name: "Adermio-Komplettanalyse"', 1),
     ('"Trafic plus dense que prévu : finalisation en cours..."',
      '"Gerade ist viel los – wir stellen Ihre Analyse fertig …"', 1),
+    # 11/10/2026 : lien « AGB » ajouté au pied de page FR (CGV v1.1) -> /de/agb
+    ('>Conditions de vente</a>',
+     '>AGB</a>', 1),
+    ('<strong>Votre suivi est actif.</strong><br>',
+     '<strong>Ihre Begleitung ist aktiv.</strong><br>', 1),
+    ("Téléchargez l'app et connectez-vous avec l'adresse e-mail de votre paiement : votre analyse y est déjà.",
+     'Laden Sie die App herunter und melden Sie sich mit der E-Mail-Adresse an, die Sie bei der Zahlung verwendet haben: Ihre Analyse ist dort bereits gespeichert.', 1),
+    ('content_name: "Abonnement Adermio"',
+     'content_name: "Adermio-Abo"', 1),
+    (">Télécharger l'app</a>",
+     '>App herunterladen</a>', 1),
 ]
 REGEX = []
 

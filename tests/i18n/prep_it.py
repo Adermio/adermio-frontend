@@ -38,7 +38,15 @@ PAGES = {
     'blog/pourquoi-a-t-on-de-l-acne.html': ('it/blog/perche-viene-l-acne.html', 'en/blog/why-do-we-have-acne', 'es/blog/por-que-tenemos-acne'),
     'blog/acne-hormonale.html': ('it/blog/acne-ormonale.html', 'en/blog/hormonal-acne', 'es/blog/acne-hormonal'),
     'blog/ou-apparait-l-acne.html': ('it/blog/dove-compare-l-acne.html', 'en/blog/where-acne-appears', 'es/blog/donde-aparece-el-acne'),
+    # CGV (11/10/2026) ; pagina di disdetta : nascosta finché l'abbonamento web non è aperto in italiano
+    'cgv.html': ('it/cgv.html', 'en/cgv', 'es/cgv'),
+    'resilier.html': ('it/resilier.html', 'en/resilier', 'es/resilier'),
 }
+
+# Lien « Résilier mon abonnement » du pied de page : l'abonnement web n'est ouvert qu'en FRANÇAIS (11/10/2026).
+# La page de résiliation traduite existe mais reste CACHÉE (noindex dans vercel.json, hors pied de page et sitemap)
+# tant que l'abonnement n'est pas ouvert dans la langue : voir docs/abonnement-web-ouverture-langues.md.
+FR_ONLY_FOOTER = re.compile(r'[ \t]*<a href="https://adermio\.com/resilier" class="!text-slate-500[^"]*">[^<]*</a>\n')
 
 def clean(path):
     """'it/home.html' -> 'it/home' ; 'it/blog/index.html' -> 'it/blog' (clean URLs Vercel)."""
@@ -144,6 +152,9 @@ def transform(fr_rel):
     html, n = SEL_BTN.subn(r'\1it\2IT\3', html)
     if not n and ok: notes.append('bouton sélecteur non trouvé')
     html = html.replace('<span class="font-sans font-medium text-sm">FR</span>', '<span class="font-sans font-medium text-sm">IT</span>')
+
+    html, n = FR_ONLY_FOOTER.subn('', html)
+    if n: notes.append('lien Résilier retiré')
 
     # 5. carte de liens, ligne par ligne, en protégeant les hreflang
     out = []

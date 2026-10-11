@@ -145,6 +145,9 @@ TR = [
      "Ich habe bezahlt, aber keine E-Mail mit meiner Komplettanalyse erhalten. Was kann ich tun?", 1),
     ("Pas d’inquiétude. Envoyez-nous simplement un message à <b>contact@adermio.com</b> en indiquant votre nom et une preuve de votre achat. Nous vous renverrons immédiatement votre analyse.",
      "Keine Sorge. Schreiben Sie uns einfach an <b>contact@adermio.com</b> und schicken Sie uns Ihren Namen und einen Kaufnachweis. Wir senden Ihnen Ihre Komplettanalyse umgehend erneut zu.", 1),
+    # 11/10/2026 : lien « AGB » ajouté au pied de page FR (CGV v1.1) -> /de/agb
+    ('>Conditions de vente</a>',
+     '>AGB</a>', 1),
 ]
 REGEX = [
     (r'>(\d{2}) ans<', r'>\1 Jahre<'),   # âges (avant/après + témoignages)

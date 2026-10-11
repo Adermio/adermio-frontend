@@ -63,3 +63,8 @@ Services
 # Sentry / Functional Software GmbH (raison sociale)
 Functional
 Software
+# Όροι πώλησης (11/10/2026) : noms de produits Apple (Face ID, Touch ID) et adresses web affichées en clair (apps.apple.com, reportaproblem.apple.com)
+Face
+Touch
+apps
+reportaproblem

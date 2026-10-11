@@ -78,6 +78,21 @@
       "statusCode": 301
     },
     {
+      "source": "/de/cgv",
+      "destination": "/de/agb",
+      "statusCode": 301
+    },
+    {
+      "source": "/nl/cgv",
+      "destination": "/nl/algemene-voorwaarden",
+      "statusCode": 301
+    },
+    {
+      "source": "/el/cgv",
+      "destination": "/el/oroi-polisis",
+      "statusCode": 301
+    },
+    {
       "source": "/en/privacy",
       "destination": "/en/confidentialite",
       "statusCode": 301
@@ -160,6 +175,51 @@
   "headers": [
     {
       "source": "/el/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/en/resilier",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/es/resilier",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/it/resilier",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/de/kuendigen",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/nl/opzeggen",
       "headers": [
         {
           "key": "X-Robots-Tag",

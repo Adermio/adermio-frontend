@@ -44,7 +44,8 @@ def has_fr_morphology(seg):
     return None
 
 def strip_selector(s):
-    s = '\n'.join(l for l in s.split('\n') if 'hreflang=' not in l)
+    # lien « Résilier » du pied de page FR : retiré par prep (abonnement web ouvert en FR seulement)
+    s = '\n'.join(l for l in s.split('\n') if 'hreflang=' not in l and 'adermio.com/resilier" class="!text-slate-500' not in l)
     i = s.find('<div class="lang-dropdown')
     if i >= 0:
         j = s.find('</div>', i)
@@ -168,7 +169,8 @@ def check(it_rel):  # it_rel = chemin de la page DE (nom hérité de qa_it)
     # (a) mots-outils français (attrape les phrases à moitié traduites)
     for ln, t in visible_segments(it):
         if t.replace('JS:', '') in allow: continue
-        if STRONG.search(t) or len(FR_RE.findall(t)) >= 3:
+        # « des » = article allemand (génitif) : homographe, jamais compté comme indice de français (AGB, 11/10/2026)
+        if STRONG.search(t) or len([w for w in FR_RE.findall(t) if w != 'des']) >= 3:
             fr_hits.append((ln, t[:100]))
         elif is_human_text(t.replace('JS:', '').strip()) and (mm := has_fr_morphology(t)):
             fr_hits.append((ln, f'morphologie FR ({mm}) : ' + t[:90]))

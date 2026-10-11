@@ -91,6 +91,17 @@ TR = [
      '"Het is drukker dan normaal. We ronden je analyse af..."', 1),
     ('Adermio © 2025</span>',
      'Adermio © 2026</span>', 1),
+    # 11/10/2026 : lien « Verkoopvoorwaarden » ajouté au pied de page FR (CGV v1.1) -> /nl/algemene-voorwaarden ; bloc abonné (abonnement web, caché hors ?abonnement=)
+    ('>Conditions de vente</a>',
+     '>Verkoopvoorwaarden</a>', 1),
+    ('<strong>Votre suivi est actif.</strong><br>',
+     '<strong>Je begeleiding is actief.</strong><br>', 1),
+    ("Téléchargez l'app et connectez-vous avec l'adresse e-mail de votre paiement : votre analyse y est déjà.",
+     'Download de app en log in met het e-mailadres waarmee je hebt betaald: je analyse staat er al klaar.', 1),
+    ('content_name: "Abonnement Adermio"',
+     'content_name: "Adermio-abonnement"', 1),
+    (">Télécharger l'app</a>",
+     '>Download de app</a>', 1),
 ]
 REGEX = [
     ('alt="(?:Logo Adermio|Adermio Logo)"', 'alt="Adermio-logo"'),

@@ -13,7 +13,7 @@ Référence unique pour toute traduction FR → DE du site adermio.com. Toute d�
 7. **« klinisch / Klinik » interdits côté Adermio** (badge « Méthode clinique » → *Wissenschaftlich fundiert*). Dans la bibliographie, « essais cliniques randomisés » → *randomisierte kontrollierte Studien*. Contrôlé par `qa_de.py` (BANNED_RE).
 8. **Consentement (case à cocher)** : on *akzeptiert* les Nutzungsbedingungen, on *nimmt* la Datenschutzerklärung *zur Kenntnis* — jamais « die Datenschutzerklärung akzeptieren ». Formule figée : « Ich akzeptiere die <a>Nutzungsbedingungen</a> und habe die <a>Datenschutzerklärung</a> zur Kenntnis genommen. » (liens aux mêmes places que le FR) ; erreur : « Bitte bestätigen Sie die Nutzungsbedingungen und die Datenschutzerklärung. »
 9. **Témoignages** : jamais supprimés ni réécrits sur le fond (y compris « keine Zeit für den Hautarzt ») ; **un même avis = le même texte allemand sur toutes les pages** (référence : `home.py`).
-10. **Pied de page** : © 2026 sur toutes les pages DE ; **lien Impressum obligatoire sur chaque page qui a un pied de page** (§ 5 DDG). S'il manque dans le FR (ex. `contact.html`), on l'ajoute par une entrée REGEX de la table (balise `<a>` copiée d'un lien voisin) et on déclare l'ajout dans `STRUCT_ALLOWED` de `qa_de.py`. Le lien « AGB » reste vers `/cgv` (pas d'AGB allemandes pour l'instant).
+10. **Pied de page** : © 2026 sur toutes les pages DE ; **lien Impressum obligatoire sur chaque page qui a un pied de page** (§ 5 DDG). S'il manque dans le FR (ex. `contact.html`), on l'ajoute par une entrée REGEX de la table (balise `<a>` copiée d'un lien voisin) et on déclare l'ajout dans `STRUCT_ALLOWED` de `qa_de.py`. Le lien « AGB » pointe vers `/de/agb` (AGB traduites le 11/10/2026). Le lien « Résilier mon abonnement » du pied de page FR est retiré par `prep_de.py` : l'abonnement web n'est pas ouvert en allemand ; la page `/de/kuendigen` existe mais reste cachée (noindex, hors pied de page et sitemap).
 11. **Messages d'erreur montrés au client** : jamais de message technique (`err.message`, « Failed to fetch », « Token », « jobId », « URL », « Kennung », « Konsole/F12 »). Toujours une phrase allemande claire qui dit quoi faire (ex. « Dieser Link ist unvollständig. Bitte öffnen Sie den Link aus Ihrer E-Mail erneut. »). Si le JS affiche `e.message`, on remplace l'expression par un texte fixe (REGEX), puis `node --check`.
 12. **Nombres calculés en JS** : virgule décimale (`3,8/5` via `.replace('.', ',')`), espace avant % (`42 %`), semaines « Wo. 1 », pluriels Tag/Tage.
 
@@ -174,6 +174,18 @@ Référence unique pour toute traduction FR → DE du site adermio.com. Toute d�
 | cookies et traceurs | Cookies und ähnliche Technologien |
 | Sentry (raison sociale) | Functional Software GmbH (Sentry) — même libellé partout |
 | « passible de sanctions » | … kann … geahndet werden (possibilité, jamais « wird geahndet ») |
+| CGV (titre) / CGV (renvoi) | Allgemeine Geschäftsbedingungen (AGB) / AGB — slug `/de/agb` |
+| abonnement Premium | Premium-Abo (Abo partout dans le texte courant ; « Abonnement » seulement s'il est cité tel quel) |
+| formule (mensuelle / trimestrielle) | Tarif : Monatsabo / Quartalsabo |
+| résilier / résiliation (abonnement) | kündigen / Kündigung (jamais « stornieren ») ; bouton iOS : „Abo kündigen“ |
+| renouvellement automatique / échéance | automatische Verlängerung / Fälligkeitstermin |
+| prélèvement | Abbuchung |
+| renoncer expressément au droit de rétractation | ausdrücklich auf das Widerrufsrecht verzichten (mot du FR ; le juriste dira s'il faut la formule allemande « Zustimmung + Kenntnis vom Verlust », § 356 Abs. 5 BGB) |
+| franchise en base de TVA | französische Kleinunternehmerregelung (franchise en base de TVA) |
+| TTC | inklusive aller Steuern / Endpreise |
+| plateforme européenne ODR | Europäische OS-Plattform |
+| suivi (case à cocher de l'abonnement) | Begleitung („Ich verlange den sofortigen Zugang zu meiner Begleitung …“) |
+| « l'acceptation … de la Politique de confidentialité » | Kenntnisnahme der Datenschutzerklärung (décision 8 : jamais « akzeptieren ») |
 
 ## Ne jamais traduire
 Balises, classes, ids, `name`/`value` des champs (valeurs envoyées au serveur = français canonique), clés JS, URLs, webhooks, commentaires de code, marques, noms de produits, INCI, « Adermio ».
@@ -182,5 +194,6 @@ Balises, classes, ids, `name`/`value` des champs (valeurs envoyées au serveur =
 - Allégations chiffrées (« précision 98,5 % »), photos avant/après, « diagnostic précis » : traduites fidèlement (sans « Diagnose »), mais à faire valider par un juriste avant l'ouverture publique en Allemagne.
 
 ## Historique
+- 11/10 : AGB v1.1 traduites (`tr_de/agb.py`, page `/de/agb`) + page de résiliation cachée `/de/kuendigen` (`tr_de/kuendigen.py`) ; liens `/cgv` → `/de/agb` ; « des » (article allemand) n'est plus compté comme indice de français par `qa_de.py`.
 - 30/09 : glossaire relu par un relecteur natif indépendant ; 25 corrections intégrées (Komplettanalyse, schwarze/weiße Mitesser, zweite Runde, Fahrplan, 28-Tage-Check, LSF…).
 - 30/09 (soir) : 5 relectures natives (R1 copywriting, R2 terminologie/conformité, R3 UX, R4 blog + juridique, R5 rétro-traduction) appliquées dans les tables + arbitrages PDG (Diagnose/klinisch, consentement, titre d'accueil, profils du formulaire, Pflegeroutine, témoignages unifiés, © 2026, Impressum sur chaque pied de page, messages d'erreur, nombres JS, `facescan.js`).

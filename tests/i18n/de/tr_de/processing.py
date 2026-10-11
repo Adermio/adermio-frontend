@@ -97,6 +97,9 @@ TR = [
     ('label: "Scan dermatologique IA"', 'label: "KI-Hautscan"', 1),
     ('label: "Analyse des imperfections"', 'label: "Analyse der Unreinheiten"', 1),
     ('label: "Génération du rapport"', 'label: "Berichterstellung"', 1),
+    # 11/10/2026 : lien « AGB » ajouté au pied de page FR (CGV v1.1) -> /de/agb
+    ('>Conditions de vente</a>',
+     '>AGB</a>', 1),
 ]
 REGEX = []
 

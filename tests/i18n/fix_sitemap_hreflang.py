@@ -26,6 +26,7 @@ GROUPS = [
     {'fr': 'conditions',                            'en': 'en/conditions',      'es': 'es/conditions',      'it': 'it/conditions', 'de': 'de/nutzungsbedingungen', 'nl': 'nl/gebruiksvoorwaarden'},
     {'fr': 'confidentialite',                       'en': 'en/confidentialite', 'es': 'es/confidentialite', 'it': 'it/confidentialite', 'de': 'de/datenschutz', 'nl': 'nl/privacyverklaring'},
     {'fr': 'sources',                               'en': 'en/sources',         'es': None,                 'it': 'it/sources', 'de': 'de/quellen', 'nl': 'nl/bronnen'},
+    {'fr': 'cgv',                                   'en': 'en/cgv',             'es': 'es/cgv',             'it': 'it/cgv', 'de': 'de/agb', 'nl': 'nl/algemene-voorwaarden'},  # CGV v1.1 traduites (11/10/2026)
     {'fr': 'mentions-legales',                      'en': 'en/legal-notice',    'es': 'es/legal-notice',    'it': 'it/legal-notice', 'de': 'de/impressum', 'nl': 'nl/juridische-informatie'},
     {'fr': 'blog',                                  'en': 'en/blog',            'es': 'es/blog',            'it': 'it/blog', 'de': 'de/blog', 'nl': 'nl/blog'},
     {'fr': 'blog/comment-connaitre-son-type-de-peau','en': 'en/blog/how-to-know-your-skin-type', 'es': 'es/blog/como-conocer-tu-tipo-de-piel', 'it': 'it/blog/come-conoscere-il-tuo-tipo-di-pelle', 'de': 'de/blog/hauttyp-bestimmen', 'nl': 'nl/blog/huidtype-bepalen'},

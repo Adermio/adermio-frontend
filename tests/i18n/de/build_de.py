@@ -24,6 +24,7 @@ TABLES = {
     'de/blog/index.html': 'blog_index', 'de/blog/hauttyp-bestimmen.html': 'blog_hauttyp',
     'de/blog/warum-bekommt-man-akne.html': 'blog_warum_akne', 'de/blog/hormonelle-akne.html': 'blog_hormonelle_akne',
     'de/blog/wo-tritt-akne-auf.html': 'blog_wo_akne',
+    'de/agb.html': 'agb', 'de/kuendigen.html': 'kuendigen',
 }
 
 def run(*args):

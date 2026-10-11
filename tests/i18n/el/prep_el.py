@@ -40,6 +40,9 @@ PAGES = {
     'blog/pourquoi-a-t-on-de-l-acne.html': ('el/blog/giati-vgazoume-akmi.html', 'en/blog/why-do-we-have-acne', 'es/blog/por-que-tenemos-acne', 'it/blog/perche-viene-l-acne', 'de/blog/warum-bekommt-man-akne', 'nl/blog/waarom-krijg-je-acne'),
     'blog/acne-hormonale.html': ('el/blog/ormoniki-akmi.html', 'en/blog/hormonal-acne', 'es/blog/acne-hormonal', 'it/blog/acne-ormonale', 'de/blog/hormonelle-akne', 'nl/blog/hormonale-acne'),
     'blog/ou-apparait-l-acne.html': ('el/blog/pou-emfanizetai-akmi.html', 'en/blog/where-acne-appears', 'es/blog/donde-aparece-el-acne', 'it/blog/dove-compare-l-acne', 'de/blog/wo-tritt-akne-auf', 'nl/blog/waar-ontstaat-acne'),
+    # Όροι πώλησης (11/10/2026) ; σελίδα ακύρωσης : κρυφή όσο η διαδικτυακή συνδρομή δεν είναι ανοιχτή στα ελληνικά
+    'cgv.html': ('el/oroi-polisis.html', 'en/cgv', 'es/cgv', 'it/cgv', 'de/agb', 'nl/algemene-voorwaarden'),
+    'resilier.html': ('el/akyrosi-syndromis.html', 'en/resilier', 'es/resilier', 'it/resilier', 'de/kuendigen', 'nl/opzeggen'),
 }
 
 # Webhooks de l'analyse grecque : à créer dans n8n (phase 2) avec CES chemins.
@@ -70,7 +73,7 @@ GREEK_STYLE = ("    <style>/* Grec : DM Sans et Playfair Display n'ont pas de gl
                ".font-serif{font-family:'Noto Serif Display','Playfair Display',serif}</style>\n")
 
 # Lien « Résilier mon abonnement » : abonnement web FRANÇAIS seulement (absent des autres langues).
-# Les CGV (/cgv, en français) restent liées : elles régissent aussi l'achat de l'analyse complète.
+# Les CGV sont traduites (/el/oroi-polisis, 11/10/2026) ; la page de résiliation grecque existe mais reste cachée.
 FR_ONLY_FOOTER = re.compile(r'[ \t]*<a href="https://adermio\.com/resilier" class="!text-slate-500[^"]*">[^<]*</a>\n')
 
 def clean(path):

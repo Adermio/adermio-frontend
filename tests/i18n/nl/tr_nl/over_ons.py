@@ -73,6 +73,9 @@ TR = [
      '>&lt; 45 sec.</div>', 1),
     (">Temps d'analyse</div>",
      '>Analysetijd</div>', 1),
+    # 11/10/2026 : lien « Verkoopvoorwaarden » ajouté au pied de page FR (CGV v1.1) -> /nl/algemene-voorwaarden
+    ('>Conditions de vente</a>',
+     '>Verkoopvoorwaarden</a>', 1),
 ]
 REGEX = [
     (r'alt="(?:Logo Adermio|Adermio Logo)"', 'alt="Adermio-logo"'),

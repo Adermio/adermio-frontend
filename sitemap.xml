@@ -65,6 +65,18 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://adermio.com/cgv</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/cgv"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/agb"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://adermio.com/confidentialite</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
@@ -349,6 +361,18 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://adermio.com/en/cgv</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/cgv"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/agb"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://adermio.com/en/confidentialite</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
@@ -447,6 +471,18 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://adermio.com/es/cgv</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/cgv"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/agb"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://adermio.com/es/confidentialite</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
@@ -528,6 +564,18 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen"/>
     <xhtml:link rel="alternate" hreflang="nl" href="https://adermio.com/nl/gebruiksvoorwaarden"/>
     <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/it/cgv</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/cgv"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/agb"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden"/>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -688,6 +736,18 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://adermio.com/de/agb</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/cgv"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/agb"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://adermio.com/de/datenschutz</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite"/>
@@ -840,6 +900,18 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/nutzungsbedingungen"/>
     <xhtml:link rel="alternate" hreflang="nl" href="https://adermio.com/nl/gebruiksvoorwaarden"/>
     <lastmod>2026-04-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://adermio.com/nl/algemene-voorwaarden</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://adermio.com/cgv"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://adermio.com/de/agb"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden"/>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

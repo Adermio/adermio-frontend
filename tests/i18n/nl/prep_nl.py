@@ -39,6 +39,9 @@ PAGES = {
     'blog/pourquoi-a-t-on-de-l-acne.html': ('nl/blog/waarom-krijg-je-acne.html', 'en/blog/why-do-we-have-acne', 'es/blog/por-que-tenemos-acne', 'it/blog/perche-viene-l-acne', 'de/blog/warum-bekommt-man-akne'),
     'blog/acne-hormonale.html': ('nl/blog/hormonale-acne.html', 'en/blog/hormonal-acne', 'es/blog/acne-hormonal', 'it/blog/acne-ormonale', 'de/blog/hormonelle-akne'),
     'blog/ou-apparait-l-acne.html': ('nl/blog/waar-ontstaat-acne.html', 'en/blog/where-acne-appears', 'es/blog/donde-aparece-el-acne', 'it/blog/dove-compare-l-acne', 'de/blog/wo-tritt-akne-auf'),
+    # algemene verkoopvoorwaarden (11/10/2026) ; opzegpagina : verborgen zolang het webabonnement niet in het Nederlands open is
+    'cgv.html': ('nl/algemene-voorwaarden.html', 'en/cgv', 'es/cgv', 'it/cgv', 'de/agb'),
+    'resilier.html': ('nl/opzeggen.html', 'en/resilier', 'es/resilier', 'it/resilier', 'de/kuendigen'),
 }
 
 # Webhook de l'analyse gratuite néerlandaise : à créer dans n8n (phase 2) avec CE chemin.
@@ -61,6 +64,11 @@ VISUALS = {
     S3L + 'new_version/Screenshot+2025-12-20+at+10.33.39.png': S3L + 'en/Screenshot+2026-01-20+at+16.55.22.png',
     S3L + 'new_version/Screenshot+2025-12-20+at+10.33.57.png': S3L + 'en/Screenshot+2026-01-20+at+16.55.32.png',
 }
+
+# Lien « Résilier mon abonnement » du pied de page : l'abonnement web n'est ouvert qu'en FRANÇAIS (11/10/2026).
+# La page de résiliation traduite existe mais reste CACHÉE (noindex dans vercel.json, hors pied de page et sitemap)
+# tant que l'abonnement n'est pas ouvert dans la langue : voir docs/abonnement-web-ouverture-langues.md.
+FR_ONLY_FOOTER = re.compile(r'[ \t]*<a href="https://adermio\.com/resilier" class="!text-slate-500[^"]*">[^<]*</a>\n')
 
 def clean(path):
     """'nl/home.html' -> 'nl/home' ; 'nl/blog/index.html' -> 'nl/blog' (clean URLs Vercel)."""
@@ -141,6 +149,9 @@ def transform(fr_rel):
     html, n = SEL_BTN.subn(r'\1nl\2NL\3', html)
     if not n and ok: notes.append('bouton sélecteur non trouvé')
     html = html.replace('<span class="font-sans font-medium text-sm">FR</span>', '<span class="font-sans font-medium text-sm">NL</span>')
+
+    html, n = FR_ONLY_FOOTER.subn('', html)
+    if n: notes.append('lien Résilier retiré')
 
     out = []
     for line in html.split('\n'):

@@ -39,6 +39,9 @@ PAGES = {
     'blog/pourquoi-a-t-on-de-l-acne.html': ('de/blog/warum-bekommt-man-akne.html', 'en/blog/why-do-we-have-acne', 'es/blog/por-que-tenemos-acne', 'it/blog/perche-viene-l-acne'),
     'blog/acne-hormonale.html': ('de/blog/hormonelle-akne.html', 'en/blog/hormonal-acne', 'es/blog/acne-hormonal', 'it/blog/acne-ormonale'),
     'blog/ou-apparait-l-acne.html': ('de/blog/wo-tritt-akne-auf.html', 'en/blog/where-acne-appears', 'es/blog/donde-aparece-el-acne', 'it/blog/dove-compare-l-acne'),
+    # AGB (11/10/2026) ; page de résiliation : cachée tant que l'abonnement web n'est pas ouvert en allemand
+    'cgv.html': ('de/agb.html', 'en/cgv', 'es/cgv', 'it/cgv'),
+    'resilier.html': ('de/kuendigen.html', 'en/resilier', 'es/resilier', 'it/resilier'),
 }
 
 # Webhook de l'analyse gratuite allemande : à créer dans n8n (phase n8n) avec CE chemin.
@@ -60,6 +63,11 @@ VISUALS = {
     S3L + 'new_version/Screenshot+2025-12-20+at+10.33.39.png': S3L + 'en/Screenshot+2026-01-20+at+16.55.22.png',
     S3L + 'new_version/Screenshot+2025-12-20+at+10.33.57.png': S3L + 'en/Screenshot+2026-01-20+at+16.55.32.png',
 }
+
+# Lien « Résilier mon abonnement » du pied de page : l'abonnement web n'est ouvert qu'en FRANÇAIS (11/10/2026).
+# La page de résiliation traduite existe mais reste CACHÉE (noindex dans vercel.json, hors pied de page et sitemap)
+# tant que l'abonnement n'est pas ouvert dans la langue : voir docs/abonnement-web-ouverture-langues.md.
+FR_ONLY_FOOTER = re.compile(r'[ \t]*<a href="https://adermio\.com/resilier" class="!text-slate-500[^"]*">[^<]*</a>\n')
 
 def clean(path):
     """'de/home.html' -> 'de/home' ; 'de/blog/index.html' -> 'de/blog' (clean URLs Vercel)."""
@@ -148,6 +156,9 @@ def transform(fr_rel):
     html, n = SEL_BTN.subn(r'\1de\2DE\3', html)
     if not n and ok: notes.append('bouton sélecteur non trouvé')
     html = html.replace('<span class="font-sans font-medium text-sm">FR</span>', '<span class="font-sans font-medium text-sm">DE</span>')
+
+    html, n = FR_ONLY_FOOTER.subn('', html)
+    if n: notes.append('lien Résilier retiré')
 
     out = []
     for line in html.split('\n'):

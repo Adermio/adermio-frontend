@@ -77,6 +77,9 @@ TR = [
      "submitBtn.textContent = 'Versturen';", 1),
     ('Adermio © 2025</span>',
      'Adermio © 2026</span>', 1),
+    # 11/10/2026 : lien « Verkoopvoorwaarden » ajouté au pied de page FR (CGV v1.1) -> /nl/algemene-voorwaarden
+    ('>Conditions de vente</a>',
+     '>Verkoopvoorwaarden</a>', 1),
 ]
 REGEX = [
     (r'alt="(?:Logo Adermio|Adermio Logo)"', 'alt="Adermio-logo"'),

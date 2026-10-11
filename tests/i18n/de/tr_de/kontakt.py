@@ -54,6 +54,9 @@ TR = [
 # --- Relecture native 30/09 (R1–R5 + arbitrages PDG) : ajouts ---
 TR += [
     ('Adermio © 2025</span>', 'Adermio © 2026</span>', 1),   # arbitrage 7
+    # 11/10/2026 : lien « AGB » ajouté au pied de page FR (CGV v1.1) -> /de/agb
+    ('>Conditions de vente</a>',
+     '>AGB</a>', 1),
 ]
 REGEX = []
 REGEX += [

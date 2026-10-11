@@ -101,6 +101,9 @@ TR = [
     ('label: "Scan multi-angles IA"', 'label: "KI-Scan aus mehreren Blickwinkeln"', 1),
     ('label: "Analyse zone par zone"', 'label: "Analyse Zone für Zone"', 1),
     ('label: "G\\u00e9n\\u00e9ration du rapport"', 'label: "Berichterstellung"', 1),
+    # 11/10/2026 : lien « AGB » ajouté au pied de page FR (CGV v1.1) -> /de/agb
+    ('>Conditions de vente</a>',
+     '>AGB</a>', 1),
 ]
 REGEX = []
 

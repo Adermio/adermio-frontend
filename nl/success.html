@@ -308,6 +308,40 @@
             font-weight: 500;
         }
 
+        /* ABONNEMENT WEB (10/10/2026) : affiché seulement si l'URL porte ?abonnement=monthly|quarterly,
+           paramètre que seul le paiement d'abonnement ajoute. Les achats uniques ne le voient jamais. */
+        .abo-app-block {
+            width: 100%;
+            box-sizing: border-box;
+            background: #f0fdfa;
+            border: 1px solid #ccfbf1;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: -26px 0 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+            animation: fadeIn 0.8s ease;
+        }
+        .abo-app-block[hidden] { display: none; }
+        .abo-app-block .email-text strong { color: var(--primary-dark); }
+        .abo-app-btn {
+            flex-shrink: 0;
+            background-color: var(--adermio-teal);
+            color: #ffffff !important;
+            padding: 10px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        @media (max-width: 520px) {
+            .abo-app-block { flex-wrap: wrap; }
+            .abo-app-btn { width: 100%; text-align: center; padding: 12px 18px; }
+        }
+
         /* SUCCÈS (État final) */
         .success-state {
             display: none;
@@ -511,6 +545,17 @@
                 <div class="main-subtitle">Bedankt. We stellen je volledige Adermio-analyse nu samen.</div>
             </div>
 
+            <div id="abo-app-block" class="abo-app-block" hidden>
+                <div class="email-icon-circle">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                </div>
+                <div class="email-text">
+                    <strong>Je begeleiding is actief.</strong><br>
+                    Download de app en log in met het e-mailadres waarmee je hebt betaald: je analyse staat er al klaar.
+                </div>
+                <a class="abo-app-btn" href="https://apps.apple.com/app/adermio/id6768772221" rel="noopener">Download de app</a>
+            </div>
+
             <div class="analysis-card">
                 
                 <div id="loading-content">
@@ -639,6 +684,7 @@
 
             <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
                 <a href="https://adermio.com/nl/gebruiksvoorwaarden" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Gebruiksvoorwaarden</a>
+                <a href="https://adermio.com/nl/algemene-voorwaarden" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Verkoopvoorwaarden</a>
                 <a href="https://adermio.com/nl/juridische-informatie" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Juridische informatie</a>
                 <a href="https://adermio.com/nl/privacyverklaring" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Privacyverklaring</a>
             </div>
@@ -697,6 +743,11 @@
               return; 
           }
        
+          // Abonnement web : seul le paiement d'abonnement ajoute ?abonnement=monthly|quarterly à cette page.
+          const ABO_PRICES = { monthly: 9.99, quarterly: 19.99 };
+          const abo = Object.prototype.hasOwnProperty.call(ABO_PRICES, params.get("abonnement")) ? params.get("abonnement") : null;
+          if (abo) document.getElementById("abo-app-block").hidden = false;
+
           // --- CONFIGURATION SUPABASE ---
           // ── TikTok Pixel : conversion (paiement Stripe confirmé) ──
           // On arrive ici uniquement si jobId est présent (garde ci-dessus) :
@@ -704,7 +755,10 @@
           // pour ne pas re-compter sur un rechargement de la page.
           try {
             if (window.ttq && !sessionStorage.getItem("ttq_paid_" + jobId)) {
-              ttq.track("CompletePayment", {
+              ttq.track("CompletePayment", abo ? {
+                value: ABO_PRICES[abo], currency: "EUR",
+                contents: [{ content_id: "abonnement_" + abo, content_type: "product", content_name: "Adermio-abonnement" }]
+              } : {
                 value: 5.99, currency: "EUR",
                 contents: [{ content_id: "analyse_premium", content_type: "product", content_name: "Volledige Adermio-analyse" }]
               }, { event_id: jobId });

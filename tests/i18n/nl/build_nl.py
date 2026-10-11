@@ -24,6 +24,7 @@ TABLES = {
     'nl/blog/index.html': 'blog_index', 'nl/blog/huidtype-bepalen.html': 'blog_huidtype',
     'nl/blog/waarom-krijg-je-acne.html': 'blog_waarom_acne', 'nl/blog/hormonale-acne.html': 'blog_hormonale_acne',
     'nl/blog/waar-ontstaat-acne.html': 'blog_waar_acne',
+    'nl/algemene-voorwaarden.html': 'algemene_voorwaarden', 'nl/opzeggen.html': 'opzeggen',
 }
 
 def run(*args):

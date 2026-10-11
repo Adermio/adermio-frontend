@@ -226,6 +226,9 @@ TR = [
      'Ik heb betaald, maar mijn volledige analyse niet per e-mail ontvangen. Wat nu?', 1),
     ('Pas d’inquiétude. Envoyez-nous simplement un message à <b>contact@adermio.com</b> en indiquant votre nom et une preuve de votre achat. Nous vous renverrons immédiatement votre analyse.',
      'Geen zorgen. Stuur een e-mail naar <b>contact@adermio.com</b> met je naam en een aankoopbewijs. Dan sturen we je analyse meteen opnieuw.', 1),
+    # 11/10/2026 : lien « Verkoopvoorwaarden » ajouté au pied de page FR (CGV v1.1) -> /nl/algemene-voorwaarden
+    ('>Conditions de vente</a>',
+     '>Verkoopvoorwaarden</a>', 1),
 ]
 REGEX = [
     (r'>(\d{2}) ans<', r'>\1 jaar<'),
