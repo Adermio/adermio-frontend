@@ -1,0 +1,65 @@
+# Mots latins admis dans les pages grecques (prénoms des avis, marques, INCI). UN mot par ligne.
+# Jamais un mot français ou anglais non traduit.
+# Faux positifs QA : code JS lu comme du texte (directive « use strict », classes CSS dans un gabarit JS de premium)
+toggle-opt
+active-replace
+# Sélecteur de langue (endonymes, voulus)
+English
+Español
+Italiano
+Deutsch
+Nederlands
+Français
+# Prénoms des témoignages et des avant/après (vrais clients)
+Anissa
+Julie
+Chloé
+Lou-Anne
+Camille
+Thomas
+Sarah
+Nassim
+Léa
+Marc
+Sophie
+Élise
+# Nom de police dans la config Tailwind (code JS lu comme du texte)
+Playfair
+Display
+# Marque « Adermio Scan™ » (second-cycle)
+Scan
+Cutibacterium
+acnes
+# Navigateurs et marque citée en exemple (formulaire)
+Safari
+Chrome
+Effaclar
+# Pages juridiques : noms propres, sociétés, outils techniques, adresses postales (rue La Boétie, place de Fontenoy)
+Antoine
+Munch
+Ergersheim
+HaveIBeenPwned
+rue
+Boétie
+OAuth
+PostHog
+Sentry
+Keychain
+Expo
+ChatGPT
+Inc
+GmbH
+RevenueCat
+dataprivacyframework
+bcrypt
+PostgreSQL
+React
+Query
+Place
+Fontenoy
+# Marque « Amazon Web Services » (sous-traitant)
+Web
+Services
+# Sentry / Functional Software GmbH (raison sociale)
+Functional
+Software

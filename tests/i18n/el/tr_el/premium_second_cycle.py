@@ -1,0 +1,52 @@
+# Table de traduction el/premium-second-cycle.html (source : premium-second-cycle.html)
+# Colonne de gauche = littéral FR EXACT de la page préparée (ne pas modifier) ; à droite : le grec.
+# None = pas encore traduit (apply_tr_el.py refuse). 3e valeur = nombre d'occurrences attendu.
+TARGET = 'el/premium-second-cycle.html'
+TR = [
+    ("Analyse Cycle 2 — Suivi d'évolution Adermio",
+     'Ανάλυση δεύτερου κύκλου — Η εξέλιξή σας με το Adermio', 3),
+    ("Comparez l'évolution de votre peau avec l'analyse comparative Cycle 2 d'Adermio. Mesurez vos progrès après 28 jours de routine.",
+     'Συγκρίνετε την εξέλιξη της επιδερμίδας σας με τη συγκριτική ανάλυση δεύτερου κύκλου του Adermio. Δείτε την πρόοδό σας μετά από 28 ημέρες ρουτίνας.', 3),
+    ('<title>Adermio - Analyse Cycle 2</title>',
+     '<title>Adermio - Ανάλυση δεύτερου κύκλου</title>', 1),
+    ('Chargement de votre analyse Cycle 2...',
+     'Φόρτωση της ανάλυσης του δεύτερου κύκλου...', 1),
+    ('Lien invalide : token manquant.',
+     'Ο σύνδεσμος δεν είναι έγκυρος. Ανοίξτε τον ξανά από το e-mail σας.', 1),
+    ('Error("Erreur de chargement")',
+     'Error("Σφάλμα φόρτωσης")', 1),
+    ('"Rapport introuvable"',
+     '"Η αναφορά δεν βρέθηκε"', 1),
+    ('"URL du rapport manquante"',
+     '"Λείπει ο σύνδεσμος της αναφοράς"', 1),
+    ('Erreur de chargement. R\\u00e9essayez plus tard.',
+     'Δεν ήταν δυνατή η φόρτωση της ανάλυσής σας. Δοκιμάστε ξανά σε λίγο.', 1),
+    ("Je suis l'IA Adermio &#128075;<br>Des questions sur votre Cycle 2 ? Je suis l&#224; !",
+     'Είμαι η AI του Adermio &#128075;<br>Έχετε ερωτήσεις για τον δεύτερο κύκλο σας; Είμαι εδώ!', 1),
+    ('aria-label="Ouvrir le chat Adermio"',
+     'aria-label="Άνοιγμα της συνομιλίας με το Adermio"', 1),
+    ('>Adermio Assistant</span>',
+     '>Βοηθός Adermio</span>', 1),
+    ('>En ligne</span>',
+     '>Σε σύνδεση</span>', 1),
+    ('aria-label="Fermer"',
+     'aria-label="Κλείσιμο"', 1),
+    ("Bonjour ! Je suis l'IA Adermio. J'ai analys&#233; vos donn&#233;es du Cycle 1 et Cycle 2. Posez-moi vos questions ! &#128071;",
+     'Γεια σας! Είμαι η AI του Adermio. Ανέλυσα τα δεδομένα σας από τον 1ο και τον 2ο κύκλο. Κάντε μου τις ερωτήσεις σας! &#128071;', 1),
+    ('placeholder="Posez votre question..."',
+     'placeholder="Γράψτε την ερώτησή σας..."', 1),
+    ('Adermio IA peut faire des erreurs.',
+     'Η AI του Adermio μπορεί να κάνει λάθη.', 1),
+    ("Impossible d'identifier votre rapport.",
+     'Δεν ήταν δυνατή η αναγνώριση της αναφοράς σας.', 1),
+    ('"Erreur IA"',
+     '"Σφάλμα AI"', 1),
+    ("D\\u00e9sol\\u00e9, je n'ai pas compris.",
+     'Λυπάμαι, δεν κατάλαβα την ερώτησή σας.', 1),
+    ('(err.message || "Erreur.")',
+     '("Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο.")', 1),
+]
+REGEX = [
+    # Règle 8 du glossaire : jamais err.message à l'écran -> texte fixe en grec.
+    (r'errorEl\.textContent = e\.message \|\| "', 'errorEl.textContent = "'),
+]
