@@ -151,7 +151,11 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 
 /* 5. Rigueur */
 .rig{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;width:100%;max-width:1000px}
-.r-item{border-top:1px solid var(--fg10);padding-top:16px}
+.r-item{border-top:1px solid var(--fg10);padding-top:20px}
+.r-num{display:flex;align-items:flex-end;height:40px;font-size:36px;line-height:1;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin-bottom:12px}
+.r-ico{color:var(--fg)}
+.r-src{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.r-src span{font-size:12px;font-weight:500;line-height:1.4;padding:3px 9px;border-radius:999px;border:1px solid var(--fg10);color:var(--fg65)}
 .r-item b{display:block;font-weight:600}
 .r-item p{color:var(--fg65);margin-top:6px}
 .note{font-size:12px;font-weight:500;color:var(--fg65);text-align:center}
@@ -227,7 +231,8 @@ footer{padding:20px var(--gut) 20px}
   .f-row b{font-size:22px}
   .f-row span{font-size:14px}
   .rig{grid-template-columns:1fr;gap:0}
-  .r-item{padding:16px 0}
+  .r-item{padding:22px 0 24px}
+  .r-num{font-size:34px}
   .fan-wrap{--s:.4;margin-top:28px}
   .faq{padding:64px 16px}
   .f-grid{grid-template-columns:1fr 1fr}
@@ -333,12 +338,12 @@ footer{padding:20px var(--gut) 20px}
 <section class="sec">
   <div class="center"><h2>La rigueur, avant les promesses</h2><p class="sub">Une recommandation ne vaut que par ce qui la justifie.</p></div>
   <div class="rig">
-    <div class="r-item"><b>Sources citées</b><p>Chaque recommandation renvoie à la littérature scientifique, consultable dans l'app.</p></div>
-    <div class="r-item"><b>Produits vérifiés</b><p>Composition, potentiel comédogène et compatibilité avec votre peau, un par un.</p></div>
-    <div class="r-item"><b>Sécurité d'abord</b><p>Grossesse, traitement, allergie&nbsp;: les actifs déconseillés sont écartés de votre routine.</p></div>
-    <div class="r-item"><b>Données protégées</b><p>Photos chiffrées, jamais partagées, supprimables à tout moment.</p></div>
+    <div class="r-item"><span class="r-num">200</span><b>règles d'expertise</b><p>Chaque conseil de votre routine s'appuie sur les recommandations publiées en dermatologie.</p><div class="r-src"><span>AAD 2024</span><span>SFD 2015</span><span>EADV 2019</span><span>ANSM 2018</span></div></div>
+    <div class="r-item"><span class="r-num">2&nbsp;202</span><b>produits vérifiés un par un</b><p>Composition complète, potentiel comédogène et compatibilité avec votre peau.</p></div>
+    <div class="r-item"><span class="r-num">3&nbsp;056</span><b>ingrédients référencés</b><p>Grossesse, traitement, allergie&nbsp;: les actifs déconseillés sont écartés automatiquement.</p></div>
+    <div class="r-item"><span class="r-num r-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span><b>Données protégées</b><p>Photos chiffrées, jamais partagées, supprimables à tout moment.</p></div>
   </div>
-  <p class="note">Adermio ne remplace pas un avis médical. En cas d'acné sévère, consultez un dermatologue.</p>
+  <p class="note">Chiffres du catalogue Adermio au 12 octobre 2026. Adermio ne remplace pas un avis médical&nbsp;; en cas d'acné sévère, consultez un dermatologue.</p>
 </section>
 
 <!-- 6. Second bloc + éventail (= second bloc Nolla Derm + flacons) -->
