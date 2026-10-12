@@ -101,17 +101,11 @@
       font-weight: 600;
       box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3);
     }
-    /* Sélecteur de test A | B */
-    #ab-switch{position:fixed;left:50%;transform:translateX(-50%);bottom:max(18px,env(safe-area-inset-bottom));z-index:30;display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(37,27,19,.88);box-shadow:0 6px 18px rgba(0,0,0,.25);font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif}
-    #ab-switch[hidden]{display:none}
-    #ab-switch button{border:0;background:transparent;color:rgba(255,255,255,.7);font-size:12px;font-weight:600;padding:7px 11px;border-radius:999px;cursor:pointer}
-    #ab-switch button.on{background:#fff;color:#251B13}
   </style>
     <script src="/js/ttq.js"></script>
 </head>
 <body>
 
-  <div id="ab-switch" hidden><button type="button" data-v="a">A · Clinique</button><button type="button" data-v="b">B · PDF</button></div>
   <div class="iframe-container">
     <iframe id="reportFrame" title="Rapport Adermio"></iframe>
   </div>
@@ -165,20 +159,7 @@
     }
 
     // Construction et injection de l'URL S3
-    // TEST : deux rapports par analyse (A = ANALYSE_<jobId>.html, B = ANALYSE_<jobId>_B.html), sélecteur A | B en haut
-    const version = (urlParams.get("v") || "a").toLowerCase() === "b" ? "b" : "a";
-    const fileFor = v => `https://adermio-free.s3.eu-north-1.amazonaws.com/ANALYSE_${encodeURIComponent(jobId)}${v === "b" ? "_B" : ""}.html`;
-    const reportUrl = fileFor(version);
-    const sw = document.getElementById("ab-switch");
-    sw.hidden = false;
-    sw.querySelectorAll("button").forEach(b => {
-      b.classList.toggle("on", b.dataset.v === version);
-      b.addEventListener("click", () => {
-        sw.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
-        iframe.src = fileFor(b.dataset.v);
-        const u = new URL(location.href); u.searchParams.set("v", b.dataset.v); history.replaceState(null, "", u);
-      });
-    });
+    const reportUrl = `https://adermio-free.s3.eu-north-1.amazonaws.com/ANALYSE_${encodeURIComponent(jobId)}.html`;
     
     // On expose l'origine autorisée globalement pour l'écouteur de message
     window.adermioAllowedOrigin = new URL(reportUrl).origin;
