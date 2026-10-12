@@ -309,6 +309,40 @@
             font-weight: 500;
         }
 
+        /* ABONNEMENT WEB (10/10/2026) : affiché seulement si l'URL porte ?abonnement=monthly|quarterly,
+           paramètre que seul le paiement d'abonnement ajoute. Les achats uniques ne le voient jamais. */
+        .abo-app-block {
+            width: 100%;
+            box-sizing: border-box;
+            background: #f0fdfa;
+            border: 1px solid #ccfbf1;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: -26px 0 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+            animation: fadeIn 0.8s ease;
+        }
+        .abo-app-block[hidden] { display: none; }
+        .abo-app-block .email-text strong { color: var(--primary-dark); }
+        .abo-app-btn {
+            flex-shrink: 0;
+            background-color: var(--adermio-teal);
+            color: #ffffff !important;
+            padding: 10px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        @media (max-width: 520px) {
+            .abo-app-block { flex-wrap: wrap; }
+            .abo-app-btn { width: 100%; text-align: center; padding: 12px 18px; }
+        }
+
         /* SUCCÈS (État final) */
         .success-state {
             display: none;
@@ -516,6 +550,17 @@
                 <div class="main-subtitle">Grazie. Il tuo report completo Adermio è in fase di creazione.</div>
             </div>
 
+            <div id="abo-app-block" class="abo-app-block" hidden>
+                <div class="email-icon-circle">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                </div>
+                <div class="email-text">
+                    <strong>Il tuo monitoraggio è attivo.</strong><br>
+                    Scarica l'app e accedi con l'indirizzo e-mail del tuo pagamento: la tua analisi è già lì.
+                </div>
+                <a class="abo-app-btn" href="https://apps.apple.com/app/adermio/id6768772221" rel="noopener">Scarica l'app</a>
+            </div>
+
             <div class="analysis-card">
                 
                 <div id="loading-content">
@@ -703,6 +748,11 @@
               return; 
           }
        
+          // Abonnement web : seul le paiement d'abonnement ajoute ?abonnement=monthly|quarterly à cette page.
+          const ABO_PRICES = { monthly: 6.99, quarterly: 14.99 };
+          const abo = Object.prototype.hasOwnProperty.call(ABO_PRICES, params.get("abonnement")) ? params.get("abonnement") : null;
+          if (abo) document.getElementById("abo-app-block").hidden = false;
+
           // --- CONFIGURATION SUPABASE ---
           // ── TikTok Pixel : conversion (paiement Stripe confirmé) ──
           // On arrive ici uniquement si jobId est présent (garde ci-dessus) :
@@ -710,7 +760,10 @@
           // pour ne pas re-compter sur un rechargement de la page.
           try {
             if (window.ttq && !sessionStorage.getItem("ttq_paid_" + jobId)) {
-              ttq.track("CompletePayment", {
+              ttq.track("CompletePayment", abo ? {
+                value: ABO_PRICES[abo], currency: "EUR",
+                contents: [{ content_id: "abonnement_" + abo, content_type: "product", content_name: "Abbonamento Adermio" }]
+              } : {
                 value: 5.99, currency: "EUR",
                 contents: [{ content_id: "analyse_premium", content_type: "product", content_name: "Analisi premium Adermio" }]
               }, { event_id: jobId });
