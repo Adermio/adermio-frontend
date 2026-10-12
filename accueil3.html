@@ -372,6 +372,11 @@ footer{padding:20px var(--gut) 20px}
 
 <script>
 const $=id=>document.getElementById(id);
+// Rechargement : toujours repartir du haut (Safari reprenait la position ou sautait à #langues, au pied de page)
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+if(location.hash){history.replaceState(null,'',location.pathname+location.search);const top=()=>scrollTo({top:0,left:0,behavior:'instant'});top();addEventListener('load',top)}
+// Liens internes : défilement doux sans écrire d'ancre dans l'adresse
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.getElementById(a.getAttribute('href').slice(1));e.preventDefault();t?t.scrollIntoView({behavior:'smooth'}):scrollTo({top:0,behavior:'smooth'})}));
 const bar=$('bar'),hero=$('hero');
 const onScroll=()=>{const past=hero.getBoundingClientRect().bottom<0;bar.classList.toggle('show',past)};
 addEventListener('scroll',onScroll,{passive:true});onScroll();
