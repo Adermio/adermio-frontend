@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Rapport d'analyse cutanée — Adermio (maquette)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#EEEEEE;--fg:#251B13;--fg65:rgba(37,27,19,.65);--fg40:rgba(37,27,19,.4);--fg10:rgba(43,24,9,.1);--fg5:rgba(37,27,19,.05);
+  --leg:#AFC7A6;--mod:#B9A6C0;--sev:#D9927E;--sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font:500 16px/1.45 var(--sans);-webkit-font-smoothing:antialiased}
+.top{height:60px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.top img{width:28px;height:28px;border-radius:50%}
+html{scroll-padding-top:8px}
+main{max-width:520px;margin:0 auto;padding:4px 16px 48px;display:flex;flex-direction:column;gap:12px}
+.card{background:#fff;border-radius:24px;padding:22px 20px}
+.lab{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg40)}
+h1{font-size:30px;line-height:36px;font-weight:600;letter-spacing:-.02em;margin-top:6px}
+h2{font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
+.meta{display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--fg10);font-size:12px;color:var(--fg65);font-variant-numeric:tabular-nums}
+.meta b{display:block;font-size:13px;font-weight:600;color:var(--fg);margin-top:2px}
+/* synthèse */
+.syn-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+.sev{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--bg);font-size:13px;font-weight:600}
+.sev i{width:8px;height:8px;border-radius:50%;background:var(--mod)}
+.syn-p{color:var(--fg65);margin-top:6px}
+.face{margin:18px auto 0;width:100%;max-width:300px;aspect-ratio:1;border-radius:20px;overflow:hidden;background:#F4F6F8}
+.face svg{width:100%;height:100%;display:block;filter:saturate(.5) brightness(1.03)}
+.legend{display:flex;justify-content:center;gap:16px;margin-top:12px;font-size:12px;color:var(--fg65)}
+.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:8px;height:8px;border-radius:50%}
+/* indicateurs */
+.rows{margin-top:10px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid var(--fg5);font-size:15px}
+.row:first-child{border-top:0}
+.row span{color:var(--fg65)}
+.row b{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.row b small{font-weight:500;color:var(--fg40);font-size:13px;margin-left:4px}
+.note{font-size:12px;color:var(--fg40);margin-top:8px}
+/* texte */
+.txt p{margin-top:12px;color:var(--fg);font-size:16px;line-height:1.6}
+.txt p+p{color:var(--fg65)}
+.txt p.lab{font-size:11px;line-height:1.45;margin-top:0;color:var(--fg40)}
+.disc{font-size:12px;color:var(--fg40);text-align:center;padding:8px 24px 4px}
+.pg{display:flex;align-items:center;gap:12px;margin:22px 4px 6px;font-size:12px;color:var(--fg40)}
+.pg::before,.pg::after{content:"";flex:1;height:1px;background:var(--fg10)}
+/* stratégie */
+.ph{display:grid;grid-template-columns:36px 1fr auto;gap:4px 10px;padding:16px 0;border-top:1px solid var(--fg5)}
+.ph:first-of-type{border-top:0}
+.ph em{font-style:normal;font-size:15px;font-weight:600;color:var(--fg40);font-variant-numeric:tabular-nums;padding-top:1px}
+.ph b{font-size:17px;font-weight:600}
+.ph svg{color:var(--fg40)}
+.ph p{grid-column:2/4;color:var(--fg65);font-size:15px}
+/* app */
+.phone{container-type:inline-size;position:relative;isolation:isolate;width:56%;max-width:220px;margin:22px auto 0}
+.phone::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:18cqw;background:linear-gradient(145deg,#f2efe9 0%,#c9c2b6 14%,#ece8e1 30%,#a8a094 52%,#e4dfd7 70%,#b3ac9f 86%,#efebe4 100%);box-shadow:inset 0 0 0 .35cqw rgba(255,255,255,.55),inset 0 0 0 .7cqw rgba(60,52,42,.18),0 .6cqw 1.2cqw rgba(37,27,19,.18),0 14cqw 24cqw -8cqw rgba(37,27,19,.42)}
+.phone .scr{position:relative;box-sizing:content-box;margin:1.05cqw;border:3.3cqw solid #060606;border-radius:16.9cqw;overflow:hidden;background:#fff;aspect-ratio:1206/2622}
+.phone .scr img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.vid{position:relative;width:62%;max-width:240px;margin:20px auto 0;aspect-ratio:9/16;border-radius:22px;overflow:hidden;background:var(--bg);box-shadow:0 18px 40px -18px rgba(37,27,19,.35)}
+.vid img{width:100%;height:100%;object-fit:cover;display:block}
+.vid small{position:absolute;right:10px;bottom:10px;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.45);color:#fff;font-size:11px;font-weight:600}
+.play{position:absolute;inset:0;display:grid;place-items:center}
+.play span{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.thumbs{display:flex;gap:10px;overflow-x:auto;margin:22px -20px 0;padding:0 20px 4px;scrollbar-width:none}
+.thumbs::-webkit-scrollbar{display:none}
+.thumb{flex:none;width:96px;text-align:center;font-size:12px;color:var(--fg65)}
+.thumb div{height:124px;border-radius:10px;overflow:hidden;background:var(--bg);margin-bottom:6px;border:1px solid var(--fg5)}
+.thumb img{width:100%;height:100%;object-fit:cover;object-position:top;filter:blur(1.2px)}
+/* offre */
+.offer{padding:26px 20px 22px}
+.offer .logo{width:36px;height:36px;border-radius:50%;display:block;margin:0 auto 14px}
+.offer h2{text-align:center;font-size:30px;line-height:36px}
+.offer .pers{text-align:center;color:var(--fg65);margin:10px auto 0;max-width:330px}
+.offer .pers b{color:var(--fg);font-weight:600}
+.chk{list-style:none;margin:20px 0 4px;display:flex;flex-direction:column;gap:10px}
+.chk li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.chk svg{flex:none;margin-top:3px}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.plan{position:relative;border-radius:18px;border:1.5px solid var(--fg10);padding:16px 14px 14px;text-align:center}
+.plan.on{border-color:var(--fg)}
+.plan .tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);padding:2px 10px;border-radius:999px;background:var(--fg);color:#fff;font-size:11px;font-weight:600;white-space:nowrap}
+.plan h3{font-size:15px;font-weight:600}
+.plan .pr{font-size:26px;font-weight:600;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums}
+.plan .pr small{font-size:13px;font-weight:500;color:var(--fg65)}
+.plan p{font-size:12px;color:var(--fg65);margin-top:2px}
+.plan s{color:var(--fg40)}
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:56px;margin-top:18px;border-radius:999px;background:var(--fg);color:#fff;font-size:16px;font-weight:600;text-decoration:none}
+.trust{text-align:center;font-size:12px;color:var(--fg40);margin-top:12px}
+/* avis */
+.rv-h{display:flex;justify-content:space-between;align-items:baseline}
+.rv-h span{font-size:13px;color:var(--fg65)}
+.rv{display:flex;gap:10px;overflow-x:auto;margin:14px -20px 0;padding:0 20px;scrollbar-width:none}
+.rv::-webkit-scrollbar{display:none}
+.q{flex:none;width:250px;background:var(--bg);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.q .st{font-size:12px;letter-spacing:2px}
+.q p{font-size:15px;font-weight:600;line-height:1.35;flex:1}
+.q small{font-size:12px;color:var(--fg65)}
+.biblio{display:flex;gap:10px;align-items:center;justify-content:center;font-size:13px;color:var(--fg65);padding:10px 0}
+.biblio a{color:var(--fg);font-weight:600}
+</style>
+</head>
+<body>
+<div class="top"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</div>
+<main>
+
+  <!-- en-tête du document -->
+  <section class="card">
+    <p class="lab">Rapport d'analyse cutanée</p>
+    <h1>Votre peau, Antoine.</h1>
+    <div class="meta">
+      <div>Référence<b>2026-ADR-GEN</b></div>
+      <div>Date<b>12 oct. 2026</b></div>
+      <div>Méthode<b>Photo + profil</b></div>
+    </div>
+  </section>
+
+  <!-- synthèse -->
+  <section class="card">
+    <p class="lab">Synthèse</p>
+    <div class="syn-h"><h2>Acné inflammatoire</h2><span class="sev"><i></i>Modérée</span></div>
+    <p class="syn-p">Peau mixte. Inflammation active sur les joues et la mâchoire.</p>
+    <div class="face">
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <image href="https://adermio-heatmap.s3.eu-north-1.amazonaws.com/heatmap/heatmap_front_blanc_joues_blanc_menton_blanc.png" x="0" y="0" width="500" height="500" style="filter:saturate(.55) brightness(1.04)" />
+  <path d="M154.794 262.571C140.153 239.967 192.603 216.888 200 262.145C207.423 318.72 169.563 341.766 154.794 262.571ZM344.475 262.145C359.015 239.476 304.194 216.856 297 262.145C289.832 318.753 330.062 341.406 344.475 262.145Z" fill="#c0aec3" opacity="0.5" style="mix-blend-mode: multiply;" />
+  <path d="M152.166 300C146.082 300 164.332 354.167 194.749 365L200.833 343.333C176.499 321.667 164.332 300 152.166 300ZM346.834 300C352.918 300 334.668 354.167 304.251 365L298.167 343.333C322.501 321.667 334.668 300 346.834 300Z" fill="#c0aec3" opacity="0.5" style="mix-blend-mode: multiply;" />
+</svg>
+    </div>
+    <div class="legend"><span><i style="background:var(--leg)"></i>Légère</span><span><i style="background:var(--mod)"></i>Modérée</span><span><i style="background:var(--sev)"></i>Sévère</span></div>
+  </section>
+
+  <!-- indicateurs -->
+  <section class="card" id="a2">
+    <p class="lab">Indicateurs mesurés</p>
+    <div class="rows">
+      <div class="row"><span>Type de peau</span><b>Mixte</b></div>
+      <div class="row"><span>Imperfection dominante</span><b>Marques rouges<small>25</small></b></div>
+      <div class="row"><span>Zones touchées</span><b>Joues, mâchoire</b></div>
+      <div class="row"><span>Boutons rouges</span><b>15</b></div>
+      <div class="row"><span>Pores (max.)</span><b>2,25<small>joues</small></b></div>
+      <div class="row"><span>Cicatrices</span><b>5</b></div>
+    </div>
+    <p class="note">Mesures calculées sur votre photo de face du 12 octobre 2026.</p>
+  </section>
+
+  <!-- analyse -->
+  <section class="card txt">
+    <p class="lab">Analyse de votre profil</p>
+    <p>Les données indiquent que votre peau est de type mixte avec une acné modérée, principalement inflammatoire. Les zones les plus touchées sont vos joues et votre mâchoire, où l'on observe une inflammation active. Ces signes apparaissent souvent en raison d'une activité accrue des glandes sébacées, qui peut déséquilibrer votre flore cutanée naturelle.</p>
+    <p>Les marques rouges sont également présentes, témoignant de réactions cutanées fréquentes à l'inflammation. Une prise en charge non ciblée pourrait exacerber ces réactions. Comprendre précisément ces caractéristiques de votre peau permet de prévoir les meilleures étapes pour une amélioration visible et durable.</p>
+  </section>
+  <p class="disc">Document confidentiel. Adermio ne remplace pas un avis médical.</p>
+
+  <p class="pg" id="a3">Page 2 sur 2 · Votre dossier complet</p>
+
+  <!-- stratégie -->
+  <section class="card">
+    <p class="lab">Votre stratégie de soin</p>
+    <h2 style="margin-top:8px">Trois phases, pensées pour votre peau.</h2>
+    <div style="margin-top:8px">
+      <div class="ph"><em>01</em><b>Stabilisation</b><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><p>Calmer l'inflammation sur vos joues et votre mâchoire pour un apaisement rapide et visible.</p></div>
+      <div class="ph"><em>02</em><b>Rééquilibre</b><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><p>Harmoniser votre peau mixte et apaiser les zones réactives pour un teint plus uniforme.</p></div>
+      <div class="ph"><em>03</em><b>Prévention</b><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><p>Maintenir l'équilibre obtenu pour réduire les récidives et stabiliser votre peau à long terme.</p></div>
+    </div>
+  </section>
+
+  <!-- ce que vous débloquez -->
+  <section class="card" id="a4">
+    <p class="lab">Ce que vous débloquez</p>
+    <h2 style="margin-top:8px">Tout votre suivi, dans l'app Adermio.</h2>
+    <div class="vid"><img src="https://zqhmobgjxmyziuwkrkqf.supabase.co/storage/v1/object/public/branding/report-page2/video/poster-app-fr-v8-analyse.jpg" alt=""><div class="play"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="#251B13"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><small>0:50</small></div>
+    <div class="thumbs">
+      <div class="thumb"><div><img src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/zip/Screenshot+2025-11-21+at+18.38.21.png" alt=""></div>Causes</div>
+      <div class="thumb"><div><img src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/zip/Screenshot+2025-11-21+at+18.41.32.png" alt=""></div>Facteurs</div>
+      <div class="thumb"><div><img src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/zip/Screenshot+2025-11-27+at+14.10.09.png" alt=""></div>Routine</div>
+      <div class="thumb"><div><img src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/zip/Screenshot+2025-11-27+at+14.10.39.png" alt=""></div>Produits</div>
+      <div class="thumb"><div><img src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/zip/Screenshot+2025-11-27+at+14.11.02.png" alt=""></div>Nutrition</div>
+    </div>
+  </section>
+
+  <!-- offre -->
+  <section class="card offer" id="a5">
+    <img class="logo" src="/medias/accueil3/logo-disque.png" alt="">
+    <h2>Maîtrisez enfin votre peau.</h2>
+    <p class="pers">Pour votre <b>acné inflammatoire modérée</b>, sur vos joues et votre mâchoire. Prochaine analyse dans 28 jours.</p>
+    <ul class="chk">
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#251B13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Accès à l'app Adermio</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#251B13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Analyse intégrale tous les 28 jours</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#251B13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Routine sur mesure et ajustée</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#251B13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Suivi personnalisé et adaptatif</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#251B13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Enquête sur vos déclencheurs</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#251B13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Recommandations dermatologiques vérifiées</li>
+    </ul>
+    <div class="plans">
+      <div class="plan"><h3>1 mois</h3><div class="pr">6,99 €<small>/mois</small></div><p>Chaque mois</p></div>
+      <div class="plan on"><span class="tag">Recommandé · −28 %</span><h3>3 mois</h3><div class="pr">5,00 €<small>/mois</small></div><p><s>6,99 €</s> · 14,99 € / 3 mois</p></div>
+    </div>
+    <a class="cta" href="#">Commencer mon suivi <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <p class="trust">Paiement sécurisé · Accès immédiat · Résiliable à tout moment</p>
+  </section>
+
+  <!-- avis -->
+  <section class="card">
+    <div class="rv-h"><p class="lab">Vos retours</p><span>★ 4,8 · 500+ avis</span></div>
+    <div class="rv">
+      <div class="q"><span class="st">★★★★★</span><p>Franchement j'adore ! Enfin une app qui sert vraiment aux gens qui souffrent d'acné.</p><small>Inès · 23 ans</small></div>
+      <div class="q"><span class="st">★★★★★</span><p>Ça m'a permis de beaucoup comprendre ma peau et ce qui la fait réagir.</p><small>Camille · 24 ans</small></div>
+      <div class="q"><span class="st">★★★★★</span><p>Grâce à cette app, j'ai compris que mon acné était hormonale.</p><small>Sarah · 31 ans</small></div>
+    </div>
+  </section>
+  <p class="biblio">Recommandations documentées · <a href="/sources">Consulter nos sources</a></p>
+  <p class="disc">Document confidentiel · Page 2 sur 2 · Adermio ne remplace pas un avis médical.</p>
+</main>
+</body>
+</html>
