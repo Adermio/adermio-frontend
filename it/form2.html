@@ -7,10 +7,13 @@
     <title>Analisi esperta — Adermio</title>
     <meta name="description" content="Modulo di analisi esperta Adermio. Analisi dermatologica avanzata con intelligenza artificiale.">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://adermio.com/it/form"
+    <link rel="canonical" href="https://adermio.com/it/form">
     <link rel="alternate" hreflang="fr" href="https://adermio.com/formulaire">
     <link rel="alternate" hreflang="es" href="https://adermio.com/es/form">
-    <link rel="alternate" hreflang="it" href="https://adermio.com/it/form2">
+    <link rel="alternate" hreflang="it" href="https://adermio.com/it/form">
+    <link rel="alternate" hreflang="de" href="https://adermio.com/de/form">
+    <link rel="alternate" hreflang="nl" href="https://adermio.com/nl/form">
+    <link rel="alternate" hreflang="el" href="https://adermio.com/el/form">
     <meta property="og:title" content="Analisi esperta — Adermio">
     <meta property="og:description" content="Modulo di analisi esperta Adermio. Analisi dermatologica avanzata con intelligenza artificiale.">
     <meta property="og:url" content="https://adermio.com/it/form">
@@ -38,14 +41,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://unpkg.com">
 
-    <!-- Preload MediaPipe FaceMesh WASM + packed assets so the browser starts
-         pulling them in parallel with the HTML/CSS/JS, before our scan code
-         actually requests them. These are the two heavyweight files (~10 MB
-         combined) that dominate first-load time on slow mobile connections.
-         Self-hosted on Vercel so HTTP/2 multiplexes them on the existing
-         connection — no extra DNS / TLS handshake. -->
-    <link rel="preload" href="/vendor/mediapipe/face_mesh/face_mesh_solution_simd_wasm_bin.wasm" as="fetch" type="application/wasm" crossorigin="anonymous">
-    <link rel="preload" href="/vendor/mediapipe/face_mesh/face_mesh_solution_packed_assets.data" as="fetch" crossorigin="anonymous">
+    <!-- /formulaire (PROD) = variante 100% manuelle (pas de scan). Aucun asset
+         MediaPipe n'est préchargé ni chargé sur cette page — même principe
+         que /es/form. La variante scan-first vit sur /formulaire3. -->
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style-formulaire.css">
 
@@ -162,17 +160,29 @@
                             <img src="https://flagcdn.com/it.svg" width="18" alt="Italiano" class="rounded-sm shadow-sm">
                             <span>Italiano</span>
                         </a>
-                        <a href="https://adermio.com/en/form2" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                        <a href="https://adermio.com/en/form" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
                             <img src="https://flagcdn.com/us.svg" width="18" alt="English" class="rounded-sm shadow-sm">
                             <span>English</span>
                         </a>
-                        <a href="https://adermio.com/es/form2" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                        <a href="https://adermio.com/es/form" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
                             <img src="https://flagcdn.com/es.svg" width="18" alt="Español" class="rounded-sm shadow-sm">
                             <span>Español</span>
                         </a>
-                        <a href="https://adermio.com/formulaire2" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                        <a href="https://adermio.com/formulaire" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
                             <img src="https://flagcdn.com/fr.svg" width="18" alt="Français" class="rounded-sm shadow-sm">
                             <span>Français</span>
+                        </a>
+                        <a href="https://adermio.com/de/form" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/de.svg" width="18" alt="Deutsch" class="rounded-sm shadow-sm">
+                            <span>Deutsch</span>
+                        </a>
+                        <a href="https://adermio.com/nl/form" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/nl.svg" width="18" alt="Nederlands" class="rounded-sm shadow-sm">
+                            <span>Nederlands</span>
+                        </a>
+                        <a href="https://adermio.com/el/form" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
+                            <img src="https://flagcdn.com/gr.svg" width="18" alt="Ελληνικά" class="rounded-sm shadow-sm">
+                            <span>Ελληνικά</span>
                         </a>
                     </div>
                 </div>
@@ -264,26 +274,17 @@
 
         <div id="step-3" class="step-container">
             <!-- ══════ MODE 1 : PRÉ-SCAN — choix scan / manuel ══════
-                 Antoine wanted this to be a real step rather than a sub-screen
-                 of the AdermioFaceScan widget so the user can hit "Back" from
-                 inside the active scan/preview and land here again to switch
-                 to manual upload. The form's btnBack handler intercepts the
-                 step-3 case and routes back to this mode instead of step-2
-                 whenever scan/manual is currently visible. -->
-            <!-- Écran de choix — miroir de l'intro du scan app (FaceCaptureScreen
-                 phase "intro") : titre 2 lignes avec « Définition » en Playfair
-                 Italic teal, 4 conseils sans point final, mention sécurité AVANT
-                 les boutons, CTA scan + sous-titre complet, séparateur « OU »,
-                 bouton manuel en pilule blanche bordée + sous-titre. Les deux
-                 boutons gardent leur place (nav CONTINUER/retour du formulaire
-                 en dessous, contenu centré). -->
-            <div id="prescan-choice-mode">
+                 /formulaire (PROD) = manuel-only (pas de scan) : cet écran de
+                 choix reste dans le DOM mais caché en permanence — le scan est
+                 inaccessible (ni facescan.js ni MediaPipe chargés). L'import
+                 manuel est le mode par défaut du step 3. Miroir de /es/form. -->
+            <div id="prescan-choice-mode" class="hidden">
                 <div class="text-center mb-8">
                     <span class="text-[10px] font-bold uppercase tracking-widest text-brand-primary mb-2 block animate-pulse">Tecnologia Adermio Scan&trade;</span>
                     <h2 class="font-serif text-3xl text-brand-dark" style="line-height:1.15;">Analisi ad alta<br><em style="color:#14B8A6;font-style:italic;">definizione</em></h2>
                 </div>
 
-                <div class="bg-brand-light/50 border border-brand-primary/20 rounded-xl p-4 mb-4 max-w-sm mx-auto">
+                <div class="bg-brand-light/50 border border-brand-primary/20 rounded-xl p-4 mb-6 max-w-sm mx-auto">
                     <h4 class="text-xs font-bold uppercase text-brand-dark mb-2 flex items-center gap-2">
                         <i data-lucide="info" class="w-3 h-3"></i> Consigli per un'analisi perfetta
                     </h4>
@@ -295,36 +296,42 @@
                     </ul>
                 </div>
 
-                <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:22px;">
-                    <svg width="13" height="13" fill="none" stroke="#14B8A6" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-                    <span style="font-size:12px;color:#a8a29e;font-weight:300;">Nessun dato video conservato</span>
-                </div>
-
                 <!-- Inline styles below: the project ships a pre-compiled
                      style-formulaire.css that doesn't contain JIT-only Tailwind
                      classes (gap-2.5, py-[18px], tracking-[1.5px]). Inline styles
                      guarantee the buttons render exactly as designed regardless
                      of what's in the compiled bundle. -->
-                <div style="max-width:24rem;margin:0 auto;font-family:'DM Sans',sans-serif;">
-                    <button type="button" id="prescan-start-scan"
+                <div style="max-width:24rem;margin:0 auto;padding-top:8px;font-family:'DM Sans',sans-serif;">
+                    <!-- Primary CTA = manual upload (reliable: user controls photo
+                         quality). Secondary CTA = video scan, BETA-badged. The scan
+                         button keeps the brand-green tint so it stays attractive
+                         and on-identity, not relegated to neutral "plan B" status.
+                         IDs preserved so existing JS still wires correctly. -->
+                    <button type="button" id="prescan-start-manual"
                         style="width:100%;padding:18px 20px;border:none;border-radius:9999px;background:#0F3D39;color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px -8px rgba(15,61,57,.4);transition:background .15s, transform .15s;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
-                        Avvia la scansione
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Aggiungi le mie foto
                     </button>
-                    <p style="text-align:center;font-size:12px;color:#a8a29e;margin:10px 0 0;font-weight:300;">Rilevamento automatico in ~15 secondi</p>
+                    <p style="text-align:center;font-size:11px;color:#a8a29e;margin:10px 0 18px;font-weight:400;">Fotocamera o galleria &middot; 3 angolazioni</p>
 
-                    <div style="display:flex;align-items:center;gap:14px;margin:18px 0;">
+                    <div style="display:flex;align-items:center;gap:10px;margin:0 0 14px;">
                         <div style="flex:1;height:1px;background:#e7e5e4;"></div>
-                        <span style="font-size:11px;color:#a8a29e;font-weight:500;letter-spacing:2px;text-transform:uppercase;">oppure</span>
+                        <span style="font-size:10px;color:#a8a29e;font-weight:600;letter-spacing:.1em;text-transform:uppercase;">oppure</span>
                         <div style="flex:1;height:1px;background:#e7e5e4;"></div>
                     </div>
 
-                    <button type="button" id="prescan-start-manual"
-                        style="width:100%;padding:16px 20px;border:1px solid #e7e5e4;border-radius:9999px;background:#fff;color:#0F3D39;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .15s, color .15s;">
-                        <svg width="16" height="16" fill="none" stroke="#78716C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
-                        Aggiungi le mie foto
+                    <button type="button" id="prescan-start-scan"
+                        style="width:100%;padding:14px 20px;border:1px solid #d6d3d1;border-radius:9999px;background:#fff;color:#44403C;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1.2px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .15s, color .15s, background .15s;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                        Scansione video automatica
+                        <span style="background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:9999px;font-size:9px;font-weight:800;letter-spacing:.08em;line-height:1;">BETA</span>
                     </button>
-                    <p style="text-align:center;font-size:12px;color:#a8a29e;margin:10px 0 0;font-weight:300;">Fotocamera o galleria &middot; 3 angolazioni</p>
+                    <p style="text-align:center;font-size:11px;color:#a8a29e;margin:8px 0 0;font-weight:400;">Rilevamento automatico in ~15 secondi</p>
+
+                    <div style="display:flex;align-items:center;gap:5px;justify-content:center;margin-top:18px;opacity:.4;">
+                        <svg width="11" height="11" fill="none" stroke="#44403C" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span style="font-size:9px;color:#44403C;font-weight:500;letter-spacing:.05em;">Nessun dato video conservato</span>
+                    </div>
                 </div>
             </div>
 
@@ -334,10 +341,11 @@
             </div>
 
             <!-- ══════ MODE 3 : IMPORT MANUEL (hidden until user picks manual) ══════
-                 The old "Utiliser le scan guidé" affordance is gone — back-to-choice
-                 navigation is now handled by the form's btnBack so the user has a
-                 single mental model for navigating between the three modes. -->
-            <div id="manual-upload-container" class="hidden space-y-4 animate-fade-in max-w-sm mx-auto">
+                 No in-flow scan switch here on purpose: once the user has
+                 committed to the manual path, we keep the funnel linear and
+                 let them focus on uploading. The Back button still routes
+                 back to the pre-scan choice screen for the rare second-guess. -->
+            <div id="manual-upload-container" class="space-y-4 animate-fade-in max-w-sm mx-auto">
 
                 <div class="relative w-10/12 mx-auto sm:w-full">
                     <div class="flex justify-between items-center mb-2 px-1">
@@ -789,7 +797,7 @@
         else { document.addEventListener('DOMContentLoaded', function() { lucide.createIcons(); }); }
 
         // --- CONFIGURATION ---
-        const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/form-test-it-og-v7'; // TEST 01/10 : « OG v7 » IT (IGlZli4MbkXXEhqF = OG + Gemini v6 + observation Gemini, sans garde-fou points noirs/blancs) — /it/form (prod) reste sur form-test-it-og (OG pur)
+        const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/form-test-it-abbonamento-visivo'; // TEST 12/10/2026 : /it/form2 = copie de /it/form (prod) vers le workflow test « abbonamento » (avp2T2hgGaFDejja) ; l'ancien test v7 (form-test-it-og-v7) est dans l'historique git (page 2 abonnement en italien) — même moteur que la prod IT (QHNwyQeTn3paGKrn)
         const PRESIGN_URL = 'https://api.adermio.com/v2/uploads/presign';
 
 
@@ -803,9 +811,10 @@
 
         // --- JOB ID GENERATION ---
         function adermioGenerateJobId() {
-            const randomPart = Math.random().toString(36).substring(2, 10);
-            const timePart = Date.now().toString(36);
-            return "job_" + timePart + "_" + randomPart;
+            // TEST abonnement : préfixe job_testabo3_ (même format que les tests FR, conforme à JOB_ID_RE
+            // job_<6-16>_<6-16>) ⇒ web-subscription-checkout propose le champ code promo (code de test à 100 %).
+            const randomPart = (Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2)).replace(/[^a-z0-9]/g, "").substring(0, 8);
+            return "job_testabo3_" + randomPart;
         }
 
         let currentJobId = adermioGenerateJobId();
@@ -1186,9 +1195,11 @@
             // sub-mode, "Back" should return to the pre-scan choice within the
             // same step — not jump to step 2. That way the user can switch
             // between scan and manual without losing their place in the funnel.
+            // /formulaire manuel-only : le mode "manual" est l'écran par défaut
+            // du step 3, "Back" doit donc remonter au step 2 (pas de choix scan).
             if (currentStep === 3 && typeof window.getStep3Mode === 'function') {
                 var mode = window.getStep3Mode();
-                if (mode === 'scan' || mode === 'manual') {
+                if (mode === 'scan') {
                     window.showPrescanChoice();
                     return;
                 }
@@ -1768,8 +1779,7 @@ async function submitFormData() {
 
     </script>
 
-    <!-- Face Scan Module -->
-    <script src="/facescan.js"></script>
+    <!-- Face Scan Module retiré : /formulaire est 100% manuel (pas de scan). -->
     <script>
     // ── Mode switching: Scan ↔ Manual Upload ──
     // ── Step-3 mode machine ─────────────────────────────────────────────
@@ -1887,70 +1897,9 @@ async function submitFormData() {
     <script src="/js/geo.js" defer></script>
     <script src="/js/pwa.js" defer></script>
 
-    <!-- MediaPipe FaceMesh — self-hosted on Vercel.
-         The library + its WASM/data assets are served from /vendor/mediapipe/
-         instead of jsdelivr. This buys us:
-           - HTTP/2 multiplexing on the same origin (no extra DNS / TLS / TCP)
-           - Service-Worker-controlled caching (long-lived, deterministic)
-           - Resilience to CDN outages or mobile carriers blocking jsdelivr
-         camera_utils.js was loaded but never used — dropped to save a request.
-         Kept the same async background pre-warm so the engine is hot by the
-         time the user reaches step 3 of the form. -->
-    <script>
-    (function() {
-        var WASM_BASE = "/vendor/mediapipe/face_mesh/";
-        // Expose for facescan.js so it uses the same locateFile target
-        window._adermioMediaPipeBase = WASM_BASE;
+    <!-- Loader MediaPipe FaceMesh retiré : /formulaire est 100% manuel,
+         aucun moteur de scan n'est chargé (miroir de /es/form). -->
 
-        function loadMediaPipe() {
-            var s1 = document.createElement('script');
-            s1.src = WASM_BASE + 'face_mesh.js';
-            s1.async = true;
-            s1.onload = preWarmFaceMesh;
-            s1.onerror = function () {
-                // Fallback to jsdelivr if our vendored copy somehow 404s.
-                var fallback = document.createElement('script');
-                fallback.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js';
-                fallback.async = true;
-                fallback.crossOrigin = 'anonymous';
-                fallback.onload = function () {
-                    window._adermioMediaPipeBase = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/';
-                    preWarmFaceMesh();
-                };
-                document.head.appendChild(fallback);
-            };
-            document.head.appendChild(s1);
-        }
-
-        function preWarmFaceMesh() {
-            try {
-                if (typeof window.FaceMesh !== 'function') return;
-                var base = window._adermioMediaPipeBase;
-                var fm = new window.FaceMesh({ locateFile: function (f) { return base + f; } });
-                // refineLandmarks predicate MUST match facescan.js's isHighEnd so the
-                // pre-warmed graph is the same one the scan instantiates (a mismatch
-                // would re-initialize the WASM graph at scan start and waste the warm-up).
-                var preWarmHighEnd = (window.devicePixelRatio || 1) >= 3 || (navigator.deviceMemory || 4) >= 6;
-                fm.setOptions({ maxNumFaces: 1, refineLandmarks: preWarmHighEnd, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
-                if (typeof fm.initialize === 'function') {
-                    fm.initialize().then(function () {
-                        window._adermioFaceMeshReady = true;
-                        try { fm.close(); } catch (_) {}
-                    }).catch(function () {
-                        try { fm.close(); } catch (_) {}
-                    });
-                }
-            } catch (_) {}
-        }
-        window._adermioFaceMeshReady = false;
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadMediaPipe);
-        } else {
-            loadMediaPipe();
-        }
-    })();
-    </script>
-
+    <script src="/js/funnel.js?v=3" defer></script>
 </body>
 </html>
