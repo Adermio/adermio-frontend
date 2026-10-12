@@ -675,6 +675,17 @@
   const customBrands = { love: [], hate: [] };
   let userContext = { products: [], allergies: "", meds: "", note: "", keep_text: "" };
   let GLOBAL_TOKEN = null;
+  // The report token is handed to the report iframe (?token=) so that new reports no longer have to read it with the anon key.
+  // Signed URLs (X-Amz-* / Signature) are left untouched.
+  function withReportToken(url) {
+    try {
+      if (!GLOBAL_TOKEN || !url) return url;
+      if (/[?&](X-Amz-|Signature=|AWSAccessKeyId=)/i.test(url)) return url;
+      var u = new URL(url, window.location.href);
+      u.searchParams.set("token", GLOBAL_TOKEN);
+      return u.toString();
+    } catch (e) { return url; }
+  }
   // --- 1. INITIALISATION & IFRAME ---
   // --- SUPABASE CONFIG (for upgrade polling) ---
   const SB_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
@@ -730,7 +741,7 @@
       if (!resp.ok) throw new Error("Δεν επιτρέπεται η πρόσβαση ή ο σύνδεσμος έχει λήξει");
       const data = await resp.json();
       if (!data.report_html_url) throw new Error("Η αναφορά δεν βρέθηκε");
-      iframeEl.src = data.report_html_url;
+      iframeEl.src = withReportToken(data.report_html_url);
       if(loadingEl) loadingEl.style.display = "none";
       if(containerEl) containerEl.style.display = "block";
       // Viewport fix
@@ -1039,7 +1050,7 @@
                 btn.disabled = false;
                 iframe.onload = null;
             };
-            iframe.src = data.report_html_url;
+            iframe.src = withReportToken(data.report_html_url);
         }, 100);
       } catch (e) {
         console.error(e);

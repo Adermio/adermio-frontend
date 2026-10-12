@@ -692,6 +692,19 @@
                    <p id="error-treatment" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Please answer yes or no.</p>
                    <p id="error-treatment-empty" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Please specify your treatment.</p>
                </div>
+
+               <div class="space-y-3 p-4 rounded-xl bg-stone-50 border border-stone-100" id="pregnancy-container">
+                   <div class="flex items-center justify-between">
+                        <div class="pr-2">
+                           <label class="text-sm font-medium text-brand-dark block" id="lbl-pregnancy">Pregnant or breastfeeding?</label>
+                           <span class="text-[10px] text-stone-400">Important to adapt the recommendations</span>
+                        </div>
+                       <div class="flex gap-2 bg-stone-200/50 p-1 rounded-lg shrink-0" id="btn-group-pregnancy">
+                           <button type="button" class="px-3 py-1 rounded-md text-xs font-bold text-stone-400 transition-all bg-white hover:text-brand-dark hover:text-white shadow-sm" onclick="setPregnancy(true, this)">YES</button>
+                           <button type="button" class="px-3 py-1 rounded-md text-xs font-bold transition-all hover:text-brand-dark hover:text-white shadow-sm bg-brand-dark text-white" onclick="setPregnancy(false, this)">NO</button>
+                       </div>
+                   </div>
+               </div>
            </div>
        </div>
 
@@ -847,6 +860,7 @@
                has: false,
                detail: ''
            },
+           isPregnant: false,
            extraNotes: '',
            email: '',
            scanLog: ''
@@ -1570,6 +1584,18 @@ window.handleImageUpload = async function (input, previewId, overlayId, emptyId)
            }
        }
 
+        // Optional pregnancy / breastfeeding question: no detail field, no validation, "NO" selected by default.
+        window.setPregnancy = function(isYes, btnElement) {
+            formState.isPregnant = isYes;
+
+            btnElement.parentElement.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('bg-brand-dark', 'text-white');
+                btn.classList.add('bg-white', 'text-stone-400');
+            });
+            btnElement.classList.remove('bg-white', 'text-stone-400');
+            btnElement.classList.add('bg-brand-dark', 'text-white');
+        }
+
 // --- SUBMISSION TO WEBHOOK ---
 async function submitFormData() {
  if (isSubmitting) return;
@@ -1704,6 +1730,7 @@ async function submitFormData() {
 
  params.append("traitement", traitement);
  params.append("traitement_oui", traitement_oui);
+ params.append("is_pregnant", formState.isPregnant ? "true" : "false");
 
  params.append("info_suppl", info_suppl);
 
