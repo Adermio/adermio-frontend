@@ -128,6 +128,8 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 .reviews{width:100vw;margin-inline:calc(50% - 50vw);overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;cursor:grab;-webkit-user-select:none;user-select:none}
 .reviews::-webkit-scrollbar{display:none}
 .reviews.drag{cursor:grabbing}
+.reviews.manual{scroll-snap-type:x proximity;scroll-padding-inline:16px}
+.reviews.manual .q{scroll-snap-align:start}
 .reviews img{-webkit-user-drag:none;pointer-events:none}
 .row{display:flex;gap:16px;width:max-content;padding-inline:16px}
 .ba{position:relative;flex:none;width:261px;height:440px;border-radius:24px;overflow:hidden;background:var(--card);display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:0}
@@ -318,7 +320,7 @@ footer{padding:20px var(--gut) 20px}
 <!-- 4b. Avis -->
 <section class="sec">
   <div class="center"><h2>Vos avis</h2><p class="rating"><span class="stars" aria-hidden="true">★★★★★</span>4,8 sur 5<span>· +500 avis</span></p></div>
-  <div class="reviews"><div class="row">
+  <div class="reviews manual"><div class="row">
     <div class="q"><span class="stars">★★★★★</span><p>Franchement j'adore&nbsp;! Enfin une app qui sert vraiment aux gens qui souffrent d'acné.</p><div class="who"><i aria-hidden="true">I</i><div>Inès<small>23 ans</small></div></div></div>
     <div class="q"><span class="stars">★★★★★</span><p>J'utilise Adermio tous les jours, ça m'a permis de beaucoup comprendre ma peau et ce qui la fait réagir.</p><div class="who"><i aria-hidden="true">C</i><div>Camille<small>24 ans</small></div></div></div>
     <div class="q"><span class="stars">★★★★★</span><p>Rien à dire. L'application est complète et la routine a été vraiment efficace pour ma part.</p><div class="who"><i aria-hidden="true">M</i><div>Manon<small>19 ans</small></div></div></div>
@@ -393,13 +395,12 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
 const bar=$('bar'),hero=$('hero');
 const onScroll=()=>{const past=hero.getBoundingClientRect().bottom<0;bar.classList.toggle('show',past)};
 addEventListener('scroll',onScroll,{passive:true});onScroll();
-// Bandeaux (avant/après, avis) : défilement lent automatique, qu'on peut aussi faire glisser ; reprise 2 s après le dernier geste
+// Bandeaux : défilement lent automatique (avant/après), qu'on peut aussi faire glisser ; reprise 2 s après le dernier geste. Les avis (.manual) ne bougent qu'au doigt
 const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
-document.querySelectorAll('.reviews').forEach(rv=>{const track=rv.querySelector('.row'),base=[...track.children];
+document.querySelectorAll('.reviews').forEach(rv=>{const track=rv.querySelector('.row'),base=[...track.children],auto=!rv.classList.contains('manual');
   const add=list=>list.forEach(c=>{const d=c.cloneNode(true);d.setAttribute('aria-hidden','true');track.appendChild(d)});
-  for(let i=0;i<8&&track.scrollWidth<innerWidth+300;i++)add(base);
-  add([...track.children]);
-  const kids=track.children,half=kids.length/2,period=()=>kids[half].offsetLeft-kids[0].offsetLeft;
+  if(auto){for(let i=0;i<8&&track.scrollWidth<innerWidth+300;i++)add(base);add([...track.children])}
+  const kids=track.children,half=kids.length/2,period=()=>auto?kids[half].offsetLeft-kids[0].offsetLeft:0;
   let pos=0,set=-1,hold=0,down=false,seen=false,last=0,dragX=null,dragL=0;
   const pause=()=>{hold=performance.now()+2000};
   const wrap=()=>{const p=period(),l=rv.scrollLeft;let d=0;if(l>=p)d=-p;else if(l<=0&&p>0)d=p;if(d){rv.scrollLeft=l+d;dragL+=d}return rv.scrollLeft};
@@ -414,7 +415,7 @@ document.querySelectorAll('.reviews').forEach(rv=>{const track=rv.querySelector(
   const tick=now=>{const dt=Math.min(50,now-(last||now));last=now;
     if(seen&&!still&&!down&&now>hold){const p=period();pos+=60*dt/1000;if(p>0&&pos>=p)pos-=p;rv.scrollLeft=pos;set=rv.scrollLeft}
     requestAnimationFrame(tick)};
-  requestAnimationFrame(tick)});
+  if(auto)requestAnimationFrame(tick)});
 // Animations d'apparition : déclenchées quand l'élément atteint 70 % de la hauteur d'écran, pour qu'on les voie se jouer
 if('IntersectionObserver' in window&&innerHeight>0){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reduce');
