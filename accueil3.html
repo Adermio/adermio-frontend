@@ -63,6 +63,16 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 .hero-top .side{position:absolute;font-size:14px;font-weight:500;color:var(--light65);transition:color .15s;display:flex;align-items:center;gap:6px}
 .hero-top .side:hover{color:var(--light)}
 .hero-top .l{left:24px}.hero-top .r{right:24px}
+.hero-top button.side{background:none;border:0;font:inherit;font-size:14px;font-weight:500;cursor:pointer;padding:8px;margin-left:-8px}
+.hero-top .side .chev{transition:transform .2s}
+.hero-top .side[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.lg-short{display:none}
+.lang-menu{position:absolute;top:54px;left:16px;z-index:5;min-width:188px;padding:6px;background:#fff;border-radius:16px;box-shadow:0 14px 36px rgba(37,27,19,.22);display:flex;flex-direction:column;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .16s,transform .16s}
+.lang-menu.open{opacity:1;transform:none;pointer-events:auto}
+.lang-menu a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:10px;font-size:15px;font-weight:500;color:var(--fg)}
+.lang-menu a:hover{background:var(--fg5)}
+.lang-menu a[aria-current]{font-weight:600}
+
 .hero-card h1{margin:16px 0 8px;color:var(--light)}
 .hero-card .sub{color:var(--light65);max-width:430px}
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:250px;margin:16px 0 22px}
@@ -216,7 +226,9 @@ footer{padding:20px var(--gut) 20px}
   .hero{padding:0}
   .hero-card{height:80svh;min-height:560px;padding:32px 16px;border-radius:0}
   .hero-top .side{display:flex}
-  .hero-top .l span{display:none}
+  .hero-top .lg-long{display:none}
+  .hero-top .lg-short{display:inline}
+  .lang-menu{left:8px}
   .hero-top .l{left:16px}.hero-top .r{right:16px}
   .hero-card>img{object-position:72% 30%}
   .sec{padding-top:64px;gap:28px}
@@ -262,7 +274,8 @@ footer{padding:20px var(--gut) 20px}
   <div class="hero-card" id="hero">
     <img src="/medias/accueil3/hero.jpg" alt="Peau au naturel, lumière douce">
     <div class="hero-top">
-      <a class="side l" href="#langues"><svg class="i" style="width:16px;height:16px"><use href="#i-globe"/></svg><span>Français</span></a>
+      <button class="side l" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Choisir la langue"><svg class="i" style="width:16px;height:16px"><use href="#i-globe"/></svg><span class="lg-long">Français</span><span class="lg-short">FR</span><svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <nav class="lang-menu" id="langMenu" aria-label="Langues"><a href="#" aria-current="true">Français<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></a><a href="/en/home" lang="en">English</a><a href="/es/home" lang="es">Español</a><a href="/it/home" lang="it">Italiano</a><a href="/de/home" lang="de">Deutsch</a><a href="/nl/home" lang="nl">Nederlands</a><a href="/el/home" lang="el">Ελληνικά</a></nav>
       <span class="mark"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</span>
       <a class="side r" href="/formulaire">Commencer</a>
     </div>
@@ -384,7 +397,7 @@ footer{padding:20px var(--gut) 20px}
     <div class="f-col"><h4>Explorer</h4><a href="/formulaire">Faire mon analyse</a><a href="/blog">Blog</a></div>
     <div class="f-col"><h4>Entreprise</h4><a href="/about">À propos</a><a href="/contact">Nous contacter</a></div>
     <div class="f-col"><h4>Légal</h4><a href="/cgv">Conditions de vente</a><a href="/conditions">Conditions d'utilisation</a><a href="/mentions-legales">Mentions légales</a><a href="/resilier">Résilier mon abonnement</a></div>
-    <div class="f-col" id="langues"><h4>Langues</h4><a href="#">Français</a><a href="/en/">English</a><a href="/es/home">Español</a><a href="/it/home">Italiano</a><a href="/de/home">Deutsch</a><a href="/nl/home">Nederlands</a></div>
+    <div class="f-col" id="langues"><h4>Langues</h4><a href="#">Français</a><a href="/en/home">English</a><a href="/es/home">Español</a><a href="/it/home">Italiano</a><a href="/de/home">Deutsch</a><a href="/nl/home">Nederlands</a><a href="/el/home">Ελληνικά</a></div>
   </div>
   <div class="f-bottom"><span>Adermio © 2026</span><a href="/confidentialite">Confidentialité</a><span class="r">Adermio ne remplace pas un avis médical.</span></div>
 </footer>
@@ -400,6 +413,11 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
 const bar=$('bar'),hero=$('hero');
 const onScroll=()=>{const past=hero.getBoundingClientRect().bottom<0;bar.classList.toggle('show',past)};
 addEventListener('scroll',onScroll,{passive:true});onScroll();
+// Choix de langue : menu sous le globe, fermé par un appui ailleurs ou Échap
+const lb=$('langBtn'),lm=$('langMenu'),setLang=o=>{lm.classList.toggle('open',o);lb.setAttribute('aria-expanded',o)};
+lb.addEventListener('click',e=>{e.stopPropagation();setLang(!lm.classList.contains('open'))});
+document.addEventListener('click',e=>{if(!lm.contains(e.target)||e.target.closest('[aria-current]'))setLang(false)});
+addEventListener('keydown',e=>{if(e.key==='Escape')setLang(false)});
 // Bandeaux : défilement lent automatique (avant/après), qu'on peut aussi faire glisser ; reprise 2 s après le dernier geste. Les avis (.manual) ne bougent qu'au doigt
 const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.querySelectorAll('.reviews').forEach(rv=>{const track=rv.querySelector('.row'),base=[...track.children],auto=!rv.classList.contains('manual');
