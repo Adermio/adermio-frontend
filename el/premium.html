@@ -1440,8 +1440,14 @@
 
   var SB_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
   var SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
-  var LS_DONE = "adermio_app_banner_done";
-  var SS_CLOSED = "adermio_app_banner_closed";
+  // 12/10/2026 : mémoire PAR RAPPORT (8 premiers caractères du jeton = le code). Avant, un « Copier » sur
+  // un rapport masquait à vie le bandeau de TOUS les rapports suivants du navigateur — dont le code d'un
+  // nouvel achat (abonnement). Les anciennes clés globales sont ignorées : le bandeau peut réapparaître une
+  // fois sur un rapport déjà vu, jamais l'inverse.
+  var BANNER_KEY = "";
+  try { BANNER_KEY = (new URLSearchParams(window.location.search).get("token") || "").slice(0, 8).toUpperCase(); } catch (e) { BANNER_KEY = ""; }
+  var LS_DONE = "adermio_app_banner_done:" + BANNER_KEY;
+  var SS_CLOSED = "adermio_app_banner_closed:" + BANNER_KEY;
   var COPY_LABEL_DONE = "Αντιγράφηκε ✓";
 
   function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
