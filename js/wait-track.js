@@ -2,7 +2,7 @@
 // /it|es|de|en/processing. N'ÉCRIT RIEN dans la page et ne change aucune logique : il OBSERVE les états que la page
 // affiche déjà (même structure dans les 5 langues) :
 //   #success-btn-container visible → wait_ready ; clic #access-btn → wait_click
-//   #delayed-container visible (bloqué à 99 % après 30 s) → wait_long ; #delay-fail-content visible (« Oups », 60 s) → wait_fail
+//   #delayed-container visible (bloqué à 99 % après 45 s) → wait_long ; #delay-fail-content visible (« Oups », 75 s) → wait_fail
 //   #face-error-popup → wait_noface ; #quality-error-popup → wait_retry ; resumeAnalysis() → wait_resume
 //   clic vers le formulaire depuis un écran d'erreur → wait_restart ; application quittée / page fermée.
 // Même table que le questionnaire et le rapport (web_form_funnel, insert seul), jointure par job_id.
