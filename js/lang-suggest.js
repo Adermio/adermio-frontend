@@ -5,8 +5,11 @@
 // /it. Même constat le 11/10 pour la Grèce : 87 % des Grecs du questionnaire
 // arrivent sur /en et n'y envoient que 46 % des questionnaires, contre 65 % sur
 // /el. Et le 12/10 pour les Pays-Bas : ~21 Néerlandais sur /en, /de, /it et
-// les pages FR contre 6 sur /nl. À l'arrivée, on leur propose la version dans leur langue (même parcours) :
+// les pages FR contre 6 sur /nl. Et le 12/10 pour l'Allemagne : ~250 Allemands
+// et Autrichiens sur /en en 3 jours, 0 paiement le 12/10 contre 24 % sur /de.
+// À l'arrivée, on leur propose la version dans leur langue (même parcours) :
 //   « Continua in italiano » / « Συνέχεια στα ελληνικά » / « Verder in het Nederlands »
+//   / « Weiter auf Deutsch »
 //                               → page équivalente, query string conservée
 //                                 (utm, ttclid…) pour ne pas casser l'attribution ;
 //   « Continue in English » (ou la langue de la page) → on ferme et on ne
@@ -61,6 +64,21 @@
       title: 'Adermio is beschikbaar in het Nederlands',
       text: 'Je gratis huidanalyse en je volledige rapport, helemaal in het Nederlands.',
       cta: 'Verder in het Nederlands'
+    },
+    de: {
+      // Suisse exclue : visiteurs répartis entre /de, /it, /fr et /en, sans perte nette.
+      countries: ['DE', 'AT'],
+      choiceKey: 'adermio_lang_choice_de',
+      targets: {
+        '/en/form': '/de/form', '/en/home': '/de/home',
+        '/formulaire': '/de/form', '/': '/de/home'
+      },
+      flag: 'de',
+      flags: { AT: 'at' },
+      label: 'Deutsch',
+      title: 'Adermio ist auf Deutsch verfügbar',
+      text: 'Ihre kostenlose Hautanalyse und Ihr vollständiger Bericht, komplett auf Deutsch.',
+      cta: 'Weiter auf Deutsch'
     }
   };
 
