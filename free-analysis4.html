@@ -159,7 +159,11 @@
     }
 
     // Construction et injection de l'URL S3
-    const reportUrl = `https://adermio-free.s3.eu-north-1.amazonaws.com/ANALYSE_${encodeURIComponent(jobId)}.html`;
+    // TEST : deux rapports par analyse (A = ANALYSE_<jobId>.html, B = ANALYSE_<jobId>_B.html), sélecteur A | B en haut
+    const version = (urlParams.get("v") || "a").toLowerCase() === "b" ? "b" : "a";
+    const fileFor = v => `https://adermio-free.s3.eu-north-1.amazonaws.com/ANALYSE_${encodeURIComponent(jobId)}${v === "b" ? "_B" : ""}.html`;
+    const reportUrl = fileFor(version);
+    // Sélecteur A | B retiré (12/10) : on affiche A ; B reste accessible avec ?v=b
     
     // On expose l'origine autorisée globalement pour l'écouteur de message
     window.adermioAllowedOrigin = new URL(reportUrl).origin;
