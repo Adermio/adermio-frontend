@@ -10,7 +10,9 @@
       try {
         var pages = d.querySelectorAll('.pdf-page');
         // Page 2 abonnement (bouton « Commencer mon suivi ») d'abord : elle reprend aussi les pages floutées .o2p.
+        // Même page 2 avec une seule offre 5,99 € (bouton data-cta="stripe" dans #adermio-paywall-study, FR 12/10).
         var variant = d.querySelector('[data-cta="subscription"]') ? 'page2-abonnement'
+          : d.querySelector('#adermio-paywall-study [data-cta="stripe"]') ? 'page2-nouvelle-5-99'
           : d.querySelector('.o2p') ? 'page2-ancienne' : 'page2-standard';
         say({ event: 'ready', pages: pages.length, variant: variant });
         var p2 = pages[1];
