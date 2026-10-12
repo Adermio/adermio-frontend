@@ -811,9 +811,10 @@
 
         // --- JOB ID GENERATION ---
         function adermioGenerateJobId() {
-            const randomPart = Math.random().toString(36).substring(2, 10);
-            const timePart = Date.now().toString(36);
-            return "job_" + timePart + "_" + randomPart;
+            // TEST abonnement : préfixe job_testabo3_ (même format que les tests FR, conforme à JOB_ID_RE
+            // job_<6-16>_<6-16>) ⇒ web-subscription-checkout propose le champ code promo (code de test à 100 %).
+            const randomPart = (Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2)).replace(/[^a-z0-9]/g, "").substring(0, 8);
+            return "job_testabo3_" + randomPart;
         }
 
         let currentJobId = adermioGenerateJobId();
