@@ -160,10 +160,10 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 .anim .fan:not(.in) .phone{translate:calc(var(--dx,0px)*var(--mv,1)) calc(80px*var(--mv,1));rotate:calc(var(--r,0deg)*(1 - var(--mv,1)));opacity:0}
 /* Écrans des étapes : chaque bloc apparaît en fondu, de haut en bas */
 .scr .band{position:absolute;left:0;right:0;background-repeat:no-repeat;background-size:100% auto}
-.step .phone{transition:translate .8s cubic-bezier(.2,.8,.2,1),opacity .6s ease;transition-delay:var(--d,0ms)}
-.anim .step:not(.in) .phone{translate:0 calc(48px*var(--mv,1));opacity:0}
-.scr .band.a{transition:opacity .7s ease-out,transform .8s cubic-bezier(.2,.8,.2,1);transition-delay:calc(350ms + var(--k)*190ms + var(--d,0ms))}
-.anim .step:not(.in) .band.a{opacity:0;transform:translateY(calc(28px*var(--mv,1)))}
+.step .phone{transition:translate 1s cubic-bezier(.2,.8,.2,1),opacity .7s ease;transition-delay:var(--d,0ms)}
+.anim .step:not(.in) .phone{translate:0 calc(72px*var(--mv,1));opacity:0}
+.scr .band.a{transition:opacity .8s ease-out,transform .9s cubic-bezier(.2,.8,.2,1);transition-delay:calc(450ms + var(--k)*240ms + var(--d,0ms))}
+.anim .step:not(.in) .band.a{opacity:0;transform:translateY(calc(40px*var(--mv,1)))}
 .step:nth-child(2){--d:200ms}.step:nth-child(3){--d:400ms}
 .reduce{--mv:0}
 
@@ -186,7 +186,6 @@ footer{padding:20px var(--gut) 20px}
 .f-bottom{display:flex;gap:24px;align-items:center;margin-top:56px;padding-top:16px;border-top:1px solid var(--fg5);font-size:14px;color:var(--fg65)}
 .f-bottom a:hover{color:var(--fg)}
 .f-bottom .r{margin-left:auto}
-.m-cta{display:none}
 
 /* Tablette */
 @media (max-width:1100px){
@@ -227,10 +226,6 @@ footer{padding:20px var(--gut) 20px}
   .f-brand{grid-column:1/-1}
   .f-bottom{flex-wrap:wrap;gap:12px 20px}
   .f-bottom .r{margin-left:0}
-  footer{padding-bottom:100px}
-  .m-cta{display:block;position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:30;transition:transform .25s,opacity .25s}
-  .m-cta.hide{transform:translateY(140%);opacity:0}
-  .m-cta .btn{width:100%;justify-content:center}
 }
 </style>
 </head>
@@ -374,18 +369,17 @@ footer{padding:20px var(--gut) 20px}
   <div class="f-bottom"><span>Adermio © 2026</span><a href="/confidentialite">Confidentialité</a><span class="r">Adermio ne remplace pas un avis médical.</span></div>
 </footer>
 
-<div class="m-cta hide" id="mcta"><a class="btn btn-dark" href="/formulaire">Faire mon analyse gratuite</a></div>
 
 <script>
 const $=id=>document.getElementById(id);
-const bar=$('bar'),mcta=$('mcta'),hero=$('hero');
-const onScroll=()=>{const past=hero.getBoundingClientRect().bottom<0;bar.classList.toggle('show',past);mcta.classList.toggle('hide',!past)};
+const bar=$('bar'),hero=$('hero');
+const onScroll=()=>{const past=hero.getBoundingClientRect().bottom<0;bar.classList.toggle('show',past)};
 addEventListener('scroll',onScroll,{passive:true});onScroll();
 const rv=document.querySelector('.reviews'),track=rv.querySelector('.row');
 [...track.children].forEach(c=>{const d=c.cloneNode(true);d.setAttribute('aria-hidden','true');track.appendChild(d)});
 const setDur=()=>track.style.setProperty('--dur',(track.scrollWidth/2/60)+'s');setDur();addEventListener('load',setDur);
 rv.addEventListener('touchstart',()=>rv.classList.add('hold'),{passive:true});rv.addEventListener('touchend',()=>rv.classList.remove('hold'));
-// Animations d'apparition (désactivées si l'utilisateur a demandé moins d'animations)
+// Animations d'apparition : déclenchées quand l'élément atteint 70 % de la hauteur d'écran, pour qu'on les voie se jouer
 if('IntersectionObserver' in window&&innerHeight>0){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reduce');
   document.querySelectorAll('.scr img[data-bands]').forEach(img=>{
@@ -394,10 +388,10 @@ if('IntersectionObserver' in window&&innerHeight>0){
       d.className='band'+(i?' a':'');d.style.cssText='top:'+t+'%;height:'+h+'%;background-image:url("'+src+'");background-position:0 '+(h>=100?0:t/(100-h)*100)+'%;--k:'+(i-1);scr.appendChild(d)}
     img.style.visibility='hidden'});
   document.documentElement.classList.add('anim');
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.25});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -30% 0px',threshold:0});
   const els=[...document.querySelectorAll('.step,.fan')];els.forEach(el=>io.observe(el));
   // filet de sécurité : tout élément visible à l'écran s'affiche, même si l'observateur ne se déclenche pas
-  const check=()=>els.forEach(el=>{const r=el.getBoundingClientRect();if(r.top<innerHeight*.85&&r.bottom>0)el.classList.add('in')});
+  const check=()=>els.forEach(el=>{const r=el.getBoundingClientRect();if(r.top<innerHeight*.7&&r.bottom>0)el.classList.add('in')});
   addEventListener('scroll',check,{passive:true});setTimeout(check,1200);
 }
 const box=$('video'),vid=$('vid'),rows=[...document.querySelectorAll('#chapters .f-row')];
