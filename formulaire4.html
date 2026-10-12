@@ -1790,9 +1790,10 @@ async function submitFormData() {
 
       setTimeout(function () {
         if (formState.jobId) {
-          window.location.href = "/analyse-en-cours?jobId=" + encodeURIComponent(formState.jobId);
+          try { sessionStorage.setItem("adermio_prenom", formState.name || ""); } catch (e) {}
+          window.location.href = "/analyse-en-cours4?jobId=" + encodeURIComponent(formState.jobId);
         } else {
-          window.location.href = "/analyse-en-cours";
+          window.location.href = "/analyse-en-cours4";
         }
       }, 800);
     }, 1000);
