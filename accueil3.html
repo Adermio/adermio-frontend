@@ -125,9 +125,11 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 .f-panel .fine{text-align:center}
 
 /* 4. Transformations et avis — cartes 261 × 440 */
+.wall{display:flex;flex-direction:column;gap:12px;width:100vw;margin-inline:calc(50% - 50vw)}
 .reviews{width:100%;overflow:hidden}
 .row{display:flex;gap:8px;width:max-content;animation:marquee var(--dur,60s) linear infinite}
 .reviews:hover .row,.reviews.hold .row{animation-play-state:paused}
+.row.rev{animation-direction:reverse}
 @keyframes marquee{to{transform:translateX(calc(-50% - 4px))}}
 @media (prefers-reduced-motion:reduce){.row{animation:none}.reviews{overflow-x:auto}}
 .ba{position:relative;flex:none;width:261px;height:440px;border-radius:24px;overflow:hidden;background:var(--card);display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:0}
@@ -137,7 +139,7 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 .ba .cap{position:absolute;left:0;right:0;bottom:0;padding:40px 14px 12px;background:linear-gradient(to top,rgba(28,20,14,.6),rgba(28,20,14,0));color:var(--light);text-align:left}
 .ba .cap b{display:block;font-size:14px;font-weight:600}
 .ba .cap small{font-size:12px;font-weight:500;color:var(--light65)}
-.q{flex:none;width:261px;height:440px;background:var(--card);border-radius:24px;padding:22px;display:flex;flex-direction:column}
+.q{flex:none;width:300px;min-height:220px;background:var(--card);border-radius:24px;padding:22px;display:flex;flex-direction:column}
 .q .stars{font-size:12px;letter-spacing:2px}
 .q p{flex:1;font-size:20px;line-height:1.3;letter-spacing:-.01em;font-weight:600;margin-top:14px}
 .q .who{font-size:14px;font-weight:600}
@@ -301,17 +303,21 @@ footer{padding:20px var(--gut) 20px}
 <!-- 4. Transformations et avis (= 11,000+ People. Real Progress.) -->
 <section class="sec">
   <div class="center"><h2>+150 000 analyses. Des progrès réels.</h2><p class="sub">Des routines sur mesure, suivies dans le temps.</p></div>
+  <div class="wall">
   <div class="reviews"><div class="row">
     <div class="ba"><img loading="lazy" src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/avant_apres/Screenshot+2025-12-20+at+10.59.04.png" alt="Avant"><img loading="lazy" src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/avant_apres/Screenshot+2025-12-20+at+10.59.18.png" alt="Après"><span class="lab t">Avant</span><span class="lab b">Après</span></div>
-    <div class="q"><span class="stars">★★★★★</span><p>Franchement j'adore&nbsp;! Enfin une app qui sert vraiment aux gens qui souffrent d'acné.</p><div class="who">Inès<small>23 ans</small></div></div>
     <div class="ba"><img loading="lazy" src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/avant_apres/Screenshot+2025-12-20+at+10.58.26.png" alt="Avant"><img loading="lazy" src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/avant_apres/Screenshot+2025-12-20+at+10.58.42.png" alt="Après"><span class="lab t">Avant</span><span class="lab b">Après</span></div>
-    <div class="q"><span class="stars">★★★★★</span><p>J'utilise Adermio tous les jours, ça m'a permis de beaucoup comprendre ma peau et ce qui la fait réagir.</p><div class="who">Camille<small>24 ans</small></div></div>
     <div class="ba"><img loading="lazy" src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/avant_apres/Screenshot+2025-12-20+at+10.59.51.png" alt="Avant"><img loading="lazy" src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/avant_apres/Screenshot+2025-12-20+at+11.00.33.png" alt="Après"><span class="lab t">Avant</span><span class="lab b">Après</span></div>
-    <div class="q"><span class="stars">★★★★★</span><p>Rien à dire. L'application est complète et la routine a été vraiment efficace pour ma part.</p><div class="who">Manon<small>19 ans</small></div></div>
     <div class="ba"><img loading="lazy" style="object-position:50% 100%" src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/avant_apres/Screenshot+2025-12-20+at+11.01.02.png" alt="Avant"><img loading="lazy" style="object-position:50% 100%" src="https://adermio-locked-pages.s3.eu-north-1.amazonaws.com/avant_apres/Screenshot+2025-12-20+at+11.01.16.png" alt="Après"><span class="lab t">Avant</span><span class="lab b">Après</span></div>
+  </div></div>
+  <div class="reviews"><div class="row rev">
+    <div class="q"><span class="stars">★★★★★</span><p>Franchement j'adore&nbsp;! Enfin une app qui sert vraiment aux gens qui souffrent d'acné.</p><div class="who">Inès<small>23 ans</small></div></div>
+    <div class="q"><span class="stars">★★★★★</span><p>J'utilise Adermio tous les jours, ça m'a permis de beaucoup comprendre ma peau et ce qui la fait réagir.</p><div class="who">Camille<small>24 ans</small></div></div>
+    <div class="q"><span class="stars">★★★★★</span><p>Rien à dire. L'application est complète et la routine a été vraiment efficace pour ma part.</p><div class="who">Manon<small>19 ans</small></div></div>
     <div class="q"><span class="stars">★★★★★</span><p>Grâce à cette app, j'ai compris que mon acné était hormonale, et mon médecin l'a confirmé&nbsp;!</p><div class="who">Sarah<small>31 ans</small></div></div>
     <div class="q"><span class="stars">★★★★★</span><p>App pro et utile</p><div class="who">Lina<small>21 ans</small></div></div>
   </div></div>
+  </div>
 </section>
 
 <!-- 5. Rigueur -->
@@ -380,10 +386,13 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
 const bar=$('bar'),hero=$('hero');
 const onScroll=()=>{const past=hero.getBoundingClientRect().bottom<0;bar.classList.toggle('show',past)};
 addEventListener('scroll',onScroll,{passive:true});onScroll();
-const rv=document.querySelector('.reviews'),track=rv.querySelector('.row');
-[...track.children].forEach(c=>{const d=c.cloneNode(true);d.setAttribute('aria-hidden','true');track.appendChild(d)});
-const setDur=()=>track.style.setProperty('--dur',(track.scrollWidth/2/60)+'s');setDur();addEventListener('load',setDur);
-rv.addEventListener('touchstart',()=>rv.classList.add('hold'),{passive:true});rv.addEventListener('touchend',()=>rv.classList.remove('hold'));
+// Deux bandeaux défilants (avant/après, puis avis en sens inverse) : on répète les cartes jusqu'à dépasser la largeur d'écran, puis on double pour une boucle sans couture
+document.querySelectorAll('.reviews').forEach(rv=>{const track=rv.querySelector('.row'),base=[...track.children];
+  const add=list=>list.forEach(c=>{const d=c.cloneNode(true);d.setAttribute('aria-hidden','true');track.appendChild(d)});
+  for(let i=0;i<8&&track.scrollWidth<innerWidth+300;i++)add(base);
+  add([...track.children]);
+  const setDur=()=>track.style.setProperty('--dur',(track.scrollWidth/2/60)+'s');setDur();addEventListener('load',setDur);
+  rv.addEventListener('touchstart',()=>rv.classList.add('hold'),{passive:true});rv.addEventListener('touchend',()=>rv.classList.remove('hold'))});
 // Animations d'apparition : déclenchées quand l'élément atteint 70 % de la hauteur d'écran, pour qu'on les voie se jouer
 if('IntersectionObserver' in window&&innerHeight>0){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reduce');
