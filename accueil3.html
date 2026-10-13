@@ -265,7 +265,7 @@ footer{padding:20px var(--gut) 20px}
 .hero-shot::before{display:none;content:"";position:absolute;left:50%;top:0;width:560px;height:560px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,255,255,.75),rgba(255,255,255,0));pointer-events:none}
 .hero-shot .phone{width:300px;flex:none;align-self:flex-start}
 @media (max-width:760px){
-  .hero-card{height:90svh;min-height:690px;padding:76px 16px 0}
+  .hero-card{height:90svh;min-height:690px;padding:84px 16px 0}
   .hero-shot{margin-top:20px}
   .hero-shot .phone{width:60%;max-width:250px}
   .hero-shot::before{width:360px;height:360px}
@@ -274,6 +274,9 @@ footer{padding:20px var(--gut) 20px}
 /* Haut de page au blanc de la LP prod (#F8FAFC) : le fond de body donne aussi la couleur de la barre de Safari en haut ; le reste de la page reste gris */
 body{background:#F8FAFC}
 main,footer{background:var(--bg)}
+/* Header = celui de la LP prod (.glass-nav) : blanc 90 %, flou 12 px, filet bas */
+.hero-top{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
+.bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
 </style>
 </head>
 <body>
