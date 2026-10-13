@@ -252,6 +252,24 @@ footer{padding:20px var(--gut) 20px}
   .f-bottom{flex-wrap:wrap;gap:12px 20px}
   .f-bottom .r{margin-left:0}
 }
+
+/* Hero « produit » (13/10) : plus de photo, le vrai écran Bilan de l'app */
+.hero-card{background:linear-gradient(180deg,#F7F5F2 0%,#E8E3DC 100%);color:var(--fg);justify-content:flex-start;padding:104px 16px 0}
+.hero-card::after{display:none}
+.hero-top .mark{color:var(--fg)}
+.hero-top .side{color:var(--fg65)}
+.hero-top .side:hover{color:var(--fg)}
+.hero-card h1{color:var(--fg)}
+.hero-card .sub,.hero-card .fine{color:var(--fg65)}
+.hero-shot{position:relative;flex:1 1 0;min-height:0;width:100%;overflow:hidden;display:flex;justify-content:center;margin-top:36px;padding-top:6px}
+.hero-shot::before{content:"";position:absolute;left:50%;top:0;width:560px;height:560px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,255,255,.75),rgba(255,255,255,0));pointer-events:none}
+.hero-shot .phone{width:300px;flex:none;align-self:flex-start}
+@media (max-width:760px){
+  .hero-card{height:90svh;min-height:690px;padding:76px 16px 0}
+  .hero-shot{margin-top:20px}
+  .hero-shot .phone{width:60%;max-width:250px}
+  .hero-shot::before{width:360px;height:360px}
+}
 </style>
 </head>
 <body>
@@ -272,19 +290,19 @@ footer{padding:20px var(--gut) 20px}
 <!-- 1. Hero (= hero Nolla Derm) -->
 <section class="hero">
   <div class="hero-card" id="hero">
-    <img src="/medias/accueil3/hero.jpg" alt="Peau au naturel, lumière douce">
     <div class="hero-top">
       <button class="side l" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Choisir la langue"><svg class="i" style="width:16px;height:16px"><use href="#i-globe"/></svg><span class="lg-long">Français</span><span class="lg-short">FR</span><svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <nav class="lang-menu" id="langMenu" aria-label="Langues"><a href="#" aria-current="true">Français<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></a><a href="/en/home" lang="en">English</a><a href="/es/home" lang="es">Español</a><a href="/it/home" lang="it">Italiano</a><a href="/de/home" lang="de">Deutsch</a><a href="/nl/home" lang="nl">Nederlands</a><a href="/el/home" lang="el">Ελληνικά</a></nav>
       <span class="mark"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</span>
       <a class="side r" href="/formulaire4">Commencer</a>
     </div>
-    <span class="pill">4,8 étoiles <span class="st">★★★★★</span>&nbsp;·&nbsp;150&nbsp;000+ analyses</span>
+    <span class="pill dark">4,8 étoiles <span class="st">★★★★★</span>&nbsp;·&nbsp;150&nbsp;000+ analyses</span>
     <h1>Comprenez enfin votre peau.</h1>
     <p class="sub">Une analyse de peau intelligente, propulsée par l'IA, et un suivi sur mesure.</p>
-    <div class="chips"><span class="chip">Acné</span><span class="chip">Points noirs</span><span class="chip">Marques</span><span class="chip">Cicatrices</span><span class="chip">Taches</span><span class="chip">Pores</span></div>
-    <a class="btn btn-light" href="/formulaire4"><svg class="i"><use href="#i-scan"/></svg>Faire mon analyse gratuite</a>
+    <div class="chips dark"><span class="chip">Acné</span><span class="chip">Points noirs</span><span class="chip">Marques</span><span class="chip">Cicatrices</span><span class="chip">Taches</span><span class="chip">Pores</span></div>
+    <a class="btn btn-dark" href="/formulaire4"><svg class="i"><use href="#i-scan"/></svg>Faire mon analyse gratuite</a>
     <p class="fine">Gratuit · 2 minutes</p>
+    <div class="hero-shot"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-bilan.jpg" alt="Bilan de peau : carte des zones et sévérité"></div></div></div>
   </div>
 </section>
 
@@ -292,7 +310,7 @@ footer{padding:20px var(--gut) 20px}
 <section class="sec">
   <h2>Comment ça marche</h2>
   <div class="steps">
-    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-bilan-kpi.jpg" data-bands="0,5.5,14,51.5,76,100" alt="Bilan de peau : carte des zones et indicateurs"></div></div></div><h3>Analyser</h3><p class="sub">Nous mesurons votre peau</p></div>
+    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-analyse-expert.jpg" data-bands="0,5.5,13,58.5,73.5,100" alt="Analyse détaillée : synthèse et signes identifiés"></div></div></div><h3>Analyser</h3><p class="sub">Nous mesurons votre peau</p></div>
     <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-routine-recap.jpg" data-bands="0,5.5,15.5,43,69,87,100" alt="Routine matin et soir"></div></div></div><h3>Agir</h3><p class="sub">Votre routine, construite pour vous</p></div>
     <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-suivi-courbe.jpg" data-bands="0,5.5,18,47,84,100" alt="Journal photo et courbe de progression"></div></div></div><h3>Suivre</h3><p class="sub">Ajustée tous les 28 jours</p></div>
   </div>
