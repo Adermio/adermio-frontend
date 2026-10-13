@@ -46,7 +46,7 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 .fine{font-size:12px;font-weight:500;line-height:1.4;color:var(--fg65)}
 
 /* Barre compacte (après le hero) */
-.bar{position:fixed;top:0;left:0;right:0;z-index:40;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gut);background:rgba(238,238,238,.82);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--fg5);transform:translateY(-100%);transition:transform .25s}
+.bar{position:fixed;top:0;left:0;right:0;z-index:40;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gut);background:rgba(248,250,252,.9);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--fg5);transform:translateY(-100%);transition:transform .25s}
 .bar.show{transform:none}
 .bar .btn{padding:8px 16px;font-size:14px}
 .mark{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:19px;letter-spacing:-.02em}
@@ -254,7 +254,7 @@ footer{padding:20px var(--gut) 20px}
 }
 
 /* Hero « produit » (13/10) : plus de photo, le vrai écran Bilan de l'app */
-.hero-card{background:#FFFFFF;color:var(--fg);justify-content:flex-start;padding:104px 16px 0}
+.hero-card{background:#F8FAFC;color:var(--fg);justify-content:flex-start;padding:104px 16px 0}
 .hero-card::after{display:none}
 .hero-top .mark{color:var(--fg)}
 .hero-top .side{color:var(--fg65)}
@@ -270,6 +270,10 @@ footer{padding:20px var(--gut) 20px}
   .hero-shot .phone{width:60%;max-width:250px}
   .hero-shot::before{width:360px;height:360px}
 }
+
+/* Haut de page au blanc de la LP prod (#F8FAFC) : le fond de body donne aussi la couleur de la barre de Safari en haut ; le reste de la page reste gris */
+body{background:#F8FAFC}
+main,footer{background:var(--bg)}
 </style>
 </head>
 <body>
