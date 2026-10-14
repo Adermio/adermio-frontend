@@ -1,0 +1,1 @@
+# Faux positifs de qa_pl.py : CODE<TAB>sous-chaîne exacte du segment<TAB>raison (jamais INTERDIT/DERMA/IDENT/PRIX/GREC)
