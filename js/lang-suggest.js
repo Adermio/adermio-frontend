@@ -79,6 +79,19 @@
       title: 'Adermio ist auf Deutsch verfügbar',
       text: 'Ihre kostenlose Hautanalyse und Ihr vollständiger Bericht, komplett auf Deutsch.',
       cta: 'Weiter auf Deutsch'
+    },
+    pl: {
+      countries: ['PL'],
+      choiceKey: 'adermio_lang_choice_pl',
+      targets: {
+        '/en/form': '/pl/form', '/en/home': '/pl/home',
+        '/formulaire': '/pl/form', '/': '/pl/home'
+      },
+      flag: 'pl',
+      label: 'Polski',
+      title: 'Adermio jest dostępne po polsku',
+      text: 'Twoja darmowa analiza skóry i pełny raport – w całości po polsku.',
+      cta: 'Kontynuuj po polsku'
     }
   };
 

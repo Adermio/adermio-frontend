@@ -189,15 +189,6 @@
   ],
   "headers": [
     {
-      "source": "/pl/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex"
-        }
-      ]
-    },
-    {
       "source": "/pl/anuluj-subskrypcje",
       "headers": [
         {
