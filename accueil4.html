@@ -180,11 +180,14 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 .anim .fan:not(.in) .phone{translate:calc(var(--dx,0px)*var(--mv,1)) calc(80px*var(--mv,1));rotate:calc(var(--r,0deg)*(1 - var(--mv,1)));opacity:0}
 /* Écrans des étapes : chaque bloc apparaît en fondu, de haut en bas */
 .scr .band{position:absolute;left:0;right:0;background-repeat:no-repeat;background-size:100% auto}
-.step .phone{transition:translate 1s cubic-bezier(.2,.8,.2,1),opacity .7s ease;transition-delay:var(--d,0ms)}
+.step .phone{transition:translate .75s cubic-bezier(.2,.8,.2,1),opacity .5s ease;transition-delay:var(--d,0ms)}
 .anim .step:not(.in) .phone{translate:0 calc(72px*var(--mv,1));opacity:0}
-.scr .band.a{transition:opacity .8s ease-out,transform .9s cubic-bezier(.2,.8,.2,1);transition-delay:calc(450ms + var(--k)*240ms + var(--d,0ms))}
+.scr .band.a{transition:opacity .6s ease-out,transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:calc(300ms + var(--k)*170ms + var(--d,0ms))}
+/* écran du scan : pas de découpage en bandes (la personne n'est jamais coupée), l'écran entier apparaît en fondu doux */
+.step.in .scr img.fondu{transition:opacity .6s ease-out,transform .9s cubic-bezier(.2,.8,.2,1);transition-delay:calc(250ms + var(--d,0ms))}  /* transition seulement à l'apparition : masqué d'emblée au chargement */
+.anim .step:not(.in) .scr img.fondu{opacity:0;transform:scale(calc(1 + .04*var(--mv,1)))}
 .anim .step:not(.in) .band.a{opacity:0;transform:translateY(calc(40px*var(--mv,1)))}
-.step:nth-child(2){--d:200ms}.step:nth-child(3){--d:400ms}
+.step:nth-child(2){--d:150ms}.step:nth-child(3){--d:300ms}
 .reduce{--mv:0}
 
 /* 7. FAQ — colonne de 560 px */
@@ -359,7 +362,7 @@ main,footer{background:var(--bg)}
 <section class="sec">
   <h2>Comment ça marche</h2>
   <div class="steps">
-    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-scan-visuel-2.jpg" data-bands="0,7,18.5,48,75,100" alt="Scan du visage : analyse en cours, cartographie du visage"></div></div></div><h3>Analyser</h3><p class="sub">Nous mesurons votre peau</p></div>
+    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img class="fondu" src="/medias/accueil3/app-scan-visuel-2.jpg" alt="Scan du visage : analyse en cours, cartographie du visage"></div></div></div><h3>Analyser</h3><p class="sub">Nous mesurons votre peau</p></div>
     <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-routine-recap.jpg" data-bands="0,5.5,15.5,43,69,87,100" alt="Routine matin et soir"></div></div></div><h3>Agir</h3><p class="sub">Votre routine, construite pour vous</p></div>
     <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-suivi-courbe.jpg" data-bands="0,5.5,18,47,84,100" alt="Journal photo et courbe de progression"></div></div></div><h3>Suivre</h3><p class="sub">Ajustée tous les 28 jours</p></div>
   </div>
