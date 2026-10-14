@@ -10,8 +10,10 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <title>Adermio — Analyse de peau par IA</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preload" href="/medias/accueil3/fonts/pretendard-fr-v1.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Pretendard Variable v1.3.9, sous-ensemble latin + grec (menu des langues) auto-hébergé : un seul fichier de 45 Ko */
+@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/medias/accueil3/fonts/pretendard-fr-v1.woff2) format("woff2-variations"),url(/medias/accueil3/fonts/pretendard-fr-v1.woff2) format("woff2")}
 /* Système = valeurs relevées sur nollahealth.com/derm (11/10/2026) */
 :root{
   --bg:#EEEEEE; --fg:#251B13; --fg65:rgba(37,27,19,.65); --fg10:rgba(43,24,9,.1); --fg5:rgba(37,27,19,.05);
@@ -302,6 +304,11 @@ main,footer{background:var(--bg)}
 .pb-ico svg{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media (min-width:768px){.pb-ico{display:block}}
 @keyframes pb-float{0%,to{transform:translateY(0)}50%{transform:translateY(-10px)}}
+/* Perf : animations en boucle du bloc mises en pause quand il est hors de l'écran (rien ne change à l'œil) */
+.pb.off,.pb.off *{animation-play-state:paused}
+/* Perf : balise picture (WebP + repli JPEG) posée à la génération, sans boîte propre : l'image garde exactement sa mise en page
+   (Safari ne masque pas source par défaut : sans display:none, elle devient une case vide dans les grilles) */
+picture{display:contents}picture>source{display:none}
 @keyframes pb-ping{75%,to{opacity:0;transform:scale(2)}}
 @keyframes pb-spin{to{transform:rotate(1turn)}}
 /* Haut de page : éventail de 3 écrans (routine, bilan, analyse partie 2) à la place du téléphone seul, coupé net au bas du bloc blanc (14/10) */
@@ -332,7 +339,7 @@ main,footer{background:var(--bg)}
 </svg>
 
 <div class="bar" id="bar">
-  <a class="mark" href="#"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a>
+  <a class="mark" href="#"><picture><source srcset="/medias/accueil3/logo-disque.webp" type="image/webp"><img src="/medias/accueil3/logo-disque.png" alt=""></picture>Adermio</a>
   <a class="btn btn-dark" href="/formulaire4">Faire mon analyse</a>
 </div>
 
@@ -343,7 +350,7 @@ main,footer{background:var(--bg)}
     <div class="hero-top">
       <button class="side l" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Choisir la langue"><svg class="i" style="width:16px;height:16px"><use href="#i-globe"/></svg><span class="lg-long">Français</span><span class="lg-short">FR</span><svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <nav class="lang-menu" id="langMenu" aria-label="Langues"><a href="#" aria-current="true">Français<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></a><a href="/en/home" lang="en">English</a><a href="/es/home" lang="es">Español</a><a href="/it/home" lang="it">Italiano</a><a href="/de/home" lang="de">Deutsch</a><a href="/nl/home" lang="nl">Nederlands</a><a href="/el/home" lang="el">Ελληνικά</a></nav>
-      <span class="mark"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</span>
+      <span class="mark"><picture><source srcset="/medias/accueil3/logo-disque.webp" type="image/webp"><img src="/medias/accueil3/logo-disque.png" alt=""></picture>Adermio</span>
       <a class="side r" href="/formulaire4">Commencer</a>
     </div>
     <span class="pill dark">4,8 étoiles <span class="st">★★★★★</span>&nbsp;·&nbsp;150&nbsp;000+ analyses</span>
@@ -352,9 +359,9 @@ main,footer{background:var(--bg)}
     <a class="btn btn-dark" href="/formulaire4"><svg class="i"><use href="#i-scan"/></svg>Faire mon analyse gratuite</a>
     <p class="fine">Gratuit · 2 minutes</p>
     <div class="fan-wrap fan-hero"><div class="fan">
-      <div class="phone" style="left:230px;top:80px;--r:-8deg;--dx:160px;--i:1"><div class="scr"><img src="/medias/accueil3/app-analyse-partie2.jpg" alt="Bilan de peau : équilibre cutané et patterns identifiés"></div></div>
-      <div class="phone" style="right:230px;top:80px;--r:8deg;--dx:-160px;--i:1"><div class="scr"><img src="/medias/accueil3/app-routine-recap.jpg" alt=""></div></div>
-      <div class="phone" style="left:50%;top:24px;width:240px;margin-left:-120px;--r:0deg;--dx:0px;--i:0;z-index:3"><div class="scr"><img src="/medias/accueil3/app-bilan.jpg" alt=""></div></div>
+      <div class="phone" style="left:230px;top:80px;--r:-8deg;--dx:160px;--i:1"><div class="scr"><picture><source srcset="/medias/accueil3/app-analyse-partie2.webp" type="image/webp"><img src="/medias/accueil3/app-analyse-partie2.jpg" alt="Bilan de peau : équilibre cutané et patterns identifiés"></picture></div></div>
+      <div class="phone" style="right:230px;top:80px;--r:8deg;--dx:-160px;--i:1"><div class="scr"><picture><source srcset="/medias/accueil3/app-routine-recap.webp" type="image/webp"><img src="/medias/accueil3/app-routine-recap.jpg" alt=""></picture></div></div>
+      <div class="phone" style="left:50%;top:24px;width:240px;margin-left:-120px;--r:0deg;--dx:0px;--i:0;z-index:3"><div class="scr"><picture><source srcset="/medias/accueil3/app-bilan.webp" type="image/webp"><img src="/medias/accueil3/app-bilan.jpg" alt="" fetchpriority="high"></picture></div></div>
     </div></div>
   </div>
 </section>
@@ -363,10 +370,10 @@ main,footer{background:var(--bg)}
 <section class="sec">
   <div class="center"><h2>150&nbsp;000+ analyses. Des progrès réels.</h2><p class="sub">Des routines sur mesure, suivies dans le temps.</p></div>
   <div class="reviews"><div class="row">
-    <div class="ba"><img loading="lazy" src="/medias/accueil3/ba-10.59.04-hd.jpg" alt="Avant"><img loading="lazy" src="/medias/accueil3/ba-10.59.18-hd.jpg" alt="Après"><span class="lab t">Avant</span><span class="lab b">Après</span></div>
-    <div class="ba"><img loading="lazy" src="/medias/accueil3/ba-10.58.26-hd.jpg" alt="Avant"><img loading="lazy" src="/medias/accueil3/ba-10.58.42-hd.jpg" alt="Après"><span class="lab t">Avant</span><span class="lab b">Après</span></div>
-    <div class="ba"><img loading="lazy" src="/medias/accueil3/ba-10.59.51-hd.jpg" alt="Avant"><img loading="lazy" src="/medias/accueil3/ba-11.00.33-hd.jpg" alt="Après"><span class="lab t">Avant</span><span class="lab b">Après</span></div>
-    <div class="ba"><img loading="lazy" src="/medias/accueil3/ba-11.01.02-hd.jpg" alt="Avant"><img loading="lazy" src="/medias/accueil3/ba-11.01.16-hd.jpg" alt="Après"><span class="lab t">Avant</span><span class="lab b">Après</span></div>
+    <div class="ba"><picture><source srcset="/medias/accueil3/ba-10.59.04-hd.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/ba-10.59.04-hd.jpg" alt="Avant"></picture><picture><source srcset="/medias/accueil3/ba-10.59.18-hd.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/ba-10.59.18-hd.jpg" alt="Après"></picture><span class="lab t">Avant</span><span class="lab b">Après</span></div>
+    <div class="ba"><picture><source srcset="/medias/accueil3/ba-10.58.26-hd.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/ba-10.58.26-hd.jpg" alt="Avant"></picture><picture><source srcset="/medias/accueil3/ba-10.58.42-hd.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/ba-10.58.42-hd.jpg" alt="Après"></picture><span class="lab t">Avant</span><span class="lab b">Après</span></div>
+    <div class="ba"><picture><source srcset="/medias/accueil3/ba-10.59.51-hd.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/ba-10.59.51-hd.jpg" alt="Avant"></picture><picture><source srcset="/medias/accueil3/ba-11.00.33-hd.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/ba-11.00.33-hd.jpg" alt="Après"></picture><span class="lab t">Avant</span><span class="lab b">Après</span></div>
+    <div class="ba"><picture><source srcset="/medias/accueil3/ba-11.01.02-hd.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/ba-11.01.02-hd.jpg" alt="Avant"></picture><picture><source srcset="/medias/accueil3/ba-11.01.16-hd.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/ba-11.01.16-hd.jpg" alt="Après"></picture><span class="lab t">Avant</span><span class="lab b">Après</span></div>
   </div></div>
 </section>
 
@@ -374,9 +381,9 @@ main,footer{background:var(--bg)}
 <section class="sec">
   <h2>Comment ça marche</h2>
   <div class="steps">
-    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img class="fondu" src="/medias/accueil3/app-scan-visuel-2.jpg" alt="Scan du visage : analyse en cours, cartographie du visage"></div></div></div><h3>Analyser</h3><p class="sub">Nous mesurons votre peau</p></div>
-    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-routine-recap.jpg" data-bands="0,5.5,15.5,43,69,87,100" alt="Routine matin et soir"></div></div></div><h3>Agir</h3><p class="sub">Votre routine, construite pour vous</p></div>
-    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-suivi-courbe.jpg" data-bands="0,5.5,18,47,84,100" alt="Journal photo et courbe de progression"></div></div></div><h3>Suivre</h3><p class="sub">Ajustée tous les 28 jours</p></div>
+    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><picture><source srcset="/medias/accueil3/app-scan-visuel-2.webp" type="image/webp"><img class="fondu" loading="lazy" decoding="async" src="/medias/accueil3/app-scan-visuel-2.jpg" alt="Scan du visage : analyse en cours, cartographie du visage"></picture></div></div></div><h3>Analyser</h3><p class="sub">Nous mesurons votre peau</p></div>
+    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><picture><source srcset="/medias/accueil3/app-routine-recap.webp" type="image/webp"><img data-webp="/medias/accueil3/app-routine-recap.webp" loading="lazy" src="/medias/accueil3/app-routine-recap.jpg" data-bands="0,5.5,15.5,43,69,87,100" alt="Routine matin et soir"></picture></div></div></div><h3>Agir</h3><p class="sub">Votre routine, construite pour vous</p></div>
+    <div class="step"><div class="step-card"><div class="phone"><div class="scr"><picture><source srcset="/medias/accueil3/app-suivi-courbe.webp" type="image/webp"><img data-webp="/medias/accueil3/app-suivi-courbe.webp" loading="lazy" src="/medias/accueil3/app-suivi-courbe.jpg" data-bands="0,5.5,18,47,84,100" alt="Journal photo et courbe de progression"></picture></div></div></div><h3>Suivre</h3><p class="sub">Ajustée tous les 28 jours</p></div>
   </div>
 </section>
 
@@ -395,7 +402,7 @@ main,footer{background:var(--bg)}
     </div>
     <div class="f-panel">
       <div class="video" id="video">
-        <img src="https://zqhmobgjxmyziuwkrkqf.supabase.co/storage/v1/object/public/branding/report-page2/video/poster-app-fr-v8-analyse.jpg" alt="Aperçu de la vidéo de l'app Adermio">
+        <picture><source srcset="/medias/accueil3/poster-video-fr.webp" type="image/webp"><img loading="lazy" decoding="async" src="/medias/accueil3/poster-video-fr.jpg" alt="Aperçu de la vidéo de l'app Adermio"></picture>
         <video id="vid" playsinline preload="none" data-src="https://adermio-heatmap.s3.eu-north-1.amazonaws.com/heatmap/Adermio+-+Pr%C3%A9sentation+app+FR.mp4"></video>
         <span class="veil"></span>
         <button class="vplay" id="vplay" aria-label="Lire la vidéo"><svg viewBox="0 0 24 24"><use href="#i-play"/></svg></button>
@@ -425,7 +432,7 @@ main,footer{background:var(--bg)}
     <div class="pb-card">
       <div class="pb-grain"></div>
       <div class="pb-tag"><span class="pb-dot"><i></i><b></b></span><span class="t">Technologie Adermio AI Core • v2.4</span></div>
-      <div class="pb-emb"><div class="r1"></div><div class="r2"></div><img src="/medias/accueil3/logo_Adermio.png" alt="Adermio Emblem"></div>
+      <div class="pb-emb"><div class="r1"></div><div class="r2"></div><picture><source srcset="/medias/accueil3/logo-adermio-432.webp" type="image/webp"><img loading="lazy" decoding="async" src="/medias/accueil3/logo-adermio-432.png" alt="Adermio Emblem"></picture></div>
       <div class="pb-stats"><div><div class="l">Précision</div><div class="v">98.5%</div></div><div><div class="l">Analyse</div><div class="v">~30 sec</div></div></div>
       <div class="pb-safe"><svg viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span>Données cryptées &amp; sécurisées</span></div>
     </div>
@@ -450,11 +457,11 @@ main,footer{background:var(--bg)}
   <a class="btn btn-dark" href="/formulaire4">Commencer</a>
   <p class="fine" style="margin-top:12px">Gratuit · 2 minutes</p>
   <div class="fan-wrap"><div class="fan">
-    <div class="phone" style="left:60px;top:170px;--r:-18deg;--dx:330px;--i:2"><div class="scr"><img loading="lazy" src="/medias/accueil3/app-alim-explorer.jpg" alt=""></div></div>
-    <div class="phone" style="left:230px;top:80px;--r:-8deg;--dx:160px;--i:1"><div class="scr"><img loading="lazy" src="/medias/accueil3/app-routine-recap.jpg" alt=""></div></div>
-    <div class="phone" style="right:230px;top:80px;--r:8deg;--dx:-160px;--i:1"><div class="scr"><img loading="lazy" src="/medias/accueil3/app-scan-produit.jpg" alt=""></div></div>
-    <div class="phone" style="right:60px;top:170px;--r:18deg;--dx:-330px;--i:2"><div class="scr"><img loading="lazy" src="/medias/accueil3/app-point-repere.jpg" alt=""></div></div>
-    <div class="phone" style="left:50%;top:24px;width:240px;margin-left:-120px;--r:3deg;--dx:0px;--i:0;z-index:3"><div class="scr"><img loading="lazy" src="/medias/accueil3/app-bilan.jpg" alt=""></div></div>
+    <div class="phone" style="left:60px;top:170px;--r:-18deg;--dx:330px;--i:2"><div class="scr"><picture><source srcset="/medias/accueil3/app-alim-explorer.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/app-alim-explorer.jpg" alt=""></picture></div></div>
+    <div class="phone" style="left:230px;top:80px;--r:-8deg;--dx:160px;--i:1"><div class="scr"><picture><source srcset="/medias/accueil3/app-routine-recap.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/app-routine-recap.jpg" alt=""></picture></div></div>
+    <div class="phone" style="right:230px;top:80px;--r:8deg;--dx:-160px;--i:1"><div class="scr"><picture><source srcset="/medias/accueil3/app-scan-produit.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/app-scan-produit.jpg" alt=""></picture></div></div>
+    <div class="phone" style="right:60px;top:170px;--r:18deg;--dx:-330px;--i:2"><div class="scr"><picture><source srcset="/medias/accueil3/app-point-repere.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/app-point-repere.jpg" alt=""></picture></div></div>
+    <div class="phone" style="left:50%;top:24px;width:240px;margin-left:-120px;--r:3deg;--dx:0px;--i:0;z-index:3"><div class="scr"><picture><source srcset="/medias/accueil3/app-bilan.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/app-bilan.jpg" alt=""></picture></div></div>
   </div></div>
 </section>
 
@@ -475,7 +482,7 @@ main,footer{background:var(--bg)}
 <!-- 8. Pied de page -->
 <footer>
   <div class="f-grid">
-    <div class="f-brand"><a class="mark" href="#"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a></div>
+    <div class="f-brand"><a class="mark" href="#"><picture><source srcset="/medias/accueil3/logo-disque.webp" type="image/webp"><img loading="lazy" src="/medias/accueil3/logo-disque.png" alt=""></picture>Adermio</a></div>
     <div class="f-col"><h4>Explorer</h4><a href="/formulaire4">Faire mon analyse</a><a href="/blog">Blog</a></div>
     <div class="f-col"><h4>Entreprise</h4><a href="/about">À propos</a><a href="/contact">Nous contacter</a></div>
     <div class="f-col"><h4>Légal</h4><a href="/cgv">Conditions de vente</a><a href="/conditions">Conditions d'utilisation</a><a href="/mentions-legales">Mentions légales</a><a href="/resilier">Résilier mon abonnement</a></div>
@@ -493,8 +500,8 @@ if(location.hash){history.replaceState(null,'',location.pathname+location.search
 // Liens internes : défilement doux sans écrire d'ancre dans l'adresse
 document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.getElementById(a.getAttribute('href').slice(1));e.preventDefault();t?t.scrollIntoView({behavior:'smooth'}):scrollTo({top:0,behavior:'smooth'})}));
 const bar=$('bar'),hero=$('hero');
-const onScroll=()=>{const past=hero.getBoundingClientRect().bottom<0;bar.classList.toggle('show',past)};
-addEventListener('scroll',onScroll,{passive:true});onScroll();
+if('IntersectionObserver' in window)new IntersectionObserver(es=>bar.classList.toggle('show',!es[0].isIntersecting&&es[0].boundingClientRect.top<0)).observe(hero);
+else{const onScroll=()=>bar.classList.toggle('show',hero.getBoundingClientRect().bottom<0);addEventListener('scroll',onScroll,{passive:true});onScroll()}
 // Choix de langue : menu sous le globe, fermé par un appui ailleurs ou Échap
 const lb=$('langBtn'),lm=$('langMenu'),setLang=o=>{lm.classList.toggle('open',o);lb.setAttribute('aria-expanded',o)};
 lb.addEventListener('click',e=>{e.stopPropagation();setLang(!lm.classList.contains('open'))});
@@ -516,26 +523,31 @@ document.querySelectorAll('.reviews').forEach(rv=>{const track=rv.querySelector(
   rv.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;down=true;dragX=e.clientX;dragL=rv.scrollLeft;rv.setPointerCapture(e.pointerId);rv.classList.add('drag')});
   rv.addEventListener('pointermove',e=>{if(dragX!==null){rv.scrollLeft=dragL-(e.clientX-dragX);pause()}});
   ['pointerup','pointercancel'].forEach(t=>rv.addEventListener(t,()=>{if(dragX===null)return;dragX=null;down=false;rv.classList.remove('drag');pause()}));
-  if('IntersectionObserver' in window)new IntersectionObserver(es=>{seen=es[0].isIntersecting}).observe(rv);else seen=true;
+  let running=false;const run=()=>{if(auto&&!running&&seen&&!still){running=true;last=0;requestAnimationFrame(tick)}};
+  if('IntersectionObserver' in window)new IntersectionObserver(es=>{seen=es[0].isIntersecting;run()}).observe(rv);else seen=true;
   const tick=now=>{const dt=Math.min(50,now-(last||now));last=now;
     if(seen&&!still&&!down&&now>hold){const p=period();pos+=60*dt/1000;if(p>0&&pos>=p)pos-=p;rv.scrollLeft=pos;set=rv.scrollLeft}
-    requestAnimationFrame(tick)};
-  if(auto)requestAnimationFrame(tick)});
+    if(seen)requestAnimationFrame(tick);else running=false};
+  run()});
 // Animations d'apparition : déclenchées quand l'élément atteint 70 % de la hauteur d'écran, pour qu'on les voie se jouer
 if('IntersectionObserver' in window&&innerHeight>0){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reduce');
   document.querySelectorAll('.scr img[data-bands]').forEach(img=>{
-    const b=img.dataset.bands.split(',').map(Number),scr=img.parentElement,src=img.getAttribute('src');
+    const b=img.dataset.bands.split(',').map(Number),scr=img.closest('.scr'),src=img.getAttribute('src'),wp=img.dataset.webp;
     for(let i=0;i<b.length-1;i++){const t=b[i],h=Math.min(100-t,b[i+1]-t+.4),d=document.createElement('div');
-      d.className='band'+(i?' a':'');d.style.cssText='top:'+t+'%;height:'+h+'%;background-image:url("'+src+'");background-position:0 '+(h>=100?0:t/(100-h)*100)+'%;--k:'+(i-1);scr.appendChild(d)}
-    img.style.visibility='hidden'});
+      d.className='band'+(i?' a':'');d.style.cssText='top:'+t+'%;height:'+h+'%;background-position:0 '+(h>=100?0:t/(100-h)*100)+'%;--k:'+(i-1);scr.appendChild(d)}
+    img.style.visibility='hidden';
+    const near=new IntersectionObserver(es=>{if(es[0].isIntersecting){scr.querySelectorAll('.band').forEach(d=>{d.style.backgroundImage='url("'+src+'")';if(wp)d.style.backgroundImage='image-set(url("'+wp+'") type("image/webp"),url("'+src+'") type("image/jpeg"))'});near.disconnect()}},{rootMargin:'150% 0px'});near.observe(scr)});
   document.documentElement.classList.add('anim');
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -30% 0px',threshold:0});
   const els=[...document.querySelectorAll('.step,.fan')];els.forEach(el=>io.observe(el));
   // filet de sécurité : tout élément visible à l'écran s'affiche, même si l'observateur ne se déclenche pas
-  const check=()=>els.forEach(el=>{const r=el.getBoundingClientRect();if(r.top<innerHeight*.7&&r.bottom>0)el.classList.add('in')});
-  addEventListener('scroll',check,{passive:true});setTimeout(check,1200);
+  let queued=false;const check=()=>{queued=false;const left=els.filter(el=>!el.classList.contains('in'));if(!left.length){removeEventListener('scroll',onS);return}
+    left.forEach(el=>{const r=el.getBoundingClientRect();if(r.top<innerHeight*.7&&r.bottom>0)el.classList.add('in')})};
+  const onS=()=>{if(!queued){queued=true;requestAnimationFrame(check)}};
+  addEventListener('scroll',onS,{passive:true});setTimeout(check,1200);
 }
+if('IntersectionObserver' in window)document.querySelectorAll('.pb').forEach(pb=>new IntersectionObserver(es=>pb.classList.toggle('off',!es[0].isIntersecting)).observe(pb));
 const box=$('video'),vid=$('vid'),rows=[...document.querySelectorAll('#chapters .f-row')];
 const starts=rows.map(r=>+r.dataset.t);
 const setOn=k=>rows.forEach((r,j)=>r.classList.toggle('on',j===k));
