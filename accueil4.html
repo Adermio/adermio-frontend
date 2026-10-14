@@ -307,7 +307,13 @@ main,footer{background:var(--bg)}
 /* Haut de page : l'éventail (5 écrans de l'app) remplace le téléphone seul, coupé net au bas du bloc blanc (14/10) */
 .hero-card .fan-hero{margin-top:52px;height:calc(470px * var(--s))}
 .again{padding-bottom:24px}
-@media (max-width:760px){.hero-card .fan-hero{--s:.58;margin-top:36px;width:calc(100% + 40px);margin-left:-20px;margin-right:-20px}}
+@media (max-width:760px){
+  /* téléphone : 3 écrans entiers et lisibles (analyse au centre, routine, scan produit) ; les 5 restent sur ordinateur */
+  .hero-card .fan-hero{--s:.6;margin-top:36px;width:calc(100% + 40px);margin-left:-20px;margin-right:-20px}
+  .fan-hero .phone:nth-child(1),.fan-hero .phone:nth-child(4){display:none}
+}
+@media (max-width:390px){.hero-card .fan-hero{--s:.57}}
+@media (max-width:350px){.hero-card .fan-hero{--s:.52}}
 .sec-rig .pb{margin-bottom:32px}
 @media (max-width:760px){.sec-rig .pb{margin-bottom:20px}}
 .hero-shot{width:100%;height:440px;overflow:hidden;display:flex;justify-content:center;margin-top:56px;padding-top:6px}
