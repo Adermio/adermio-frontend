@@ -254,7 +254,7 @@ footer{padding:20px var(--gut) 20px}
 }
 
 /* Hero (14/10) : fond blanc de la LP prod, texte aéré, puis le bloc « AI Core » de la LP prod (logo dans un anneau qui tourne, 2 chiffres, données) */
-.hero-card{background:#F8FAFC;color:var(--fg);height:auto;min-height:0;max-height:none;justify-content:flex-start;padding:132px 16px 0}
+.hero-card{background:#F8FAFC;color:var(--fg);height:auto;min-height:0;max-height:none;justify-content:flex-start;padding:132px 16px 96px}
 .hero-card::after{display:none}
 .hero-top .mark{color:var(--fg)}
 .hero-top .side{color:var(--fg65)}
@@ -264,15 +264,12 @@ footer{padding:20px var(--gut) 20px}
 .hero-card .chips{margin:20px 0 32px}
 .hero-card .fine{margin-top:14px}
 @media (max-width:760px){
-  .hero-card{height:auto;min-height:0;padding:104px 20px 0}
+  .hero-card{height:auto;min-height:0;padding:104px 20px 72px}
 }
 body{background:#F8FAFC}
 main,footer{background:var(--bg)}
-.hero-shot{width:100%;height:440px;overflow:hidden;display:flex;justify-content:center;margin-top:56px;padding-top:6px}
-.hero-shot .phone{width:300px;flex:none;align-self:flex-start}
 /* Bloc « AI Core » = copie EXACTE de la LP prod (index.html prod : premium-card, Tailwind traduit valeur par valeur).
    Polices : comme en prod, "DM Sans"/"Playfair Display" déclarées SANS chargement (le lien Google Fonts de la prod répond 400) => polices système, rendu identique. */
-.sec-core{padding-bottom:16px}
 .pb{position:relative;width:100%;max-width:360px;margin:0 auto;font-family:"DM Sans",sans-serif;color:#334155}
 .pb-glow{position:absolute;inset:0;background-image:linear-gradient(to top right,rgba(45,212,191,.1),rgba(147,197,253,.1));border-radius:3rem;filter:blur(64px);transform:rotate(6deg) scale(.95)}
 .pb-card{position:relative;isolation:isolate;border-radius:2.5rem;padding:32px;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden;
@@ -302,7 +299,8 @@ main,footer{background:var(--bg)}
 @keyframes pb-float{0%,to{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes pb-ping{75%,to{opacity:0;transform:scale(2)}}
 @keyframes pb-spin{to{transform:rotate(1turn)}}
-@media (max-width:760px){.hero-shot{height:330px;margin-top:40px}.hero-shot .phone{width:62%;max-width:250px}}
+.hero-card .pb{margin-top:64px}
+@media (max-width:760px){.hero-card .pb{margin-top:52px}}
 /* Header = celui de la LP prod (.glass-nav) : blanc 90 %, flou 12 px, filet bas */
 .hero-top{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
 .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
@@ -338,22 +336,17 @@ main,footer{background:var(--bg)}
     <div class="chips dark"><span class="chip">Acné</span><span class="chip">Points noirs</span><span class="chip">Marques</span><span class="chip">Cicatrices</span><span class="chip">Taches</span><span class="chip">Pores</span></div>
     <a class="btn btn-dark" href="/formulaire4"><svg class="i"><use href="#i-scan"/></svg>Faire mon analyse gratuite</a>
     <p class="fine">Gratuit · 2 minutes</p>
-    <div class="hero-shot"><div class="phone"><div class="scr"><img src="/medias/accueil3/app-bilan.jpg" alt="Bilan de peau : carte des zones et sévérité"></div></div></div>
-  </div>
-</section>
-
-<!-- 1 bis. Bloc AI Core (repris de la LP prod) : sépare le téléphone du haut de ceux de « Comment ça marche » -->
-<section class="sec sec-core">
-  <div class="pb">
-    <div class="pb-glow"></div>
-    <div class="pb-card">
-      <div class="pb-grain"></div>
-      <div class="pb-tag"><span class="pb-dot"><i></i><b></b></span><span class="t">Technologie Adermio AI Core • v2.4</span></div>
-      <div class="pb-emb"><div class="r1"></div><div class="r2"></div><img src="/medias/accueil3/logo_Adermio.png" alt="Adermio Emblem"></div>
-      <div class="pb-stats"><div><div class="l">Précision</div><div class="v">98.5%</div></div><div><div class="l">Analyse</div><div class="v">~30 sec</div></div></div>
-      <div class="pb-safe"><svg viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span>Données cryptées &amp; sécurisées</span></div>
+    <div class="pb">
+      <div class="pb-glow"></div>
+      <div class="pb-card">
+        <div class="pb-grain"></div>
+        <div class="pb-tag"><span class="pb-dot"><i></i><b></b></span><span class="t">Technologie Adermio AI Core • v2.4</span></div>
+        <div class="pb-emb"><div class="r1"></div><div class="r2"></div><img src="/medias/accueil3/logo_Adermio.png" alt="Adermio Emblem"></div>
+        <div class="pb-stats"><div><div class="l">Précision</div><div class="v">98.5%</div></div><div><div class="l">Analyse</div><div class="v">~30 sec</div></div></div>
+        <div class="pb-safe"><svg viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span>Données cryptées &amp; sécurisées</span></div>
+      </div>
+      <div class="pb-ico"><svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></svg></div>
     </div>
-    <div class="pb-ico"><svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></svg></div>
   </div>
 </section>
 
