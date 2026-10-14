@@ -127,7 +127,7 @@
 
     <div id="loading-overlay" class="fixed inset-0 z-[120] bg-brand-cream/80 hidden items-center justify-center flex-col">
         <div class="w-12 h-12 border-4 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin mb-4"></div>
-        <p class="font-serif text-brand-dark animate-pulse">Wysyłanie danych...</p>
+        <p class="font-serif text-brand-dark animate-pulse">Wysyłanie danych…</p>
     </div>
 
     <header class="fixed top-0 w-full z-50 bg-brand-cream/90 backdrop-blur-xl border-b border-stone-200/50">
@@ -284,7 +284,7 @@
                         <li>&bull; Twarz na środku kadru i dobrze oświetlona</li>
                         <li>&bull; Włosy odgarnięte, bez okularów</li>
                         <li>&bull; Skóra bez makijażu, jeśli to możliwe</li>
-                        <li>&bull; Najlepiej przy świetle dziennym</li>
+                        <li>&bull; Najlepiej w świetle dziennym</li>
                     </ul>
                 </div>
 
@@ -372,7 +372,7 @@
                         <img id="preview-face" class="absolute inset-0 w-full h-full object-cover hidden z-20 pointer-events-none">
                         <div id="overlay-face" class="absolute inset-0 z-30 bg-black/40 hidden flex-col items-center justify-center backdrop-blur-[2px] pointer-events-none">
                             <div class="absolute top-0 left-0 w-full h-[2px] bg-brand-primary shadow-[0_0_20px_rgba(20,184,166,1)] animate-scan"></div>
-                            <div class="absolute bottom-8 px-3 py-1 rounded-full border border-brand-primary/50 bg-black/50 text-brand-primary text-[10px] uppercase tracking-widest animate-pulse">Analiza...</div>
+                            <div class="absolute bottom-8 px-3 py-1 rounded-full border border-brand-primary/50 bg-black/50 text-brand-primary text-[10px] uppercase tracking-widest animate-pulse">Analizowanie…</div>
                         </div>
                     </label>
                 </div>
@@ -381,7 +381,7 @@
                     <div class="relative">
                         <div class="flex justify-between items-center mb-2 px-1">
                             <label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Lewy profil</label>
-                            <span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Opcja</span>
+                            <span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Opcjonalne</span>
                         </div>
                         <label class="block relative group cursor-pointer w-full aspect-square rounded-[1.5rem] overflow-hidden bg-stone-900 shadow-lg">
                             <input type="file" accept="image/*,.heic,.heif,.heics,.avif,.webp,.bmp,.tif,.tiff,.dng,.cr2,.nef,.arw,.raw" class="absolute inset-0 w-full h-full opacity-0 z-50 cursor-pointer"
@@ -406,7 +406,7 @@
                     <div class="relative">
                         <div class="flex justify-between items-center mb-2 px-1">
                             <label class="text-[10px] font-bold uppercase text-brand-dark tracking-wide">Prawy profil</label>
-                            <span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Opcja</span>
+                            <span class="text-[8px] uppercase tracking-widest font-bold text-stone-400 border border-stone-200 px-1.5 py-0.5 rounded">Opcjonalne</span>
                         </div>
                         <label class="block relative group cursor-pointer w-full aspect-square rounded-[1.5rem] overflow-hidden bg-stone-900 shadow-lg">
                             <input type="file" accept="image/*,.heic,.heif,.heics,.avif,.webp,.bmp,.tif,.tiff,.dng,.cr2,.nef,.arw,.raw" class="absolute inset-0 w-full h-full opacity-0 z-50 cursor-pointer"
@@ -474,7 +474,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="text-xs font-bold uppercase text-stone-400 tracking-widest block mb-3">Obecnie twoim celem jest raczej...</label>
+                    <label class="text-xs font-bold uppercase text-stone-400 tracking-widest block mb-3">Jaki jest teraz twój główny cel?</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="goal-selection">
                         <button type="button" onclick="setGoal('correction')" class="zone-item selected w-full p-4 rounded-xl border border-stone-200 bg-white text-left group transition-all" id="btn-goal-correction">
                             <div class="flex items-center gap-2 mb-2">
@@ -485,7 +485,7 @@
                                 „Mam trądzik (nawracający lub uporczywy) i chcę się go pozbyć.”
                             </span>
                             <span class="text-xs text-stone-500 block leading-tight">
-                                Mniej wyprysków, śladów i stanów zapalnych
+                                Ograniczyć wypryski, ślady i stany zapalne
                             </span>
                         </button>
 
@@ -532,7 +532,7 @@
                          <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-4 leading-relaxed">Jak często pojawiają się niedoskonałości?</label>
                          <div class="grid grid-cols-1 gap-2">
                              <button type="button" onclick="setFrequency('1-2 fois / mois', this)" class="freq-btn w-full text-left px-4 py-3 rounded-xl border border-stone-100 bg-stone-50 text-sm text-stone-600 hover:border-brand-primary/30 transition-all">1–2 razy w miesiącu</button>
-                             <button type="button" onclick="setFrequency('1 fois / semaine', this)" class="freq-btn w-full text-left px-4 py-3 rounded-xl border border-stone-100 bg-stone-50 text-sm text-stone-600 hover:border-brand-primary/30 transition-all">1 raz w tygodniu</button>
+                             <button type="button" onclick="setFrequency('1 fois / semaine', this)" class="freq-btn w-full text-left px-4 py-3 rounded-xl border border-stone-100 bg-stone-50 text-sm text-stone-600 hover:border-brand-primary/30 transition-all">Raz w tygodniu</button>
                              <button type="button" onclick="setFrequency('Par p&eacute;riodes (stress/cycle)', this)" class="freq-btn w-full text-left px-4 py-3 rounded-xl border border-stone-100 bg-stone-50 text-sm text-stone-600 hover:border-brand-primary/30 transition-all">Okresowo (stres/cykl)</button>
                              <button type="button" onclick="setFrequency('Rarement / Quelques fois par an', this)" class="freq-btn w-full text-left px-4 py-3 rounded-xl border border-stone-100 bg-stone-50 text-sm text-stone-600 hover:border-brand-primary/30 transition-all">Rzadko / kilka razy w roku</button>
                           </div>
@@ -543,10 +543,10 @@
                 <div class="space-y-4">
                     <div>
                         <div class="flex justify-between items-center mb-1">
-                            <label class="block text-brand-dark font-medium leading-snug pr-2" id="lbl-concerns">Co obecnie najbardziej przeszkadza ci w twojej skórze?</label>
+                            <label class="block text-brand-dark font-medium leading-snug pr-2" id="lbl-concerns">Co w twojej skórze najbardziej przeszkadza ci teraz?</label>
                         </div>
                         <p class="text-xs text-stone-500 mb-3 leading-relaxed">Ta odpowiedź pomaga AI zrozumieć, jak odczuwasz swoją skórę, i uchwycić to, czego nie widać na zdjęciach.</p>
-                        <textarea id="skin-concerns" rows="5" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Np. Mam małe czerwone wypryski na policzkach i zaskórniki na nosie. Chcę też trochę wygładzić skórę na czole..."></textarea>
+                        <textarea id="skin-concerns" rows="5" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors text-sm" placeholder="Np. mam małe czerwone wypryski na policzkach i zaskórniki na nosie. Chcę też trochę wygładzić skórę na czole…"></textarea>
                         <p id="concerns-error" class="text-red-500 text-xs mt-2 hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> To pole jest wymagane.</p>
                     </div>
                 </div>
@@ -557,7 +557,7 @@
             <div class="text-center mb-8">
                 <span class="text-[10px] font-bold uppercase tracking-widest text-brand-primary mb-2 block">Strefy twarzy</span>
                 <h2 class="font-serif text-3xl text-brand-dark" id="lbl-zones-title">Które strefy najbardziej cię martwią?</h2>
-                 <p class="text-stone-500 font-light mt-2 text-sm hidden" id="lbl-zones-subtitle">Nawet jeśli to sporadyczne, pomoże nam działać zapobiegawczo.</p>
+                 <p class="text-stone-500 font-light mt-2 text-sm hidden" id="lbl-zones-subtitle">Nawet jeśli zdarza się to rzadko, ta informacja pomoże nam działać zapobiegawczo.</p>
                 <p id="zones-error" class="text-red-500 text-xs mt-2 hidden flex items-center justify-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Wybierz co najmniej jedną strefę.</p>
             </div>
 
@@ -611,7 +611,7 @@
 
                 <div>
                     <label class="text-xs font-bold uppercase text-stone-400 tracking-widest block mb-2" id="lbl-products">Obecna pielęgnacja (opcjonalnie)</label>
-                    <textarea id="current-products" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors" rows="3" placeholder="Np. żel do mycia La Roche-Posay Effaclar, krem nawilżający CeraVe, ..."></textarea>
+                    <textarea id="current-products" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors" rows="3" placeholder="Np. żel do mycia La Roche-Posay Effaclar, krem nawilżający CeraVe, …"></textarea>
                 </div>
 
                 <div class="mb-10">
@@ -633,7 +633,7 @@
                         </button>
 
                          <button type="button" onclick="toggleFactor(this, 'diet')" class="zone-item w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-100 bg-white text-sm text-stone-500 hover:border-brand-primary/30 text-left group">
-                            <span class="font-medium group-[.selected]:text-brand-dark">Dieta / nadmiar (cukier, alkohol)</span>
+                            <span class="font-medium group-[.selected]:text-brand-dark">Dieta / za dużo cukru lub alkoholu</span>
                             <div class="indicator w-4 h-4 rounded-full border border-stone-200"></div>
                         </button>
 
@@ -668,7 +668,7 @@
                         </div>
                     </div>
                     <div id="allergies-detail" class="hidden animate-fade-in">
-                        <input type="text" id="allergies-input" placeholder="Podaj szczegóły (np. aspiryna, orzechy...)" class="w-full p-3 rounded-lg bg-white border border-stone-200 text-sm focus:border-brand-primary focus:outline-none">
+                        <input type="text" id="allergies-input" placeholder="Podaj szczegóły (np. aspiryna, orzechy…)" class="w-full p-3 rounded-lg bg-white border border-stone-200 text-sm focus:border-brand-primary focus:outline-none">
                     </div>
                     <p id="error-allergies" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Wybierz „tak” lub „nie”.</p>
                     <p id="error-allergies-empty" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Wpisz, na co masz alergię.</p>
@@ -686,7 +686,7 @@
                         </div>
                     </div>
                     <div id="treatment-detail" class="hidden animate-fade-in">
-                        <input type="text" id="treatment-input" placeholder="Podaj szczegóły (np. izotretynoina 2 lata temu, antybiotyki...)" class="w-full p-3 rounded-lg bg-white border border-stone-200 text-sm focus:border-brand-primary focus:outline-none">
+                        <input type="text" id="treatment-input" placeholder="Podaj szczegóły (np. izotretynoina 2 lata temu, antybiotyki…)" class="w-full p-3 rounded-lg bg-white border border-stone-200 text-sm focus:border-brand-primary focus:outline-none">
                     </div>
                     <p id="error-treatment" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Wybierz „tak” lub „nie”.</p>
                     <p id="error-treatment-empty" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Wpisz nazwę leku lub kuracji.</p>
@@ -716,7 +716,7 @@
 
                 <div>
                     <label class="block text-brand-dark font-medium mb-1">Chcesz coś dodać?</label>
-                    <textarea id="extra-notes" rows="4" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors" placeholder="Dodatkowe informacje..."></textarea>
+                    <textarea id="extra-notes" rows="4" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-300 focus:border-brand-primary focus:outline-none transition-colors" placeholder="Dodatkowe informacje…"></textarea>
                 </div>
 
                 <div class="space-y-4 pt-4 border-t border-stone-200/50">
@@ -727,13 +727,13 @@
                     <input type="email" id="email-confirm" placeholder="Potwierdź adres e-mail" class="w-full p-4 rounded-xl bg-white border border-stone-200 text-brand-dark placeholder-stone-400 focus:border-brand-primary focus:outline-none transition-colors">
 
                     <p id="email-error-empty" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Adres e-mail jest wymagany.</p>
-                    <p id="email-error-match" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Adresy e-mail nie są takie same.</p>
+                    <p id="email-error-match" class="text-red-500 text-xs hidden flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Adresy e-mail się nie zgadzają.</p>
                 </div>
 
                 <div class="bg-stone-50 p-6 rounded-2xl border-2 border-stone-300 shadow-sm" id="privacy-container">
                     <h3 class="font-serif text-lg text-brand-dark mb-2">Poufność i ochrona twoich danych</h3>
                     <p class="text-xs text-stone-500 leading-relaxed mb-4">
-                        Twoje dane służą do przygotowania twojej analizy i pomagają ulepszać naszą AI (w sposób całkowicie anonimowy). Pozostają poufne.
+                        Twoje dane służą do przygotowania analizy i pomagają ulepszać naszą AI (w sposób całkowicie anonimowy). Pozostają poufne.
                     </p>
 
                     <label class="flex items-start gap-3 cursor-pointer group">
@@ -778,7 +778,7 @@
                     Twoje dane zostały wysłane.
                 </p>
                 <p class="text-stone-500 font-light mb-12">
-                    Trwa analiza – za chwilę nastąpi przekierowanie...
+                    Trwa analiza – za chwilę nastąpi przekierowanie…
                 </p>
             </div>
         </div>
@@ -973,12 +973,12 @@
             if(goal === 'correction') {
                 durationCont.classList.remove('hidden');
                 frequencyCont.classList.add('hidden');
-                concernsTextarea.placeholder = "Np. Mam małe czerwone wypryski na policzkach i zaskórniki na nosie. Chcę też trochę wygładzić skórę na czole...";
-                concernsLabel.textContent = "Co obecnie najbardziej przeszkadza ci w twojej skórze?";
+                concernsTextarea.placeholder = "Np. mam małe czerwone wypryski na policzkach i zaskórniki na nosie. Chcę też trochę wygładzić skórę na czole…";
+                concernsLabel.textContent = "Co w twojej skórze najbardziej przeszkadza ci teraz?";
             } else {
                 durationCont.classList.add('hidden');
                 frequencyCont.classList.remove('hidden');
-                concernsTextarea.placeholder = "Np. Skóra jest OK, ale przed miesiączką pojawiają się 1–2 wypryski na brodzie. Chcę wygładzić teksturę i uniknąć niespodziewanych wyprysków...";
+                concernsTextarea.placeholder = "Np. skóra jest OK, ale przed miesiączką pojawiają się 1–2 wypryski na brodzie. Chcę wygładzić teksturę i uniknąć niespodziewanych wyprysków…";
                 concernsLabel.textContent = "Czy jest coś w twojej skórze, co chcesz poprawić?";
             }
 
@@ -1006,11 +1006,11 @@
             if(goal === 'correction') {
                  factorsLabel.textContent = "Które z tych czynników dotyczą cię najbardziej w ostatnich miesiącach?";
                  treatmentLabel.innerHTML = 'Leki lub kuracja na trądzik? <span class="text-brand-primary">*</span>';
-                 treatmentInput.placeholder = "Podaj szczegóły (np. izotretynoina 2 lata temu, antybiotyki...)";
+                 treatmentInput.placeholder = "Podaj szczegóły (np. izotretynoina 2 lata temu, antybiotyki…)";
             } else {
                  factorsLabel.textContent = "W jakich sytuacjach wypryski pojawiają się najczęściej?";
                  treatmentLabel.innerHTML = 'Czy stosujesz leki (np. krem na receptę)? <span class="text-brand-primary">*</span>';
-                 treatmentInput.placeholder = "Podaj szczegóły (np. krem z antybiotykiem, nadtlenek benzoilu...)";
+                 treatmentInput.placeholder = "Podaj szczegóły (np. krem z antybiotykiem, nadtlenek benzoilu…)";
             }
         }
 

@@ -38,7 +38,7 @@ TR = [
     ('Produits de votre routine actuelle que vous souhaitez conserver',
      'Produkty z obecnej rutyny, które chcesz zachować', 1),
     ('placeholder="Ex: Je souhaite absolument garder ma crème hydratante Caudalie car je l\'ai achetée récemment..."',
-     'placeholder="Np. Na pewno chcę zostawić krem nawilżający Caudalie – to świeży zakup…"', 1),
+     'placeholder="Np. na pewno chcę zostawić krem nawilżający Caudalie – to świeży zakup…"', 1),
     ('Format de la Routine',
      'Format rutyny', 1),
     ('>Minimaliste</span>',

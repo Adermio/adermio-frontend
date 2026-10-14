@@ -254,11 +254,11 @@
       <div id="status-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding: 20px;">
 
         <h1 id="status-title" style="font-size:26px;font-weight:700;margin-bottom:12px;color:#1f2937;transition:all 0.4s ease;">
-          Trwa analiza twojej skóry...
+          Trwa analiza twojej skóry…
         </h1>
 
         <p id="status-subtitle" style="color:#64748b;font-size:15px;line-height:1.5;max-width:400px;margin:0 auto 40px auto; min-height: 45px; transition: opacity 0.3s;">
-          Uruchamianie AI...
+          Uruchamianie AI…
         </p>
 
         <div style="position:relative;width:220px;height:220px;margin:0 auto 30px auto;">
@@ -280,7 +280,7 @@
           <div id="delay-wait-content">
             <p style="color:#d97706; background: #fffbeb; border: 1px solid #fcd34d; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.4; margin-bottom: 12px;">
               <b>Duże obciążenie serwerów</b><br>
-              Próbujemy dokończyć analizę...
+              Próbujemy dokończyć analizę…
             </p>
             <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; position: relative;">
               <div id="timeout-bar" style="width: 0%; height: 100%; background: #d97706; transition: width 0.2s linear;"></div>
@@ -478,17 +478,17 @@
 
       // Messages de progression
       const loadingSteps = [
-        { pct: 0,  text: "Bezpieczne łączenie z AI..." },
-        { pct: 10, text: "Odbieranie twoich zdjęć..." },
-        { pct: 20, text: "Skanowanie skóry z kilku ujęć..." },
-        { pct: 35, text: "Analiza zdjęcia en face..." },
-        { pct: 45, text: "Analiza prawej strony (3 ujęcia)..." },
-        { pct: 55, text: "Analiza lewej strony (3 ujęcia)..." },
-        { pct: 65, text: "Zestawianie obserwacji..." },
-        { pct: 75, text: "Wykrywanie zmian strefa po strefie..." },
-        { pct: 85, text: "Przygotowywanie twojej analizy..." },
-        { pct: 92, text: "Finalizowanie raportu..." },
-        { pct: 97, text: "Ostatnie weryfikacje..." }
+        { pct: 0,  text: "Bezpieczne łączenie z AI…" },
+        { pct: 10, text: "Odbieranie twoich zdjęć…" },
+        { pct: 20, text: "Skanowanie skóry z kilku ujęć…" },
+        { pct: 35, text: "Analiza zdjęcia en face…" },
+        { pct: 45, text: "Analiza prawej strony (3 ujęcia)…" },
+        { pct: 55, text: "Analiza lewej strony (3 ujęcia)…" },
+        { pct: 65, text: "Zestawianie obserwacji…" },
+        { pct: 75, text: "Wykrywanie zmian strefa po strefie…" },
+        { pct: 85, text: "Przygotowywanie twojej analizy…" },
+        { pct: 92, text: "Finalizowanie raportu…" },
+        { pct: 97, text: "Ostatnie weryfikacje…" }
       ];
 
       // DOM Elements
@@ -569,7 +569,7 @@
       function triggerHighDemandMode() {
         if (subtitle) {
           subtitle.style.color = "#d97706";
-          subtitle.innerText = "Przetwarzanie trwa dłużej niż zwykle...";
+          subtitle.innerText = "Przetwarzanie trwa dłużej niż zwykle…";
         }
 
         delayedContainer.style.display = "block";
@@ -705,7 +705,7 @@
         startTime = Date.now();
 
         if (subtitle) {
-            subtitle.innerText = "Wznawianie analizy...";
+            subtitle.innerText = "Wznawianie analizy…";
             subtitle.style.color = "#14B8A6";
         }
         
@@ -733,14 +733,14 @@
     ];
 
     const reviews = [
-      { name: "Camille D.", age: 24, text: "Super, dzięki! Moja skóra wygląda coraz lepiej", rating: 5 },
-      { name: "Thomas L.", age: 31, text: "naprawdę tanio", rating: 4 },
+      { name: "Camille D.", age: 24, text: "Super, dziękuję! Moja skóra wygląda coraz lepiej", rating: 5 },
+      { name: "Thomas L.", age: 31, text: "naprawdę niedrogo", rating: 4 },
       { name: "Sarah B.", age: 19, text: "Jestem bardzo zadowolona ze swojej rutyny", rating: 5 },
-      { name: "Nassim K.", age: 27, text: "Wygodne, jak nie ma się czasu iść do dermatologa (i dużo taniej)", rating: 4 },
-      { name: "Julie P.", age: 35, text: "Byłam sceptyczna wobec analizy ze zdjęcia, ale wynik idealnie pasuje do mojego przypadku, dziękuję.", rating: 5 },
-      { name: "Léa R.", age: 22, text: "w końcu rutyna dopasowana do mojego trądziku, skóra wygląda dużo lepiej!!", rating: 5 },
-      { name: "Marc A.", age: 29, text: "Czytelny PDF. Polecane kosmetyki można kupić w aptece.", rating: 4 },
-      { name: "Sophie T.", age: 17, text: "Konkretne i przydatne, jest dużo lepiej", rating: 5 },
+      { name: "Nassim K.", age: 27, text: "Wygodne, jeśli nie ma się czasu pójść do dermatologa (i dużo taniej)", rating: 4 },
+      { name: "Julie P.", age: 35, text: "Byłam sceptyczna wobec analizy ze zdjęcia, ale ocena idealnie pasuje do mojego przypadku, dziękuję.", rating: 5 },
+      { name: "Léa R.", age: 22, text: "w końcu rutyna dopasowana do mojego trądziku, moja skóra ma się dużo lepiej!!", rating: 5 },
+      { name: "Marc A.", age: 29, text: "Przejrzysty PDF. Polecane produkty można kupić w aptece.", rating: 4 },
+      { name: "Sophie T.", age: 17, text: "Dokładne i przydatne, jest dużo lepiej", rating: 5 },
       { name: "Élise M.", age: 42, text: "Bardzo jasne i uspokajające.", rating: 5 },
       { name: "Chloé V.", age: 18, text: "polecam", rating: 5 }
     ];
