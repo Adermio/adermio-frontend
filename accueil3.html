@@ -180,11 +180,11 @@ h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;font-weight:600}
 .anim .fan:not(.in) .phone{translate:calc(var(--dx,0px)*var(--mv,1)) calc(80px*var(--mv,1));rotate:calc(var(--r,0deg)*(1 - var(--mv,1)));opacity:0}
 /* Écrans des étapes : chaque bloc apparaît en fondu, de haut en bas */
 .scr .band{position:absolute;left:0;right:0;background-repeat:no-repeat;background-size:100% auto}
-.step .phone{transition:translate 1s cubic-bezier(.2,.8,.2,1),opacity .7s ease;transition-delay:var(--d,0ms)}
+.step .phone{transition:translate .75s cubic-bezier(.2,.8,.2,1),opacity .5s ease;transition-delay:var(--d,0ms)}
 .anim .step:not(.in) .phone{translate:0 calc(72px*var(--mv,1));opacity:0}
-.scr .band.a{transition:opacity .8s ease-out,transform .9s cubic-bezier(.2,.8,.2,1);transition-delay:calc(450ms + var(--k)*240ms + var(--d,0ms))}
+.scr .band.a{transition:opacity .6s ease-out,transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:calc(300ms + var(--k)*170ms + var(--d,0ms))}
 .anim .step:not(.in) .band.a{opacity:0;transform:translateY(calc(40px*var(--mv,1)))}
-.step:nth-child(2){--d:200ms}.step:nth-child(3){--d:400ms}
+.step:nth-child(2){--d:150ms}.step:nth-child(3){--d:300ms}
 .reduce{--mv:0}
 
 /* 7. FAQ — colonne de 560 px */
