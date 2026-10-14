@@ -63,6 +63,16 @@
       "statusCode": 301
     },
     {
+      "source": "/pl",
+      "destination": "/pl/home",
+      "statusCode": 301
+    },
+    {
+      "source": "/pl/",
+      "destination": "/pl/home",
+      "statusCode": 301
+    },
+    {
       "source": "/finalisation",
       "destination": "/success",
       "statusCode": 301
@@ -90,6 +100,11 @@
     {
       "source": "/el/cgv",
       "destination": "/el/oroi-polisis",
+      "statusCode": 301
+    },
+    {
+      "source": "/pl/cgv",
+      "destination": "/pl/warunki-sprzedazy",
       "statusCode": 301
     },
     {
@@ -173,6 +188,24 @@
     }
   ],
   "headers": [
+    {
+      "source": "/pl/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/pl/anuluj-subskrypcje",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
     {
       "source": "/en/resilier",
       "headers": [

@@ -70,7 +70,9 @@ Adaptations par rapport au grec :
 - `qa_pl.py` : résidus FR/EN (mots-outils), **formes genrées adressées à l'utilisateur** (`\w+łaś\b`, `\w+łeś\b`,
   `gotow[ay]\b`, `pewn[ay]\b`, `zadowolon[ya]\b`… allowlist motivée), vocabulaire interdit, `€` ou `5,99` résiduels,
   notation « 24,99 zł » avec espace insécable ; prouvé par contre-épreuve (injection de chaque défaut détectée) ;
-- `facescan.js`, `free-analysis.html`, `js/lang-suggest.js` : entrée `pl` (ce dernier seulement à l'ouverture).
+- `free-analysis.html` : entrée `pl` ; `js/lang-suggest.js` : entrée `pl` à l'ouverture seulement ; `facescan.js` n'est pas
+  chargé par le formulaire FR actuel → rien à faire.
+- `success` : pixel TikTok `CompletePayment` en `24.99` / `PLN` (entrée REGEX de la table).
 
 Traduction : 6 sous-agents par lots (accueil / parcours / payant / juridique / blog ×2), brief `BRIEF_TRADUCTEUR_PL.md`.
 
