@@ -558,6 +558,20 @@ $('vplay').onclick=()=>playAt(vid.src?vid.currentTime:0);
 rows.forEach((r,k)=>r.addEventListener('click',()=>{setOn(k);playAt(starts[k])}));
 vid.addEventListener('timeupdate',()=>{let k=0;starts.forEach((s,j)=>{if(vid.currentTime>=s-.05)k=j});setOn(k)});
 vid.addEventListener('ended',()=>{box.classList.remove('playing');vid.controls=false;vid.currentTime=0;setOn(0)});
+// Mesure (mêmes outils que la prod : Clarity + pixel TikTok /js/ttq.js) chargée APRÈS l'affichage, quand le navigateur est libre :
+// rien ne ralentit le premier écran. Le clic-ID TikTok (ttclid) est recopié sur les liens du formulaire, pour que l'attribution
+// ne dépende pas du temps de chargement du pixel ici (le pixel du formulaire le relit dans l'adresse).
+const ttclid=new URLSearchParams(location.search).get('ttclid');
+if(ttclid)document.querySelectorAll('a[href*="/formulaire"]').forEach(a=>{const u=new URL(a.href,location.href);u.searchParams.set('ttclid',ttclid);a.href=u.href});
+let measured=false;
+const measure=()=>{if(measured)return;measured=true;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","ua5d07cn1u");
+  const s=document.createElement('script');s.src='/js/ttq.js';s.async=true;document.head.appendChild(s)};
+const later=()=>'requestIdleCallback' in window?requestIdleCallback(measure,{timeout:2000}):setTimeout(measure,300);
+if(document.readyState==='complete')later();else addEventListener('load',later,{once:true});
+// filet : si la page met du temps à finir de charger (réseau lent), la mesure part quand même au bout de 4 s
+setTimeout(measure,4000);
 </script>
 </body>
 </html>
