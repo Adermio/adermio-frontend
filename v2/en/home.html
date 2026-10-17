@@ -326,6 +326,8 @@ picture{display:contents}picture>source{display:none}
 @media (max-width:760px){.hero-shot{height:330px;margin-top:44px}.hero-shot .phone{width:62%;max-width:250px}.hero-card h1{font-size:40px;line-height:1.08;letter-spacing:-.03em;margin:22px 0 14px}.hero-card .sub{font-size:16px;max-width:320px}.hero-card .btn{margin-top:32px}}
 /* Header = celui de la LP prod (.glass-nav) : blanc 90 %, flou 12 px, filet bas */
 .hero-top{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
+/* menu des langues au-dessus du contenu du haut de page (le flou d'arrière-plan crée un contexte d'empilement) */
+.hero-top{z-index:30}
 .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
 </style>
 </head>
