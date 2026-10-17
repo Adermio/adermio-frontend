@@ -327,7 +327,7 @@ picture{display:contents}picture>source{display:none}
 /* Header = celui de la LP prod (.glass-nav) : blanc 90 %, flou 12 px, filet bas */
 .hero-top{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
 /* menu des langues au-dessus du contenu du haut de page (le flou d'arrière-plan crée un contexte d'empilement) */
-.hero-top{z-index:30}
+.hero-card>.hero-top{z-index:30} /* plus précis que « .hero-card>*:not(img){z-index:1} », sinon Safari peint le titre par-dessus le menu */
 .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(15,61,57,.05)}
 </style>
 </head>
