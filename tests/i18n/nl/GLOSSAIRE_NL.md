@@ -25,6 +25,10 @@ Référence unique pour toute traduction FR → NL du site adermio.com. Toute d�
 16. **« je » d'abord** : *je huid, je routine* ; *jouw / jij* seulement pour insister ou opposer (*Jouw huid, jouw routine* dans un titre, une fois). *we* plutôt que *wij* (sauf insistance). « Veuillez / Merci de / N'hésitez pas à » → impératif simple avec *je* (*Vul je e-mailadres in.*) ; jamais *Gelieve…*, *Wij verzoeken je…*, *Aarzel niet om…*.
 17. **Textes juridiques** : là où le FR parle de « l'Utilisateur » à la 3e personne, garder **de Gebruiker** (3e personne) ; ne pas passer au « je » au milieu d'une clause.
 14. **Visuels** : captures du rapport et vidéo de l'accueil = versions **anglaises** (pas encore de rapport néerlandais). Si un texte annonce la vidéo ou les captures, ne pas promettre qu'elles sont en néerlandais.
+18. **18/10/2026 — nouveau site (/v2/nl, puis /nl après la bascule), remplace le n° 14 pour l'accueil** : les écrans de l'app
+    montrés sur l'accueil sont **en néerlandais** (Antoine traduit l'app en néerlandais et ne veut pas tout refaire). Seule la
+    **vidéo** reste en anglais, avec la mention *(video in het Engels)*. Tant que l'app n'a pas ses textes néerlandais, les
+    écrans suivent ce glossaire (`output/site-v2/builders/ecrans_nl.py`) ; à aligner sur les chaînes de l'app ensuite.
 
 ## Style néerlandais
 
