@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="format-detection" content="telephone=no">
+<title>Zahlung bestätigt — Adermio-Komplettanalyse</title>
+<script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ua5d07cn1u");
+    </script>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/v2/v2.css">
+<style>
+.s-top{height:60px;display:flex;align-items:center;justify-content:center}
+.s-main{max-width:480px;margin:0 auto;padding:12px 16px 48px;display:flex;flex-direction:column;gap:12px}
+.s-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:18px 8px 14px}
+.s-ok{width:72px;height:72px;border-radius:50%;border:1.5px solid var(--fg);display:grid;place-items:center;margin-bottom:8px}
+.s-head h1{font-size:30px;line-height:36px;font-weight:600;letter-spacing:-.02em;text-wrap:balance}
+.s-head p{color:var(--fg65)}
+.s-card{background:#fff;border-radius:24px;padding:22px 20px}
+.s-card[hidden]{display:none}
+.s-lab{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg40)}
+.s-card h2{font-size:20px;line-height:1.25;font-weight:600;letter-spacing:-.01em;margin-top:6px}
+.s-card p{color:var(--fg65);margin-top:6px;line-height:1.55}
+#status-subtitle{transition:opacity .3s}
+.s-prog{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:13px;color:var(--fg65);font-variant-numeric:tabular-nums}
+.s-ring{width:28px;height:28px;transform:rotate(-90deg);flex:none}
+#extension-bar-wrapper{display:none;opacity:0;margin-top:12px;height:2px;border-radius:2px;background:var(--fg10);overflow:hidden;transition:opacity .4s}
+#extension-bar-fill{height:100%;width:0;background:var(--fg);transition:width 30s linear}
+#success-state{display:none;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.s-card .btn{width:100%;height:52px;margin-top:16px}
+.s-steps{list-style:none;margin-top:12px;counter-reset:s}
+.s-steps li{display:grid;grid-template-columns:26px 1fr;gap:8px;padding:9px 0;border-top:1px solid var(--fg5);font-size:15px}
+.s-steps li:first-child{border-top:0}
+.s-steps li::before{counter-increment:s;content:counter(s);width:22px;height:22px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--fg65)}
+.s-note{display:flex;gap:8px;align-items:center;justify-content:center;font-size:12px;color:var(--fg40);padding:6px 0;text-align:center}
+#timeout-modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(37,27,19,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#timeout-modal.active{display:flex}
+#timeout-modal>div{background:#fff;border-radius:24px;padding:28px 24px 22px;max-width:360px;width:100%;text-align:center}
+#timeout-modal h3{font-size:22px;font-weight:600;letter-spacing:-.02em}
+#timeout-modal p{color:var(--fg65);margin:10px 0 20px;line-height:1.5}
+#timeout-modal .btn{width:100%;height:50px}
+#timeout-modal button{margin-top:10px;background:none;border:0;font:inherit;font-size:14px;color:var(--fg65);text-decoration:underline;cursor:pointer}
+</style>
+<script src="/js/ttq.js"></script>
+</head>
+<body>
+<div class="s-top"><a class="mark" href="/v2/de/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a></div>
+<main class="s-main">
+  <section class="s-head">
+    <div class="s-ok"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#251B13" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h1 id="s-title">Zahlung bestätigt.</h1>
+    <p id="s-sub">Danke. Ihr vollständiger Adermio-Bericht wird gerade erstellt.</p>
+  </section>
+
+  <section class="s-card">
+    <p class="s-lab">Ihr vollständiger Bericht</p>
+    <div id="loading-content">
+      <h2 id="status-title">Wir bereiten Ihren Bericht vor.</h2>
+      <p id="status-subtitle">KI wird gestartet…</p>
+      <div class="s-prog"><svg class="s-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" stroke="rgba(43,24,9,.12)" stroke-width="10" fill="none"/><circle id="progress-circle" cx="50" cy="50" r="45" stroke="#251B13" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="282.6" stroke-dashoffset="282.6" style="transition: stroke-dashoffset 1s linear;"/></svg><span id="progress-text">0%</span></div>
+      <div id="extension-bar-wrapper"><div id="extension-bar-fill"></div></div>
+    </div>
+    <div id="success-state">
+      <h2>Ihr Bericht ist fertig.</h2>
+      <p>Die vollständige Analyse Ihrer Haut ist abgeschlossen. Sie können Ihre Ergebnisse ab sofort ansehen.</p>
+      <a id="access-btn" class="btn btn-dark" href="#">Meinen vollständigen Bericht öffnen →</a>
+    </div>
+  </section>
+
+  <section class="s-card" id="abo-app-block" hidden>
+    <p class="s-lab">Weiter in der App</p>
+    <h2>Ihre Begleitung wartet in der Adermio-App auf Sie.</h2>
+    <ol class="s-steps">
+      <li>Laden Sie die Adermio-App herunter.</li>
+      <li>Melden Sie sich mit der E-Mail-Adresse Ihrer Zahlung an.</li>
+      <li>Ihre Analyse ist schon dort: Ihre Begleitung beginnt.</li>
+    </ol>
+    <a class="btn btn-dark" href="https://apps.apple.com/app/adermio/id6768772221" rel="noopener">App herunterladen</a>
+  </section>
+
+  <p class="s-note" id="trust-grid">Der PDF-Bericht wird Ihnen auch per E-Mail gesendet · Verschlüsselte Daten, 100 % vertraulich</p>
+</main>
+
+<div id="timeout-modal"><div>
+  <h3>Einen Moment…</h3>
+  <p>Sie haben Ihre Analyse nicht erhalten? Kein Problem. Unser Server ist vielleicht überlastet. Schreiben Sie uns, und wir senden sie Ihnen sofort per E-Mail erneut zu.</p>
+  <a class="btn btn-dark" href="/v2/de/kontakt">Support kontaktieren</a>
+  <button onclick="document.getElementById('timeout-modal').classList.remove('active')">Weiter warten</button>
+</div></div>
+
+<script>
+// En-tête : abonné (paramètre ?abonnement= ajouté par le paiement d'abonnement) → accueil dans le suivi, avec le prénom gardé par le formulaire
+(function () {
+  const p = new URLSearchParams(location.search);
+  if (/^(monthly|quarterly)$/.test(p.get('abonnement') || '')) {
+    let prenom = '';
+    try { prenom = (sessionStorage.getItem('adermio_prenom') || '').trim(); } catch (e) {}
+    document.getElementById('s-title').textContent = 'Willkommen bei Ihrer Begleitung' + (prenom ? ', ' + prenom.charAt(0).toUpperCase() + prenom.slice(1) : '') + '.';
+    document.getElementById('s-sub').textContent = 'Ihre Zahlung ist bestätigt. Ihr Adermio-Abo ist aktiv.';
+  }
+})();
+</script>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+       
+          // 1. RECUPERATION JOB ID
+          const params = new URLSearchParams(window.location.search);
+          const jobId = params.get("jobId") || params.get("client_reference_id");
+       
+          if (!jobId) {
+              document.getElementById("status-subtitle").innerText = "Wir konnten Ihre Bestellung nicht finden. Keine Sorge: Ihr PDF-Bericht wird Ihnen per E-Mail zugeschickt. Bei Fragen hilft Ihnen unser Support.";
+              document.getElementById("status-subtitle").style.color = "#ef4444";
+              return; 
+          }
+       
+          // Abonnement web : seul le paiement d'abonnement ajoute ?abonnement=monthly|quarterly à cette page.
+          const ABO_PRICES = { monthly: 9.99, quarterly: 19.99 };
+          const abo = Object.prototype.hasOwnProperty.call(ABO_PRICES, params.get("abonnement")) ? params.get("abonnement") : null;
+          if (abo) document.getElementById("abo-app-block").hidden = false;
+
+          // --- CONFIGURATION SUPABASE ---
+          // ── TikTok Pixel : conversion (paiement Stripe confirmé) ──
+          // On arrive ici uniquement si jobId est présent (garde ci-dessus) :
+          // c'est la redirection Stripe post-paiement. Dédup sessionStorage
+          // pour ne pas re-compter sur un rechargement de la page.
+          try {
+            if (window.ttq && !sessionStorage.getItem("ttq_paid_" + jobId)) {
+              ttq.track("CompletePayment", abo ? {
+                value: ABO_PRICES[abo], currency: "EUR",
+                contents: [{ content_id: "abonnement_" + abo, content_type: "product", content_name: "Adermio-Abo" }]
+              } : {
+                value: 5.99, currency: "EUR",
+                contents: [{ content_id: "analyse_premium", content_type: "product", content_name: "Adermio-Komplettanalyse" }]
+              }, { event_id: jobId });
+              sessionStorage.setItem("ttq_paid_" + jobId, "1");
+            }
+          } catch (e) {}
+
+          const SUPABASE_URL = "https://zqhmobgjxmyziuwkrkqf.supabase.co";
+          const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxaG1vYmdqeG15eml1d2tya3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTUzODgsImV4cCI6MjA3OTM3MTM4OH0.1RenqEuFcJulmi-1ZK10n301bS-QpFLKZ5Un1Xa5C_w";
+          
+          // 1. Durée chargement normal : 90 secondes
+          const MAIN_LOAD_TIME = 90 * 1000; 
+          
+          // 2. Durée Extension : 30 secondes
+          const EXTENSION_TIME = 30 * 1000;
+
+          // 3. Buffer final avant l'arrêt complet (15 secondes)
+          const EXTRA_BUFFER_TIME = 15 * 1000;
+          
+          const POLL_INTERVAL = 3000; 
+          
+          const loadingSteps = [
+              { pct: 0,  text: "Sichere Verbindung zum Server …" },
+              { pct: 20, text: "Hochauflösende Bildverarbeitung …" },
+              { pct: 40, text: "Analyse von Unreinheiten und Hautstruktur …" },
+              { pct: 60, text: "Ihre persönliche Pflegeroutine wird erstellt …" },
+              { pct: 85, text: "Ihre Ergebnisseite wird aufgebaut …" },
+              { pct: 95, text: "Ihr Bericht wird fertiggestellt …" }
+          ];
+       
+          const startTime = Date.now();
+          const progressCircle = document.getElementById("progress-circle");
+          const progressText   = document.getElementById("progress-text");
+          const circumference  = 2 * Math.PI * 45; 
+          
+          const loadingContent = document.getElementById("loading-content");
+          const successState   = document.getElementById("success-state");
+          const accessBtn      = document.getElementById("access-btn");
+          const subtitle       = document.getElementById("status-subtitle");
+          const trustGrid      = document.getElementById("trust-grid");
+          
+          // Elements pour l'extension et le timeout
+          const extensionBarWrapper = document.getElementById("extension-bar-wrapper");
+          const extensionBarFill    = document.getElementById("extension-bar-fill");
+          const timeoutModal        = document.getElementById("timeout-modal");
+       
+          let progressInterval;
+          let pollingInterval;
+          let isSuccess = false;
+          let isExtendedPhase = false;
+          let hasTriggeredTimeout = false;
+       
+          // A. Animation Visuelle du Cercle (0 -> 60s)
+          function animateProgress() {
+            progressInterval = setInterval(() => {
+              const elapsed  = Date.now() - startTime;
+              
+              // On calcule le pourcentage sur la base de MAIN_LOAD_TIME (60s)
+              // On bloque à 99%
+              const progress = Math.min((elapsed / MAIN_LOAD_TIME) * 100, 99);
+              
+              if (isSuccess) return;
+       
+              // MISE A JOUR UI CERCLE
+              const offset   = circumference - (progress / 100) * circumference;
+              if(progressCircle) progressCircle.style.strokeDashoffset = offset.toFixed(2);
+              if(progressText) progressText.textContent = Math.floor(progress) + " %";
+       
+              // MISE A JOUR TEXTES ETAPES
+              const currentStep = loadingSteps.slice().reverse().find(step => progress >= step.pct);
+              if (currentStep && subtitle && subtitle.innerText !== currentStep.text && !isExtendedPhase) {
+                    subtitle.style.opacity = 0; 
+                    setTimeout(() => {
+                        if(!isExtendedPhase) subtitle.innerText = currentStep.text;
+                        subtitle.style.opacity = 1;
+                    }, 300);
+              }
+              
+              // FIN DU CERCLE (60s) -> LANCEMENT BARRE HORIZONTALE
+              if (elapsed >= MAIN_LOAD_TIME && !isSuccess && !isExtendedPhase) {
+                  startExtensionPhase();
+              }
+
+            }, 100);
+          }
+
+          // B. Phase d'extension (Barre horizontale - 30 secondes)
+          function startExtensionPhase() {
+              isExtendedPhase = true;
+              clearInterval(progressInterval); // On arrête le cercle à 99%
+
+              // Mise à jour visuelle pour l'extension
+              subtitle.style.opacity = 0;
+              setTimeout(() => {
+                  subtitle.innerText = "Gerade ist viel los – wir stellen Ihre Analyse fertig …";
+                  subtitle.style.color = "rgba(37,27,19,.65)"; // Gold color
+                  subtitle.style.opacity = 1;
+              }, 300);
+
+              // Affichage et animation de la nouvelle barre
+              extensionBarWrapper.style.display = "block";
+              setTimeout(() => {
+                  extensionBarWrapper.style.opacity = 1;
+                  extensionBarFill.style.width = "100%"; // Déclenche la transition CSS de 30s
+              }, 100);
+
+              // Quand la barre a fini de charger (30s plus tard), on lance le buffer final
+              setTimeout(() => {
+                  if (!isSuccess && !hasTriggeredTimeout) {
+                      startFinalBufferPhase();
+                  }
+              }, EXTENSION_TIME);
+          }
+
+          // C. Buffer Final (15 secondes supplémentaires "au cas où")
+          function startFinalBufferPhase() {
+              // On ne change pas l'UI ici, on laisse juste le polling tourner 15s de plus
+              // Total écoulé ici : 60s + 30s = 1m30s
+              
+              setTimeout(() => {
+                  if (!isSuccess && !hasTriggeredTimeout) {
+                      showTimeoutPopup(); // Stop polling se fait ici
+                  }
+              }, EXTRA_BUFFER_TIME);
+          }
+
+          // D. Affichage du Popup Timeout & ARRÊT DU POLLING
+          function showTimeoutPopup() {
+              hasTriggeredTimeout = true;
+              stopPolling(); // <--- ARRÊT IMPERATIF DES APPELS RESEAU
+              timeoutModal.classList.add('active');
+          }
+       
+          // E. Polling (Supabase)
+          async function checkStatus() {
+            try {
+              if (isSuccess) return;
+
+              const res = await fetch(
+                SUPABASE_URL + "/rest/v1/premium_analysis?jobId=eq." + encodeURIComponent(jobId) + "&select=downloadUrl&limit=1",
+                {
+                  method: "GET",
+                  headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY
+                  },
+                  cache: "no-store"
+                }
+              );
+              const data = await res.json();
+              if (!data || !Array.isArray(data) || data.length === 0) return;
+
+              const record = data[0];
+
+              // Condition "ROBUSTE"
+              if (record && record.downloadUrl && record.downloadUrl.length > 10) {
+                isSuccess = true;
+                stopPolling();
+                showSuccess(record.downloadUrl);
+              }
+            } catch (e) { console.error("Polling error:", e); }
+          }
+       
+          // F. Succès
+          function showSuccess(url) {
+              // Fermer le modal de timeout s'il est ouvert
+              if(timeoutModal.classList.contains('active')) {
+                  timeoutModal.classList.remove('active');
+              }
+
+              // Remplir le cercle
+              if(progressText) progressText.textContent = "100%";
+              if(progressCircle) {
+                  progressCircle.style.strokeDashoffset = 0;
+                  progressCircle.style.stroke = "#251B13"; // Vert succès
+              }
+
+              // Cacher la barre d'extension si elle était là
+              if(isExtendedPhase) {
+                   extensionBarWrapper.style.opacity = 0;
+              }
+       
+              setTimeout(() => {
+                  loadingContent.style.opacity = 0;
+                  loadingContent.style.transition = "opacity 0.5s ease";
+                  
+                  setTimeout(() => {
+                      loadingContent.style.display = "none";
+                      accessBtn.href = url;
+                      
+                      successState.style.display = "block";
+                      setTimeout(() => {
+                          successState.style.opacity = 1;
+                          successState.style.transform = "translateY(0)";
+                      }, 50);
+
+                      if(trustGrid) trustGrid.style.opacity = 0.6;
+                  }, 500);
+              }, 600);
+          }
+       
+          function stopPolling() {
+            clearInterval(pollingInterval);
+            clearInterval(progressInterval);
+          }
+       
+          // Démarrage
+          animateProgress();
+          setTimeout(() => {
+            checkStatus(); 
+            pollingInterval = setInterval(() => checkStatus(), POLL_INTERVAL);
+          }, 2500);
+       
+          window.addEventListener('beforeunload', () => stopPolling());
+        });
+      </script>
+<script src="/js/pwa.js" defer></script>
+</body>
+</html>
