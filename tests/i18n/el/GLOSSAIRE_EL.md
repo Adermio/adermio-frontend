@@ -20,6 +20,13 @@ Référence unique pour toute traduction FR → EL du site adermio.com. Toute d�
 
 11. **Point Repère** (fonction Premium de l'app) → *Σημείο Αναφοράς* ; « enquête » → *διερεύνηση*, « pistes » → *υποθέσεις*, « verdicts » → *συμπεράσματα*, « dossier » → *φάκελος* (fixé le 11/10 avec la politique de confidentialité v2.4).
 
+## Décisions du client
+
+- **18/10/2026 — remplace la décision n° 9 pour le nouveau site (/v2/el, puis /el après la bascule)** : les écrans de l'app
+  montrés sur l'accueil sont **en grec** (Antoine traduit l'app en grec et ne veut pas tout refaire). Seule la **vidéo**
+  reste en anglais, avec la mention *(βίντεο στα αγγλικά)*. Tant que l'app n'a pas ses textes grecs, les écrans suivent ce
+  glossaire (`output/site-v2/builders/ecrans_el.py`) ; à aligner sur les chaînes de l'app ensuite.
+
 ## Typographie grecque
 
 - **Point d'interrogation = « ; »** (point-virgule latin U+003B). « · » (άνω τελεία, U+00B7) avec parcimonie. Aucune espace avant `! ; : ·`.
