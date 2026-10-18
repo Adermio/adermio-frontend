@@ -56,7 +56,10 @@ appliquée. Un relecteur ne défait JAMAIS une décision du client ni du PDG.
 
 ## Décisions du client
 
-(aucune pour l'instant — toute décision d'Antoine s'écrit ici, datée)
+- **18/10/2026 — remplace la décision n° 10 pour le nouveau site (/v2/pl, puis /pl après la bascule)** : les écrans de l'app
+  montrés sur l'accueil sont **en polonais** (Antoine traduit l'app en polonais et ne veut pas tout refaire). Seule la
+  **vidéo** reste en anglais, avec la mention *(wideo w języku angielskim)*. Tant que l'app n'a pas ses textes polonais,
+  les écrans suivent ce glossaire (`output/site-v2/builders/ecrans_pl.py`) ; à aligner sur les chaînes de l'app ensuite.
 
 ## Typographie polonaise
 
