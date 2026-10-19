@@ -1,239 +1,57 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "ua5d07cn1u");
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <title>Terms of Sale — Adermio</title>
-    <meta name="description" content="Terms of Sale for the Adermio Premium subscription — App Store and adermio.com, automatic renewal, online cancellation, right of withdrawal, mediation.">
-    <link rel="canonical" href="https://adermio.com/en/cgv">
-    <link rel="alternate" hreflang="fr" href="https://adermio.com/cgv">
-    <link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv">
-    <link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv">
-    <link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv">
-    <link rel="alternate" hreflang="de" href="https://adermio.com/de/agb">
-    <link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden">
-    <link rel="alternate" hreflang="el" href="https://adermio.com/el/oroi-polisis">
-    <link rel="alternate" hreflang="pl" href="https://adermio.com/pl/warunki-sprzedazy">
-    <link rel="alternate" hreflang="x-default" href="https://adermio.com/cgv">
-    <meta property="og:title" content="Terms of Sale — Adermio">
-    <meta property="og:description" content="Terms of Sale for the Adermio Premium subscription — App Store and adermio.com, automatic renewal, online cancellation, right of withdrawal, mediation.">
-    <meta property="og:url" content="https://adermio.com/en/cgv">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://adermio.com/og-image.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="Adermio">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Terms of Sale — Adermio">
-    <meta name="twitter:description" content="Terms of Sale for the Adermio Premium subscription — App Store and adermio.com, automatic renewal, online cancellation, right of withdrawal, mediation.">
-    <meta name="twitter:image" content="https://adermio.com/og-image.png">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <meta name="theme-color" content="#0F3D39">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Adermio">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        adermio: {
-                            base: '#F8FAFC',   
-                            dark: '#0F3D39',   
-                            primary: '#14B8A6',
-                            text: '#334155',   
-                            muted: '#94A3B8',  
-                            surface: '#FFFFFF' 
-                        }
-                    },
-                    fontFamily: {
-                        serif: ['"Playfair Display"', 'serif'],
-                        sans: ['"DM Sans"', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'soft': '0 30px 60px -15px rgba(15, 61, 57, 0.15)',
-                        'luxury': '0 0 0 1px rgba(255,255,255,0.4) inset, 0 20px 40px -20px rgba(0,0,0,0.1)',
-                    },
-                }
-            }
-        }
-    </script>
-
-    <style>
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-        
-        a, a:visited, a:hover, a:active {
-            color: inherit; 
-            text-decoration: none;
-        }
-        .text-adermio-dark { color: #0F3D39 !important; }
-        
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(15, 61, 57, 0.05);
-        }
-
-        .fade-up {
-            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #full-menu {
-            transition: opacity 0.4s ease, visibility 0.4s;
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        #full-menu.menu-active {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-        }
-
-        /* Language Dropdown Styles */
-        .lang-dropdown {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.2s ease;
-        }
-        .group:hover .lang-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-    </style>
-    <script src="/js/ttq.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>Terms of Sale — Adermio</title>
+<link rel="canonical" href="https://adermio.com/en/cgv">
+<link rel="alternate" hreflang="fr" href="https://adermio.com/cgv">
+<link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv">
+<link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv">
+<link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv">
+<link rel="alternate" hreflang="de" href="https://adermio.com/de/agb">
+<link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden">
+<link rel="alternate" hreflang="el" href="https://adermio.com/el/oroi-polisis">
+<link rel="alternate" hreflang="pl" href="https://adermio.com/pl/warunki-sprzedazy">
+<link rel="alternate" hreflang="x-default" href="https://adermio.com/cgv">
+<meta property="og:title" content="Terms of Sale — Adermio">
+<meta property="og:description" content="Terms of Sale for the Adermio Premium subscription — App Store and adermio.com, automatic renewal, online cancellation, right of withdrawal, mediation.">
+<meta property="og:url" content="https://adermio.com/en/cgv">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://adermio.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Adermio">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Terms of Sale — Adermio">
+<meta name="twitter:description" content="Terms of Sale for the Adermio Premium subscription — App Store and adermio.com, automatic renewal, online cancellation, right of withdrawal, mediation.">
+<meta name="twitter:image" content="https://adermio.com/og-image.png">
+<meta name="description" content="Terms of Sale for the Adermio Premium subscription — App Store and adermio.com, automatic renewal, online cancellation, right of withdrawal, mediation.">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/v2.css">
 </head>
-<body class="bg-adermio-base text-adermio-text antialiased selection:bg-adermio-dark selection:text-white overflow-x-hidden pb-32">
-
-    <nav class="fixed top-0 left-0 right-0 z-[60] glass-nav transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="/en/home" class="flex items-center gap-2">
-                 <img src="/logo_Adermio.png" alt="Logo" class="h-8 w-auto object-contain">
-                 <span class="font-serif text-xl text-adermio-dark font-semibold tracking-tight">Adermio</span>
-            </a>
-
-            <div class="flex items-center gap-2">
-
-                <div class="relative group">
-                    <button class="flex items-center gap-1.5 px-2 py-1 rounded-full hover:bg-black/5 transition-colors text-adermio-dark">
-                        <img src="https://flagcdn.com/us.svg" width="16" alt="EN" class="rounded-sm shadow-sm">
-                        <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
-                    </button>
-                    <div class="lang-dropdown absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-adermio-dark/5 overflow-hidden z-[80]">
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium bg-teal-50/50 text-teal-700">
-                            <img src="https://flagcdn.com/us.svg" width="18" alt="English" class="rounded-sm shadow-sm">
-                            <span>EN</span>
-                        </a>
-                        <a href="https://adermio.com/cgv" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
-                            <img src="https://flagcdn.com/fr.svg" width="18" alt="Français" class="rounded-sm shadow-sm">
-                            <span>FR</span>
-                        </a>
-                        <a href="https://adermio.com/es/cgv" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
-                            <img src="https://flagcdn.com/es.svg" width="18" alt="Español" class="rounded-sm shadow-sm">
-                            <span>ES</span>
-                        </a>
-                        <a href="https://adermio.com/it/cgv" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
-                            <img src="https://flagcdn.com/it.svg" width="18" alt="Italiano" class="rounded-sm shadow-sm">
-                            <span>Italiano</span>
-                        </a>
-                        <a href="https://adermio.com/de/agb" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
-                            <img src="https://flagcdn.com/de.svg" width="18" alt="Deutsch" class="rounded-sm shadow-sm">
-                            <span>Deutsch</span>
-                        </a>
-                        <a href="https://adermio.com/nl/algemene-voorwaarden" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
-                            <img src="https://flagcdn.com/nl.svg" width="18" alt="Nederlands" class="rounded-sm shadow-sm">
-                            <span>Nederlands</span>
-                        </a>
-                        <a href="https://adermio.com/el/oroi-polisis" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
-                            <img src="https://flagcdn.com/gr.svg" width="18" alt="Ελληνικά" class="rounded-sm shadow-sm">
-                            <span>Ελληνικά</span>
-                        </a>
-                        <a href="https://adermio.com/pl/warunki-sprzedazy" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-adermio-dark hover:bg-gray-50 transition-colors">
-                            <img src="https://flagcdn.com/pl.svg" width="18" alt="Polski" class="rounded-sm shadow-sm">
-                            <span>Polski</span>
-                        </a>
-                    </div>
-                </div>
-
-                <button id="menu-btn" class="text-adermio-dark hover:text-teal-700 transition-colors p-2 z-[70]">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <div id="full-menu" class="fixed inset-0 z-[55] bg-white/98 backdrop-blur-xl flex flex-col items-center justify-center">
-        <nav class="flex flex-col items-center gap-8 md:gap-10">
-            <a href="/en/home" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Home</a>
-            <a href="https://adermio.com/en/form" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Start Analysis</a>
-            <a href="https://adermio.com/en/about" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">About Us</a>
-            <a href="https://adermio.com/en/blog" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Blog</a>
-            <a href="https://adermio.com/en/contact" class="menu-link font-serif text-3xl md:text-5xl !text-adermio-dark hover:text-teal-600 transition-colors">Contact Us</a>
-        </nav>
-        <div class="absolute bottom-10 left-0 right-0 text-center">
-            <span class="text-xs uppercase tracking-widest text-adermio-muted">Adermio © 2026</span>
-        </div>
-    </div>
-
-    <header class="relative w-full pt-40 pb-16 px-6 text-center">
-        <div class="max-w-4xl mx-auto">
-            <div class="fade-up inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/50 border border-adermio-dark/5 text-[10px] uppercase tracking-[0.2em] font-medium text-adermio-dark shadow-sm mb-6">
-                <span>Legal</span>
-            </div>
-            <h1 class="font-serif text-3xl md:text-5xl text-adermio-dark mb-4 fade-up" style="animation-delay: 0.1s;">
-                General Terms and Conditions of Sale
-            </h1>
-            <p class="text-adermio-muted text-sm fade-up" style="animation-delay: 0.2s;">
-                Version 1.1 — Effective as of 10/10/2026 (addition of the subscription purchased on adermio.com)
-            </p>
-        </div>
-    </header>
-
-    <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10 fade-up" style="animation-delay: 0.3s;">
-        <div class="bg-white rounded-[2rem] p-8 md:p-16 shadow-soft border border-adermio-dark/5">
+<body>
+<header class="v2-bar"><a class="mark" href="/en/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a><a class="btn btn-dark" href="/en/form">Get my analysis</a></header>
+<section class="v2-head"><span class="pill">Legal</span><h1>General Terms and Conditions of Sale</h1><p class="sub">Version 1.1 — Effective as of 10/10/2026 (addition of the subscription purchased on adermio.com)</p></section>
+<main class="v2-main">
+<article class="card prose">
+        <div>
             
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">1. Purpose and preamble</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
-                    <p>These General Terms and Conditions of Sale (the “Terms of Sale”) exclusively govern the provision of the <strong>Premium subscription</strong> service offered in the Adermio mobile app or purchased on the <strong>adermio.com</strong> website (hereinafter “the Premium Service”).</p><p>The publisher is Antoine Munch (French sole proprietorship, “micro-entreprise”, SIRET 999 319 692 00011, 67120 Ergersheim, France — see the <a href="https://adermio.com/en/legal-notice" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">Legal Notice</a>).</p><p>Any purchase of a Premium subscription implies <strong>full and unreserved acceptance</strong> of these Terms of Sale, the <a href="https://adermio.com/en/conditions" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">Terms of Use</a> and the <a href="https://adermio.com/en/confidentialite" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">Privacy Policy</a>.</p>
+            <div>
+                <h2>1. Purpose and preamble</h2>
+                <div>
+                    <p>These General Terms and Conditions of Sale (the “Terms of Sale”) exclusively govern the provision of the <strong>Premium subscription</strong> service offered in the Adermio mobile app or purchased on the <strong>adermio.com</strong> website (hereinafter “the Premium Service”).</p><p>The publisher is Antoine Munch (French sole proprietorship, “micro-entreprise”, SIRET 999 319 692 00011, 67120 Ergersheim, France — see the <a href="/en/legal-notice">Legal Notice</a>).</p><p>Any purchase of a Premium subscription implies <strong>full and unreserved acceptance</strong> of these Terms of Sale, the <a href="/en/conditions">Terms of Use</a> and the <a href="/en/confidentialite">Privacy Policy</a>.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">2. Description of the Premium Service</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
-                    <p>In addition to the free features, the Premium Service gives access to the following features (non-exhaustive list):</p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+            <div>
+                <h2>2. Description of the Premium Service</h2>
+                <div>
+                    <p>In addition to the free features, the Premium Service gives access to the following features (non-exhaustive list):</p><ul>
                         <li><strong>AI skincare chat</strong>, unlimited (subject to a daily quota set on the paywall)</li>
                         <li><strong>Fridge-to-Plate recipes</strong> (photo analysis + recipe suggestion)</li>
                         <li>Unlimited <strong>cosmetic product substitutions</strong> with compatibility analysis</li>
@@ -246,59 +64,59 @@
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">3. How to subscribe</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+            <div>
+                <h2>3. How to subscribe</h2>
+                <div>
                     <p><strong>3.1 — In the app (App Store).</strong> The Premium Service is offered through Apple App Store In-App Purchases. The transaction is processed and billed by <strong>Apple Inc.</strong> under Apple’s terms of sale.</p><p>Adermio does not receive any of the user’s banking information. Technical management (renewals, cancellations, restorations) is handled by <strong>RevenueCat Inc.</strong>, Adermio’s processor.</p><p><strong>Steps:</strong> the user views the paywall, chooses a plan and confirms with Face ID / Touch ID / Apple password. Apple charges the payment method, and Adermio activates the Premium features immediately.</p><p><strong>Prices:</strong> displayed inclusive of all taxes, in the local currency, at the time of purchase. The exact applicable price is displayed on the in-app paywall before any confirmation.</p><p><strong>VAT:</strong> Adermio currently operates under the French <strong>VAT exemption scheme for small businesses</strong> (franchise en base de TVA, Article 293 B of the French General Tax Code). Adermio does not collect any VAT. Apple may, however, apply local VAT depending on the user’s country of tax residence.</p><p><strong>3.2 — On the adermio.com website.</strong> The Premium Service may also be purchased on the website, at the end of the online analysis. Payment is processed by <strong>Stripe</strong>, Adermio’s payment service provider: Adermio neither receives nor stores any banking data.</p><p><strong>Plans:</strong> <strong>monthly</strong> subscription (charged every month) or <strong>quarterly</strong> subscription (charged every 3 months). The price of each plan, inclusive of all taxes, and the billing frequency are displayed on the subscription page and on the payment page before any confirmation.</p><p><strong>Steps:</strong> the user chooses a plan, enters their payment details on Stripe’s secure payment page, checks the box accepting these Terms of Sale and requesting immediate access (§5), then confirms. The full analysis report is sent by email and Premium access is activated immediately.</p><p><strong>Access in the app:</strong> the subscription is linked to the Adermio account associated with the email address used for payment (created automatically if it does not exist), or to the account on which the user enters the personal code received by email (“I have an Adermio code”). Technical management of entitlements is handled by <strong>RevenueCat Inc.</strong>, Adermio’s processor.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">4. Term, automatic renewal and cancellation</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
-                    <p><strong>4.1 — Subscription purchased in the app (App Store).</strong></p><div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark"><strong>⚠️ Important:</strong> Automatic renewal: in line with standard App Store practice, the subscription renews automatically on the same terms at the end of each period, unless cancelled at least 24 hours before the renewal date.</div><p><strong>How to cancel (at any time, free of charge):</strong></p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+            <div>
+                <h2>4. Term, automatic renewal and cancellation</h2>
+                <div>
+                    <p><strong>4.1 — Subscription purchased in the app (App Store).</strong></p><div><strong>⚠️ Important:</strong> Automatic renewal: in line with standard App Store practice, the subscription renews automatically on the same terms at the end of each period, unless cancelled at least 24 hours before the renewal date.</div><p><strong>How to cancel (at any time, free of charge):</strong></p><ul>
                         <li>iOS Settings → [your name] → Subscriptions → Adermio Premium → Cancel Subscription</li>
-                        <li>Or directly via <a href="https://apps.apple.com/account/subscriptions" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">apps.apple.com/account/subscriptions</a></li>
-                    </ul><p>The user keeps access to the Premium features <strong>until the end of the period already paid for</strong>. No pro rata refund is made for the unexpired period.</p><p>Adermio cannot cancel a user’s subscription on their behalf — this is done on Apple’s side.</p><p><strong>4.2 — Subscription purchased on adermio.com.</strong></p><div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark"><strong>⚠️ Important:</strong> Automatic renewal: the subscription renews automatically for the same duration (one month or three months depending on the plan) on each renewal date, at the price then in effect, unless cancelled before the renewal date.</div><p><strong>How to cancel (at any time, free of charge, online):</strong></p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
-                        <li>From the <a href="https://adermio.com/en/resilier" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">adermio.com/en/resilier</a> page: enter the email address of your subscription, open the link you receive, then select “Cancel subscription”.</li>
+                        <li>Or directly via <a href="https://apps.apple.com/account/subscriptions">apps.apple.com/account/subscriptions</a></li>
+                    </ul><p>The user keeps access to the Premium features <strong>until the end of the period already paid for</strong>. No pro rata refund is made for the unexpired period.</p><p>Adermio cannot cancel a user’s subscription on their behalf — this is done on Apple’s side.</p><p><strong>4.2 — Subscription purchased on adermio.com.</strong></p><div><strong>⚠️ Important:</strong> Automatic renewal: the subscription renews automatically for the same duration (one month or three months depending on the plan) on each renewal date, at the price then in effect, unless cancelled before the renewal date.</div><p><strong>How to cancel (at any time, free of charge, online):</strong></p><ul>
+                        <li>From the <a href="/en/resilier">adermio.com/en/resilier</a> page: enter the email address of your subscription, open the link you receive, then select “Cancel subscription”.</li>
                         <li>Or via the “Manage or cancel your subscription” link in the confirmation email.</li>
-                        <li>Or simply by request to <a href="mailto:contact@adermio.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a>.</li>
+                        <li>Or simply by request to <a href="mailto:contact@adermio.com">contact@adermio.com</a>.</li>
                     </ul><p>Cancellation takes effect at the <strong>end of the current period</strong>: the user keeps Premium access until that date, after which no further payment is taken. No pro rata refund is made for the unexpired period. A cancellation confirmation is sent by email.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">5. Activation and right of withdrawal</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
-                    <p>The Premium Service is activated <strong>immediately</strong> after payment confirmation (by Apple for an in-app purchase, by Stripe for a subscription purchased on adermio.com).</p><p><strong>General rule:</strong> under Articles L.221-18 et seq. of the Code de la consommation (French Consumer Code), a user who is a consumer in principle has <strong>14 days</strong> to exercise their right of withdrawal.</p><div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100 text-sm text-adermio-dark"><strong>⚠️ Important:</strong> Applicable exception: under Article L.221-28 13° of the French Consumer Code, the right of withdrawal cannot be exercised for contracts for the supply of a digital service whose performance has begun after the consumer’s prior express consent and express waiver of their right of withdrawal. By subscribing to Premium and checking the acceptance box — on the app’s paywall or, for a subscription purchased on adermio.com, on the payment page (“I request immediate access to my tracking: I waive my 14-day right of withdrawal”) — the user explicitly requests immediate performance and expressly waives their right of withdrawal for the subscribed period.</div><p>The user may nevertheless <strong>cancel at any time</strong> (§4) — cancellation takes effect at the end of the current period.</p><p><strong>Apple refund requests:</strong> independently of these Terms of Sale, the user may at any time request a refund directly from Apple via <a href="https://reportaproblem.apple.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">reportaproblem.apple.com</a>. Apple alone decides. Adermio plays no part in this decision.</p>
+            <div>
+                <h2>5. Activation and right of withdrawal</h2>
+                <div>
+                    <p>The Premium Service is activated <strong>immediately</strong> after payment confirmation (by Apple for an in-app purchase, by Stripe for a subscription purchased on adermio.com).</p><p><strong>General rule:</strong> under Articles L.221-18 et seq. of the Code de la consommation (French Consumer Code), a user who is a consumer in principle has <strong>14 days</strong> to exercise their right of withdrawal.</p><div><strong>⚠️ Important:</strong> Applicable exception: under Article L.221-28 13° of the French Consumer Code, the right of withdrawal cannot be exercised for contracts for the supply of a digital service whose performance has begun after the consumer’s prior express consent and express waiver of their right of withdrawal. By subscribing to Premium and checking the acceptance box — on the app’s paywall or, for a subscription purchased on adermio.com, on the payment page (“I request immediate access to my tracking: I waive my 14-day right of withdrawal”) — the user explicitly requests immediate performance and expressly waives their right of withdrawal for the subscribed period.</div><p>The user may nevertheless <strong>cancel at any time</strong> (§4) — cancellation takes effect at the end of the current period.</p><p><strong>Apple refund requests:</strong> independently of these Terms of Sale, the user may at any time request a refund directly from Apple via <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>. Apple alone decides. Adermio plays no part in this decision.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">6. Restoring purchases</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+            <div>
+                <h2>6. Restoring purchases</h2>
+                <div>
                     <p>After reinstalling the app, changing device or resetting, the user can <strong>restore their subscription</strong> from the paywall: “Restore purchases” button. Restoration is free and instant as long as the subscription is active on the Apple account used.</p><p>For a subscription purchased on adermio.com, access is linked to the Adermio account: the user simply signs back into that account, or enters their personal code again (“I have an Adermio code”).</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">7. Price changes</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+            <div>
+                <h2>7. Price changes</h2>
+                <div>
                     <p><strong>For new subscribers:</strong> Adermio reserves the right to change its prices at any time. New prices apply to new subscriptions.</p><p><strong>For existing subscribers:</strong> in the event of a price increase, the user is notified at least <strong>30 days before</strong> the new price applies — by Apple for an App Store subscription, by email from Adermio for a subscription purchased on adermio.com. The user may decline by cancelling before the next renewal date.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">8. Service unavailability</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+            <div>
+                <h2>8. Service unavailability</h2>
+                <div>
                     <p>In the event of prolonged unavailability of the Premium Service attributable to Adermio (&gt;72 consecutive hours), the user may request a pro rata credit on the next billing, or a refund — through Apple’s procedure for an App Store subscription, or from Adermio (contact@adermio.com) for a subscription purchased on adermio.com.</p><p>Excluded: unavailability caused by third-party subcontractors (Apple, Google, Stripe, Supabase…), scheduled maintenance announced 48 hours in advance, and force majeure.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">9. Liability and warranties</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
-                    <p>The Premium Service is provided “as is”. Adermio uses reasonable technical means to ensure that it operates as described, without guaranteeing that it is entirely free of bugs.</p><p>Adermio cannot be held liable for:</p><ul class="list-disc pl-5 space-y-2 marker:text-teal-600">
+            <div>
+                <h2>9. Liability and warranties</h2>
+                <div>
+                    <p>The Premium Service is provided “as is”. Adermio uses reasonable technical means to ensure that it operates as described, without guaranteeing that it is entirely free of bugs.</p><p>Adermio cannot be held liable for:</p><ul>
                         <li>individual cosmetic results (every skin reacts differently),</li>
                         <li>adverse reactions to recommended third-party cosmetic products (consult a dermatologist if in doubt),</li>
                         <li>interactions with ongoing medical treatment (the user must declare their treatments via the form).</li>
@@ -306,106 +124,54 @@
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">10. Personal data</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
-                    <p>The processing of personal data in connection with the Premium Service is governed by the <a href="https://adermio.com/en/confidentialite" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">Privacy Policy</a>.</p>
+            <div>
+                <h2>10. Personal data</h2>
+                <div>
+                    <p>The processing of personal data in connection with the Premium Service is governed by the <a href="/en/confidentialite">Privacy Policy</a>.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">11. Changes to the Terms of Sale</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+            <div>
+                <h2>11. Changes to the Terms of Sale</h2>
+                <div>
                     <p>Adermio reserves the right to amend these Terms of Sale. Amendments apply to new purchases. For ongoing subscriptions, material changes will be notified <strong>by email and by an in-app banner at least 30 days before</strong> they take effect. The user may cancel free of charge before they take effect.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">12. Mediation and disputes</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
-                    <p><strong>Prior complaint:</strong> <a href="mailto:contact@adermio.com" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">contact@adermio.com</a> — subject “Terms of Sale complaint”.</p><p><strong>FEVAD mediation</strong> (free of charge for consumers):<br>60 rue La Boétie — 75008 Paris<br><a href="https://www.mediateurfevad.fr" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">https://www.mediateurfevad.fr</a></p><p><strong>European ODR platform:</strong> <a href="https://ec.europa.eu/consumers/odr" class="text-teal-600 font-medium underline decoration-teal-600/30 hover:decoration-teal-600">ec.europa.eu/consumers/odr</a></p><p><strong>Competent courts:</strong> failing an amicable settlement, the French courts, in accordance with the rules of the French Consumer Code.</p>
+            <div>
+                <h2>12. Mediation and disputes</h2>
+                <div>
+                    <p><strong>Prior complaint:</strong> <a href="mailto:contact@adermio.com">contact@adermio.com</a> — subject “Terms of Sale complaint”.</p><p><strong>FEVAD mediation</strong> (free of charge for consumers):<br>60 rue La Boétie — 75008 Paris<br><a href="https://www.mediateurfevad.fr">https://www.mediateurfevad.fr</a></p><p><strong>European ODR platform:</strong> <a href="https://ec.europa.eu/consumers/odr">ec.europa.eu/consumers/odr</a></p><p><strong>Competent courts:</strong> failing an amicable settlement, the French courts, in accordance with the rules of the French Consumer Code.</p>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h2 class="font-serif text-2xl text-adermio-dark mb-4 pb-2 border-b border-adermio-dark/5">13. Governing law</h2>
-                <div class="space-y-4 text-adermio-text/80 font-light leading-relaxed">
+            <div>
+                <h2>13. Governing law</h2>
+                <div>
                     <p>These Terms of Sale are governed by <strong>French law</strong>, subject to the mandatory provisions applicable to consumers within the European Union.</p>
                 </div>
             </div>
 
         </div>
-    </main>
-
-    <footer class="bg-white border-t border-adermio-dark/5 py-16 px-6">
-        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
-            
-            <div class="w-24 h-24 mb-6 relative flex items-center justify-center p-4 rounded-full bg-adermio-base border border-adermio-dark/5 z-10">
-                <img src="/logo_Adermio.png" 
-                     alt="Adermio Logo" 
-                     class="w-full h-full object-contain relative z-20" loading="lazy">
-            </div>
-
-            <span class="font-serif text-2xl font-bold text-adermio-dark mb-2">Adermio</span>
-            <p class="text-sm text-adermio-text/60 max-w-sm mb-10 font-light">
-                Dermatology reinvented by artificial intelligence.
-            </p>
-
-            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm font-medium text-adermio-dark/90">
-                <a href="/en/home" class="hover:text-teal-600 transition-colors !text-adermio-dark">Home</a>
-                <a href="https://adermio.com/en/form" class="hover:text-teal-600 transition-colors !text-adermio-dark">Start Analysis</a>
-                <a href="https://adermio.com/en/about" class="hover:text-teal-600 transition-colors !text-adermio-dark">About Us</a>
-                <a href="https://adermio.com/en/blog" class="hover:text-teal-600 transition-colors !text-adermio-dark">Blog</a>
-                <a href="https://adermio.com/en/contact" class="hover:text-teal-600 transition-colors !text-adermio-dark">Contact Us</a>
-            </div>
-
-            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-xs uppercase tracking-wider">
-                <a href="https://adermio.com/en/conditions" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Terms of Use</a>
-                <a href="https://adermio.com/en/cgv" class="!text-adermio-dark font-medium transition-colors">Terms of Sale</a>
-                <a href="https://adermio.com/en/legal-notice" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Legal Notice</a>
-                <a href="https://adermio.com/en/confidentialite" class="!text-slate-500 hover:!text-adermio-dark transition-colors">Privacy Policy</a>
-            </div>
-
-            <div class="text-xs text-adermio-muted/40 font-light">
-                © 2026 Adermio. All rights reserved.
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        lucide.createIcons();
-
-        // Logique du Menu
-        const menuBtn = document.getElementById('menu-btn');
-        const menuOverlay = document.getElementById('full-menu');
-        const menuLinks = document.querySelectorAll('.menu-link');
-        let isMenuOpen = false;
-
-        function toggleMenu() {
-            isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) {
-                menuOverlay.classList.add('menu-active');
-                menuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
-                menuBtn.classList.add('text-teal-900');
-            } else {
-                menuOverlay.classList.remove('menu-active');
-                menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
-                menuBtn.classList.remove('text-teal-900');
-            }
-            lucide.createIcons();
-        }
-
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMenu();
-        });
-
-        menuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if(isMenuOpen) toggleMenu();
-            });
-        });
-    </script>
-    <script src="/js/pwa.js" defer></script>
+    </article>
+</main>
+<footer>
+  <div class="f-grid">
+    <div class="f-brand"><a class="mark" href="/en/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a></div>
+    <div class="f-col"><h4>Explore</h4><a href="/en/form">Get my analysis</a><a href="/en/blog">Blog</a></div>
+    <div class="f-col"><h4>Company</h4><a href="/en/about">About</a><a href="/en/contact">Contact us</a></div>
+    <div class="f-col"><h4>Legal</h4><a href="/en/cgv">Terms of sale</a><a href="/en/conditions">Terms of use</a><a href="/en/legal-notice">Legal notice</a><a href="/en/resilier">Cancel my subscription</a></div>
+    <div class="f-col"><h4>Languages</h4><a href="/en/home">English</a><a href="/">Français</a><a href="/es/home">Español</a><a href="/it/home">Italiano</a><a href="/de/home">Deutsch</a><a href="/nl/home">Nederlands</a><a href="/el/home">Ελληνικά</a><a href="/pl/home">Polski</a></div>
+  </div>
+  <div class="f-bottom"><span>Adermio © 2026</span><a href="/en/confidentialite">Privacy</a><span class="r">Adermio does not replace medical advice.</span></div>
+</footer>
+<script>
+// Mesure (Clarity + pixel TikTok), comme la prod, chargée après l'affichage
+(function(){let d=false;const go=()=>{if(d)return;d=true;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","ua5d07cn1u");
+  const s=document.createElement('script');s.src='/js/ttq.js';s.async=true;document.head.appendChild(s)};
+  const later=()=>'requestIdleCallback' in window?requestIdleCallback(go,{timeout:2000}):setTimeout(go,300);
+  if(document.readyState==='complete')later();else addEventListener('load',later,{once:true});setTimeout(go,4000)})();
+</script>
 </body>
 </html>

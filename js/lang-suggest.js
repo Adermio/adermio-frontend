@@ -20,6 +20,7 @@
 //   résolu hors de ces pays, ne voit jamais rien → aucun effet sur l'indexation).
 // - Jamais bloquant : tout est en try/catch, échec silencieux = rien affiché.
 // - Styles en ligne (le CSS Tailwind compilé ne contient pas de nouvelles classes).
+// - 19/10 : couleurs et police du nouveau site (beige/brun, Pretendard), à la bascule du nouveau design.
 (function () {
   'use strict';
 
@@ -157,22 +158,22 @@
     // Mobile : feuille en bas de l'écran ; ordinateur : fenêtre centrée.
     var wide = (window.innerWidth || 0) >= 640;
     root.style.cssText = 'position:fixed;inset:0;z-index:200;display:flex;align-items:' + (wide ? 'center' : 'flex-end') + ';justify-content:center;' +
-      'background:rgba(15,61,57,.45);padding:16px;font-family:"DM Sans",system-ui,sans-serif;opacity:0;transition:opacity .25s ease';
+      'background:rgba(37,27,19,.45);padding:16px;font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;opacity:0;transition:opacity .25s ease';
     root.innerHTML =
-      '<div style="width:100%;max-width:420px;background:#FAFAF9;border-radius:20px;padding:24px 22px 18px;' +
-      'box-shadow:0 20px 50px rgba(15,61,57,.25);transform:translateY(16px);transition:transform .25s ease;margin-bottom:max(8px,env(safe-area-inset-bottom))">' +
+      '<div style="width:100%;max-width:420px;background:#fff;border-radius:24px;padding:24px 22px 18px;' +
+      'box-shadow:0 20px 50px rgba(37,27,19,.2);transform:translateY(16px);transition:transform .25s ease;margin-bottom:max(8px,env(safe-area-inset-bottom))">' +
         '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">' +
           '<img src="https://flagcdn.com/' + flag + '.svg" width="26" height="18" alt="" style="border-radius:3px;box-shadow:0 1px 2px rgba(0,0,0,.15)">' +
-          '<span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#14B8A6;font-weight:600">' + cfg.label + '</span>' +
+          '<span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:rgba(37,27,19,.65);font-weight:600">' + cfg.label + '</span>' +
         '</div>' +
-        '<h2 id="adm-ls-title" style="margin:0 0 8px;font-family:\'Playfair Display\',serif;font-size:22px;line-height:1.25;color:#0F3D39;font-weight:600">' +
+        '<h2 id="adm-ls-title" style="margin:0 0 8px;font-family:inherit;font-size:22px;line-height:1.25;letter-spacing:-.02em;color:#251B13;font-weight:600">' +
           cfg.title + '</h2>' +
-        '<p style="margin:0 0 20px;font-size:15px;line-height:1.5;color:#44403C">' +
+        '<p style="margin:0 0 20px;font-size:15px;line-height:1.5;color:rgba(37,27,19,.65)">' +
           cfg.text + '</p>' +
         '<a data-adm-ls="go" href="' + href.replace(/"/g, '&quot;') + '" style="display:block;text-align:center;text-decoration:none;' +
-          'background:#0F3D39;color:#fff;font-weight:600;font-size:16px;padding:14px 16px;border-radius:999px">' + cfg.cta + '</a>' +
+          'background:#251B13;color:#fff;font-weight:600;font-size:16px;padding:14px 16px;border-radius:999px">' + cfg.cta + '</a>' +
         '<button data-adm-ls="en" type="button" lang="' + stay + '" style="display:block;width:100%;margin-top:8px;background:none;border:0;' +
-          'color:#57534E;font-size:14px;padding:12px;cursor:pointer;font-family:inherit">' + STAY[stay] + '</button>' +
+          'color:rgba(37,27,19,.65);font-size:14px;padding:12px;cursor:pointer;font-family:inherit;text-decoration:underline">' + STAY[stay] + '</button>' +
       '</div>';
 
     var prevOverflow = document.body.style.overflow;

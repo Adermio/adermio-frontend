@@ -3,6 +3,16 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/v2",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/v2/:path((?!v2\\.css$).*)",
+      "destination": "/:path",
+      "statusCode": 301
+    },
+    {
       "source": "/en",
       "destination": "/en/home",
       "statusCode": 301
