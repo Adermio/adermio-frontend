@@ -1,5 +1,5 @@
 :root{--bg:#EEEEEE;--fg:#251B13;--fg80:rgba(37,27,19,.82);--fg65:rgba(37,27,19,.65);--fg40:rgba(37,27,19,.4);--fg10:rgba(43,24,9,.1);--fg5:rgba(37,27,19,.05);--card:#fff;--gut:16px;
-  --sans:"Pretendard Variable","Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif}
+  --sans:"Pretendard Variable","Pretendard Fallback","Pretendard Fallback W",-apple-system,BlinkMacSystemFont,system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--fg);font:500 16px/1.5 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
