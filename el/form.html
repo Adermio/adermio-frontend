@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="preload" href="/fonts/pretendard-latin-v1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/pretendard-greek-v1.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-v1.woff2) format("woff2");unicode-range:U+20-7E,U+A0-FF,U+131,U+152-153,U+2BB-2BC,U+2C6,U+2DA,U+2DC,U+304,U+308,U+329,U+395,U+3AC,U+3B7,U+3B9-3BB,U+3BD,U+2000-200D,U+2010-2027,U+202F-2060,U+20AC,U+2122,U+2191-2194,U+2212,U+22EF,U+2605,U+26A0,U+FEFF}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2");unicode-range:U+100-130,U+132-148,U+14A-151,U+154-17F,U+218-21B,U+1E9E}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-greek-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-greek-v1.woff2) format("woff2");unicode-range:U+370-377,U+37A-37F,U+384-38A,U+38C,U+38E-394,U+396-3A1,U+3A3-3AB,U+3AD-3B6,U+3B8,U+3BC,U+3BE-3E1,U+3F0-3FF,U+1F00-1F15,U+1F18-1F1D,U+1F20-1F45,U+1F48-1F4D,U+1F50-1F57,U+1F59,U+1F5B,U+1F5D,U+1F5F-1F7D,U+1F80-1FB4,U+1FB6-1FC4,U+1FC6-1FD3,U+1FD6-1FDB,U+1FDD-1FEF,U+1FF2-1FF4,U+1FF6-1FFE}@font-face{font-family:"Pretendard Fallback";src:local("Arial"),local("ArialMT");size-adjust:101.00%;ascent-override:94.27%;descent-override:23.88%;line-gap-override:0.00%}</style>
 
     <title>Εξειδικευμένη ανάλυση — Adermio</title>
 <meta name="robots" content="noindex, nofollow">
@@ -37,14 +40,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Adermio">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://unpkg.com">
 
     <!-- /formulaire (PROD) = variante 100% manuelle (pas de scan). Aucun asset
          MediaPipe n'est préchargé ni chargé sur cette page — même principe
          que /es/form. La variante scan-first vit sur /formulaire3. -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
     <link rel="stylesheet" href="/style-formulaire4.css">
 
     <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
@@ -60,7 +60,7 @@
 
     <style>
     /* Habillage « style Nolla », même charte que /accueil3. Surcouche seulement : rien ne change dans les questions, l'envoi ou le suivi. */
-    body,.font-sans,.font-serif{font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif!important}
+    body,.font-sans,.font-serif{font-family:"Pretendard Variable","Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif!important}
     body{font-weight:500;color:#251B13;-webkit-font-smoothing:antialiased;background:#EEEEEE}
     .font-serif{font-family:inherit!important;font-weight:600!important;letter-spacing:-.02em}
     .italic,em{font-style:normal!important}
@@ -94,20 +94,20 @@
             <div style="width:56px; height:56px; border-radius:16px; background:linear-gradient(135deg,#F4F1EC,#E6E0D7); display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#251B13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
             </div>
-            <h2 style="font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:18px; font-weight:700; color:#251B13; margin:0 0 8px;">Ανοίξτε τη σελίδα στο πρόγραμμα περιήγησης</h2>
-            <p style="font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:13px; color:#57534E; line-height:1.5; margin:0 0 20px;">Για να λειτουργήσει σωστά το ερωτηματολόγιο, ανοίξτε αυτή τη σελίδα στο Safari ή στο Chrome.</p>
+            <h2 style="font-family:'Pretendard Variable',"Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:18px; font-weight:700; color:#251B13; margin:0 0 8px;">Ανοίξτε τη σελίδα στο πρόγραμμα περιήγησης</h2>
+            <p style="font-family:'Pretendard Variable',"Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:13px; color:#57534E; line-height:1.5; margin:0 0 20px;">Για να λειτουργήσει σωστά το ερωτηματολόγιο, ανοίξτε αυτή τη σελίδα στο Safari ή στο Chrome.</p>
             <div style="background:#F5F5F4; border-radius:14px; padding:14px 16px; margin-bottom:16px;">
-                <p style="font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:12px; font-weight:600; color:#251B13; margin:0 0 10px;">Πώς θα το κάνετε:</p>
+                <p style="font-family:'Pretendard Variable',"Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:12px; font-weight:600; color:#251B13; margin:0 0 10px;">Πώς θα το κάνετε:</p>
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
                     <span style="width:24px; height:24px; border-radius:50%; background:#251B13; color:white; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</span>
-                    <span style="font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:12px; color:#44403C; text-align:left;">Πατήστε <strong id="inapp-menu-icon">⋯</strong> ή <strong>⫶</strong> στο πάνω μέρος της οθόνης</span>
+                    <span style="font-family:'Pretendard Variable',"Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:12px; color:#44403C; text-align:left;">Πατήστε <strong id="inapp-menu-icon">⋯</strong> ή <strong>⫶</strong> στο πάνω μέρος της οθόνης</span>
                 </div>
                 <div style="display:flex; align-items:center; gap:10px;">
                     <span style="width:24px; height:24px; border-radius:50%; background:#251B13; color:white; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">2</span>
-                    <span style="font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:12px; color:#44403C; text-align:left;" id="inapp-instruction">Επιλέξτε <strong>&laquo;Άνοιγμα στο πρόγραμμα περιήγησης&raquo;</strong></span>
+                    <span style="font-family:'Pretendard Variable',"Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif; font-size:12px; color:#44403C; text-align:left;" id="inapp-instruction">Επιλέξτε <strong>&laquo;Άνοιγμα στο πρόγραμμα περιήγησης&raquo;</strong></span>
                 </div>
             </div>
-            <button onclick="navigator.clipboard.writeText(window.location.href).then(function(){var b=document.getElementById('inapp-copy-btn');b.textContent='Ο σύνδεσμος αντιγράφηκε \u2705';setTimeout(function(){b.textContent='Αντιγραφή συνδέσμου';},2000);})" id="inapp-copy-btn" style="font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif; width:100%; padding:13px; border:1.5px solid #E7E5E4; border-radius:14px; background:white; color:#251B13; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">Αντιγραφή συνδέσμου</button>
+            <button onclick="navigator.clipboard.writeText(window.location.href).then(function(){var b=document.getElementById('inapp-copy-btn');b.textContent='Ο σύνδεσμος αντιγράφηκε \u2705';setTimeout(function(){b.textContent='Αντιγραφή συνδέσμου';},2000);})" id="inapp-copy-btn" style="font-family:'Pretendard Variable',"Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif; width:100%; padding:13px; border:1.5px solid #E7E5E4; border-radius:14px; background:white; color:#251B13; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">Αντιγραφή συνδέσμου</button>
         </div>
     </div>
     <script>
@@ -320,7 +320,7 @@
                      classes (gap-2.5, py-[18px], tracking-[1.5px]). Inline styles
                      guarantee the buttons render exactly as designed regardless
                      of what's in the compiled bundle. -->
-                <div style="max-width:24rem;margin:0 auto;padding-top:8px;font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;">
+                <div style="max-width:24rem;margin:0 auto;padding-top:8px;font-family:'Pretendard Variable',"Pretendard Fallback",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;">
                     <!-- Primary CTA = manual upload (reliable: user controls photo
                          quality). Secondary CTA = video scan, BETA-badged. The scan
                          button keeps the brand-green tint so it stays attractive
