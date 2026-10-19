@@ -1532,8 +1532,20 @@
     } catch (e) { /* jamais casser le rapport */ }
   }
 
+  // 19/10/2026 : l'app n'existe que sur iPhone (pas d'Android) et en français, anglais, espagnol, italien,
+  // allemand. Ailleurs (téléphone Android, rapport polonais / grec / néerlandais) : pas de bandeau.
+  // Ordinateur : bandeau gardé (le client peut avoir un iPhone).
+  function appDispo() {
+    try {
+      if (/Android/i.test(navigator.userAgent || "")) return false;
+      var l = (document.documentElement.lang || "").slice(0, 2).toLowerCase();
+      return ["fr", "en", "es", "it", "de"].indexOf(l) !== -1;
+    } catch (e) { return false; }
+  }
+
   window.__showAppBanner = function (jobId) {
     try {
+      if (!appDispo()) return;
       if (lsGet(LS_DONE) || ssGet(SS_CLOSED)) return;
       var banner = document.getElementById("app-banner");
       if (!banner) return;
