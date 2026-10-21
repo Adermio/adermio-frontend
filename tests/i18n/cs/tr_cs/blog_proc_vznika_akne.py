@@ -172,4 +172,6 @@ TR = [
     ('alt="Adermio Logo"',
      'alt="Logo Adermio"', 1),
 ]
-REGEX = []
+REGEX = [
+    (' — Adermio', ' – Adermio'),  # typographie tchèque : tiret demi-cadratin (21/10, relecture native)
+]

@@ -4,7 +4,7 @@
 TARGET = 'cs/premium.html'
 TR = [
     ('<title>Analyse Premium — Adermio</title>',
-     '<title>Kompletní analýza — Adermio</title>', 1),
+     '<title>Kompletní analýza – Adermio</title>', 1),
     ('aria-label="Application Adermio"',
      'aria-label="Aplikace Adermio"', 1),
     ("Votre analyse vous attend dans l'app Adermio",

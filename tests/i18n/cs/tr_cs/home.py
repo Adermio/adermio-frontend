@@ -4,7 +4,7 @@
 TARGET = 'cs/home.html'
 TR = [
     ('Adermio — Analyse dermatologique par intelligence artificielle',
-     'Adermio — Analýza pleti pomocí AI', 3),
+     'Adermio – Analýza pleti pomocí AI', 3),
     ("Adermio utilise l'IA pour analyser votre peau et diagnostiquer l'acné. Recevez un diagnostic personnalisé, des recommandations de produits et un suivi sur 28 jours. Essai gratuit.",
      "Adermio pomocí AI analyzuje vaši pleť a vyhodnotí akné. Získáte personalizované vyhodnocení, doporučení přípravků a sledování pokroku po dobu 28 dní. Analýza zdarma.", 3),
     ("Adermio est une application d'analyse dermatologique par intelligence artificielle spécialisée dans le diagnostic et le suivi de l'acné.",

@@ -4,9 +4,9 @@
 TARGET = 'cs/success.html'
 TR = [
     ('<title>Paiement confirmé — Adermio Premium</title>',
-     '<title>Platba potvrzena — kompletní analýza Adermio</title>', 1),
+     '<title>Platba potvrzena – kompletní analýza Adermio</title>', 1),
     ('content="Paiement confirmé — Adermio Premium"',
-     'content="Platba potvrzena — kompletní analýza Adermio"', 2),
+     'content="Platba potvrzena – kompletní analýza Adermio"', 2),
     ('content="Votre paiement a été confirmé. Votre analyse premium Adermio est en cours de préparation."',
      'content="Vaše platba byla potvrzena. Připravujeme vaši kompletní analýzu Adermio."', 3),
     ('transition-colors">Accueil</a>',

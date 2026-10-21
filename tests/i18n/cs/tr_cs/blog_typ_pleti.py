@@ -188,4 +188,6 @@ TR = [
     ('\n                    Dermatologie\n',
      '\n                    Dermatologie\n', 1),
 ]
-REGEX = []
+REGEX = [
+    (' — Adermio', ' – Adermio'),  # typographie tchèque : tiret demi-cadratin (21/10, relecture native)
+]

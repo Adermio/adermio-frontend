@@ -62,4 +62,6 @@ TR = [
     (', et al. — <em>',
      ', et al. – <em>', 15),
 ]
-REGEX = []
+REGEX = [
+    (' — <em>', ' – <em>'),  # typographie tchèque : tiret demi-cadratin (21/10, relecture native)
+]

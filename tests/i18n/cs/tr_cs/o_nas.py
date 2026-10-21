@@ -4,7 +4,7 @@
 TARGET = 'cs/o-nas.html'
 TR = [
     ("À propos d'Adermio — Notre mission en dermatologie IA",
-     "O nás — Naše mise: péče o pleť díky AI | Adermio", 3),
+     "O nás – naše mise: péče o pleť díky AI | Adermio", 3),
     ("Découvrez Adermio, l'application qui combine expertise dermatologique et intelligence artificielle pour offrir des analyses de peau personnalisées et accessibles à tous.",
      "Aplikace Adermio přináší personalizované analýzy pleti dostupné pro každého. Spojuje umělou inteligenci s poznatky z dermatologie.", 3),
     ('>Accueil</a>',

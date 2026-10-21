@@ -6,9 +6,9 @@
 TARGET = 'cs/form.html'
 TR = [
     ('<title>Diagnostic Expert — Adermio</title>',
-     '<title>Odborná analýza pleti — Adermio</title>', 1),
+     '<title>Odborná analýza pleti – Adermio</title>', 1),
     ('content="Diagnostic Expert — Adermio"',
-     'content="Odborná analýza pleti — Adermio"', 2),
+     'content="Odborná analýza pleti – Adermio"', 2),
     ('content="Formulaire de diagnostic expert Adermio. Analyse dermatologique avancée par intelligence artificielle."',
      'content="Dotazník Adermio pro odbornou analýzu pleti. Pokročilé vyhodnocení pomocí umělé inteligence."', 3),
     ('>Ouvrez dans votre navigateur</h2>',

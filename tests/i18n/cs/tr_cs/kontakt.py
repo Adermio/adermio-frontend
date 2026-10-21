@@ -4,7 +4,7 @@
 TARGET = 'cs/kontakt.html'
 TR = [
     ('Contact — Adermio',
-     'Kontakt — Adermio', 3),
+     'Kontakt – Adermio', 3),
     ("Contactez l'équipe Adermio pour toute question sur votre analyse dermatologique, votre compte ou nos services.",
      "Máte dotaz k analýze pleti, ke svému účtu nebo k našim službám? Napište týmu Adermio.", 3),
     ("Contactez l'équipe Adermio pour toute question sur votre analyse de peau ou le fonctionnement de notre IA.",

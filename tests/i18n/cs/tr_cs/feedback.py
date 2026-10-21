@@ -4,11 +4,11 @@
 TARGET = 'cs/feedback.html'
 TR = [
     ('Votre avis — Adermio',
-     'Vaše zpětná vazba — Adermio', 3),
+     'Vaše zpětná vazba – Adermio', 3),
     ("Partagez votre expérience avec Adermio. Votre retour nous aide à améliorer notre service d'analyse dermatologique.",
      'Podělte se o své zkušenosti se službou Adermio. Vaše zpětná vazba nám pomáhá zlepšovat analýzu pleti pomocí AI.', 3),
     ('<title>Votre avis compte pour Adermio</title>',
-     '<title>Na vašem názoru nám záleží — Adermio</title>', 1),
+     '<title>Na vašem názoru nám záleží – Adermio</title>', 1),
     ('>Adermio &amp; Vous</h1>',
      '>Adermio a vy</h1>', 1),
     ("&quot;Merci d'avoir testé notre analyse complète. Adermio est encore jeune et en pleine expansion.",

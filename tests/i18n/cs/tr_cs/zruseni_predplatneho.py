@@ -4,7 +4,7 @@
 TARGET = 'cs/zruseni-predplatneho.html'
 TR = [
     ('Résilier mon abonnement — Adermio',
-     'Zrušení předplatného — Adermio', 3),
+     'Zrušení předplatného – Adermio', 3),
     ("Résiliez votre abonnement Adermio Premium en ligne, en quelques clics : abonnement souscrit sur adermio.com ou dans l'application.",
      'Zrušte své předplatné Adermio Premium online během několika kliknutí: platí pro předplatné sjednané na adermio.com i v aplikaci.', 3),
     ('                <span>Mon abonnement</span>',
