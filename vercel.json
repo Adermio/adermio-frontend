@@ -93,6 +93,16 @@
       "statusCode": 301
     },
     {
+      "source": "/cs",
+      "destination": "/cs/home",
+      "statusCode": 301
+    },
+    {
+      "source": "/cs/",
+      "destination": "/cs/home",
+      "statusCode": 301
+    },
+    {
       "source": "/finalisation",
       "destination": "/success",
       "statusCode": 301
@@ -208,6 +218,15 @@
     }
   ],
   "headers": [
+    {
+      "source": "/cs/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
     {
       "source": "/pl/anuluj-subskrypcje",
       "headers": [
