@@ -9,7 +9,7 @@
 // et Autrichiens sur /en en 3 jours, 0 paiement le 12/10 contre 24 % sur /de.
 // À l'arrivée, on leur propose la version dans leur langue (même parcours) :
 //   « Continua in italiano » / « Συνέχεια στα ελληνικά » / « Verder in het Nederlands »
-//   / « Weiter auf Deutsch »
+//   / « Weiter auf Deutsch » / « Kontynuuj po polsku » / « Continuar em português »
 //                               → page équivalente, query string conservée
 //                                 (utm, ttclid…) pour ne pas casser l'attribution ;
 //   « Continue in English » (ou la langue de la page) → on ferme et on ne
@@ -93,6 +93,23 @@
       title: 'Adermio jest dostępne po polsku',
       text: 'Twoja darmowa analiza skóry i pełny raport – w całości po polsku.',
       cta: 'Kontynuuj po polsku'
+    },
+    pt: {
+      // 21/10/2026 : 30 derniers jours, visiteurs situés au Portugal sur /en/form (50 sessions), /formulaire (35),
+      // /it/form (19), /de/form (11)… aucun sur une page portugaise (ouverte ce jour). Brésil : 0 visite → non ciblé.
+      countries: ['PT'],
+      choiceKey: 'adermio_lang_choice_pt',
+      targets: {
+        '/en/form': '/pt/form', '/en/home': '/pt/home',
+        '/it/form': '/pt/form', '/it/home': '/pt/home',
+        '/de/form': '/pt/form', '/de/home': '/pt/home',
+        '/formulaire': '/pt/form', '/': '/pt/home'
+      },
+      flag: 'pt',
+      label: 'Português',
+      title: 'A Adermio está disponível em português',
+      text: 'A sua análise gratuita da pele e o relatório completo, totalmente em português.',
+      cta: 'Continuar em português'
     }
   };
 
