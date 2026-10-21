@@ -1,0 +1,53 @@
+# Table de traduction pt/premium-second-cycle.html (source : premium-second-cycle.html)
+# Colonne de gauche = littéral FR EXACT de la page préparée (ne pas modifier) ; à droite : le portugais (Portugal).
+# None = pas encore traduit (apply_tr_pt.py refuse). 3e valeur = nombre d'occurrences attendu.
+TARGET = 'pt/premium-second-cycle.html'
+TR = [
+    ("Analyse Cycle 2 — Suivi d'évolution Adermio",
+     'Análise do Ciclo 2 — Acompanhamento da evolução com a Adermio', 3),
+    ("Comparez l'évolution de votre peau avec l'analyse comparative Cycle 2 d'Adermio. Mesurez vos progrès après 28 jours de routine.",
+     'Compare a evolução da sua pele com a análise comparativa do Ciclo 2 da Adermio. Meça os seus progressos após 28 dias de rotina.', 3),
+    ('<title>Adermio - Analyse Cycle 2</title>',
+     '<title>Adermio - Análise do Ciclo 2</title>', 1),
+    ('Chargement de votre analyse Cycle 2...',
+     'A carregar a sua análise do Ciclo 2...', 1),
+    ('Lien invalide : token manquant.',
+     'Ligação inválida. Abra a ligação que recebeu por e-mail.', 1),
+    ('Error("Erreur de chargement")',
+     'Error("Erro ao carregar")', 1),
+    ('"Rapport introuvable"',
+     '"Relatório não encontrado"', 1),
+    ('"URL du rapport manquante"',
+     '"Endereço do relatório em falta"', 1),
+    ('Erreur de chargement. R\\u00e9essayez plus tard.',
+     'Erro ao carregar. Tente novamente mais tarde.', 1),
+    ("Je suis l'IA Adermio &#128075;<br>Des questions sur votre Cycle 2 ? Je suis l&#224; !",
+     'Sou a IA da Adermio &#128075;<br>Tem dúvidas sobre o seu Ciclo 2? Estou aqui!', 1),
+    ('aria-label="Ouvrir le chat Adermio"',
+     'aria-label="Abrir a conversa com a Adermio"', 1),
+    ('>Adermio Assistant</span>',
+     '>Assistente Adermio</span>', 1),
+    ('>En ligne</span>',
+     '>Online</span>', 1),
+    ('aria-label="Fermer"',
+     'aria-label="Fechar"', 1),
+    ("Bonjour ! Je suis l'IA Adermio. J'ai analys&#233; vos donn&#233;es du Cycle 1 et Cycle 2. Posez-moi vos questions ! &#128071;",
+     'Olá! Sou a IA da Adermio. Analisei os seus dados dos Ciclos 1 e 2. Faça-me as suas perguntas! &#128071;', 1),
+    ('placeholder="Posez votre question..."',
+     'placeholder="Escreva a sua pergunta..."', 1),
+    ('Adermio IA peut faire des erreurs.',
+     'A IA da Adermio pode cometer erros.', 1),
+    ("Impossible d'identifier votre rapport.",
+     'Não foi possível identificar o seu relatório.', 1),
+    ('"Erreur IA"',
+     '"Erro da IA"', 1),
+    ("D\\u00e9sol\\u00e9, je n'ai pas compris.",
+     'Desculpe, não percebi a pergunta.', 1),
+    ('(err.message || "Erreur.")',
+     '("Não foi possível obter uma resposta. Tente novamente dentro de instantes.")', 1),
+]
+# REGEX de la table polonaise (motif FR ; remplacement POLONAIS montré pour le sens) : à réécrire en portugais, puis décommenter :
+#   ('errorEl\\.textContent = e\\.message \\|\\| "', 'errorEl.textContent = "'),
+REGEX = [
+    ('errorEl\.textContent = e\.message \|\| "', 'errorEl.textContent = "'),
+]
