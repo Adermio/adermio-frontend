@@ -209,7 +209,7 @@
   ],
   "headers": [
     {
-      "source": "/pt/(.*)",
+      "source": "/pl/anuluj-subskrypcje",
       "headers": [
         {
           "key": "X-Robots-Tag",
@@ -218,7 +218,7 @@
       ]
     },
     {
-      "source": "/pl/anuluj-subskrypcje",
+      "source": "/pt/cancelar-subscricao",
       "headers": [
         {
           "key": "X-Robots-Tag",
