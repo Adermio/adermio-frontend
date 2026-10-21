@@ -95,6 +95,19 @@ d'être appliquée. Un relecteur ne défait JAMAIS une décision du client ni du
     inteligence* une fois par page au plus. Slogan « La dermatologie réinventée par l'IA » → ***Péče o pleť v novém pojetí
     díky AI.*** (jamais « dermatologie » à côté d'AI).
 
+
+## Harmonisation (21/10, après traduction) — s'applique à toutes les pages
+
+- Logo : `alt="Logo Adermio"` partout (aussi pour `alt="Logo"`).
+- Catégorie du blog « Acné & Dermatologie » → *Akné a dermatologie* (et « Data & … » → *Data a …*) : « a », jamais « & ».
+- « Vos données ont été transmises avec succès » → *Vaše údaje byly úspěšně odeslány.* ; « Analyse en cours, veuillez patienter pour la redirection » →
+  *Probíhá analýza, chvíli strpení – za okamžik vás přesměrujeme…*
+- Chemin iOS de résiliation : *Nastavení iOS → [vaše jméno] → Předplatná → Adermio Premium → Zrušit předplatné*.
+- « Nous contacter » (menu, pied de page, boutons) → *Napište nám* partout ; « Contact » (titre de page) → *Kontakt*.
+- Témoignages : texte IDENTIQUE à `tr_cs/home.py` (référence ; « diagnostic » de Julie → *výsledek*).
+- « Le saviez-vous ? » → *Zajímavost* ; « score » → *hodnocení* (le QA prend *skóre* pour du polonais) ; « Oups ! » → *Jejda!*
+- Prénom absent : *Dobrý den* sauf dans un titre de félicitations (« Gratulujeme, skvělá volba »).
+
 ## Décisions du client
 
 - **21/10/2026** (plan validé « OK pour tout ton plan… GO », puis « même principe, site seul puis retour à Antoine ») :

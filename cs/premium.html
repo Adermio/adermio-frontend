@@ -24,7 +24,7 @@
 <link rel="alternate" hreflang="pl" href="https://adermio.com/pl/premium">
 <link rel="alternate" hreflang="pt" href="https://adermio.com/pt/premium">
 <link rel="alternate" hreflang="cs" href="https://adermio.com/cs/premium">
-<title>Analyse Premium — Adermio</title>
+<title>Kompletní analýza — Adermio</title>
 <style>
   /* --- 1. BASE & VARS --- */
   :root {
@@ -378,30 +378,30 @@
     .app-banner-inner { padding: 12px; gap: 10px; }
   }
 </style>
-<div id="app-banner" style="display:none" role="region" aria-label="Application Adermio">
+<div id="app-banner" style="display:none" role="region" aria-label="Aplikace Adermio">
   <div class="app-banner-inner">
     <div class="app-banner-icon">📱</div>
     <div class="app-banner-body">
       <div id="app-banner-with-code" style="display:none">
-        <p class="app-banner-title">Votre analyse vous attend dans l'app Adermio</p>
-        <p class="app-banner-sub">Entrez ce code dans l'app pour la retrouver&nbsp;: <strong id="app-banner-code" class="app-banner-code-val"></strong></p>
+        <p class="app-banner-title">Vaše analýza na vás čeká v aplikaci Adermio</p>
+        <p class="app-banner-sub">Zadejte v aplikaci tento kód a analýzu tam najdete: <strong id="app-banner-code" class="app-banner-code-val"></strong></p>
         <div class="app-banner-actions">
-          <button id="app-banner-copy" type="button" class="app-banner-btn">Copier le code</button>
-          <a class="app-banner-btn app-banner-btn-primary app-banner-store-link" href="https://apps.apple.com/app/adermio/id6768772221" target="_blank" rel="noopener">Télécharger l'app</a>
+          <button id="app-banner-copy" type="button" class="app-banner-btn">Zkopírovat kód</button>
+          <a class="app-banner-btn app-banner-btn-primary app-banner-store-link" href="https://apps.apple.com/app/adermio/id6768772221" target="_blank" rel="noopener">Stáhnout aplikaci</a>
         </div>
       </div>
       <div id="app-banner-no-code" style="display:none">
-        <p class="app-banner-title">L'app Adermio est disponible</p>
-        <p class="app-banner-sub">Scans illimités, routine personnalisée et suivi de votre peau.</p>
+        <p class="app-banner-title">Aplikace Adermio je k dispozici</p>
+        <p class="app-banner-sub">Neomezené skenování pleti, personalizovaná rutina péče a sledování pokroku.</p>
         <div class="app-banner-actions">
-          <a class="app-banner-btn app-banner-btn-primary app-banner-store-link" href="https://apps.apple.com/app/adermio/id6768772221" target="_blank" rel="noopener">Découvrir l'app</a>
+          <a class="app-banner-btn app-banner-btn-primary app-banner-store-link" href="https://apps.apple.com/app/adermio/id6768772221" target="_blank" rel="noopener">Vyzkoušet aplikaci</a>
         </div>
       </div>
     </div>
-    <button id="app-banner-close" type="button" class="app-banner-close" aria-label="Fermer">×</button>
+    <button id="app-banner-close" type="button" class="app-banner-close" aria-label="Zavřít">×</button>
   </div>
 </div>
-<div id="premium-loading">Chargement de votre analyse premium...</div>
+<div id="premium-loading">Načítáme vaši kompletní analýzu…</div>
 <div id="premium-error"></div>
 <div id="premium-container">
   <iframe
@@ -416,8 +416,8 @@
 
     <div id="adjust-header">
       <div>
-        <h2 class="header-title">Personnalisation Expert</h2>
-        <p class="header-sub">Configurez votre stratégie dermatologique</p>
+        <h2 class="header-title">Pokročilé přizpůsobení</h2>
+        <p class="header-sub">Nastavte si strategii péče o pleť</p>
       </div>
       <button class="close-btn" id="adjust-close-btn">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -428,38 +428,38 @@
         <div class="section">
           <div class="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14h6"/><path d="M9 18h6"/><path d="M9 10h6"/></svg>
-            Votre routine Adermio
+            Vaše rutina Adermio
           </div>
           <div class="routine-container">
             <div id="routine-rows"></div>
           </div>
           <div class="routine-text-block">
-            <label>Les produits que vous utilisez déjà (Modifiable)</label>
+            <label>Přípravky, které už používáte (lze upravit)</label>
             <textarea id="current-products-text" class="text-area-sm" style="min-height:50px;"></textarea>
           </div>
           <div class="routine-text-block">
-            <label style="color:#0f766e;">Produits de votre routine actuelle que vous souhaitez conserver</label>
-            <textarea id="keep-products-text" class="text-area-sm" placeholder="Ex: Je souhaite absolument garder ma crème hydratante Caudalie car je l'ai achetée récemment..."></textarea>
+            <label style="color:#0f766e;">Přípravky ze současné rutiny, které si chcete ponechat</label>
+            <textarea id="keep-products-text" class="text-area-sm" placeholder="Např.: Určitě si chci ponechat hydratační krém Caudalie, je to čerstvý nákup…"></textarea>
           </div>
         </div>
         <div class="section">
           <div class="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-            Format de la Routine
+            Rozsah rutiny
           </div>
           <div class="intensity-grid">
             <label class="chip-opt">
               <input type="radio" name="intensity" value="minimal" onchange="window.updateBudgetRanges('minimal')">
               <div class="chip-visual">
                 <svg class="chip-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <div><span class="chip-title">Minimaliste</span><div class="chip-desc">2-3 produits • Rapide</div></div>
+                <div><span class="chip-title">Minimalistická</span><div class="chip-desc">2–3 přípravky • Rychlá</div></div>
               </div>
             </label>
             <label class="chip-opt">
               <input type="radio" name="intensity" value="complete" checked onchange="window.updateBudgetRanges('complete')">
               <div class="chip-visual">
                 <svg class="chip-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <div><span class="chip-title">Complète</span><div class="chip-desc">4-6 produits • Standard</div></div>
+                <div><span class="chip-title">Kompletní</span><div class="chip-desc">4–6 přípravků • Standardní</div></div>
               </div>
             </label>
           </div>
@@ -467,28 +467,28 @@
         <div class="section">
           <div class="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2 2 2 0 0 1 2-2h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2v-8h-2z"/></svg>
-            Budget Cible
+            Cílový rozpočet
           </div>
           <div class="budget-row">
             <label class="budget-item">
               <input type="radio" name="budget" value="low">
               <div class="budget-tile">
-                <span class="b-title">Économique</span>
-                <span class="b-range" id="price-low">&lt; 60€</span>
+                <span class="b-title">Úsporný</span>
+                <span class="b-range" id="price-low">&lt; 60&nbsp;€</span>
               </div>
             </label>
             <label class="budget-item">
               <input type="radio" name="budget" value="mid" checked>
               <div class="budget-tile">
-                <span class="b-title">Standard</span>
-                <span class="b-range" id="price-mid">60€ - 110€</span>
+                <span class="b-title">Standardní</span>
+                <span class="b-range" id="price-mid">60–110&nbsp;€</span>
               </div>
             </label>
             <label class="budget-item">
               <input type="radio" name="budget" value="high">
               <div class="budget-tile">
-                <span class="b-title">Premium</span>
-                <span class="b-range" id="price-high">&gt; 110€</span>
+                <span class="b-title">Prémiový</span>
+                <span class="b-range" id="price-high">&gt; 110&nbsp;€</span>
               </div>
             </label>
           </div>
@@ -498,28 +498,28 @@
         <div class="section">
           <div class="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>
-            Préférence de Texture
+            Preferovaná textura
           </div>
           <div class="budget-row">
             <label class="budget-item">
               <input type="radio" name="texture" value="light">
               <div class="budget-tile">
-                <span class="b-title">Légère</span>
-                <span class="b-range">Gel, fluide, eau</span>
+                <span class="b-title">Lehká</span>
+                <span class="b-range">Gel, fluid, esence</span>
               </div>
             </label>
             <label class="budget-item">
               <input type="radio" name="texture" value="rich">
               <div class="budget-tile">
-                <span class="b-title">Riche</span>
-                <span class="b-range">Crème, baume</span>
+                <span class="b-title">Výživná</span>
+                <span class="b-range">Krém, balzám</span>
               </div>
             </label>
             <label class="budget-item">
               <input type="radio" name="texture" value="trust" checked>
               <div class="budget-tile">
-                <span class="b-title">Au choix</span>
-                <span class="b-range">Je vous fais confiance</span>
+                <span class="b-title">Libovolná</span>
+                <span class="b-range">Nechám to na vás</span>
               </div>
             </label>
           </div>
@@ -528,14 +528,14 @@
         <div class="section">
           <div class="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-            Préférences Marques
+            Preferované značky
           </div>
 
           <div class="brand-section-group">
-            <label class="brand-section-label pos">Marques à Privilégier</label>
+            <label class="brand-section-label pos">Upřednostňované značky</label>
             <div class="brand-dropdown">
               <div class="bd-header" onclick="window.toggleDropdown('bd-love')">
-                <span>Ajouter une marque...</span>
+                <span>Přidat značku…</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
               </div>
               <div id="bd-love" class="bd-content">
@@ -557,7 +557,7 @@
                   <label class="brand-check"><input type="checkbox" value="Vichy" onchange="window.updateTags('love')"> Vichy</label>
                 </div>
                 <div class="brand-input-row">
-                  <input type="text" id="input-love" class="brand-input-custom" placeholder="Autre marque..." onkeypress="window.handleBrandInput(event, 'love')">
+                  <input type="text" id="input-love" class="brand-input-custom" placeholder="Jiná značka…" onkeypress="window.handleBrandInput(event, 'love')">
                   <button type="button" class="brand-add-btn" onclick="window.addCustomBrand('love')">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                   </button>
@@ -567,10 +567,10 @@
             <div id="tags-love" class="selected-tags-container"></div>
           </div>
           <div class="brand-section-group">
-            <label class="brand-section-label neg">Marques à Éviter</label>
+            <label class="brand-section-label neg">Značky, kterým se chcete vyhnout</label>
             <div class="brand-dropdown">
               <div class="bd-header" onclick="window.toggleDropdown('bd-hate')">
-                <span>Ajouter une marque...</span>
+                <span>Přidat značku…</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
               </div>
               <div id="bd-hate" class="bd-content">
@@ -592,7 +592,7 @@
                   <label class="brand-check"><input type="checkbox" value="Vichy" onchange="window.updateTags('hate')"> Vichy</label>
                 </div>
                 <div class="brand-input-row">
-                  <input type="text" id="input-hate" class="brand-input-custom" placeholder="Autre marque..." onkeypress="window.handleBrandInput(event, 'hate')">
+                  <input type="text" id="input-hate" class="brand-input-custom" placeholder="Jiná značka…" onkeypress="window.handleBrandInput(event, 'hate')">
                   <button type="button" class="brand-add-btn" onclick="window.addCustomBrand('hate')">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                   </button>
@@ -607,36 +607,36 @@
         <div class="section">
           <div class="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            Vigilance Médicale
+            Zdravotní informace
           </div>
           <div class="vigilance-container">
             <div class="med-grid">
               <div class="med-box">
-                <label>Allergies connues</label>
-                <textarea id="allergies-text" class="text-area-sm" placeholder="Ex : parfum, huiles essentielles..."></textarea>
+                <label>Známé alergie</label>
+                <textarea id="allergies-text" class="text-area-sm" placeholder="Např. parfemace, esenciální oleje…"></textarea>
               </div>
               <div class="med-box">
-                <label>Traitements en cours</label>
-                <textarea id="meds-text" class="text-area-sm" placeholder="Ex : isotrétinoïne, corticoïdes..."></textarea>
+                <label>Užívané léky</label>
+                <textarea id="meds-text" class="text-area-sm" placeholder="Např. izotretinoin, kortikoidy…"></textarea>
               </div>
             </div>
             <label class="preg-toggle">
               <input type="checkbox" id="pregnancy-status">
               <span class="toggle-switch"></span>
-              <span class="preg-label">Grossesse ou allaitement en cours</span>
+              <span class="preg-label">Těhotenství nebo kojení</span>
             </label>
           </div>
         </div>
 
         <div class="section">
-          <div class="section-header">Note à l'IA Adermio</div>
-          <textarea id="user-note" class="text-area-sm" style="min-height: 120px;" placeholder="Indiquez ici tout ce que vous souhaitez que l'IA prenne en compte pour ajuster votre routine."></textarea>
+          <div class="section-header">Poznámka pro AI Adermio</div>
+          <textarea id="user-note" class="text-area-sm" style="min-height: 120px;" placeholder="Napište sem vše, co má AI vzít v úvahu při úpravě vaší rutiny."></textarea>
         </div>
       </div>
     </div>
     <div id="adjust-footer">
-      <button class="btn btn-ghost" id="adjust-cancel-btn">Annuler</button>
-      <button class="btn btn-primary" id="adjust-submit-btn">Valider la routine</button>
+      <button class="btn btn-ghost" id="adjust-cancel-btn">Zrušit</button>
+      <button class="btn btn-primary" id="adjust-submit-btn">Potvrdit rutinu</button>
       <div></div>
     </div>
   </div>
@@ -649,12 +649,12 @@
       <div id="gen-progress-bar" class="gen-progress-fill"></div>
     </div>
 
-    <h3 id="gen-title" class="gen-title">Adermio génère votre nouvelle routine...</h3>
-    <p id="gen-desc" class="gen-desc">L'IA analyse vos contraintes et reformule votre protocole. <br>Cela peut prendre quelques secondes.</p>
+    <h3 id="gen-title" class="gen-title">Adermio vytváří vaši novou rutinu…</h3>
+    <p id="gen-desc" class="gen-desc">AI vyhodnocuje vaše požadavky a přizpůsobuje rutinu. <br>Může to trvat několik sekund.</p>
 
     <div id="gen-success-area">
       <button id="gen-open-btn" class="btn btn-primary" style="font-size:16px; padding:16px 32px;">
-        Voir mon nouveau protocole
+        Zobrazit novou rutinu
       </button>
     </div>
   </div>
@@ -722,16 +722,16 @@
       const iframeEl = document.getElementById("premium-iframe");
       if (!GLOBAL_TOKEN) {
         if(loadingEl) loadingEl.style.display = "none";
-        if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Lien invalide : token manquant."; }
+        if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Odkaz je neplatný. Otevřete prosím znovu odkaz z e-mailu."; }
         return;
       }
       // If upgrade to "complet", wait for workflow to finish before loading report
       if (upgradeVersion === "complet") {
-        if(loadingEl) loadingEl.innerHTML = '<div style="text-align:center"><div style="margin-bottom:16px;font-size:24px">⏳</div><div style="font-weight:600;color:#0f766e;margin-bottom:8px">Pr\u00e9paration de votre dossier complet...</div><div style="font-size:12px;color:#94a3b8">Cela peut prendre quelques minutes</div></div>';
+        if(loadingEl) loadingEl.innerHTML = '<div style="text-align:center"><div style="margin-bottom:16px;font-size:24px">⏳</div><div style="font-weight:600;color:#0f766e;margin-bottom:8px">Připravujeme vaši kompletní analýzu…</div><div style="font-size:12px;color:#94a3b8">Může to trvat několik minut</div></div>';
         const ready = await waitForUpgrade(GLOBAL_TOKEN);
         if (!ready) {
           if(loadingEl) loadingEl.style.display = "none";
-          if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Le dossier complet n'est pas encore pr\u00eat. Rechargez la page dans quelques minutes."; }
+          if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Kompletní analýza ještě není hotová. Obnovte prosím stránku za několik minut."; }
           return;
         }
       }
@@ -741,9 +741,9 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: GLOBAL_TOKEN })
       });
-      if (!resp.ok) throw new Error("Acc\u00e8s refus\u00e9 ou lien expir\u00e9");
+      if (!resp.ok) throw new Error("Přístup byl odepřen nebo platnost odkazu vypršela");
       const data = await resp.json();
-      if (!data.report_html_url) throw new Error("URL rapport manquante");
+      if (!data.report_html_url) throw new Error("Chybí odkaz na zprávu");
       iframeEl.src = withReportToken(data.report_html_url);
       if(loadingEl) loadingEl.style.display = "none";
       if(containerEl) containerEl.style.display = "block";
@@ -764,7 +764,7 @@
       const loadingEl = document.getElementById("premium-loading");
       const errorEl = document.getElementById("premium-error");
       if(loadingEl) loadingEl.style.display = "none";
-      if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Erreur de chargement. Réessayez plus tard."; }
+      if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Analýzu se nepodařilo načíst. Zkuste to prosím později."; }
     }
   }
   // --- 2. FETCH CONTEXT (SILENT) ---
@@ -805,9 +805,9 @@
     pLow.style.opacity = 0.5; pMid.style.opacity = 0.5; pHigh.style.opacity = 0.5;
     setTimeout(() => {
       if (mode === 'minimal') {
-        pLow.textContent = "< 40€"; pMid.textContent = "40€ - 70€"; pHigh.textContent = "> 70€";
+        pLow.textContent = "< 40 €"; pMid.textContent = "40–70 €"; pHigh.textContent = "> 70 €";
       } else {
-        pLow.textContent = "< 60€"; pMid.textContent = "60€ - 110€"; pHigh.textContent = "> 110€";
+        pLow.textContent = "< 60 €"; pMid.textContent = "60–110 €"; pHigh.textContent = "> 110 €";
       }
       pLow.style.opacity = 0.8; pMid.style.opacity = 0.8; pHigh.style.opacity = 0.8;
     }, 150);
@@ -858,7 +858,7 @@
       container.innerHTML = '';
       const productsToDisplay = (userContext.products && userContext.products.length > 0)
                                 ? userContext.products
-                                : [{type: "Info", name: "Aucune routine détectée", id: "0"}];
+                                : [{type: "Informace", name: "Žádná rutina nebyla nalezena", id: "0"}];
       productsToDisplay.forEach(item => {
         const el = document.createElement('div');
         el.className = 'prod-card';
@@ -871,8 +871,8 @@
             <div class="prod-name">${fixEncoding(item.name)}</div>
           </div>
           <div class="toggle-group" data-choice="replace" ${hideButtons}>
-            <button type="button" class="toggle-opt active-replace" onclick="setProductState(this, 'replace')">Remplacer</button>
-            <button type="button" class="toggle-opt" onclick="setProductState(this, 'keep')">Garder</button>
+            <button type="button" class="toggle-opt active-replace" onclick="setProductState(this, 'replace')">Nahradit</button>
+            <button type="button" class="toggle-opt" onclick="setProductState(this, 'keep')">Ponechat</button>
           </div>`;
         container.appendChild(el);
       });
@@ -935,8 +935,8 @@
       const overlay = document.getElementById('generating-overlay');
       overlay.style.display = 'flex';
 
-      document.getElementById('gen-title').textContent = "Adermio génère votre nouvelle routine...";
-      document.getElementById('gen-desc').textContent = "L'IA analyse vos contraintes et reformule votre protocole. Cela peut prendre quelques secondes.";
+      document.getElementById('gen-title').textContent = "Adermio vytváří vaši novou rutinu…";
+      document.getElementById('gen-desc').textContent = "AI vyhodnocuje vaše požadavky a přizpůsobuje rutinu. Může to trvat několik sekund.";
       document.getElementById('gen-success-area').style.display = 'none';
       // Reset Bar & Start Animation Stages
       const bar = document.getElementById('gen-progress-bar');
@@ -1003,7 +1003,7 @@
         const bar = document.getElementById('gen-progress-bar');
         bar.style.transition = 'width 0.5s ease-out';
         bar.style.width = '100%';
-        document.getElementById('gen-desc').textContent = "Finalisation de l'écriture du rapport...";
+        document.getElementById('gen-desc').textContent = "Dokončujeme zprávu…";
         setTimeout(() => { showGenerationSuccess(); }, 800);
       }
     } catch (e) { console.error("Polling error:", e); }
@@ -1021,8 +1021,8 @@
     if (pollIntervalId) { clearInterval(pollIntervalId); pollIntervalId = null; }
   }
   function showGenerationSuccess() {
-    document.getElementById('gen-title').textContent = "Analyse prête !";
-    document.getElementById('gen-desc').textContent = "Votre nouvelle routine a été générée avec succès.";
+    document.getElementById('gen-title').textContent = "Analýza je hotová!";
+    document.getElementById('gen-desc').textContent = "Vaše nová rutina je připravena.";
     document.getElementById('gen-success-area').style.display = 'block';
   }
   // --- 7. RELOAD ---
@@ -1031,16 +1031,16 @@
     openNewBtn.addEventListener('click', async () => {
       const btn = document.getElementById('gen-open-btn');
       const iframe = document.getElementById("premium-iframe");
-      btn.textContent = "Ouverture...";
+      btn.textContent = "Otevírání…";
       btn.disabled = true;
-      document.getElementById('gen-desc').textContent = "Récupération de votre nouvelle routine...";
+      document.getElementById('gen-desc').textContent = "Načítáme vaši novou rutinu…";
       try {
         const resp = await fetch("https://ai.adermio.com/api/get_report", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token: GLOBAL_TOKEN })
         });
-        if (!resp.ok) throw new Error("Erreur récupération URL");
+        if (!resp.ok) throw new Error("Odkaz na zprávu se nepodařilo načíst");
         const data = await resp.json();
 
         iframe.src = "about:blank";
@@ -1049,7 +1049,7 @@
                 document.getElementById('generating-overlay').style.display = 'none';
                 // TOAST REMOVED HERE AS REQUESTED
                 fetchUserContext(); // Refresh context for V3
-                btn.textContent = "Voir mon nouveau protocole";
+                btn.textContent = "Zobrazit novou rutinu";
                 btn.disabled = false;
                 iframe.onload = null;
             };
@@ -1227,11 +1227,11 @@
 </style>
 
 <div id="adermio-welcome-bubble">
-  Je suis l'IA Adermio &#128075;<br>Si tu as des questions sur ton analyse, n'h&eacute;site pas &agrave; m'interroger !
+  Jsem AI asistent Adermio &#128075;<br>Máte otázky ke své analýze? Klidně se mě zeptejte!
   <button id="adermio-welcome-close">&times;</button>
 </div>
 
-<div id="adermio-chat-launcher" aria-label="Ouvrir le chat Adermio">
+<div id="adermio-chat-launcher" aria-label="Otevřít chat Adermio">
   <span class="dot" id="adermio-chat-dot"></span>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
 </div>
@@ -1239,26 +1239,26 @@
 <div id="adermio-chat" role="dialog" aria-modal="true">
   <div class="adermio-chat-header">
     <div class="adermio-header-info">
-      <span class="adermio-header-title">Adermio Assistant</span>
-      <span class="adermio-header-subtitle">En ligne</span>
+      <span class="adermio-header-title">Asistent Adermio</span>
+      <span class="adermio-header-subtitle">Online</span>
     </div>
-    <button class="adermio-chat-close" id="adermio-chat-close" aria-label="Fermer">
+    <button class="adermio-chat-close" id="adermio-chat-close" aria-label="Zavřít">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
   </div>
   <div class="adermio-chat-body" id="adermio-chat-body">
     <div class="adermio-chat-msg bot">
       <div class="adermio-chat-bubble">
-        Bonjour ! Je suis l'IA Adermio. J'ai analys&eacute; tes donn&eacute;es, pose-moi une question sur ton rapport ! &#128071;
+        Dobrý den! Jsem AI asistent Adermio a vaše data už mám zanalyzovaná. Zeptejte se mě na cokoli ke své zprávě! &#128071;
       </div>
     </div>
   </div>
   <div class="adermio-chat-footer">
     <div class="adermio-input-wrapper">
-      <textarea id="adermio-chat-input" placeholder="Pose ta question..." rows="1"></textarea>
+      <textarea id="adermio-chat-input" placeholder="Napište svůj dotaz…" rows="1"></textarea>
       <button id="adermio-chat-send" disabled><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
     </div>
-    <div class="adermio-chat-hint">Adermio IA peut faire des erreurs.</div>
+    <div class="adermio-chat-hint">AI asistent Adermio může chybovat.</div>
   </div>
 </div>
 
@@ -1392,7 +1392,7 @@
         addMessage('bot', '', true);
 
         try {
-            if (!token) throw new Error("Impossible d'identifier votre rapport.");
+            if (!token) throw new Error("Vaši zprávu se nepodařilo najít.");
 
             const resp = await fetch("https://ai.adermio.com/api/chat", {
                 method: "POST",
@@ -1408,7 +1408,7 @@
             removeTypingIndicator();
 
             if (!resp.ok || !data.ok) {
-                throw new Error(data.error || "Erreur IA");
+                throw new Error(data.error || "Chyba AI");
             }
 
             if (data.thread_id) {
@@ -1416,12 +1416,12 @@
                 localStorage.setItem(storageKey, threadId);
             }
 
-            const reply = data.assistant?.content || "D&eacute;sol&eacute;, je n'ai pas compris.";
+            const reply = data.assistant?.content || "Omlouvám se, tomu nerozumím.";
             addMessage('bot', reply);
 
         } catch (err) {
             removeTypingIndicator();
-            addMessage('bot', "&#9888; " + (err.message || "Erreur."));
+            addMessage('bot', "&#9888; " + ("Něco se nepovedlo. Zkuste to prosím za chvíli znovu."));
         }
     });
 
@@ -1462,7 +1462,7 @@
   try { BANNER_KEY = (new URLSearchParams(window.location.search).get("token") || "").slice(0, 8).toUpperCase(); } catch (e) { BANNER_KEY = ""; }
   var LS_DONE = "adermio_app_banner_done:" + BANNER_KEY;
   var SS_CLOSED = "adermio_app_banner_closed:" + BANNER_KEY;
-  var COPY_LABEL_DONE = "Copié ✓";
+  var COPY_LABEL_DONE = "Zkopírováno ✓";
 
   function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k) { try { window.localStorage.setItem(k, "1"); } catch (e) { /* no-op */ } }

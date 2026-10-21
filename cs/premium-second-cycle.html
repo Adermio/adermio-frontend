@@ -11,8 +11,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>Analyse Cycle 2 — Suivi d'évolution Adermio</title>
-    <meta name="description" content="Comparez l'évolution de votre peau avec l'analyse comparative Cycle 2 d'Adermio. Mesurez vos progrès après 28 jours de routine.">
+    <title>Analýza Cyklu 2 – sledování vývoje pleti – Adermio</title>
+    <meta name="description" content="Porovnejte vývoj své pleti ve srovnávací analýze Cyklu 2. Změřte svůj pokrok po 28 dnech rutiny.">
     <link rel="canonical" href="https://adermio.com/cs/premium-second-cycle">
     <link rel="alternate" hreflang="fr" href="https://adermio.com/premium-second-cycle">
     <link rel="alternate" hreflang="en" href="https://adermio.com/en/premium-second-cycle">
@@ -25,8 +25,8 @@
     <link rel="alternate" hreflang="pt" href="https://adermio.com/pt/premium-second-cycle">
     <link rel="alternate" hreflang="cs" href="https://adermio.com/cs/premium-second-cycle">
     <link rel="alternate" hreflang="x-default" href="https://adermio.com/premium-second-cycle">
-    <meta property="og:title" content="Analyse Cycle 2 — Suivi d'évolution Adermio">
-    <meta property="og:description" content="Comparez l'évolution de votre peau avec l'analyse comparative Cycle 2 d'Adermio. Mesurez vos progrès après 28 jours de routine.">
+    <meta property="og:title" content="Analýza Cyklu 2 – sledování vývoje pleti – Adermio">
+    <meta property="og:description" content="Porovnejte vývoj své pleti ve srovnávací analýze Cyklu 2. Změřte svůj pokrok po 28 dnech rutiny.">
     <meta property="og:url" content="https://adermio.com/cs/premium-second-cycle">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://adermio.com/og-image.png">
@@ -35,8 +35,8 @@
     <meta property="og:locale" content="cs_CZ">
     <meta property="og:site_name" content="Adermio">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Analyse Cycle 2 — Suivi d'évolution Adermio">
-    <meta name="twitter:description" content="Comparez l'évolution de votre peau avec l'analyse comparative Cycle 2 d'Adermio. Mesurez vos progrès après 28 jours de routine.">
+    <meta name="twitter:title" content="Analýza Cyklu 2 – sledování vývoje pleti – Adermio">
+    <meta name="twitter:description" content="Porovnejte vývoj své pleti ve srovnávací analýze Cyklu 2. Změřte svůj pokrok po 28 dnech rutiny.">
     <meta name="twitter:image" content="https://adermio.com/og-image.png">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -47,7 +47,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Adermio">
-<title>Adermio - Analyse Cycle 2</title>
+<title>Adermio – analýza Cyklu 2</title>
 <style>
   :root {
     --primary: #0f766e;
@@ -101,7 +101,7 @@
 </head>
 <body>
 
-<div id="premium-loading">Chargement de votre analyse Cycle 2...</div>
+<div id="premium-loading">Načítáme vaši analýzu Cyklu 2…</div>
 <div id="premium-error"></div>
 
 <div id="premium-container">
@@ -133,7 +133,7 @@
 
       if (!GLOBAL_TOKEN) {
         if(loadingEl) loadingEl.style.display = "none";
-        if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Lien invalide : token manquant."; }
+        if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Odkaz je neplatný. Otevřete prosím znovu odkaz z e-mailu."; }
         return;
       }
 
@@ -149,17 +149,17 @@
         }
       );
 
-      if (!res.ok) throw new Error("Erreur de chargement");
+      if (!res.ok) throw new Error("Chyba načítání");
 
       const data = await res.json();
-      if (!data || !Array.isArray(data) || data.length === 0) throw new Error("Rapport introuvable");
+      if (!data || !Array.isArray(data) || data.length === 0) throw new Error("Zpráva nebyla nalezena");
 
       const record = data[0];
       GLOBAL_JOB_ID = record.job_id;
 
       // Use report_html_url first, fallback to downloadUrl
       const reportUrl = record.report_html_url || record.downloadUrl;
-      if (!reportUrl) throw new Error("URL du rapport manquante");
+      if (!reportUrl) throw new Error("Chybí odkaz na zprávu");
 
       iframeEl.src = reportUrl;
       if(loadingEl) loadingEl.style.display = "none";
@@ -179,7 +179,7 @@
       const loadingEl = document.getElementById("premium-loading");
       const errorEl = document.getElementById("premium-error");
       if(loadingEl) loadingEl.style.display = "none";
-      if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = e.message || "Erreur de chargement. R\u00e9essayez plus tard."; }
+      if(errorEl) { errorEl.style.display = "flex"; errorEl.textContent = "Analýzu se nepodařilo načíst. Zkuste to prosím později."; }
     }
   }
 
@@ -303,11 +303,11 @@
 </style>
 
 <div id="adermio-welcome-bubble">
-  Je suis l'IA Adermio &#128075;<br>Des questions sur votre Cycle 2 ? Je suis l&#224; !
+  Jsem AI asistent Adermio &#128075;<br>Máte otázky ke svému Cyklu 2? Jsem tu pro vás!
   <button id="adermio-welcome-close">&#215;</button>
 </div>
 
-<div id="adermio-chat-launcher" aria-label="Ouvrir le chat Adermio">
+<div id="adermio-chat-launcher" aria-label="Otevřít chat Adermio">
   <span class="dot" id="adermio-chat-dot"></span>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
 </div>
@@ -315,26 +315,26 @@
 <div id="adermio-chat" role="dialog" aria-modal="true">
   <div class="adermio-chat-header">
     <div class="adermio-header-info">
-      <span class="adermio-header-title">Adermio Assistant</span>
-      <span class="adermio-header-subtitle">En ligne</span>
+      <span class="adermio-header-title">Asistent Adermio</span>
+      <span class="adermio-header-subtitle">Online</span>
     </div>
-    <button class="adermio-chat-close" id="adermio-chat-close" aria-label="Fermer">
+    <button class="adermio-chat-close" id="adermio-chat-close" aria-label="Zavřít">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
   </div>
   <div class="adermio-chat-body" id="adermio-chat-body">
     <div class="adermio-chat-msg bot">
       <div class="adermio-chat-bubble">
-        Bonjour ! Je suis l'IA Adermio. J'ai analys&#233; vos donn&#233;es du Cycle 1 et Cycle 2. Posez-moi vos questions ! &#128071;
+        Dobrý den! Jsem AI asistent Adermio a mám k dispozici vaše data z Cyklu 1 i Cyklu 2. Zeptejte se mě na cokoli! &#128071;
       </div>
     </div>
   </div>
   <div class="adermio-chat-footer">
     <div class="adermio-input-wrapper">
-      <textarea id="adermio-chat-input" placeholder="Posez votre question..." rows="1"></textarea>
+      <textarea id="adermio-chat-input" placeholder="Napište svůj dotaz…" rows="1"></textarea>
       <button id="adermio-chat-send" disabled><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
     </div>
-    <div class="adermio-chat-hint">Adermio IA peut faire des erreurs.</div>
+    <div class="adermio-chat-hint">AI asistent Adermio může chybovat.</div>
   </div>
 </div>
 
@@ -458,7 +458,7 @@
         addMessage('bot', '', true);
 
         try {
-            if (!token) throw new Error("Impossible d'identifier votre rapport.");
+            if (!token) throw new Error("Vaši zprávu se nepodařilo najít.");
 
             var resp = await fetch("https://ai.adermio.com/api/chat", {
                 method: "POST",
@@ -474,7 +474,7 @@
             removeTypingIndicator();
 
             if (!resp.ok || !data.ok) {
-                throw new Error(data.error || "Erreur IA");
+                throw new Error(data.error || "Chyba AI");
             }
 
             if (data.thread_id) {
@@ -482,12 +482,12 @@
                 localStorage.setItem(storageKey, threadId);
             }
 
-            var reply = (data.assistant && data.assistant.content) ? data.assistant.content : "D\u00e9sol\u00e9, je n'ai pas compris.";
+            var reply = (data.assistant && data.assistant.content) ? data.assistant.content : "Omlouvám se, tomu nerozumím.";
             addMessage('bot', reply);
 
         } catch (err) {
             removeTypingIndicator();
-            addMessage('bot', "&#9888; " + (err.message || "Erreur."));
+            addMessage('bot', "&#9888; " + ("Něco se nepovedlo. Zkuste to prosím za chvíli znovu."));
         }
     });
 
