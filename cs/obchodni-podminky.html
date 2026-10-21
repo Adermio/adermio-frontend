@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preload" href="/fonts/pretendard-latin-v1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/pretendard-latin-ext-v1.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-v1.woff2) format("woff2");unicode-range:U+20-7E,U+A0-FF,U+131,U+152-153,U+2BB-2BC,U+2C6,U+2DA,U+2DC,U+304,U+308,U+329,U+395,U+3AC,U+3B7,U+3B9-3BB,U+3BD,U+2000-200D,U+2010-2027,U+202F-2060,U+20AC,U+2122,U+2191-2194,U+2212,U+22EF,U+2605,U+26A0,U+FEFF}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2");unicode-range:U+100-130,U+132-148,U+14A-151,U+154-17F,U+218-21B,U+1E9E}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-greek-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-greek-v1.woff2) format("woff2");unicode-range:U+370-377,U+37A-37F,U+384-38A,U+38C,U+38E-394,U+396-3A1,U+3A3-3AB,U+3AD-3B6,U+3B8,U+3BC,U+3BE-3E1,U+3F0-3FF,U+1F00-1F15,U+1F18-1F1D,U+1F20-1F45,U+1F48-1F4D,U+1F50-1F57,U+1F59,U+1F5B,U+1F5D,U+1F5F-1F7D,U+1F80-1FB4,U+1FB6-1FC4,U+1FC6-1FD3,U+1FD6-1FDB,U+1FDD-1FEF,U+1FF2-1FF4,U+1FF6-1FFE}@font-face{font-family:"Pretendard Fallback";font-weight:100 550;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:98.5%;ascent-override:96.66%;descent-override:24.49%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback";font-weight:551 1000;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:100.5%;ascent-override:94.74%;descent-override:24.00%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback W";font-weight:100 550;src:local("ArialMT"),local("Arial");size-adjust:102.5%;ascent-override:92.89%;descent-override:23.53%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback W";font-weight:551 1000;src:local("Arial-BoldMT"),local("Arial Bold");size-adjust:96.5%;ascent-override:98.67%;descent-override:25.00%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback";font-weight:100 550;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:99.5%;ascent-override:95.69%;descent-override:24.24%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback";font-weight:551 1000;src:local("HelveticaNeue-Bold"),local("Helvetica Neue Bold");size-adjust:100.0%;ascent-override:95.21%;descent-override:24.12%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback W";font-weight:100 550;src:local("ArialMT"),local("Arial");size-adjust:104.0%;ascent-override:91.55%;descent-override:23.19%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback W";font-weight:551 1000;src:local("Arial-BoldMT"),local("Arial Bold");size-adjust:99.5%;ascent-override:95.69%;descent-override:24.24%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}</style>
+<meta name="format-detection" content="telephone=no">
+<title>Obchodní podmínky – Adermio</title>
+<link rel="canonical" href="https://adermio.com/cs/obchodni-podminky">
+<link rel="alternate" hreflang="fr" href="https://adermio.com/cgv">
+<link rel="alternate" hreflang="en" href="https://adermio.com/en/cgv">
+<link rel="alternate" hreflang="es" href="https://adermio.com/es/cgv">
+<link rel="alternate" hreflang="it" href="https://adermio.com/it/cgv">
+<link rel="alternate" hreflang="de" href="https://adermio.com/de/agb">
+<link rel="alternate" hreflang="nl" href="https://adermio.com/nl/algemene-voorwaarden">
+<link rel="alternate" hreflang="el" href="https://adermio.com/el/oroi-polisis">
+<link rel="alternate" hreflang="pl" href="https://adermio.com/pl/warunki-sprzedazy">
+<link rel="alternate" hreflang="cs" href="https://adermio.com/cs/obchodni-podminky">
+<link rel="alternate" hreflang="x-default" href="https://adermio.com/cgv">
+<meta property="og:title" content="Obchodní podmínky – Adermio">
+<meta property="og:description" content="Všeobecné obchodní podmínky předplatného Adermio Premium – App Store a adermio.com, automatické obnovení, zrušení předplatného online, odstoupení od smlouvy, mediace.">
+<meta property="og:url" content="https://adermio.com/cs/obchodni-podminky">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://adermio.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:site_name" content="Adermio">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Obchodní podmínky – Adermio">
+<meta name="twitter:description" content="Všeobecné obchodní podmínky předplatného Adermio Premium – App Store a adermio.com, automatické obnovení, zrušení předplatného online, odstoupení od smlouvy, mediace.">
+<meta name="twitter:image" content="https://adermio.com/og-image.png">
+<meta name="description" content="Všeobecné obchodní podmínky předplatného Adermio Premium – App Store a adermio.com, automatické obnovení, zrušení předplatného online, odstoupení od smlouvy, mediace.">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/v2.css">
+</head>
+<body>
+<header class="v2-bar"><a class="mark" href="/cs/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a><a class="btn btn-dark" href="/cs/form">Spustit analýzu</a></header>
+<section class="v2-head"><span class="pill">Právní dokumenty</span><h1>Všeobecné obchodní podmínky</h1><p class="sub">Verze 1.1 – účinná od 10. října 2026 (doplněno předplatné sjednané na adermio.com)</p></section>
+<main class="v2-main">
+<article class="card prose">
+        <div>
+            
+            <div>
+                <h2>1. Předmět a úvodní ustanovení</h2>
+                <div>
+                    <p>Tyto všeobecné obchodní podmínky („VOP“) upravují výhradně poskytování služby <strong>předplatného Premium</strong> nabízeného v mobilní aplikaci Adermio nebo sjednaného na webu <strong>adermio.com</strong> (dále jen „Služba Premium“).</p><p>Provozovatelem je Antoine Munch (micro-entreprise, SIRET 999 319 692 00011, 67120 Ergersheim – viz <a href="/cs/pravni-informace">Právní informace</a>).</p><p>Každý nákup předplatného Premium znamená <strong>úplné a bezvýhradné přijetí</strong> těchto VOP, <a href="/cs/podminky-pouzivani">Všeobecných podmínek používání</a> a <a href="/cs/ochrana-osobnich-udaju">Zásad ochrany osobních údajů</a>.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>2. Popis Služby Premium</h2>
+                <div>
+                    <p>Služba Premium zpřístupňuje kromě bezplatných funkcí také tyto funkce (orientační seznam):</p><ul>
+                        <li>Neomezený <strong>AI chat o péči o pleť</strong> (s denním limitem uvedeným na obrazovce předplatného)</li>
+                        <li><strong>Recepty z lednice Fridge-to-Plate</strong> (analýza fotografie + návrh receptu)</li>
+                        <li>Neomezené <strong>náhrady kosmetických přípravků</strong> s analýzou kompatibility</li>
+                        <li><strong>Personalizované poznatky o stravě</strong> na základě deníku stravování</li>
+                        <li><strong>Zhodnocení mezi cykly</strong> porovnávající vývoj pleti v několika cyklech</li>
+                        <li><strong>Automatická úprava rutiny</strong> při změně léčby předepsané lékařem</li>
+                        <li><strong>Neomezené opakované skenování</strong> v polovině cyklu</li>
+                        <li><strong>Týdenní porovnání fotografií</strong> s AI analýzou pokroku</li>
+                    </ul><p>Úplný a aktuální seznam je před každým nákupem uveden na <strong>obrazovce předplatného v aplikaci</strong> nebo na stránce pro sjednání předplatného na webu.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>3. Sjednání předplatného</h2>
+                <div>
+                    <p><strong>3.1 – V aplikaci (App Store).</strong> Služba Premium je nabízena prostřednictvím nákupů v aplikaci (In-App) v Apple App Store. Transakci zpracovává a fakturuje <strong>Apple Inc.</strong> podle prodejních podmínek společnosti Apple.</p><p>Adermio nedostává od Uživatele žádné bankovní údaje. Technickou správu (prodlužování, rušení a obnovování nákupů) zajišťuje <strong>RevenueCat Inc.</strong>, zpracovatel služby Adermio.</p><p><strong>Postup:</strong> Uživatel si zobrazí obrazovku předplatného, zvolí tarif a potvrdí nákup pomocí Face ID / Touch ID / hesla Apple. Apple strhne platbu z platebního prostředku a Adermio okamžitě aktivuje funkce Premium.</p><p><strong>Ceny:</strong> jsou uvedeny včetně všech daní v místní měně platné v okamžiku nákupu. Přesná platná cena se zobrazí na obrazovce předplatného v aplikaci před každým potvrzením.</p><p><strong>DPH:</strong> Adermio v současnosti využívá <strong>osvobození od DPH v rámci francouzského režimu „franchise en base de TVA“</strong> (čl. 293 B francouzského všeobecného daňového zákoníku). Adermio žádnou DPH nevybírá. Apple však může uplatnit místní DPH podle země daňového rezidentství Uživatele.</p><p><strong>3.2 – Na webu adermio.com.</strong> Službu Premium lze sjednat také na webu, a to po dokončení online analýzy. Platbu zpracovává <strong>Stripe</strong>, poskytovatel platebních služeb pro Adermio: Adermio nedostává ani neuchovává žádné bankovní údaje.</p><p><strong>Tarify:</strong> <strong>měsíční</strong> předplatné (platba každý měsíc) nebo <strong>čtvrtletní</strong> předplatné (platba každé 3 měsíce). Cena každého tarifu včetně všech daní a frekvence plateb jsou uvedeny na stránce pro sjednání předplatného a na platební stránce před každým potvrzením.</p><p><strong>Postup:</strong> Uživatel zvolí tarif, zadá platební údaje na zabezpečené stránce Stripe, zaškrtne políčko, kterým přijímá tyto VOP a žádá o okamžitý přístup (bod 5), a platbu potvrdí. Kompletní analýza je zaslána e-mailem a přístup Premium je okamžitě aktivován.</p><p><strong>Přístup v aplikaci:</strong> předplatné je přiřazeno k účtu Adermio spojenému s e-mailovou adresou použitou při platbě (pokud účet neexistuje, vytvoří se automaticky), nebo k účtu, ve kterém Uživatel zadá osobní kód zaslaný e-mailem („Mám kód Adermio“). Technickou správu oprávnění zajišťuje <strong>RevenueCat Inc.</strong>, zpracovatel služby Adermio.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>4. Doba trvání, automatické obnovení a zrušení předplatného</h2>
+                <div>
+                    <p><strong>4.1 – Předplatné sjednané v aplikaci (App Store).</strong></p><div><strong>⚠️ Důležité:</strong> Automatické obnovení: v souladu se standardní praxí App Store se předplatné na konci každého období automaticky obnovuje za stejných podmínek, pokud není zrušeno nejméně 24 hodin před datem obnovení.</div><p><strong>Jak předplatné zrušit (kdykoli a bez poplatků):</strong></p><ul>
+                        <li>Nastavení iOS → [vaše jméno] → Předplatná → Adermio Premium → Zrušit předplatné</li>
+                        <li>Nebo přímo na <a href="https://apps.apple.com/account/subscriptions">apps.apple.com/account/subscriptions</a></li>
+                    </ul><p>Uživatel si ponechává přístup k funkcím Premium <strong>až do konce aktuálně zaplaceného období</strong>. Za nevyčerpanou část období se nevrací poměrná částka.</p><p>Adermio nemůže zrušit předplatné za Uživatele – jde o úkon na straně společnosti Apple.</p><p><strong>4.2 – Předplatné sjednané na adermio.com.</strong></p><div><strong>⚠️ Důležité:</strong> Automatické obnovení: předplatné se ke každému dni splatnosti automaticky obnovuje na stejnou dobu (jeden nebo tři měsíce podle tarifu) za aktuálně platnou cenu, pokud není zrušeno před dnem splatnosti.</div><p><strong>Jak předplatné zrušit (kdykoli, bez poplatků, online):</strong></p><ul>
+                        <li>Na <a href="/cs/zruseni-predplatneho">stránce pro zrušení předplatného</a> zadejte e-mailovou adresu svého předplatného, otevřete odkaz, který vám přijde, a zvolte „Zrušit předplatné“.</li>
+                        <li>Nebo pomocí odkazu „Spravovat nebo zrušit předplatné“ v potvrzovacím e-mailu.</li>
+                        <li>Nebo jednoduše žádostí zaslanou na <a href="mailto:contact@adermio.com">contact@adermio.com</a>.</li>
+                    </ul><p>Zrušení nabývá účinnosti na <strong>konci běžícího období</strong>: Uživatel si do tohoto data ponechává přístup Premium a poté již není provedena žádná další platba. Za nevyčerpanou část období se nevrací poměrná částka. Potvrzení o zrušení je zasláno e-mailem.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>5. Aktivace a lhůta pro odstoupení od smlouvy</h2>
+                <div>
+                    <p>Služba Premium se aktivuje <strong>okamžitě</strong> po potvrzení platby (společností Apple u nákupu v aplikaci, společností Stripe u předplatného sjednaného na adermio.com).</p><p><strong>Zásada:</strong> podle článků L.221-18 a násl. francouzského spotřebitelského zákoníku (Code de la consommation) má Uživatel, který je spotřebitelem, zpravidla <strong>14 dní</strong> na uplatnění práva odstoupit od smlouvy.</p><div><strong>⚠️ Důležité:</strong> Platná výjimka: podle článku L.221-28 13° francouzského spotřebitelského zákoníku nelze právo odstoupit od smlouvy uplatnit u smluv o poskytování digitální služby, jejíž plnění začalo s předchozím výslovným souhlasem spotřebitele, který se zároveň výslovně vzdal práva odstoupit od smlouvy. Sjednáním předplatného Premium a zaškrtnutím políčka souhlasu – na obrazovce předplatného v aplikaci nebo na platební stránce při sjednání předplatného na adermio.com („Žádám o okamžitý přístup ke svému sledování pokroku: vzdávám se práva odstoupit od smlouvy ve lhůtě 14 dnů“) – Uživatel výslovně žádá o okamžité plnění a výslovně se vzdává práva odstoupit od smlouvy pro sjednané období.</div><p>Uživatel však může předplatné <strong>kdykoli zrušit</strong> (bod 4) – zrušení nabývá účinnosti na konci běžícího období.</p><p><strong>Žádost o vrácení peněz u společnosti Apple:</strong> nezávisle na těchto VOP může Uživatel kdykoli požádat o vrácení peněz přímo společnost Apple na <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>. O žádosti rozhoduje výhradně Apple. Adermio do tohoto rozhodnutí nezasahuje.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>6. Obnovení nákupů</h2>
+                <div>
+                    <p>V případě přeinstalace aplikace, výměny zařízení nebo jeho resetování může Uživatel <strong>obnovit své předplatné</strong> na obrazovce předplatného tlačítkem „Obnovit nákupy“. Obnovení je bezplatné a okamžité, dokud je předplatné aktivní v použitém účtu Apple.</p><p>U předplatného sjednaného na adermio.com je přístup vázán na účet Adermio: stačí se k tomuto účtu znovu přihlásit nebo znovu zadat svůj osobní kód („Mám kód Adermio“).</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>7. Změny cen</h2>
+                <div>
+                    <p><strong>Pro nové předplatitele:</strong> Adermio si vyhrazuje právo kdykoli změnit ceny. Nové ceny platí pro nově sjednaná předplatná.</p><p><strong>Pro stávající předplatitele:</strong> v případě zvýšení ceny je Uživatel informován nejméně <strong>30 dní před</strong> uplatněním nové ceny – u předplatného v App Store společností Apple, u předplatného sjednaného na adermio.com e-mailem od týmu Adermio. Uživatel může zvýšení odmítnout tím, že předplatné zruší před dalším dnem splatnosti.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>8. Nedostupnost Služby</h2>
+                <div>
+                    <p>V případě dlouhodobé nedostupnosti Služby Premium, za kterou odpovídá Adermio (déle než 72 hodin nepřetržitě), může Uživatel požádat o poměrný kredit na další období nebo o vrácení peněz – u předplatného v App Store postupem společnosti Apple, u předplatného sjednaného na adermio.com u týmu Adermio (contact@adermio.com).</p><p>Vyloučeny jsou: nedostupnost způsobená externími subdodavateli (Apple, Google, Stripe, Supabase…), plánovaná údržba oznámená 48 hodin předem a vyšší moc.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>9. Odpovědnost a záruky</h2>
+                <div>
+                    <p>Služba Premium je poskytována „tak, jak je“. Adermio vynakládá přiměřené technické prostředky, aby fungovala v souladu s popisem, nezaručuje však úplnou bezchybnost.</p><p>Adermio neodpovídá za:</p><ul>
+                        <li>individuální kosmetické výsledky (každá pleť reaguje jinak),</li>
+                        <li>nežádoucí reakce na doporučené kosmetické přípravky třetích stran (v případě pochybností se poraďte s dermatologem),</li>
+                        <li>interakce s probíhající léčbou předepsanou lékařem (Uživatel je povinen uvést užívané léky v dotazníku).</li>
+                    </ul><p><strong>Celková odpovědnost provozovatele služby Adermio</strong> je z jakéhokoli důvodu omezena na částku, kterou Uživatel zaplatil za předplatné Premium během 12 měsíců předcházejících události, jež vedla ke sporu.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>10. Osobní údaje</h2>
+                <div>
+                    <p>Zpracování osobních údajů v rámci Služby Premium upravují <a href="/cs/ochrana-osobnich-udaju">Zásady ochrany osobních údajů</a>.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>11. Změny VOP</h2>
+                <div>
+                    <p>Adermio si vyhrazuje právo tyto VOP měnit. Změny se vztahují na nové nákupy. U běžících předplatných budou podstatné změny oznámeny <strong>e-mailem a bannerem v aplikaci nejméně 30 dní před</strong> nabytím účinnosti. Uživatel může předplatné před nabytím jejich účinnosti bezplatně zrušit.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>12. Mediace a spory</h2>
+                <div>
+                    <p><strong>Nejprve se obraťte na nás:</strong> <a href="mailto:contact@adermio.com">contact@adermio.com</a> – předmět „Stížnost – VOP“.</p><p><strong>Mediace FEVAD</strong> (pro spotřebitele bezplatná):<br>60 rue La Boétie — 75008 Paris<br><a href="https://www.mediateurfevad.fr">https://www.mediateurfevad.fr</a></p><p><strong>Evropská platforma pro řešení sporů online (ODR):</strong> <a href="https://ec.europa.eu/consumers/odr">ec.europa.eu/consumers/odr</a></p><p><strong>Příslušné soudy:</strong> nedojde-li ke smírnému řešení, francouzské soudy podle pravidel francouzského spotřebitelského zákoníku.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>13. Rozhodné právo</h2>
+                <div>
+                    <p>Tyto VOP se řídí <strong>francouzským právem</strong> s výhradou kogentních ustanovení na ochranu spotřebitele platných v Evropské unii.</p>
+                </div>
+            </div>
+
+        </div>
+    </article>
+</main>
+<footer>
+  <div class="f-grid">
+    <div class="f-brand"><a class="mark" href="/cs/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a></div>
+    <div class="f-col"><h4>Prozkoumat</h4><a href="/cs/form">Analýza pleti</a><a href="/cs/blog">Blog</a></div>
+    <div class="f-col"><h4>Společnost</h4><a href="/cs/o-nas">O nás</a><a href="/cs/kontakt">Napište nám</a></div>
+    <div class="f-col"><h4>Právní dokumenty</h4><a href="/cs/obchodni-podminky">Obchodní podmínky</a><a href="/cs/podminky-pouzivani">Podmínky používání</a><a href="/cs/pravni-informace">Právní informace</a></div>
+    <div class="f-col"><h4>Jazyky</h4><a href="/cs/home">Čeština</a><a href="/">Français</a><a href="/en/home">English</a><a href="/es/home">Español</a><a href="/it/home">Italiano</a><a href="/de/home">Deutsch</a><a href="/nl/home">Nederlands</a><a href="/el/home">Ελληνικά</a><a href="/pl/home">Polski</a><a href="/pt/home">Português</a></div>
+  </div>
+  <div class="f-bottom"><span>© 2026 Adermio. Všechna práva vyhrazena.</span><a href="/cs/ochrana-osobnich-udaju">Ochrana osobních údajů</a><span class="r">Adermio nenahrazuje lékařskou konzultaci.</span></div>
+</footer>
+<script>
+// Mesure (Clarity + pixel TikTok), comme la prod, chargée après l'affichage
+(function(){let d=false;const go=()=>{if(d)return;d=true;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","ua5d07cn1u");
+  const s=document.createElement('script');s.src='/js/ttq.js';s.async=true;document.head.appendChild(s)};
+  const later=()=>'requestIdleCallback' in window?requestIdleCallback(go,{timeout:2000}):setTimeout(go,300);
+  if(document.readyState==='complete')later();else addEventListener('load',later,{once:true});setTimeout(go,4000)})();
+</script>
+</body>
+</html>

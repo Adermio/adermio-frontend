@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preload" href="/fonts/pretendard-latin-v1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/pretendard-latin-ext-v1.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-v1.woff2) format("woff2");unicode-range:U+20-7E,U+A0-FF,U+131,U+152-153,U+2BB-2BC,U+2C6,U+2DA,U+2DC,U+304,U+308,U+329,U+395,U+3AC,U+3B7,U+3B9-3BB,U+3BD,U+2000-200D,U+2010-2027,U+202F-2060,U+20AC,U+2122,U+2191-2194,U+2212,U+22EF,U+2605,U+26A0,U+FEFF}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2");unicode-range:U+100-130,U+132-148,U+14A-151,U+154-17F,U+218-21B,U+1E9E}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-greek-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-greek-v1.woff2) format("woff2");unicode-range:U+370-377,U+37A-37F,U+384-38A,U+38C,U+38E-394,U+396-3A1,U+3A3-3AB,U+3AD-3B6,U+3B8,U+3BC,U+3BE-3E1,U+3F0-3FF,U+1F00-1F15,U+1F18-1F1D,U+1F20-1F45,U+1F48-1F4D,U+1F50-1F57,U+1F59,U+1F5B,U+1F5D,U+1F5F-1F7D,U+1F80-1FB4,U+1FB6-1FC4,U+1FC6-1FD3,U+1FD6-1FDB,U+1FDD-1FEF,U+1FF2-1FF4,U+1FF6-1FFE}@font-face{font-family:"Pretendard Fallback";font-weight:100 550;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:98.5%;ascent-override:96.66%;descent-override:24.49%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback";font-weight:551 1000;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:100.5%;ascent-override:94.74%;descent-override:24.00%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback W";font-weight:100 550;src:local("ArialMT"),local("Arial");size-adjust:102.5%;ascent-override:92.89%;descent-override:23.53%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback W";font-weight:551 1000;src:local("Arial-BoldMT"),local("Arial Bold");size-adjust:96.5%;ascent-override:98.67%;descent-override:25.00%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback";font-weight:100 550;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:99.5%;ascent-override:95.69%;descent-override:24.24%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback";font-weight:551 1000;src:local("HelveticaNeue-Bold"),local("Helvetica Neue Bold");size-adjust:100.0%;ascent-override:95.21%;descent-override:24.12%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback W";font-weight:100 550;src:local("ArialMT"),local("Arial");size-adjust:104.0%;ascent-override:91.55%;descent-override:23.19%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback W";font-weight:551 1000;src:local("Arial-BoldMT"),local("Arial Bold");size-adjust:99.5%;ascent-override:95.69%;descent-override:24.24%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}</style>
+<meta name="format-detection" content="telephone=no">
+<title>Ochrana osobních údajů – Adermio</title>
+<link rel="canonical" href="https://adermio.com/cs/ochrana-osobnich-udaju">
+<link rel="alternate" hreflang="fr" href="https://adermio.com/confidentialite">
+<link rel="alternate" hreflang="en" href="https://adermio.com/en/confidentialite">
+<link rel="alternate" hreflang="es" href="https://adermio.com/es/confidentialite">
+<link rel="alternate" hreflang="it" href="https://adermio.com/it/confidentialite">
+<link rel="alternate" hreflang="de" href="https://adermio.com/de/datenschutz">
+<link rel="alternate" hreflang="nl" href="https://adermio.com/nl/privacyverklaring">
+<link rel="alternate" hreflang="el" href="https://adermio.com/el/politiki-aporritou">
+<link rel="alternate" hreflang="pl" href="https://adermio.com/pl/polityka-prywatnosci">
+<link rel="alternate" hreflang="cs" href="https://adermio.com/cs/ochrana-osobnich-udaju">
+<link rel="alternate" hreflang="x-default" href="https://adermio.com/confidentialite">
+<meta property="og:title" content="Ochrana osobních údajů – Adermio">
+<meta property="og:description" content="Zásady ochrany osobních údajů Adermio podle GDPR – shromažďované údaje, zpracovatelé, práva, doby uchovávání.">
+<meta property="og:url" content="https://adermio.com/cs/ochrana-osobnich-udaju">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://adermio.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:site_name" content="Adermio">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ochrana osobních údajů – Adermio">
+<meta name="twitter:description" content="Zásady ochrany osobních údajů Adermio podle GDPR – shromažďované údaje, zpracovatelé, práva, doby uchovávání.">
+<meta name="twitter:image" content="https://adermio.com/og-image.png">
+<meta name="description" content="Zásady ochrany osobních údajů Adermio podle GDPR – shromažďované údaje, zpracovatelé, práva, doby uchovávání.">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/v2.css">
+</head>
+<body>
+<header class="v2-bar"><a class="mark" href="/cs/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a><a class="btn btn-dark" href="/cs/form">Spustit analýzu</a></header>
+<section class="v2-head"><span class="pill">Právní dokumenty</span><h1>Zásady ochrany osobních údajů</h1><p class="sub">Verze 2.5 – poslední aktualizace: 16. října 2026</p></section>
+<main class="v2-main">
+<article class="card prose">
+        <div>
+            
+            <div>
+                <h2>0. Úvod</h2>
+                <div>
+                    <p>Tyto zásady popisují, jak Adermio (provozovatel: Antoine Munch, SIRET 999 319 692 00011) shromažďuje, používá, chrání a sdílí osobní údaje uživatelů webu <code>adermio.com</code> a mobilní aplikace Adermio v souladu s <strong>obecným nařízením o ochraně osobních údajů (GDPR)</strong> (nařízení EU 2016/679) a s francouzským <strong>zákonem o informatice a svobodách (Loi Informatique et Libertés)</strong>.</p><div><strong>⚠️ Důležité:</strong> Adermio zpracovává údaje o zdravotním stavu (fotografie pleti, stav pleti, léčba předepsaná dermatologem) – tedy „citlivé“ údaje ve smyslu článku 9 GDPR. Jejich zpracování je možné pouze s vaším výslovným souhlasem, který udělujete při vytvoření účtu nebo při první analýze. U funkce Referenční bod se tento souhlas uděluje zvlášť, při spuštění analýzy příčin.</div>
+                </div>
+            </div>
+
+            <div>
+                <h2>1. Správce osobních údajů</h2>
+                <div>
+                    <p>Antoine Munch (podnikající fyzická osoba – francouzský režim micro-entreprise)<br>SIRET 999 319 692 00011<br>67120 Ergersheim, Francie<br>E-mail: <a href="mailto:contact@adermio.com">contact@adermio.com</a><br>Telefon: +33 6 22 30 17 31</p><p>Správce osobních údajů je zároveň <strong>kontaktní osobou pro otázky GDPR</strong>. Svá práva můžete uplatnit na adrese <a href="mailto:contact@adermio.com">contact@adermio.com</a> – předmět „GDPR“.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>2. Jaké údaje shromažďujeme</h2>
+                <div>
+                    <p><strong>Údaje, které nám poskytujete přímo:</strong></p><ul>
+                        <li><strong>Totožnost:</strong> jméno (nepovinné), příjmení (nepovinné), věk, pohlaví</li>
+                        <li><strong>Kontaktní údaje:</strong> e-mailová adresa</li>
+                        <li><strong>Přihlášení:</strong> hashované heslo (nikdy není dostupné v čitelné podobě) nebo přihlašovací údaje OAuth Apple/Google</li>
+                        <li><strong>Zdraví pleti:</strong> typ pleti, problémy pleti, alergie, užívané léky, těhotenství/kojení, fotografie obličeje</li>
+                        <li><strong>Stravování:</strong> fotografie jídel, deník stravování, intolerance (pokud používáte kartu Výživa)</li>
+                        <li><strong>Rutina péče:</strong> používané přípravky (značky, konkrétní produkty), frekvence používání</li>
+                        <li><strong>Předvolby:</strong> jazyk, časové pásmo, nastavení oznámení</li>
+                        <li><strong>Zpětná vazba:</strong> odpovědi v dotaznících, zprávy v AI chatu o péči o pleť, nahlášení problémů</li>
+                    
+                        <li><strong>Referenční bod (Premium, pokud spustíte analýzu příčin):</strong> vaše odpovědi na otázky analýzy příčin – návyky, přípravky, holení, sport, spánek, stres, strava, slunce a, pokud na ně odpovíte, váš menstruační cyklus nebo antikoncepce –, včetně volného textu, a také hypotézy, testy a závěry, které z nich vyplývají</li>
+                    </ul><p><strong>Údaje shromažďované automaticky:</strong></p><ul>
+                        <li><strong>Technické údaje:</strong> model zařízení, verze OS, verze aplikace, jazyk, IDFV (iOS)</li>
+                        <li><strong>Údaje o používání:</strong> zobrazené stránky, používané funkce, posloupnost akcí (PostHog)</li>
+                        <li><strong>Údaje o výkonu:</strong> pády aplikace, chyby, latence (Sentry)</li>
+                        <li><strong>IP adresa:</strong> dočasná, neukládá se mimo technické logy</li>
+                        <li><strong>Identifikátory relace:</strong> šifrované tokeny (Keychain iOS)</li>
+                        <li><strong>Push token:</strong> identifikátor Expo, který umožňuje zasílat oznámení</li>
+                    </ul><p><strong>Údaje shromažďované poskytovateli plateb:</strong> bankovní údaje zpracovává výhradně Apple. Adermio od vás nikdy nedostává bankovní údaje – pouze anonymní identifikátor transakce, stav předplatného, zakoupený produkt a datum nákupu.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>3. Účely a právní základy zpracování</h2>
+                <div>
+                    <div><table>
+                        <thead><tr><th>Účel</th><th>Právní základ</th><th>Základ pro údaje o zdravotním stavu</th></tr></thead>
+                        <tbody><tr><td>Vytvoření a správa vašeho účtu</td><td>Čl. 6 odst. 1 písm. b) – plnění smlouvy</td><td>—</td></tr><tr><td>Analýza pleti pomocí AI</td><td>Čl. 6 odst. 1 písm. b) – plnění smlouvy</td><td><strong>Čl. 9 odst. 2 písm. a) – výslovný souhlas</strong></td></tr><tr><td>Personalizace rutiny a doporučení</td><td>Čl. 6 odst. 1 písm. b) – plnění smlouvy</td><td>Čl. 9 odst. 2 písm. a)</td></tr><tr><td>Referenční bod: rozpoznání každodenních faktorů, které nejpravděpodobněji souvisejí se zhoršením vašeho akné</td><td>Čl. 6 odst. 1 písm. b) – plnění smlouvy</td><td><strong>Čl. 9 odst. 2 písm. a) – výslovný souhlas</strong>, udělený při spuštění analýzy příčin</td></tr><tr><td>Užitečná oznámení</td><td>Čl. 6 odst. 1 písm. a) – souhlas</td><td>—</td></tr><tr><td>Správa předplatného Premium</td><td>Čl. 6 odst. 1 písm. b) – plnění smlouvy</td><td>—</td></tr><tr><td>Zlepšování aplikace (anonymní produktové analýzy)</td><td>Čl. 6 odst. 1 písm. f) – oprávněný zájem</td><td>—</td></tr><tr><td>Odhalování a oprava chyb</td><td>Čl. 6 odst. 1 písm. f) – oprávněný zájem</td><td>—</td></tr><tr><td>Účetní povinnosti</td><td>Čl. 6 odst. 1 písm. c) – právní povinnost</td><td>—</td></tr></tbody>
+                    </table></div><p><strong>Žádné reklamní využití.</strong> Adermio nepoužívá cílenou reklamu, neprodává vaše údaje a bez vašeho výslovného souhlasu vám nezasílá marketingová sdělení.</p><p><strong>Analýza a uchovávání vašich fotografií.</strong> Vaše fotografie analyzují modely umělé inteligence provozované společnostmi Google (API Gemini), OpenAI (API ChatGPT) a Anthropic (API Claude), které jednají jako zpracovatelé pro Adermio, a to výhradně za účelem vytvoření vaší analýzy a doporučení. Jsou bezpečně uloženy ve Švýcarsku (Supabase, Curych), tedy v zemi, o které Evropská komise rozhodla, že zajišťuje odpovídající úroveň ochrany, a uchovávají se po dobu, kdy je váš účet aktivní, aby mohla služba fungovat (historie, sledování pokroku, porovnávání). Jakmile svůj účet smažete, jsou okamžitě a trvale smazány. Fotografie ze skenu, který nebyl nikdy přiřazen k účtu, se automaticky mažou do 7 dní.</p><p><strong>Referenční bod.</strong> Pokud spustíte analýzu příčin v rámci funkce Referenční bod (vyhrazené pro předplatitele Premium), výslovně souhlasíte s tím, že vaše odpovědi budou porovnány s údaji, které už v aplikaci Adermio máte (rutina, užívané léky, deník, analýzy). Pro formulování dalších otázek se do API Gemini společnosti Google, zpracovatele pro Adermio, předává pseudonymizovaná složka – bez vašeho jména, e-mailu a fotografií. Referenční bod navrhuje pravděpodobné hypotézy a testy návyků: nejde o lékařské vyhodnocení zdravotního stavu a nenahrazuje názor zdravotnického odborníka. Analýzu příčin můžete kdykoli ukončit ve své složce („Ukončit analýzu příčin“): vaše složka Referenční bod se tím vymaže a žádné další odpovědi se již neshromažďují.</p><p><strong>Lokální detekce obličeje.</strong> Rámování skenu (vzdálenost, světlo, stabilita) využívá detekci obličeje, která probíhá lokálně ve vašem zařízení. Tyto údaje o geometrii obličeje jsou dočasné: nikdy se neukládají, nikdy se nepřenášejí na naše servery a nepředstavují biometrickou šablonu k identifikaci osob.</p><p><strong>Žádné trénování AI.</strong> Vaše fotografie a údaje se nikdy nepoužívají k trénování modelů AI – ani našich, ani modelů našich zpracovatelů, kteří se ve smlouvě zavazují, že je k tomuto účelu nepoužijí. Jakákoli budoucí změna v tomto směru by vyžadovala váš předchozí výslovný souhlas v souladu s články 6 a 9 GDPR, s možností jej kdykoli odvolat.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>4. Zpracovatelé a příjemci</h2>
+                <div>
+                    <p>Adermio využívá tyto zpracovatele v souladu s článkem 28 GDPR:</p><div><table>
+                        <thead><tr><th>Zpracovatel</th><th>Role</th><th>Umístění</th><th>Předání mimo EU</th></tr></thead>
+                        <tbody><tr><td><strong>Supabase Inc.</strong></td><td>Databáze, ověřování, úložiště, edge funkce</td><td>Curych (Švýcarsko)</td><td>Rozhodnutí o odpovídající ochraně (Švýcarsko)</td></tr><tr><td><strong>Sentry GmbH</strong></td><td>Monitoring chyb</td><td>Německo (EU)</td><td>Bez předání mimo EU</td></tr><tr><td><strong>PostHog Inc.</strong> (EU)</td><td>Produktová analytika</td><td>Frankfurt (EU)</td><td>Bez předání mimo EU</td></tr><tr><td><strong>Apple Inc.</strong></td><td>App Store, nákupy v aplikaci (IAP), přihlášení přes Apple, push oznámení</td><td>USA + více regionů</td><td>DPF EU–USA</td></tr><tr><td><strong>RevenueCat Inc.</strong></td><td>Správa předplatného IAP</td><td>USA</td><td>DPF</td></tr><tr><td><strong>Google LLC</strong></td><td>API Gemini – AI analýza fotografií pleti a profilových údajů (analýzy pleti, rutiny, analýzy stravy, otázky analýzy příčin v rámci funkce Referenční bod na základě pseudonymizované složky). Vaše údaje se nepoužívají k trénování modelů</td><td>USA</td><td>DPF</td></tr><tr><td><strong>OpenAI, L.L.C.</strong></td><td>API ChatGPT – AI analýza a tvorba doporučení (analýzy pleti, rutiny, analýzy stravy) prostřednictvím naší orchestrace v n8n. Vaše údaje se nepoužívají k trénování modelů</td><td>USA</td><td>DPF</td></tr><tr><td><strong>Anthropic, PBC</strong></td><td>API Claude – AI analýza fotografií a sepsání bezplatné analýzy v aplikaci prostřednictvím naší orchestrace v n8n. Vaše údaje se nepoužívají k trénování modelů</td><td>USA</td><td>Standardní smluvní doložky</td></tr><tr><td><strong>Amazon Web Services</strong></td><td>Dočasné uložení fotografií ze skenu provedeného na webu adermio.com (smazání do 7 dní) – mobilní aplikace tuto službu nepoužívá</td><td>Paříž (EU)</td><td>Bez předání mimo EU</td></tr><tr><td><strong>Vercel Inc.</strong></td><td>Hosting adermio.com</td><td>Více regionů</td><td>DPF</td></tr><tr><td><strong>Expo Inc.</strong></td><td>Push oznámení</td><td>USA</td><td>DPF</td></tr><tr><td><strong>n8n</strong> (na vlastním serveru)</td><td>Orchestrace AI analýz (zpracování fotografií, tvorba zpráv)</td><td>Německo (EU)</td><td>—</td></tr></tbody>
+                    </table></div><p>Zpracovatelé se sídlem v USA využívají buď rozhodnutí Evropské komise o odpovídající ochraně (<strong>rámec EU–USA pro ochranu osobních údajů, Data Privacy Framework</strong>), nebo standardní smluvní doložky. Ověřit to lze na <a href="https://www.dataprivacyframework.gov/">dataprivacyframework.gov</a>.</p><p><strong>Zaručená rovnocenná ochrana.</strong> Každý zpracovatel – včetně společností Google (API Gemini), OpenAI (API ChatGPT) a Anthropic (API Claude), kterým se pro účely analýzy předávají vaše fotografie a údaje o pleti – je vázán smlouvou o zpracování osobních údajů (článek 28 GDPR), která mu ukládá chránit vaše údaje na úrovni zabezpečení a důvěrnosti rovnocenné té, kterou zaručuje Adermio, zpracovávat je pouze na základě našich doložených pokynů a nepoužívat je pro vlastní účely (zejména k trénování modelů AI).</p><p><strong>Žádné obchodní třetí strany.</strong> Adermio nesdílí vaše údaje se zprostředkovateli dat, marketingovými partnery ani reklamními sítěmi.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>5. Doby uchovávání</h2>
+                <div>
+                    <div><table>
+                        <thead><tr><th>Kategorie</th><th>Doba uchovávání</th></tr></thead>
+                        <tbody><tr><td>Aktivní účet (e-mail, profil)</td><td>Po dobu, kdy je účet aktivní</td></tr><tr><td>Fotografie pleti (analýza a sledování)</td><td>Po dobu, kdy je účet aktivní – při smazání účtu okamžité a trvalé smazání</td></tr><tr><td>Fotografie ze skenu, který nebyl nikdy přiřazen k účtu</td><td>7 dní (automatické smazání)</td></tr><tr><td>Analýzy pleti, rutiny, AI zhodnocení</td><td>Po dobu, kdy je účet aktivní</td></tr><tr><td>Referenční bod (odpovědi, složka, hypotézy)</td><td>Po dobu, kdy v analýze příčin pokračujete – okamžité a trvalé vymazání, jakmile ji ukončíte („Ukončit analýzu příčin“) nebo smažete svůj účet</td></tr><tr><td>Každodenní sledování (nálada, pleť, strava)</td><td>Po dobu, kdy je účet aktivní</td></tr><tr><td>Logy Sentry</td><td>90 dní</td></tr><tr><td>Analytika PostHog</td><td>12 měsíců</td></tr><tr><td>Ověřování Supabase</td><td>Aktivní účet + 30 dní po jeho smazání</td></tr><tr><td>Faktury a účetní údaje</td><td>10 let (čl. L123-22 francouzského obchodního zákoníku)</td></tr></tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <div>
+                <h2>6. Zabezpečení údajů</h2>
+                <div>
+                    <ul>
+                        <li><strong>Šifrování při přenosu:</strong> povinné TLS 1.3 na všech koncových bodech</li>
+                        <li><strong>Šifrování uložených dat:</strong> AES-256 (Supabase), šifrovaný Keychain v iOS</li>
+                        <li><strong>Ověřování:</strong> OAuth 2.0 PKCE, bcrypt + HaveIBeenPwned</li>
+                        <li><strong>Řízení přístupu:</strong> Row-Level Security v PostgreSQL u všech tabulek s citlivými údaji</li>
+                        <li><strong>Monitoring:</strong> upozornění v reálném čase přes Sentry</li>
+                        <li><strong>Zálohy:</strong> denní šifrované zálohy Supabase (7 dní)</li>
+                    </ul><p>V případě <strong>porušení zabezpečení osobních údajů</strong>, které by mohlo mít za následek riziko pro práva a svobody, Adermio ohlásí tuto skutečnost <strong>úřadu CNIL do 72 hodin</strong> (čl. 33 GDPR) a případně o něm informuje dotčené uživatele (čl. 34).</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>7. Vaše práva</h2>
+                <div>
+                    <div><table>
+                        <thead><tr><th>Právo</th><th>Popis</th><th>Jak ho uplatnit</th></tr></thead>
+                        <tbody><tr><td><strong>Přístup</strong> (čl. 15)</td><td>Získání kopie vašich údajů</td><td>Nastavení → „Exportovat moje data“ (kompletní JSON)</td></tr><tr><td><strong>Oprava</strong> (čl. 16)</td><td>Oprava nepřesného údaje</td><td>Úprava ve vašem profilu nebo e-mailem</td></tr><tr><td><strong>Výmaz</strong> (čl. 17)</td><td>Smazání účtu a údajů</td><td>Nastavení → „Smazat účet“ (okamžitě)</td></tr><tr><td><strong>Omezení zpracování</strong> (čl. 18)</td><td>Dočasné pozastavení zpracování</td><td>Žádost e-mailem</td></tr><tr><td><strong>Přenositelnost</strong> (čl. 20)</td><td>Strojově čitelný formát</td><td>Tuto povinnost splňuje export ve formátu JSON</td></tr><tr><td><strong>Námitka</strong> (čl. 21)</td><td>Námitka proti zpracování (oprávněný zájem)</td><td>Žádost e-mailem s uvedením důvodu</td></tr><tr><td><strong>Odvolání souhlasu</strong> (čl. 7 odst. 3)</td><td>Odvolání uděleného souhlasu</td><td>Nastavení → vypnutí oznámení, nebo e-mailem</td></tr></tbody>
+                    </table></div><p><strong>Lhůta pro odpověď:</strong> Adermio se zavazuje odpovědět do <strong>jednoho měsíce</strong> od obdržení žádosti; u složitých žádostí lze lhůtu prodloužit o 2 měsíce (o prodloužení vás budeme informovat).</p><p><strong>Stížnost u CNIL:</strong> pokud se domníváte, že došlo k porušení vašich práv, můžete podat stížnost u CNIL – 3 Place de Fontenoy, 75007 Paris – <a href="https://www.cnil.fr">www.cnil.fr</a>.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>8. Cookies a sledovací technologie</h2>
+                <div>
+                    <p><strong>Mobilní aplikace:</strong> žádné cookies. Lokální úložiště v zařízení: token relace Supabase (šifrovaný Keychain v iOS), mezipaměť React Query (šifrované MMKV), anonymní identifikátor PostHog.</p><p><strong>Web:</strong> pouze nezbytně nutné cookies (relace, jazyk). Pokud v budoucnu přibudou analytické nebo marketingové cookies, zavedeme lištu pro udělení souhlasu v souladu s usnesením CNIL č. 2020-091.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>9. Nezletilí</h2>
+                <div>
+                    <p>Aplikace Adermio je určena osobám <strong>ve věku 16 let a starším</strong> (čl. 8 GDPR, věk digitálního souhlasu ve Francii). Pokud je vám méně než 16 let, nesmíte aplikaci používat bez předchozího výslovného souhlasu osoby, která vykonává rodičovskou odpovědnost. Pokud Adermio zjistí, že účet patří nezletilé osobě bez souhlasu rodičů, bude účet smazán.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>10. Změny</h2>
+                <div>
+                    <p>Adermio si vyhrazuje právo tyto zásady kdykoli změnit. Každá podstatná změna bude oznámena <strong>e-mailem a bannerem v aplikaci nejméně 15 dní před</strong> nabytím účinnosti.</p><p>Historie verzí je vedena ve veřejném repozitáři kódu Adermio.</p>
+                </div>
+            </div>
+
+        </div>
+    </article>
+</main>
+<footer>
+  <div class="f-grid">
+    <div class="f-brand"><a class="mark" href="/cs/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a></div>
+    <div class="f-col"><h4>Prozkoumat</h4><a href="/cs/form">Analýza pleti</a><a href="/cs/blog">Blog</a></div>
+    <div class="f-col"><h4>Společnost</h4><a href="/cs/o-nas">O nás</a><a href="/cs/kontakt">Napište nám</a></div>
+    <div class="f-col"><h4>Právní dokumenty</h4><a href="/cs/obchodni-podminky">Obchodní podmínky</a><a href="/cs/podminky-pouzivani">Podmínky používání</a><a href="/cs/pravni-informace">Právní informace</a></div>
+    <div class="f-col"><h4>Jazyky</h4><a href="/cs/home">Čeština</a><a href="/">Français</a><a href="/en/home">English</a><a href="/es/home">Español</a><a href="/it/home">Italiano</a><a href="/de/home">Deutsch</a><a href="/nl/home">Nederlands</a><a href="/el/home">Ελληνικά</a><a href="/pl/home">Polski</a><a href="/pt/home">Português</a></div>
+  </div>
+  <div class="f-bottom"><span>© 2026 Adermio. Všechna práva vyhrazena.</span><a href="/cs/ochrana-osobnich-udaju">Ochrana osobních údajů</a><span class="r">Adermio nenahrazuje lékařskou konzultaci.</span></div>
+</footer>
+<script>
+// Mesure (Clarity + pixel TikTok), comme la prod, chargée après l'affichage
+(function(){let d=false;const go=()=>{if(d)return;d=true;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","ua5d07cn1u");
+  const s=document.createElement('script');s.src='/js/ttq.js';s.async=true;document.head.appendChild(s)};
+  const later=()=>'requestIdleCallback' in window?requestIdleCallback(go,{timeout:2000}):setTimeout(go,300);
+  if(document.readyState==='complete')later();else addEventListener('load',later,{once:true});setTimeout(go,4000)})();
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preload" href="/fonts/pretendard-latin-v1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/pretendard-latin-ext-v1.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-v1.woff2) format("woff2");unicode-range:U+20-7E,U+A0-FF,U+131,U+152-153,U+2BB-2BC,U+2C6,U+2DA,U+2DC,U+304,U+308,U+329,U+395,U+3AC,U+3B7,U+3B9-3BB,U+3BD,U+2000-200D,U+2010-2027,U+202F-2060,U+20AC,U+2122,U+2191-2194,U+2212,U+22EF,U+2605,U+26A0,U+FEFF}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2");unicode-range:U+100-130,U+132-148,U+14A-151,U+154-17F,U+218-21B,U+1E9E}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-greek-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-greek-v1.woff2) format("woff2");unicode-range:U+370-377,U+37A-37F,U+384-38A,U+38C,U+38E-394,U+396-3A1,U+3A3-3AB,U+3AD-3B6,U+3B8,U+3BC,U+3BE-3E1,U+3F0-3FF,U+1F00-1F15,U+1F18-1F1D,U+1F20-1F45,U+1F48-1F4D,U+1F50-1F57,U+1F59,U+1F5B,U+1F5D,U+1F5F-1F7D,U+1F80-1FB4,U+1FB6-1FC4,U+1FC6-1FD3,U+1FD6-1FDB,U+1FDD-1FEF,U+1FF2-1FF4,U+1FF6-1FFE}@font-face{font-family:"Pretendard Fallback";font-weight:100 550;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:98.5%;ascent-override:96.66%;descent-override:24.49%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback";font-weight:551 1000;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:100.5%;ascent-override:94.74%;descent-override:24.00%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback W";font-weight:100 550;src:local("ArialMT"),local("Arial");size-adjust:102.5%;ascent-override:92.89%;descent-override:23.53%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback W";font-weight:551 1000;src:local("Arial-BoldMT"),local("Arial Bold");size-adjust:96.5%;ascent-override:98.67%;descent-override:25.00%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback";font-weight:100 550;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:99.5%;ascent-override:95.69%;descent-override:24.24%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback";font-weight:551 1000;src:local("HelveticaNeue-Bold"),local("Helvetica Neue Bold");size-adjust:100.0%;ascent-override:95.21%;descent-override:24.12%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback W";font-weight:100 550;src:local("ArialMT"),local("Arial");size-adjust:104.0%;ascent-override:91.55%;descent-override:23.19%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback W";font-weight:551 1000;src:local("Arial-BoldMT"),local("Arial Bold");size-adjust:99.5%;ascent-override:95.69%;descent-override:24.24%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}</style>
+<meta name="format-detection" content="telephone=no">
+<title>Hormonální akné: jak ho rozpoznat a zvládnout – Adermio</title>
+<link rel="canonical" href="https://adermio.com/cs/blog/hormonalni-akne">
+<link rel="alternate" hreflang="fr" href="https://adermio.com/blog/acne-hormonale">
+<link rel="alternate" hreflang="en" href="https://adermio.com/en/blog/hormonal-acne">
+<link rel="alternate" hreflang="es" href="https://adermio.com/es/blog/acne-hormonal">
+<link rel="alternate" hreflang="it" href="https://adermio.com/it/blog/acne-ormonale">
+<link rel="alternate" hreflang="de" href="https://adermio.com/de/blog/hormonelle-akne">
+<link rel="alternate" hreflang="nl" href="https://adermio.com/nl/blog/hormonale-acne">
+<link rel="alternate" hreflang="el" href="https://adermio.com/el/blog/ormoniki-akmi">
+<link rel="alternate" hreflang="pl" href="https://adermio.com/pl/blog/tradzik-hormonalny">
+<link rel="alternate" hreflang="cs" href="https://adermio.com/cs/blog/hormonalni-akne">
+<link rel="alternate" hreflang="x-default" href="https://adermio.com/blog/acne-hormonale">
+<meta property="og:title" content="Hormonální akné: jak ho rozpoznat a zvládnout – Adermio">
+<meta property="og:description" content="Brada, linie čelisti, zhoršení před menstruací: jak rozpoznat hormonální akné, pochopit jeho příčiny a vědět, jak pleť zklidnit. Srozumitelný průvodce od týmu Adermio.">
+<meta property="og:url" content="https://adermio.com/cs/blog/hormonalni-akne">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://adermio.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:site_name" content="Adermio">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hormonální akné: jak ho rozpoznat a zvládnout – Adermio">
+<meta name="twitter:description" content="Brada, linie čelisti, zhoršení před menstruací: jak rozpoznat hormonální akné, pochopit jeho příčiny a vědět, jak pleť zklidnit. Srozumitelný průvodce od týmu Adermio.">
+<meta name="twitter:image" content="https://adermio.com/og-image.png">
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Hormonální akné: jak ho rozpoznat a zvládnout",
+      "description": "Brada, linie čelisti, zhoršení před menstruací: jak rozpoznat hormonální akné, pochopit jeho příčiny a vědět, jak pleť zklidnit.",
+      "author": {
+        "@type": "Organization",
+        "name": "Adermio",
+        "url": "https://adermio.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Adermio",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://adermio.com/logo_Adermio.png"
+        }
+      },
+      "datePublished": "2026-05-21",
+      "dateModified": "2026-05-21",
+      "mainEntityOfPage": "https://adermio.com/cs/blog/hormonalni-akne",
+      "image": "https://adermio.com/og-image.png"
+    }
+    </script>
+<meta name="description" content="Brada, linie čelisti, zhoršení před menstruací: jak rozpoznat hormonální akné, pochopit jeho příčiny a vědět, jak pleť zklidnit. Srozumitelný průvodce od týmu Adermio.">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/v2.css">
+</head>
+<body>
+<header class="v2-bar"><a class="mark" href="/cs/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a><a class="btn btn-dark" href="/cs/form">Spustit analýzu</a></header>
+<section class="v2-head"><span class="pill">Akné a dermatologie</span><h1>Hormonální akné: jak ho rozpoznat a zvládnout</h1><p class="sub">Brada, linie čelisti, zhoršení těsně před menstruací: jak hormonální akné rozpoznat, pochopit jeho příčiny a vědět, jak pleť zklidnit.</p></section>
+<main class="v2-main">
+<article class="card prose">
+        <article>
+
+            <p>
+                Pupínky, které se vracejí každý měsíc, vždy na stejném místě a často těsně před menstruací. Pleť, která vás trápila v dospívání a ve 28 nebo 32 letech začíná znovu. Pokud vám tento scénář zní povědomě, je velmi pravděpodobné, že je vaše akné <strong>hormonální</strong>. Dobrá zpráva: patří k nejlépe prozkoumaným typům akné, a hlavně k těm nejpředvídatelnějším – takže jakmile ho rozpoznáte, dá se o pleť pečovat mnohem snáz.
+            </p>
+
+            <h2>Co přesně je hormonální akné?</h2>
+
+            <p>
+                Každé akné je do určité míry ovlivněné hormony. O <strong>hormonálním akné</strong> ale mluvíme tehdy, když je hlavním spouštěčem hormonální výkyv – nejčastěji související s <strong>androgeny</strong>, tedy hormony (jako je testosteron), které mají ženy i muži.
+            </p>
+
+            <p>
+                Mechanismus je přesný: androgeny stimulují mazové žlázy, které začnou vytvářet víc kožního mazu. Nadbytečný maz spolu s odumřelými buňkami ucpává folikul a vytváří ideální podmínky pro zánět. Hormonální akné se tedy od ostatních typů neliší mechanismem, ale svým <strong>rytmem</strong>: kopíruje hormonální výkyvy vašeho těla, zejména menstruační cyklus.
+            </p>
+
+            <h2>Jak ho rozpoznat: 4 typické znaky</h2>
+
+            <p>
+                Žádný znak sám o sobě není jednoznačným důkazem, ale jejich kombinace toho hodně napoví.
+            </p>
+
+            <h3>1. Umístění: dolní část obličeje</h3>
+            <p>
+                Je to nejtypičtější znak. Hormonální akné se obvykle soustředí na <strong>dolní třetinu obličeje</strong>: bradu, linii čelisti (pověstnou „mandibulární linii“) a někdy i krk. Pokud se pupínky v dospívání objevovaly spíš na čele a nosu a dnes se stěhují níž, je to silná indicie.
+            </p>
+
+            <h3>2. Načasování: cyklická zhoršení</h3>
+            <p>
+                Hormonální akné je <strong>předvídatelné</strong>. U žen se často zhoršuje během <strong>7 až 10 dní před menstruací</strong> (v luteální fázi), kdy klesá hladina progesteronu a vliv androgenů je relativně výraznější. Pokud dokážete své pupínky podle kalendáře téměř „předpovědět“, je vaše akné velmi pravděpodobně hormonální.
+            </p>
+
+            <h3>3. Typ projevů: hluboké a zánětlivé</h3>
+            <p>
+                Na rozdíl od povrchových černých a bílých teček vytváří hormonální akné často <strong>hluboké a zánětlivé</strong> projevy: citlivé červené papuly a hlavně bolestivé <strong>uzly nebo mikrocysty</strong> pod kůží, které někdy mizí celé týdny a snadno zanechávají stopy.
+            </p>
+
+            <h3>4. Profil: akné dospělých žen</h3>
+            <p>
+                Hormonální akné postihuje především <strong>dospělé ženy</strong>: odhaduje se, že se týká zhruba <strong>40&nbsp;% žen</strong> ve věku 25 až 40 let. Může se poprvé objevit až v dospělosti, i u někoho, kdo v dospívání akné nikdy neměl. Muži se mu také nevyhnou, ale jejich hormonální hladiny jsou stabilnější, takže cyklická zhoršení jsou u nich méně patrná.
+            </p>
+
+            <!-- CTA Block 1 -->
+            <div>
+                <p>Je vaše akné hormonální?</p>
+                <p>
+                    Naše AI analyzuje umístění, typ a rozložení nedokonalostí vaší pleti, zjistí, zda převažuje hormonální faktor – a ukáže vám správný postup.
+                </p>
+                <a href="/cs/form">
+                    <span>Spustit analýzu zdarma</span>
+                    <i></i>
+                </a>
+            </div>
+
+            <h2>Nejčastější hormonální příčiny</h2>
+
+            <p>
+                Za hormonálním akné se jen zřídka skrývá „nemoc“: nejčastěji jde o běžný fyziologický výkyv. Tady jsou nejčastější situace.
+            </p>
+
+            <h3>Menstruační cyklus</h3>
+            <p>
+                Je to nejčastější a nejméně závažná příčina. Pokles progesteronu na konci cyklu dává volné pole androgenům, a proto se pleť před menstruací zhorší. Nejde o poruchu: je to normální cyklus, na který vaše pleť silně reaguje.
+            </p>
+
+            <h3>Syndrom polycystických ovarií (PCOS)</h3>
+            <p>
+                PCOS patří mezi hormonální příčiny, které je dobré sledovat. Často ho provází vytrvalé akné, které špatně reaguje na běžnou péči, spolu s dalšími příznaky: nepravidelným cyklem, nadměrným ochlupením (hirsutismem) a obtížným hubnutím. Pokud se k vašemu akné přidávají i tyto příznaky, rozhodně se doporučuje lékařské vyšetření – jakmile je PCOS rozpoznán, dá se velmi dobře zvládat.
+            </p>
+
+            <h3>Změny antikoncepce</h3>
+            <p>
+                Nasazení, změna nebo <strong>vysazení antikoncepční pilulky</strong> může narušit hormonální rovnováhu pleti. Některé pilulky akné zlepšují, jiné zhoršují a po vysazení se často objeví přechodné zhoršení na několik měsíců, než si tělo najde vlastní rovnováhu.
+            </p>
+
+            <h3>Těhotenství a období po porodu</h3>
+            <p>
+                Hormonální změny v těhotenství a po porodu často mění stav pleti – k lepšímu i k horšímu. <strong>Důležité:</strong> během těhotenství a kojení se řada běžných účinných látek proti akné používat nesmí. V tomto období nikdy nezačínejte s žádnou léčbou bez porady s lékařem.
+            </p>
+
+            <h3>Chronický stres</h3>
+            <p>
+                Stres není pohlavní hormon, ale působí na stejný mechanismus. <strong>Kortizol</strong> uvolňovaný ve stresu nepřímo stimuluje mazové žlázy a zesiluje zánět. Proto se hormonální akné v náročných obdobích téměř vždy zhorší.
+            </p>
+
+            <h2>Mýty, které je dobré pustit z hlavy</h2>
+
+            <h3>„Hormonální akné = vážná porucha“</h3>
+            <p>
+                Ve velké většině případů to neplatí. Hormonální akné většinou souvisí s normálními výkyvy cyklu, ne s nemocí. PCOS a endokrinní poruchy existují, ale jsou v menšině – a provázejí je další příznaky, podle kterých se dají rozpoznat.
+            </p>
+
+            <h3>„Bez hormonální léčby to nepůjde“</h3>
+            <p>
+                Ne. Lehké až středně intenzivní hormonální akné se v mnoha případech výrazně zlepší s <strong>vhodnou lokální rutinou</strong> a několika úpravami životního stylu. Hormonální léčba (vybraná antikoncepční pilulka, spironolakton) má smysl u odolných forem, ale není jedinou cestou.
+            </p>
+
+            <h3>„S menopauzou to přejde“</h3>
+            <p>
+                Ne vždy, a hlavně: proč čekat roky? Hormonální akné ponechané bez péče dává stopám a jizvám čas, aby se usadily. Jednat včas znamená hlavně omezit trvalé následky.
+            </p>
+
+            <blockquote>
+                Hormonální akné není vada vašeho těla: je to pleť, která silně reaguje na zcela normální rytmus. Pochopit ho je prvním krokem k tomu, jak ho znovu dostat pod kontrolu.
+            </blockquote>
+
+            <h2>Jak hormonální akné zvládat</h2>
+
+            <p>
+                Péče stojí na třech úrovních, které se kombinují podle závažnosti.
+            </p>
+
+            <h3>1. Ucelená lokální rutina</h3>
+            <p>
+                Základ je stejný jako u jakéhokoli akné, jen přizpůsobený pleti se sklonem k hlubokým zánětům:
+            </p>
+            <ul>
+                <li><strong>Jemné čištění</strong> ráno a večer, bez vysušování (příliš agresivní čisticí přípravek zhoršuje rebound efekt)</li>
+                <li><strong>Cílené účinné látky</strong>: kyselina salicylová (BHA) na uvolnění ucpaných pórů, niacinamid na regulaci kožního mazu a zklidnění zánětu, retinoidy na urychlení obnovy pokožky – <em>ne v těhotenství a při kojení</em></li>
+                <li><strong>Nekomedogenní hydratace</strong>: dobře hydratovaná pleť lépe reguluje tvorbu kožního mazu</li>
+                <li><strong>Každodenní ochrana před sluncem</strong>, nezbytná, aby stopy po akné netmavly</li>
+            </ul>
+
+            <h3>2. Životní styl</h3>
+            <p>
+                Protože hormonální akné citlivě reaguje na vnitřní prostředí těla, má několik změn skutečný dopad:
+            </p>
+            <ul>
+                <li><strong>Omezit potraviny s vysokým glykemickým indexem</strong> (rychlé cukry, ultrazpracované potraviny), které zesilují prudké výkyvy inzulinu</li>
+                <li><strong>Střídmě konzumovat mléčné výrobky</strong>, zejména odtučněné mléko, pokud na ně člověk citlivě reaguje</li>
+                <li><strong>Zvládat stres</strong> a dbát na kvalitní spánek – obojí přímo ovlivňuje hladinu kortizolu</li>
+            </ul>
+
+            <h3>3. Léčba předepsaná lékařem</h3>
+            <p>
+                U odolných forem může lékař navrhnout silnější léčbu: retinoidy na předpis, hormonální léčbu (některé antikoncepční pilulky, spironolakton), případně izotretinoin u výrazného akné. Tyto možnosti jsou účinné, ale vždy se o nich rozhoduje s lékařem, nikdy ne na vlastní pěst.
+            </p>
+
+            <!-- CTA Block 2 -->
+            <div>
+                <div>
+                    <div>
+                        <i></i>
+                    </div>
+                    <div>
+                        <p>Rutina navržená pro váš profil</p>
+                        <p>Naše AI vyhodnotí postižená místa a typ projevů a sestaví rutinu, která skutečně odpovídá pleti s hormonálním akné.</p>
+                    </div>
+                    <a href="/cs/form">
+                        <span>Spustit analýzu zdarma</span>
+                        <i></i>
+                    </a>
+                </div>
+            </div>
+
+            <h2>Kdy vyhledat lékaře?</h2>
+
+            <p>
+                Lehké hormonální akné se dá velmi dobře zvládnout doma. Některé signály jsou ale důvodem k návštěvě lékaře bez zbytečného odkladu:
+            </p>
+
+            <ul>
+                <li><strong>Bolestivé uzly nebo cysty</strong>, které přetrvávají několik týdnů</li>
+                <li><strong>Tvoří se jizvy</strong> (vpadlé nebo vystouplé)</li>
+                <li><strong>Akné spojené s nepravidelným cyklem, nadměrným ochlupením nebo přibíráním na váze</strong> – možné příznaky PCOS</li>
+                <li><strong>Žádné zlepšení po 3 měsících</strong> důsledně dodržované rutiny</li>
+                <li><strong>Výrazný psychický dopad</strong>: úzkost, vyhýbání se lidem, ztráta sebevědomí</li>
+            </ul>
+
+            <h2>Shrnutí</h2>
+
+            <p>
+                Hormonální akné se pozná podle čtyř znaků: <strong>umístění v dolní části obličeje</strong> (brada, linie čelisti), <strong>cyklického rytmu</strong> (zhoršení před menstruací), <strong>hlubokých a zánětlivých projevů</strong> a ve většině případů podle profilu <strong>dospělé ženy</strong>. Za tím vším nejčastěji stojí obyčejný výkyv cyklu – někdy PCOS, který je dobré sledovat.
+            </p>
+
+            <p>
+                Dobrá zpráva je, že toto akné je předvídatelné, a proto se dá dobře zvládat. Ucelená rutina, několik úprav životního stylu a v případě potřeby návštěva lékaře většinou stačí, aby se situace obrátila k lepšímu. Prvním krokem je vždy totéž: <strong>přesně zjistit</strong>, co se na vaší pleti děje, a nezkoušet přípravky naslepo.
+            </p>
+
+        </article>
+    </article>
+<section class="cta-card"><h2>Vaše pleť si zaslouží skutečnou analýzu.</h2><p>Chytrá analýza pleti pomocí AI. Zdarma, za 2 minuty.</p><a class="btn" href="/cs/form">Spustit analýzu zdarma</a></section>
+</main>
+<footer>
+  <div class="f-grid">
+    <div class="f-brand"><a class="mark" href="/cs/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a></div>
+    <div class="f-col"><h4>Prozkoumat</h4><a href="/cs/form">Analýza pleti</a><a href="/cs/blog">Blog</a></div>
+    <div class="f-col"><h4>Společnost</h4><a href="/cs/o-nas">O nás</a><a href="/cs/kontakt">Napište nám</a></div>
+    <div class="f-col"><h4>Právní dokumenty</h4><a href="/cs/obchodni-podminky">Obchodní podmínky</a><a href="/cs/podminky-pouzivani">Podmínky používání</a><a href="/cs/pravni-informace">Právní informace</a></div>
+    <div class="f-col"><h4>Jazyky</h4><a href="/cs/home">Čeština</a><a href="/">Français</a><a href="/en/home">English</a><a href="/es/home">Español</a><a href="/it/home">Italiano</a><a href="/de/home">Deutsch</a><a href="/nl/home">Nederlands</a><a href="/el/home">Ελληνικά</a><a href="/pl/home">Polski</a><a href="/pt/home">Português</a></div>
+  </div>
+  <div class="f-bottom"><span>© 2026 Adermio. Všechna práva vyhrazena.</span><a href="/cs/ochrana-osobnich-udaju">Ochrana osobních údajů</a><span class="r">Adermio nenahrazuje lékařskou konzultaci.</span></div>
+</footer>
+<script>
+// Mesure (Clarity + pixel TikTok), comme la prod, chargée après l'affichage
+(function(){let d=false;const go=()=>{if(d)return;d=true;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","ua5d07cn1u");
+  const s=document.createElement('script');s.src='/js/ttq.js';s.async=true;document.head.appendChild(s)};
+  const later=()=>'requestIdleCallback' in window?requestIdleCallback(go,{timeout:2000}):setTimeout(go,300);
+  if(document.readyState==='complete')later();else addEventListener('load',later,{once:true});setTimeout(go,4000)})();
+</script>
+</body>
+</html>

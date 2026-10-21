@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preload" href="/fonts/pretendard-latin-v1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/pretendard-latin-ext-v1.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-v1.woff2) format("woff2");unicode-range:U+20-7E,U+A0-FF,U+131,U+152-153,U+2BB-2BC,U+2C6,U+2DA,U+2DC,U+304,U+308,U+329,U+395,U+3AC,U+3B7,U+3B9-3BB,U+3BD,U+2000-200D,U+2010-2027,U+202F-2060,U+20AC,U+2122,U+2191-2194,U+2212,U+22EF,U+2605,U+26A0,U+FEFF}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-latin-ext-v1.woff2) format("woff2");unicode-range:U+100-130,U+132-148,U+14A-151,U+154-17F,U+218-21B,U+1E9E}@font-face{font-family:"Pretendard Variable";font-style:normal;font-weight:45 920;font-display:swap;src:url(/fonts/pretendard-greek-v1.woff2) format("woff2-variations"),url(/fonts/pretendard-greek-v1.woff2) format("woff2");unicode-range:U+370-377,U+37A-37F,U+384-38A,U+38C,U+38E-394,U+396-3A1,U+3A3-3AB,U+3AD-3B6,U+3B8,U+3BC,U+3BE-3E1,U+3F0-3FF,U+1F00-1F15,U+1F18-1F1D,U+1F20-1F45,U+1F48-1F4D,U+1F50-1F57,U+1F59,U+1F5B,U+1F5D,U+1F5F-1F7D,U+1F80-1FB4,U+1FB6-1FC4,U+1FC6-1FD3,U+1FD6-1FDB,U+1FDD-1FEF,U+1FF2-1FF4,U+1FF6-1FFE}@font-face{font-family:"Pretendard Fallback";font-weight:100 550;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:98.5%;ascent-override:96.66%;descent-override:24.49%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback";font-weight:551 1000;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:100.5%;ascent-override:94.74%;descent-override:24.00%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback W";font-weight:100 550;src:local("ArialMT"),local("Arial");size-adjust:102.5%;ascent-override:92.89%;descent-override:23.53%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback W";font-weight:551 1000;src:local("Arial-BoldMT"),local("Arial Bold");size-adjust:96.5%;ascent-override:98.67%;descent-override:25.00%;line-gap-override:0%}@font-face{font-family:"Pretendard Fallback";font-weight:100 550;src:local("HelveticaNeue-Medium"),local("Helvetica Neue Medium");size-adjust:99.5%;ascent-override:95.69%;descent-override:24.24%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback";font-weight:551 1000;src:local("HelveticaNeue-Bold"),local("Helvetica Neue Bold");size-adjust:100.0%;ascent-override:95.21%;descent-override:24.12%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback W";font-weight:100 550;src:local("ArialMT"),local("Arial");size-adjust:104.0%;ascent-override:91.55%;descent-override:23.19%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}@font-face{font-family:"Pretendard Fallback W";font-weight:551 1000;src:local("Arial-BoldMT"),local("Arial Bold");size-adjust:99.5%;ascent-override:95.69%;descent-override:24.24%;line-gap-override:0%;unicode-range:U+370-3FF,U+1F00-1FFF}</style>
+<meta name="format-detection" content="telephone=no">
+<title>Vědecké zdroje – Adermio</title>
+<link rel="canonical" href="https://adermio.com/cs/zdroje">
+<link rel="alternate" hreflang="fr" href="https://adermio.com/sources">
+<link rel="alternate" hreflang="en" href="https://adermio.com/en/sources">
+<link rel="alternate" hreflang="it" href="https://adermio.com/it/sources">
+<link rel="alternate" hreflang="de" href="https://adermio.com/de/quellen">
+<link rel="alternate" hreflang="nl" href="https://adermio.com/nl/bronnen">
+<link rel="alternate" hreflang="el" href="https://adermio.com/el/piges">
+<link rel="alternate" hreflang="pl" href="https://adermio.com/pl/zrodla">
+<link rel="alternate" hreflang="cs" href="https://adermio.com/cs/zdroje">
+<link rel="alternate" hreflang="x-default" href="https://adermio.com/sources">
+<meta property="og:title" content="Vědecké zdroje – Adermio">
+<meta property="og:description" content="Odborná literatura, o kterou se opírají analýzy a doporučení aplikace Adermio: doporučení odborných společností, randomizované studie a metaanalýzy.">
+<meta property="og:url" content="https://adermio.com/cs/zdroje">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://adermio.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:site_name" content="Adermio">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vědecké zdroje – Adermio">
+<meta name="twitter:description" content="Odborná literatura, o kterou se opírají analýzy a doporučení aplikace Adermio: doporučení odborných společností, randomizované studie a metaanalýzy.">
+<meta name="twitter:image" content="https://adermio.com/og-image.png">
+<meta name="description" content="Odborná literatura, o kterou se opírají analýzy a doporučení aplikace Adermio: doporučení odborných společností, randomizované studie a metaanalýzy.">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/v2.css">
+</head>
+<body>
+<header class="v2-bar"><a class="mark" href="/cs/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a><a class="btn btn-dark" href="/cs/form">Spustit analýzu</a></header>
+<section class="v2-head"><span class="pill">Vědecká důslednost</span><h1>Vědecké zdroje</h1><p class="sub">Aktualizováno: červenec 2026</p></section>
+<main class="v2-main">
+<article class="card prose">
+        <div>
+
+            <div>
+                <p>Analýzy, hodnocení a doporučení aplikace Adermio stojí na publikovaných vědeckých poznatcích. Vycházíme z dermatologické a nutriční literatury: z doporučení odborných společností, randomizovaných kontrolovaných studií, systematických přehledů a metaanalýz. Klepnutím na referenci ji otevřete.</p>
+                <div>Adermio poskytuje informace z oblasti kosmetiky a celkové pohody. Aplikace nenahrazuje lékařské vyšetření ani konzultaci se zdravotnickým odborníkem.</div>
+            </div>
+
+            <div>
+                <h2>Akné – pochopení a péče</h2>
+                <ul>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/38300170/" target="_blank" rel="noopener noreferrer">
+                                <p>Guidelines of care for the management of acne vulgaris <i></i></p>
+                                <p>Reynolds RV, Yeung H, Cheng CE, et al. – <em>J Am Acad Dermatol</em>, 2024</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/26897386/" target="_blank" rel="noopener noreferrer">
+                                <p>Guidelines of care for the management of acne vulgaris <i></i></p>
+                                <p>Zaenglein AL, Pathy AL, Schlosser BJ, et al. – <em>J Am Acad Dermatol</em>, 2016</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/27514932/" target="_blank" rel="noopener noreferrer">
+                                <p>European evidence-based (S3) guideline for the treatment of acne — update 2016 <i></i></p>
+                                <p>Nast A, Dréno B, Bettoli V, et al. – <em>J Eur Acad Dermatol Venereol</em>, 2016</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/20456560/" target="_blank" rel="noopener noreferrer">
+                                <p>Development and evaluation of a Global Acne Severity Scale (GEA Scale) suitable for France and Europe <i></i></p>
+                                <p>Dréno B, Poli F, Pawin H, et al. – <em>J Eur Acad Dermatol Venereol</em>, 2011</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/21880356/" target="_blank" rel="noopener noreferrer">
+                                <p>Acne vulgaris <i></i></p>
+                                <p>Williams HC, Dellavalle RP, Garner S — <em>Lancet</em>, 2012</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/30726466/" target="_blank" rel="noopener noreferrer">
+                                <p>Adult female acne: a guide to clinical practice <i></i></p>
+                                <p>Bagatin E, Freitas THP, Rivitti-Machado MC, et al. – <em>An Bras Dermatol</em>, 2019</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Kosmetické účinné látky</h2>
+                <ul>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/12095880/" target="_blank" rel="noopener noreferrer">
+                                <p>Randomised, controlled trial of the efficacy and safety of adapalene gel 0.1% and tretinoin cream 0.05% in patients with acne vulgaris <i></i></p>
+                                <p>Cunliffe WJ, Danby FW, Dunlap F, et al. – <em>Eur J Dermatol</em>, 2002</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/32175593/" target="_blank" rel="noopener noreferrer">
+                                <p>Topical benzoyl peroxide for acne <i></i></p>
+                                <p>Yang Z, Zhang Y, Lazic Mosler E, et al. – <em>Cochrane Database Syst Rev</em>, 2020</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/7657446/" target="_blank" rel="noopener noreferrer">
+                                <p>Topical nicotinamide compared with clindamycin gel in the treatment of inflammatory acne vulgaris <i></i></p>
+                                <p>Shalita AR, Smith JG, Parish LC, et al. – <em>Int J Dermatol</em>, 1995</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/37550898/" target="_blank" rel="noopener noreferrer">
+                                <p>A systematic review to evaluate the efficacy of azelaic acid in the management of acne, rosacea, melasma and skin aging <i></i></p>
+                                <p>King S, Campbell J, Rowe R, et al. – <em>J Cosmet Dermatol</em>, 2023</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/29705755/" target="_blank" rel="noopener noreferrer">
+                                <p>Chemical peels for acne vulgaris: a systematic review of randomised controlled trials <i></i></p>
+                                <p>Chen X, Wang S, Yang M, Li L — <em>BMJ Open</em>, 2018</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/37128827/" target="_blank" rel="noopener noreferrer">
+                                <p>Efficacy of topical vitamin C in melasma and photoaging: a systematic review <i></i></p>
+                                <p>Correia G, Magina S — <em>J Cosmet Dermatol</em>, 2023</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Komedogenita složek</h2>
+                <ul>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/6229554/" target="_blank" rel="noopener noreferrer">
+                                <p>Comedogenicity of current therapeutic products, cosmetics, and ingredients in the rabbit ear <i></i></p>
+                                <p>Fulton JE Jr, Pay SR, Fulton JE III — <em>J Am Acad Dermatol</em>, 1984</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/16488305/" target="_blank" rel="noopener noreferrer">
+                                <p>A re-evaluation of the comedogenicity concept <i></i></p>
+                                <p>Draelos ZD, DiNardo JC — <em>J Am Acad Dermatol</em>, 2006</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/6461674/" target="_blank" rel="noopener noreferrer">
+                                <p>Is the rabbit ear model, in its present state, prophetic of acnegenicity? <i></i></p>
+                                <p>Frank SB — <em>J Am Acad Dermatol</em>, 1982</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Ochrana před sluncem</h2>
+                <ul>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/23732711/" target="_blank" rel="noopener noreferrer">
+                                <p>Sunscreen and prevention of skin aging: a randomized trial <i></i></p>
+                                <p>Hughes MCB, Williams GM, Baker P, Green AC — <em>Ann Intern Med</em>, 2013</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://doi.org/10.1016/j.jaad.2021.12.019" target="_blank" rel="noopener noreferrer">
+                                <p>Photoprotection for skin of all color: consensus and clinical guidance from an expert panel <i></i></p>
+                                <p>Rigel DS, Taylor SC, Lim HW, et al. – <em>J Am Acad Dermatol</em>, 2022</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/35250287/" target="_blank" rel="noopener noreferrer">
+                                <p>A randomized, double blinded, split-face study of the efficacy of using a broad spectrum sunscreen with anti-inflammatory agent to reduce post inflammatory hyperpigmentation after picosecond laser <i></i></p>
+                                <p>Puaratanaarunkon T, Asawanonda P — <em>Clin Cosmet Investig Dermatol</em>, 2022</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Hydratace a kožní bariéra</h2>
+                <ul>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/23467280/" target="_blank" rel="noopener noreferrer">
+                                <p>Hyaluronic acid: a key molecule in skin aging <i></i></p>
+                                <p>Papakonstantinou E, Roth M, Karakiulakis G — <em>Dermatoendocrinol</em>, 2012</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/29229630/" target="_blank" rel="noopener noreferrer">
+                                <p>The role of moisturizers in addressing various kinds of dermatitis: a review <i></i></p>
+                                <p>Purnamawati S, Indrastuti N, Danarti R, Saefudin T — <em>Clin Med Res</em>, 2017</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Těhotenství a bezpečnost péče</h2>
+                <ul>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/21673209/" target="_blank" rel="noopener noreferrer">
+                                <p>Safety of skin care products during pregnancy <i></i></p>
+                                <p>Bozzo P, Chua-Gocheco A, Einarson A — <em>Can Fam Physician</em>, 2011</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Strava a pleť</h2>
+                <ul>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/17616769/" target="_blank" rel="noopener noreferrer">
+                                <p>A low-glycemic-load diet improves symptoms in acne vulgaris patients: a randomized controlled trial <i></i></p>
+                                <p>Smith RN, Mann NJ, Braue A, et al. – <em>Am J Clin Nutr</em>, 2007</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/22678562/" target="_blank" rel="noopener noreferrer">
+                                <p>Clinical and histological effect of a low glycaemic load diet in treatment of acne vulgaris in Korean patients: a randomized, controlled trial <i></i></p>
+                                <p>Kwon HH, Yoon JY, Hong JS, et al. – <em>Acta Derm Venereol</em>, 2012</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/30096883/" target="_blank" rel="noopener noreferrer">
+                                <p>Dairy intake and acne vulgaris: a systematic review and meta-analysis of 78,529 children, adolescents, and young adults <i></i></p>
+                                <p>Juhl CR, Bergholdt HKM, Miller IM, et al. – <em>Nutrients</em>, 2018</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/32748305/" target="_blank" rel="noopener noreferrer">
+                                <p>Effects of diet on acne and its response to treatment <i></i></p>
+                                <p>Baldwin H, Tan J — <em>Am J Clin Dermatol</em>, 2021</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/24553997/" target="_blank" rel="noopener noreferrer">
+                                <p>Effect of dietary supplementation with omega-3 fatty acid and gamma-linolenic acid on acne vulgaris: a randomised, double-blind, controlled trial <i></i></p>
+                                <p>Jung JY, Kwon HH, Hong JS, et al. – <em>Acta Derm Venereol</em>, 2014</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Spánek, stres a pleť</h2>
+                <ul>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/25266053/" target="_blank" rel="noopener noreferrer">
+                                <p>Does poor sleep quality affect skin ageing? <i></i></p>
+                                <p>Oyetakin-White P, Suggs A, Koo B, et al. – <em>Clin Exp Dermatol</em>, 2015</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/12873885/" target="_blank" rel="noopener noreferrer">
+                                <p>The response of skin disease to stress: changes in the severity of acne vulgaris as affected by examination stress <i></i></p>
+                                <p>Chiu A, Chon SY, Kimball AB — <em>Arch Dermatol</em>, 2003</p>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+            <p>Ověřená bibliografie – každý odkaz vede na původní článek (PubMed nebo vydavatel). Aktualizováno: červenec 2026.</p>
+
+        </div>
+    </article>
+</main>
+<footer>
+  <div class="f-grid">
+    <div class="f-brand"><a class="mark" href="/cs/home"><img src="/medias/accueil3/logo-disque.png" alt="">Adermio</a></div>
+    <div class="f-col"><h4>Prozkoumat</h4><a href="/cs/form">Analýza pleti</a><a href="/cs/blog">Blog</a></div>
+    <div class="f-col"><h4>Společnost</h4><a href="/cs/o-nas">O nás</a><a href="/cs/kontakt">Napište nám</a></div>
+    <div class="f-col"><h4>Právní dokumenty</h4><a href="/cs/obchodni-podminky">Obchodní podmínky</a><a href="/cs/podminky-pouzivani">Podmínky používání</a><a href="/cs/pravni-informace">Právní informace</a></div>
+    <div class="f-col"><h4>Jazyky</h4><a href="/cs/home">Čeština</a><a href="/">Français</a><a href="/en/home">English</a><a href="/es/home">Español</a><a href="/it/home">Italiano</a><a href="/de/home">Deutsch</a><a href="/nl/home">Nederlands</a><a href="/el/home">Ελληνικά</a><a href="/pl/home">Polski</a><a href="/pt/home">Português</a></div>
+  </div>
+  <div class="f-bottom"><span>© 2026 Adermio. Všechna práva vyhrazena.</span><a href="/cs/ochrana-osobnich-udaju">Ochrana osobních údajů</a><span class="r">Adermio nenahrazuje lékařskou konzultaci.</span></div>
+</footer>
+<script>
+// Mesure (Clarity + pixel TikTok), comme la prod, chargée après l'affichage
+(function(){let d=false;const go=()=>{if(d)return;d=true;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","ua5d07cn1u");
+  const s=document.createElement('script');s.src='/js/ttq.js';s.async=true;document.head.appendChild(s)};
+  const later=()=>'requestIdleCallback' in window?requestIdleCallback(go,{timeout:2000}):setTimeout(go,300);
+  if(document.readyState==='complete')later();else addEventListener('load',later,{once:true});setTimeout(go,4000)})();
+</script>
+</body>
+</html>
