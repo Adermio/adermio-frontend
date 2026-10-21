@@ -69,3 +69,21 @@ Créer un prix Stripe, redéployer une edge, activer un workflow sur le dispatch
 ## Décisions validées (21/10, « OK pour tout ton plan… GO »)
 
 Portugais du Portugal (pt-PT), vouvoiement neutre sans pronom, 5,99 €, MB WAY + Multibanco (Antoine), CS = « vy » sans genre, 149 Kč, vidéo EN, adresses traduites, écrans de l'app traduits au pixel (comme PL).
+
+## Tchèque — plan d'exécution (21/10 soir, « même principe, site seul puis retour à Antoine »)
+
+Décisions reprises du plan validé : registre **« vy »** (vykání) en minuscules hors début de phrase, **aucune forme genrée
+adressée au visiteur** (le passé tchèque s'accorde au genre même au vouvoiement : *udělal/a jste* interdit ; présent, noms,
+impersonnel, 1re personne du pluriel côté Adermio), **149 Kč**, zéro langage médical (*diagnóza, pacient, terapie, klinický,
+léčit/léčba* côté Adermio interdits), vidéo EN « (video v angličtině) », écrans de l'app traduits au pixel (comme PL/PT),
+adresses traduites, html lang="cs", hreflang « cs ». Typographie : „…“, pas d'espace avant ! ? : ;, virgule décimale,
+« 98 % », dates « 21. října 2026 », pluriel 1 / 2–4 / 5+.
+
+1. Glossaire GLOSSAIRE_CS.md + brief + outillage `tests/i18n/cs/` cloné du portugais (architecture post-bascule : sources dans
+   source-v1/cs, pages de parcours dans cs/) avec les détecteurs slaves du polonais (genre au passé, pluriels, registre,
+   diacritiques manquants, résidus FR/EN/PL/PT/SK).
+2. 24 pages traduites (8 traducteurs), 3 relecteurs natifs, cohérence entre pages.
+3. Nouveau site : build_{v2,flow,home}_cs.py, textes_attente_cs.py, ecrans_cs.py ; police latin-ext pour cs (bascule_v2.font_head).
+4. seo_cs + bascule_v2, noindex `/cs/(.*)`, push caché ; webhooks figés `analyse-gratuite-cs-web`, `second-cycle-cs`.
+5. Audit : QA à 0, reconstruction identique, liens, JS, rendu navigateur 390/1280 px, relecture du nouveau site.
+Hors périmètre de cette étape (après accord d'Antoine) : Stripe 149 CZK, n8n gratuit/payant/aiguillage, ouverture, lang-suggest CZ.
