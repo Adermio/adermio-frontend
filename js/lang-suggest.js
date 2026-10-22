@@ -9,7 +9,7 @@
 // et Autrichiens sur /en en 3 jours, 0 paiement le 12/10 contre 24 % sur /de.
 // À l'arrivée, on leur propose la version dans leur langue (même parcours) :
 //   « Continua in italiano » / « Συνέχεια στα ελληνικά » / « Verder in het Nederlands »
-//   / « Weiter auf Deutsch » / « Kontynuuj po polsku » / « Continuar em português »
+//   / « Weiter auf Deutsch » / « Kontynuuj po polsku » / « Continuar em português » / « Pokračovat v češtině »
 //                               → page équivalente, query string conservée
 //                                 (utm, ttclid…) pour ne pas casser l'attribution ;
 //   « Continue in English » (ou la langue de la page) → on ferme et on ne
@@ -110,6 +110,23 @@
       title: 'A Adermio está disponível em português',
       text: 'A sua análise gratuita da pele e o relatório completo, totalmente em português.',
       cta: 'Continuar em português'
+    },
+    cs: {
+      // 22/10/2026 : 30 derniers jours, visiteurs situés en Tchéquie sur /en/form (11 sessions), /it/form… ; Slovaquie (SK) :
+      // /en/form (3) — les Slovaques lisent le tchèque sans effort, bien mieux que l'anglais (prix affiché en Kč).
+      countries: ['CZ', 'SK'],
+      choiceKey: 'adermio_lang_choice_cs',
+      targets: {
+        '/en/form': '/cs/form', '/en/home': '/cs/home',
+        '/it/form': '/cs/form', '/it/home': '/cs/home',
+        '/de/form': '/cs/form', '/de/home': '/cs/home',
+        '/formulaire': '/cs/form', '/': '/cs/home'
+      },
+      flag: 'cz',                              // drapeau tchèque aussi en Slovaquie : la page proposée est en tchèque, pas en slovaque
+      label: 'Čeština',
+      title: 'Adermio je k dispozici v češtině',
+      text: 'Bezplatná analýza pleti i kompletní zpráva, celé v češtině.',
+      cta: 'Pokračovat v češtině'
     }
   };
 
