@@ -19,6 +19,7 @@ PAS de suggestion de langue (js/lang-suggest.js) : faite à part.
 ⚠️ À RELANCER après toute régénération d'une autre langue (build_v2*.py, build_home_*.py, build_flow_*.py…) puis
 bascule : les générateurs ne connaissent pas « Português » et le retireraient des menus des copies v2/.
 Le script relance lui-même bascule_v2.py quand il a modifié une copie v2/ ou seo_prod.json.
+Depuis l'ouverture du tchèque (22/10) : relancer ensuite tests/i18n/cs/expose_cs.py (même règle pour « Čeština »).
 
 Idempotent. Usage : python3 tests/i18n/pt/expose_pt.py [--check]   (--check : rc 1 s'il reste quelque chose à faire)
 """

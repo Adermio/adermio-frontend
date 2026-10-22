@@ -219,15 +219,6 @@
   ],
   "headers": [
     {
-      "source": "/cs/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex"
-        }
-      ]
-    },
-    {
       "source": "/pl/anuluj-subskrypcje",
       "headers": [
         {
@@ -238,6 +229,15 @@
     },
     {
       "source": "/pt/cancelar-subscricao",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/cs/zruseni-predplatneho",
       "headers": [
         {
           "key": "X-Robots-Tag",
