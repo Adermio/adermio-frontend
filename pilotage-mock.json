@@ -492,5 +492,457 @@
   "protected": {
     "success_pct": 99.6,
     "total": 1830
-  }
+  },
+  "onboarding": {
+    "lang": null,
+    "entered": 1386,
+    "abandoned": 761,
+    "exits": [
+      {
+        "screen": "step7",
+        "label": "Scan du visage",
+        "share_pct": 18
+      },
+      {
+        "screen": "hard-paywall",
+        "label": "Paywall",
+        "share_pct": 14
+      },
+      {
+        "screen": "step3",
+        "label": "Profil de peau",
+        "share_pct": 9
+      },
+      {
+        "screen": "welcome",
+        "label": "Écran de bienvenue",
+        "share_pct": 6
+      },
+      {
+        "screen": "step2",
+        "label": "Questions sur vous",
+        "share_pct": 3.1
+      }
+    ],
+    "by_lang": {
+      "es": {
+        "label": "Espagnol",
+        "entered": 812
+      },
+      "it": {
+        "label": "Italien",
+        "entered": 214
+      },
+      "fr": {
+        "label": "Français",
+        "entered": 171
+      },
+      "en": {
+        "label": "Anglais",
+        "entered": 96
+      },
+      "de": {
+        "label": "Allemand",
+        "entered": 61
+      },
+      "pt": {
+        "label": "Portugais",
+        "entered": 18
+      }
+    }
+  },
+  "replays": [
+    {
+      "session_id": "0199a1b2-c3d4-7e5f-8a9b-000000000001",
+      "why": "Part au scan du visage après 3 essais",
+      "detail": "La personne lance le scan **3 fois**. Le visage n'est pas détecté **2 fois**. Elle ferme l'app sur le scan du visage, après 2 min 41.",
+      "tags": {
+        "outcome": "abandon",
+        "lang_label": "Espagnol",
+        "variant_label": "hard"
+      },
+      "exit_screen": "step7",
+      "exit_label": "Scan du visage",
+      "duration_s": 161,
+      "embed_url": "pilotage-mock-replay.html",
+      "platform": "ios",
+      "app_version": "1.1.15",
+      "started_at": "2026-10-22T19:14:00Z",
+      "steps": [
+        {
+          "screen": "welcome",
+          "label": "Écran de bienvenue",
+          "at_s": 0,
+          "duration_s": 6,
+          "hl": false
+        },
+        {
+          "screen": "step3",
+          "label": "Profil de peau",
+          "at_s": 6,
+          "duration_s": 48,
+          "hl": false
+        },
+        {
+          "screen": "dossier-complete",
+          "label": "Dossier complet",
+          "at_s": 54,
+          "duration_s": 8,
+          "hl": false
+        },
+        {
+          "screen": "step7",
+          "label": "Scan du visage · 3 essais",
+          "at_s": 62,
+          "duration_s": 99,
+          "hl": true
+        },
+        {
+          "screen": null,
+          "label": "App fermée",
+          "at_s": 161,
+          "duration_s": null,
+          "hl": false
+        }
+      ],
+      "seen": false
+    },
+    {
+      "session_id": "0199a1b2-c3d4-7e5f-8a9b-000000000002",
+      "why": "Hésite 40 s sur le paywall puis ferme",
+      "detail": "Elle reste **40 s** sur le paywall. Elle ferme l'app sur le paywall, après 4 min 05.",
+      "tags": {
+        "outcome": "abandon",
+        "lang_label": "Français",
+        "variant_label": "soft"
+      },
+      "exit_screen": "hard-paywall",
+      "exit_label": "Paywall",
+      "duration_s": 245,
+      "embed_url": "pilotage-mock-replay.html",
+      "platform": "ios",
+      "app_version": "1.1.15",
+      "started_at": "2026-10-22T17:02:00Z",
+      "steps": [
+        {
+          "screen": "welcome",
+          "label": "Écran de bienvenue",
+          "at_s": 0,
+          "duration_s": 5,
+          "hl": false
+        },
+        {
+          "screen": "step3",
+          "label": "Profil de peau",
+          "at_s": 5,
+          "duration_s": 31,
+          "hl": false
+        },
+        {
+          "screen": "step7",
+          "label": "Scan du visage",
+          "at_s": 36,
+          "duration_s": 58,
+          "hl": false
+        },
+        {
+          "screen": "analysis-summary",
+          "label": "Résumé de l'analyse",
+          "at_s": 94,
+          "duration_s": 62,
+          "hl": false
+        },
+        {
+          "screen": "plan-launch",
+          "label": "Lancement du plan",
+          "at_s": 156,
+          "duration_s": 49,
+          "hl": false
+        },
+        {
+          "screen": "hard-paywall",
+          "label": "Paywall",
+          "at_s": 205,
+          "duration_s": 40,
+          "hl": true
+        },
+        {
+          "screen": null,
+          "label": "App fermée",
+          "at_s": 245,
+          "duration_s": null,
+          "hl": false
+        }
+      ],
+      "seen": false
+    },
+    {
+      "session_id": "0199a1b2-c3d4-7e5f-8a9b-000000000003",
+      "why": "Va jusqu'à l'achat",
+      "detail": "Elle achète après 5 min 12.",
+      "tags": {
+        "outcome": "purchase",
+        "lang_label": "Italien",
+        "variant_label": "ancien"
+      },
+      "exit_screen": null,
+      "exit_label": null,
+      "duration_s": 312,
+      "embed_url": "pilotage-mock-replay.html",
+      "platform": "android",
+      "app_version": "1.1.15",
+      "started_at": "2026-10-22T11:40:00Z",
+      "steps": [
+        {
+          "screen": "welcome",
+          "label": "Écran de bienvenue",
+          "at_s": 0,
+          "duration_s": 7,
+          "hl": false
+        },
+        {
+          "screen": "step3",
+          "label": "Profil de peau",
+          "at_s": 7,
+          "duration_s": 40,
+          "hl": false
+        },
+        {
+          "screen": "step7",
+          "label": "Scan du visage",
+          "at_s": 47,
+          "duration_s": 71,
+          "hl": false
+        },
+        {
+          "screen": "analysis-summary",
+          "label": "Résumé de l'analyse",
+          "at_s": 118,
+          "duration_s": 95,
+          "hl": false
+        },
+        {
+          "screen": "hard-paywall",
+          "label": "Paywall",
+          "at_s": 213,
+          "duration_s": 99,
+          "hl": false
+        },
+        {
+          "screen": null,
+          "label": "Achat",
+          "at_s": 312,
+          "duration_s": null,
+          "hl": false
+        }
+      ],
+      "seen": false
+    },
+    {
+      "session_id": "0199a1b2-c3d4-7e5f-8a9b-000000000004",
+      "why": "Revient deux fois sur l'écran « Ce qui gêne le plus »",
+      "detail": "Elle passe **3 fois** sur l'écran « Ce qui gêne le plus ». Elle entre dans l'app sans acheter, après 3 min 20.",
+      "tags": {
+        "outcome": "hesitation",
+        "lang_label": "Espagnol",
+        "variant_label": "hard"
+      },
+      "exit_screen": null,
+      "exit_label": null,
+      "duration_s": 200,
+      "embed_url": "pilotage-mock-replay.html",
+      "platform": "ios",
+      "app_version": "1.1.15",
+      "started_at": "2026-10-22T09:12:00Z",
+      "steps": [
+        {
+          "screen": "welcome",
+          "label": "Écran de bienvenue",
+          "at_s": 0,
+          "duration_s": 6,
+          "hl": false
+        },
+        {
+          "screen": "step3b",
+          "label": "Ce qui gêne le plus",
+          "at_s": 6,
+          "duration_s": 22,
+          "hl": false
+        },
+        {
+          "screen": "step3",
+          "label": "Profil de peau",
+          "at_s": 28,
+          "duration_s": 14,
+          "hl": false
+        },
+        {
+          "screen": "step3b",
+          "label": "Ce qui gêne le plus",
+          "at_s": 42,
+          "duration_s": 31,
+          "hl": true
+        },
+        {
+          "screen": "step7",
+          "label": "Scan du visage",
+          "at_s": 73,
+          "duration_s": 64,
+          "hl": false
+        },
+        {
+          "screen": "hard-paywall",
+          "label": "Paywall",
+          "at_s": 137,
+          "duration_s": 63,
+          "hl": false
+        },
+        {
+          "screen": null,
+          "label": "Entrée dans l'app",
+          "at_s": 200,
+          "duration_s": null,
+          "hl": false
+        }
+      ],
+      "seen": false
+    },
+    {
+      "session_id": "0199a1b2-c3d4-7e5f-8a9b-000000000005",
+      "why": "Va jusqu'à l'achat",
+      "detail": "Elle achète après 3 min 58.",
+      "tags": {
+        "outcome": "purchase",
+        "lang_label": "Espagnol",
+        "variant_label": "hard"
+      },
+      "exit_screen": null,
+      "exit_label": null,
+      "duration_s": 238,
+      "embed_url": "pilotage-mock-replay.html",
+      "platform": "ios",
+      "app_version": "1.1.15",
+      "started_at": "2026-10-21T21:30:00Z",
+      "steps": [
+        {
+          "screen": "welcome",
+          "label": "Écran de bienvenue",
+          "at_s": 0,
+          "duration_s": 4,
+          "hl": false
+        },
+        {
+          "screen": "step7",
+          "label": "Scan du visage",
+          "at_s": 4,
+          "duration_s": 80,
+          "hl": false
+        },
+        {
+          "screen": "hard-paywall",
+          "label": "Paywall",
+          "at_s": 84,
+          "duration_s": 154,
+          "hl": false
+        },
+        {
+          "screen": null,
+          "label": "Achat",
+          "at_s": 238,
+          "duration_s": null,
+          "hl": false
+        }
+      ],
+      "seen": false
+    },
+    {
+      "session_id": "0199a1b2-c3d4-7e5f-8a9b-000000000006",
+      "why": "Part à l'écran « Questions sur vous »",
+      "detail": "Elle ferme l'app sur l'écran « Questions sur vous », après 38 s.",
+      "tags": {
+        "outcome": "abandon",
+        "lang_label": "Anglais",
+        "variant_label": "ancien"
+      },
+      "exit_screen": "step2",
+      "exit_label": "Questions sur vous",
+      "duration_s": 38,
+      "embed_url": null,
+      "platform": "ios",
+      "app_version": "1.1.15",
+      "started_at": "2026-10-21T15:05:00Z",
+      "steps": [
+        {
+          "screen": "welcome",
+          "label": "Écran de bienvenue",
+          "at_s": 0,
+          "duration_s": 12,
+          "hl": false
+        },
+        {
+          "screen": "step2",
+          "label": "Questions sur vous",
+          "at_s": 12,
+          "duration_s": 26,
+          "hl": true
+        },
+        {
+          "screen": null,
+          "label": "App fermée",
+          "at_s": 38,
+          "duration_s": null,
+          "hl": false
+        }
+      ],
+      "seen": false
+    },
+    {
+      "session_id": "0199a1b2-c3d4-7e5f-8a9b-000000000007",
+      "why": "Part au scan du visage : visage non détecté",
+      "detail": "Le visage n'est pas détecté **une fois**. Elle ferme l'app sur le scan du visage, après 1 min 52.",
+      "tags": {
+        "outcome": "abandon",
+        "lang_label": "Allemand",
+        "variant_label": "hard"
+      },
+      "exit_screen": "step7",
+      "exit_label": "Scan du visage",
+      "duration_s": 112,
+      "embed_url": "pilotage-mock-replay.html",
+      "platform": "ios",
+      "app_version": "1.1.15",
+      "started_at": "2026-10-21T08:47:00Z",
+      "steps": [
+        {
+          "screen": "welcome",
+          "label": "Écran de bienvenue",
+          "at_s": 0,
+          "duration_s": 8,
+          "hl": false
+        },
+        {
+          "screen": "step3",
+          "label": "Profil de peau",
+          "at_s": 8,
+          "duration_s": 30,
+          "hl": false
+        },
+        {
+          "screen": "step7",
+          "label": "Scan du visage",
+          "at_s": 38,
+          "duration_s": 74,
+          "hl": true
+        },
+        {
+          "screen": null,
+          "label": "App fermée",
+          "at_s": 112,
+          "duration_s": null,
+          "hl": false
+        }
+      ],
+      "seen": false
+    }
+  ]
 }

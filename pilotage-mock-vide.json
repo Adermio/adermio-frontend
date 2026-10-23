@@ -458,5 +458,7 @@
     "anonymous_unlinked": 1
   },
   "screens": [],
-  "protected": null
+  "protected": null,
+  "onboarding": null,
+  "replays": null
 }

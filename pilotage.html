@@ -147,6 +147,51 @@
   .msg { max-width: 520px; margin: 24px auto 0; }
   .msg h2 { margin-bottom: 6px; }
   .msg .pill-btn { border: 0; font-family: inherit; }
+  /* ── Lot replay : maquette replays.html (23/10) ── */
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 4px; }
+  .chip { font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 999px; background: var(--soft); color: var(--ink2); }
+  .chip.on { background: var(--ink); color: #fff; }
+  .exit { margin-top: 12px; }
+  .exit .t { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+  .exit .t span { color: var(--ink2); }
+  .exit .t b { font-weight: 600; }
+  .exit .track { height: 8px; border-radius: 999px; background: var(--soft); overflow: hidden; }
+  .exit .track i { display: block; height: 100%; border-radius: 999px; background: var(--ink); opacity: .85; }
+  .exit + .exit { margin-top: 12px; }
+  .rp { display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+  .rp:first-child { border-top: 0; }
+  .thumb { width: 54px; height: 96px; border-radius: 10px; background: linear-gradient(180deg, #F4F2EF, #E4DFD9); position: relative; overflow: hidden; }
+  .thumb::after { content: "▶"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 14px; color: rgba(37,27,19,.45); }
+  .thumb .bar { position: absolute; left: 6px; right: 6px; height: 5px; border-radius: 3px; background: rgba(37,27,19,.10); }
+  .rp .why { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .rp .meta { font-size: 12px; color: var(--ink2); margin-top: 4px; }
+  .rp .tag { font-size: 11px; padding: 3px 8px; margin-right: 4px; }
+  .tag.n { background: var(--soft); color: var(--ink2); }
+  .rp .dur { font-size: 13px; color: var(--ink3); font-weight: 500; }
+  .player-wrap { display: grid; gap: 12px; }
+  .player { background: var(--card); border-radius: 24px; padding: 14px; display: grid; place-items: center; }
+  .phone { width: 240px; aspect-ratio: 9/19.5; border-radius: 30px; background: #F7F5F2; position: relative; overflow: hidden; box-shadow: 0 0 0 6px #E4DFD9, 0 12px 30px rgba(37,27,19,.10); }
+  .phone iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #F7F5F2; }
+  .phone .masked { position: absolute; left: 18px; right: 18px; top: 120px; height: 200px; border-radius: 16px; background: repeating-linear-gradient(45deg,#D9D3CC 0 8px,#E3DED8 8px 16px); display: grid; place-items: center; font-size: 11px; font-weight: 600; color: rgba(37,27,19,.55); text-align: center; padding: 12px; }
+  .ctrl { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; margin-top: 16px; color: var(--ink2); font-size: 13px; font-weight: 500; }
+  .ctrl a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  .steps .s { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: baseline; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .steps .s:first-child { border-top: 0; }
+  .steps .s .tm { color: var(--ink3); font-weight: 500; font-size: 13px; }
+  .steps .s .d { color: var(--ink2); font-size: 13px; }
+  .steps .s.hl { background: var(--warn-bg); margin: 0 -10px; padding: 10px; border-radius: 12px; border-top-color: transparent; }
+  .steps .s.hl .nm { font-weight: 600; }
+  .actions { display: flex; gap: 8px; margin-top: 12px; }
+  .btn { flex: 1; text-align: center; font-size: 14px; font-weight: 600; padding: 11px; border-radius: 999px; background: var(--soft); }
+  .btn.dark { background: var(--ink); color: #fff; }
+  @media (min-width: 900px) { .player-wrap { grid-template-columns: 1fr; } .phone { width: 320px; } }
+  .chip, .exit, .rp, .btn, .ctrl a { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .chip, .exit, .rp, .btn { user-select: none; }
+  .chip:focus-visible, .exit:focus-visible, .rp:focus-visible, .btn:focus-visible { outline: 2px solid var(--ink3); outline-offset: 2px; }
+  .exit.on .t span { color: var(--ink); font-weight: 600; }
+  .exit.on .track i { background: var(--warn); opacity: 1; }
+  .exit.off .track i { opacity: .35; }
+
   .skel { display: block; background: rgba(37, 27, 19, .06); border-radius: 8px; animation: skel 1.4s ease-in-out infinite; }
   @keyframes skel { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
   @media (prefers-reduced-motion: reduce) { .skel { animation: none; } }
@@ -212,7 +257,10 @@
     cache: {},
     showAll: false,
     fromHome: false,
-    homeScroll: 0
+    homeScroll: 0,
+    lang: null,          // filtre de langue de l'onboarding (2 lettres) ; null = toutes
+    exitFilter: null,    // écran touché dans « Où ils partent » : filtre les replays
+    showAllReplays: false
   };
   var app = document.getElementById('app');
   var seq = 0;
@@ -527,11 +575,162 @@
       '<div class="sub">Compteurs anonymes : on voit les pannes, jamais une personne.</div></div>';
   }
 
+  // ── Lot replay : « Où ils partent », « Replays à regarder », lecteur ──────
+  var REPLAY_EMPTY = 'Pas encore de replays : ils arrivent avec la version 1.1.15.';
+  var VISIBLE_REPLAYS = 5;
+  var MAX_LANG_CHIPS = 5;
+  var OUTCOME_TAG = { abandon: ['bad', 'Abandon'], purchase: ['ok', 'Achat'], hesitation: ['warn', 'Hésitation'], completed: ['n', 'Va au bout'] };
+  var THUMB_BARS = [
+    [[20, 6], [34, 20]], [[24, 6], [38, 14]], [[18, 6], [32, 24]], [[22, 6], [36, 18]], [[20, 6]]
+  ];
+  var EMBED_OK = /^https:\/\/(eu|us)\.posthog\.com\/embedded\/[A-Za-z0-9_%-]+$/;
+
+  function mmss(s) {
+    if (!isNum(s)) return '';
+    var t = Math.max(0, Math.round(s));
+    return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0');
+  }
+  function durText(s) {
+    if (!isNum(s)) return '';
+    var t = Math.max(0, Math.round(s));
+    if (t < 60) return t + NB + 's';
+    var m = Math.floor(t / 60), r = t % 60;
+    return m + NB + 'min' + (r ? NB + String(r).padStart(2, '0') : '');
+  }
+  function dayWord() { return state.period === 'day' ? 'hier' : state.period === '7d' ? 'sur 7 jours' : 'sur 30 jours'; }
+  function whenText(iso) {
+    var d = new Date(iso); if (!iso || isNaN(d)) return '';
+    function pday(x) { try { return x.toLocaleDateString('fr-CA', { timeZone: 'Europe/Paris' }); } catch (e) { return x.toISOString().slice(0, 10); } }
+    var day = pday(d), today = pday(new Date()), yest = pday(new Date(Date.now() - 86400000));
+    var hm = parisTime(iso);
+    if (day === today) return "aujourd'hui " + hm;
+    if (day === yest) return 'hier ' + hm;
+    try { return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', timeZone: 'Europe/Paris' }) + ' ' + hm; } catch (e) { return day + ' ' + hm; }
+  }
+  function embedOk(u) {
+    if (typeof u !== 'string') return false;
+    return EMBED_OK.test(u) || (MOCK_FILE !== null && u === 'pilotage-mock-replay.html');
+  }
+
+  function replayList(d) { return Array.isArray(d.replays) ? d.replays.filter(function (r) { return r && r.session_id; }) : []; }
+  function visibleReplays(d) {
+    var list = replayList(d);
+    return state.exitFilter ? list.filter(function (r) { return r.exit_screen === state.exitFilter; }) : list;
+  }
+  function exitLabel(d, screen) {
+    var o = d.onboarding, ex = o && Array.isArray(o.exits) ? o.exits : [];
+    for (var i = 0; i < ex.length; i++) if (ex[i] && ex[i].screen === screen) return ex[i].label || screen;
+    return screen;
+  }
+
+  function onboardingCard(d) {
+    var o = d.onboarding;
+    var head = '<div class="card"><div class="label">Onboarding</div><h2 style="margin-top:6px">Où ils partent</h2>';
+    if (!o) return head + '<div class="sub">' + EMPTY_LINE + '</div></div>';
+    var langs = o.by_lang && typeof o.by_lang === 'object' ? Object.keys(o.by_lang) : [];
+    langs = langs.filter(function (l) { return o.by_lang[l] && isNum(o.by_lang[l].entered); })
+      .sort(function (a, b) { return o.by_lang[b].entered - o.by_lang[a].entered; }).slice(0, MAX_LANG_CHIPS);
+    if (state.lang && langs.indexOf(state.lang) < 0) langs.push(state.lang);
+    var chips = '<div class="chips" role="tablist"><span class="chip' + (state.lang ? '' : ' on') + '" role="tab" tabindex="0" data-lang="">Toutes</span>' +
+      langs.map(function (l) {
+        var lb = o.by_lang[l] ? o.by_lang[l].label : l;
+        return '<span class="chip' + (state.lang === l ? ' on' : '') + '" role="tab" tabindex="0" data-lang="' + esc(l) + '">' + esc(lb) + '</span>';
+      }).join('') + '</div>';
+    var entered = isNum(o.entered) ? o.entered : 0;
+    var sub = entered > 0
+      ? 'Personnes entrées ' + dayWord() + ' : ' + int(entered) + '. Part de celles qui quittent à chaque écran.'
+      : 'Personne n\'est entré dans l\'onboarding ' + dayWord() + '.';
+    var exits = (Array.isArray(o.exits) ? o.exits : []).filter(function (x) { return x && isNum(x.share_pct); }).slice(0, 4);
+    var max = exits.reduce(function (m, x) { return Math.max(m, x.share_pct); }, 0);
+    var rows = exits.map(function (x) {
+      var w = max > 0 ? Math.round(x.share_pct / max * 72) : 0;
+      var cls = state.exitFilter ? (state.exitFilter === x.screen ? ' on' : ' off') : '';
+      return '<div class="exit' + cls + '" role="button" tabindex="0" data-exit="' + esc(x.screen) + '"><div class="t"><span>' + esc(x.label || x.screen) + '</span><b>' + pctShort(x.share_pct) + '</b></div>' +
+        '<div class="track"><i style="width:' + w + '%"></i></div></div>';
+    }).join('');
+    if (!rows && entered > 0) rows = '<div class="sub" style="margin-top:12px">Aucun départ ' + dayWord() + '.</div>';
+    var foot = state.exitFilter
+      ? 'Replays filtrés sur « ' + esc(exitLabel(d, state.exitFilter)) + ' ». Touchez-le à nouveau pour tout revoir.'
+      : 'Toucher un écran montre les replays des personnes parties là.';
+    return head + '<div class="sub">' + sub + '</div>' + chips + rows + (exits.length ? '<div class="sub" style="margin-top:14px">' + foot + '</div>' : '') + '</div>';
+  }
+
+  function replayRow(r, i) {
+    var t = OUTCOME_TAG[r.tags && r.tags.outcome] || OUTCOME_TAG.completed;
+    var tags = r.tags || {};
+    var who = [tags.lang_label, tags.variant_label].filter(Boolean).join(' · ');
+    var bars = THUMB_BARS[i % THUMB_BARS.length].map(function (b) {
+      return '<div class="bar" style="top:' + b[0] + 'px' + (b[1] !== 6 ? ';right:' + b[1] + 'px' : '') + '"></div>';
+    }).join('');
+    return '<div class="rp" role="button" tabindex="0" data-replay="' + esc(r.session_id) + '"><div class="thumb">' + bars + '</div>' +
+      '<div><div class="why">' + esc(r.why) + '</div><div class="meta"><span class="tag ' + t[0] + '">' + t[1] + '</span>' +
+      (who ? '<span class="tag n">' + esc(who) + '</span>' : '') + '</div></div><div class="dur">' + mmss(r.duration_s) + '</div></div>';
+  }
+
+  function replaysCard(d) {
+    var head = '<div class="card"><div class="label">Replays à regarder</div>';
+    var all = replayList(d);
+    if (!all.length) return head + '<div class="sub" style="margin-top:6px">' + REPLAY_EMPTY + '</div></div>';
+    var list = visibleReplays(d);
+    var h2 = state.exitFilter
+      ? (list.length ? list.length + ' parcours parti' + (list.length > 1 ? 's' : '') + ' de cet écran' : 'Aucun replay parti de cet écran')
+      : list.length + ' parcours choisi' + (list.length > 1 ? 's' : '') + ' pour vous';
+    var shown = state.showAllReplays ? list : list.slice(0, VISIBLE_REPLAYS);
+    var rest = list.length - shown.length;
+    var body = list.length
+      ? '<div style="margin-top:8px">' + shown.map(replayRow).join('') + '</div>'
+      : '<div class="sub" style="margin-top:12px">Aucun des replays choisis ne part de cet écran.</div>';
+    var more = '';
+    if (list.length > VISIBLE_REPLAYS) {
+      more = state.showAllReplays
+        ? '<a class="more" role="button" tabindex="0" data-act="more-replays">Masquer les ' + (list.length - VISIBLE_REPLAYS) + ' autres</a>'
+        : '<a class="more" role="button" tabindex="0" data-act="more-replays">Voir ' + (rest > 1 ? 'les ' + rest + ' autres' : "l'autre") + '</a>';
+    }
+    return head + '<h2 style="margin-top:6px">' + h2 + '</h2><div class="sub">Tout est masqué : jamais de visage, de photo ni de texte tapé.</div>' + body + more + '</div>';
+  }
+
+  function replayByIdx(d, sid) {
+    var list = replayList(d);
+    for (var i = 0; i < list.length; i++) if (list[i].session_id === sid) return list[i];
+    return null;
+  }
+  function nextReplay(d, sid) {
+    var list = visibleReplays(d);
+    if (!list.length) list = replayList(d);
+    for (var i = 0; i < list.length; i++) if (list[i].session_id === sid) return list.length > 1 ? list[(i + 1) % list.length] : null;
+    return list[0] || null;
+  }
+
+  function playerView(d, r) {
+    var tags = r.tags || {};
+    var plat = r.platform === 'ios' ? 'iPhone' : r.platform === 'android' ? 'Android' : (r.platform || '');
+    var meta = [tags.lang_label, tags.variant_label ? 'onboarding ' + tags.variant_label : '', plat, r.app_version ? 'version ' + r.app_version : '', whenText(r.started_at)]
+      .filter(Boolean).map(esc).join(' · ');
+    var video = embedOk(r.embed_url)
+      ? '<iframe src="' + esc(r.embed_url) + '" title="Replay" allowfullscreen referrerpolicy="no-referrer"></iframe>'
+      : '<div class="masked">La vidéo arrive : PostHog la prépare encore.<br>Revenez dans quelques minutes.</div>';
+    var ctrl = '<div class="ctrl"><span>Durée ' + (mmss(r.duration_s) || '—') + '</span>' +
+      (embedOk(r.embed_url) ? '<a href="' + esc(r.embed_url) + '" target="_blank" rel="noopener noreferrer">Ouvrir en grand ↗</a>' : '') + '</div>';
+    var steps = (Array.isArray(r.steps) ? r.steps : []).map(function (s) {
+      return '<div class="s' + (s.hl ? ' hl' : '') + '"><span class="tm">' + mmss(s.at_s) + '</span><span class="nm">' + esc(s.label) + '</span><span class="d">' + (isNum(s.duration_s) ? durText(s.duration_s) : '') + '</span></div>';
+    }).join('');
+    var nxt = nextReplay(d, r.session_id);
+    return '<a class="back" role="button" tabindex="0" data-act="back">‹ Suivi</a>' +
+      '<div class="layout"><div class="player-wrap"><div class="player"><div class="phone">' + video + '</div>' + ctrl + '</div></div>' +
+      '<div class="grid"><div class="card"><div class="label">Pourquoi ce replay</div><h2 style="margin-top:6px">' + esc(r.why) + '</h2>' +
+      '<div class="meta" style="font-size:13px;color:var(--ink2);margin-top:2px">' + meta + '</div>' +
+      (r.detail ? '<div class="note" style="margin-top:12px">' + richText(r.detail) + '</div>' : '') +
+      '<div class="actions"><span class="btn" role="button" tabindex="0" data-act="seen" data-sid="' + esc(r.session_id) + '">Déjà vu</span>' +
+      (nxt ? '<span class="btn dark" role="button" tabindex="0" data-act="next" data-sid="' + esc(nxt.session_id) + '">Replay suivant →</span>' : '') + '</div></div>' +
+      '<div class="card steps"><div class="label">Le parcours, écran par écran</div><div style="margin-top:8px">' + (steps || '<div class="sub">Pas de parcours.</div>') + '</div></div>' +
+      '</div></div>';
+  }
+
   function homeView(d) {
     return topBar(headerLine(d.built_at), true) +
       '<div class="layout"><div class="grid">' + verdictCard(d) + kpiCards(d) +
       (d.data_note ? '<div class="data-note">' + esc(d.data_note) + '</div>' : '') +
-      functionsCard(d) + '</div><div class="side">' + releaseCard(d) + moneyCard(d) + screensCard(d) + protectedCard(d) + '</div></div>' +
+      functionsCard(d) + onboardingCard(d) + replaysCard(d) + '</div><div class="side">' + releaseCard(d) + moneyCard(d) + screensCard(d) + protectedCard(d) + '</div></div>' +
       '<div class="foot">Mis à jour à ' + parisTime(d.built_at) + ' · mêmes sources que l\'e-mail de 9 h</div>';
   }
 
@@ -579,8 +778,18 @@
     var m = /^#f=(.+)$/.exec(location.hash || '');
     return m ? decodeURIComponent(m[1]) : null;
   }
+  function currentReplay() {
+    var m = /^#r=(.+)$/.exec(location.hash || '');
+    try { return m ? decodeURIComponent(m[1]) : null; } catch (e) { return null; }
+  }
   function render() {
     var key = currentFn();
+    var rid = currentReplay();
+    if (rid && state.phase === 'ok' && state.data) {
+      var r = replayByIdx(state.data, rid);
+      if (r) { app.innerHTML = playerView(state.data, r); window.scrollTo(0, 0); return; }
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    }
     if (state.phase === 'nokey') { app.innerHTML = topBar('Accès privé', false) + messageCard("Lien d'accès requis", 'Demandez le lien à Claude.'); return; }
     if (state.phase === 'invalid') { app.innerHTML = topBar('Accès privé', false) + messageCard("Lien d'accès invalide", 'Demandez un nouveau lien à Claude.'); return; }
     if (state.phase === 'error') { app.innerHTML = topBar('Chargement interrompu', true) + messageCard('Chargement impossible', 'Les données ne sont pas arrivées. Vérifiez la connexion, puis réessayez.', true); return; }
@@ -603,22 +812,63 @@
     render();
   }
   window.addEventListener('hashchange', function () {
-    if (!currentFn()) state.fromHome = false;
+    if (!currentFn() && !currentReplay()) state.fromHome = false;
     render();
   });
 
+  function openReplay(sid) {
+    state.homeScroll = window.scrollY || 0;
+    state.fromHome = true;
+    location.hash = 'r=' + encodeURIComponent(sid);
+  }
+  // Replay suivant : remplace l'adresse (le retour ramène à l'accueil, pas au replay d'avant).
+  function swapReplay(sid) {
+    try { history.replaceState(null, '', location.pathname + location.search + '#r=' + encodeURIComponent(sid)); } catch (e) { location.hash = 'r=' + encodeURIComponent(sid); return; }
+    render();
+  }
+  // « Déjà vu » : enregistré côté serveur, retiré tout de suite de la liste (toutes périodes et langues).
+  function markSeen(sid) {
+    var nxt = state.data ? nextReplay(state.data, sid) : null;
+    if (!MOCK_FILE) {
+      var key = getKey();
+      if (key) {
+        fetch(API_URL + '?action=seen&session_id=' + encodeURIComponent(sid), { method: 'POST', headers: { 'x-pilotage-key': key }, cache: 'no-store' })
+          .then(function (res) { if (res.status === 401 || res.status === 403) { dropKey(); state.phase = 'invalid'; render(); } })
+          .catch(function () {});
+      }
+    }
+    Object.keys(state.cache).forEach(function (k) {
+      var c = state.cache[k];
+      if (c && Array.isArray(c.replays)) c.replays = c.replays.filter(function (r) { return r && r.session_id !== sid; });
+    });
+    if (state.data && Array.isArray(state.data.replays)) state.data.replays = state.data.replays.filter(function (r) { return r && r.session_id !== sid; });
+    if (nxt && nxt.session_id !== sid) swapReplay(nxt.session_id); else goHome();
+  }
+
   function onActivate(t) {
-    var el = t.closest('[data-period],[data-fn],[data-act]');
+    var el = t.closest('[data-period],[data-fn],[data-act],[data-lang],[data-exit],[data-replay]');
     if (!el) return;
-    if (el.hasAttribute('data-period')) {
+    if (el.hasAttribute('data-lang')) {
+      var l = el.getAttribute('data-lang') || null;
+      if (l === state.lang) return;
+      state.lang = l; state.exitFilter = null; state.showAllReplays = false; load();
+    } else if (el.hasAttribute('data-exit')) {
+      var x = el.getAttribute('data-exit');
+      state.exitFilter = state.exitFilter === x ? null : x; state.showAllReplays = false; render();
+    } else if (el.hasAttribute('data-replay')) {
+      openReplay(el.getAttribute('data-replay'));
+    } else if (el.hasAttribute('data-period')) {
       var p = el.getAttribute('data-period');
       if (p === state.period && state.phase === 'ok') return;
-      state.period = p; lsSet(PERIOD_STORE, p); load();
+      state.period = p; state.exitFilter = null; state.showAllReplays = false; lsSet(PERIOD_STORE, p); load();
     } else if (el.hasAttribute('data-fn')) {
       openFn(el.getAttribute('data-fn'));
     } else {
       var a = el.getAttribute('data-act');
       if (a === 'more') { state.showAll = !state.showAll; render(); }
+      else if (a === 'more-replays') { state.showAllReplays = !state.showAllReplays; render(); }
+      else if (a === 'seen') markSeen(el.getAttribute('data-sid'));
+      else if (a === 'next') swapReplay(el.getAttribute('data-sid'));
       else if (a === 'back') goHome();
       else if (a === 'retry') load(true);
     }
@@ -632,13 +882,15 @@
   function load(force) {
     var my = ++seq;
     var period = state.period;
+    var lang = state.lang;
+    var ck = period + '|' + (lang || '');
     var key = getKey();
     if (!MOCK_FILE && !key) { state.phase = 'nokey'; render(); return; }
-    if (!force && state.cache[period]) { state.data = state.cache[period]; state.phase = 'ok'; render(); return; }
+    if (!force && state.cache[ck]) { state.data = state.cache[ck]; state.phase = 'ok'; render(); return; }
     state.phase = 'loading'; state.data = null; render();
     var req = MOCK_FILE
       ? fetch(MOCK_FILE, { cache: 'no-store' })
-      : fetch(API_URL + '?period=' + encodeURIComponent(period), { headers: { 'x-pilotage-key': key }, cache: 'no-store' });
+      : fetch(API_URL + '?period=' + encodeURIComponent(period) + (lang ? '&lang=' + encodeURIComponent(lang) : ''), { headers: { 'x-pilotage-key': key }, cache: 'no-store' });
     req.then(function (res) {
       if (my !== seq) return;
       if (!MOCK_FILE && (res.status === 401 || res.status === 403)) { dropKey(); state.phase = 'invalid'; render(); return; }
@@ -646,7 +898,7 @@
       return res.json().then(function (data) {
         if (my !== seq) return;
         if (!data || typeof data !== 'object') throw new Error('réponse vide');
-        state.cache[period] = data; state.data = data; state.phase = 'ok'; render();
+        state.cache[ck] = data; state.data = data; state.phase = 'ok'; render();
       });
     }).catch(function () {
       if (my !== seq) return;
