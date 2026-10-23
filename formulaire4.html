@@ -822,7 +822,7 @@
 
         // --- CONFIGURATION ---
         // A/B du rapport gratuit depuis le 23/10 (ordre d'Antoine) : 1 personne sur 2 en v1, tirage gardé par navigateur (localStorage adermio_ab_rapport, commun FR/IT).
-        // v1 = form-test-fr-og-pur (7TwWULnwly1erfw7, « analyse gratuite web FR remake OG pur ») ; nouveau = form-test-fr-rapport-ab (L028an9owq3euypz, « Analyse gratuite web FR — nouveau design »).
+        // moitié « v1 » = CLAUDE depuis le 23/10 (ordre d'Antoine) : analyse-gratuite-web-claude-fr (3qGRadBRsQUUui6f, moteur Claude Sonnet de l'app + rapport OG pur) ; nouveau = form-test-fr-rapport-ab (L028an9owq3euypz, « Analyse gratuite web FR — nouveau design »). Avant le 23/10 ~13h : v1 = form-test-fr-og-pur (7TwWULnwly1erfw7).
         // Mesure : web_form_funnel, événement « submit », detail = nom du webhook. Fin du test = remettre une seule adresse.
         const AB_RAPPORT = (function () {
             var v = null;
@@ -834,7 +834,7 @@
             return v;
         })();
         const WEBHOOK_URL = AB_RAPPORT === 'v1'
-            ? 'https://n8n.adermio.com/webhook/form-test-fr-og-pur'
+            ? 'https://n8n.adermio.com/webhook/analyse-gratuite-web-claude-fr'
             : 'https://n8n.adermio.com/webhook/form-test-fr-rapport-ab';
         const PRESIGN_URL = 'https://api.adermio.com/v2/uploads/presign';
 
