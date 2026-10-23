@@ -837,7 +837,21 @@
         else { document.addEventListener('DOMContentLoaded', function() { lucide.createIcons(); }); }
 
         // --- CONFIGURATION ---
-        const WEBHOOK_URL = 'https://n8n.adermio.com/webhook/form-test-fr-rapport-ab'; // PROD depuis le 22/10 (ordre d'Antoine) : « Analyse gratuite web FR — nouveau design » (L028an9owq3euypz : prod FR 7TwWU + rapport A) — retour arrière = form-test-fr-og-pur (7TwWULnwly1erfw7, « analyse gratuite web FR remake OG pur »)
+        // A/B du rapport gratuit depuis le 23/10 (ordre d'Antoine) : 1 personne sur 2 en v1, tirage gardé par navigateur (localStorage adermio_ab_rapport, commun FR/IT).
+        // v1 = form-test-fr-og-pur (7TwWULnwly1erfw7, « analyse gratuite web FR remake OG pur ») ; nouveau = form-test-fr-rapport-ab (L028an9owq3euypz, « Analyse gratuite web FR — nouveau design »).
+        // Mesure : web_form_funnel, événement « submit », detail = nom du webhook. Fin du test = remettre une seule adresse.
+        const AB_RAPPORT = (function () {
+            var v = null;
+            try { v = localStorage.getItem('adermio_ab_rapport'); } catch (e) {}
+            if (v !== 'v1' && v !== 'nouveau') {
+                v = Math.random() < 0.5 ? 'v1' : 'nouveau';
+                try { localStorage.setItem('adermio_ab_rapport', v); } catch (e) {}
+            }
+            return v;
+        })();
+        const WEBHOOK_URL = AB_RAPPORT === 'v1'
+            ? 'https://n8n.adermio.com/webhook/form-test-fr-og-pur'
+            : 'https://n8n.adermio.com/webhook/form-test-fr-rapport-ab';
         const PRESIGN_URL = 'https://api.adermio.com/v2/uploads/presign';
 
 
