@@ -1,0 +1,495 @@
+{
+  "period": "day",
+  "from": "2026-10-22",
+  "to": "2026-10-22",
+  "built_at": "2026-10-23T07:02:00Z",
+  "data_note": null,
+  "verdict": {
+    "status": "orange",
+    "title": "Un point à regarder",
+    "sentence": "Le scan produit échoue plus que d'habitude : 7,9 % contre 2 %, surtout en Espagne sur la version 1.1.15. Tout le reste va bien.",
+    "focus": "product_scan"
+  },
+  "kpis": {
+    "revenue": {
+      "value_eur": 2165.08,
+      "norm_eur": 1209.23,
+      "delta_pct": 79
+    },
+    "new_users": {
+      "value": 1240,
+      "norm": 1210
+    },
+    "purchases": {
+      "value": 214,
+      "rate_pct": 17.3
+    }
+  },
+  "functions": [
+    {
+      "key": "product_scan",
+      "name": "Scan produit",
+      "status": "orange",
+      "rate_pct": 92.1,
+      "norm_pct": 98.0,
+      "attempts": 4210,
+      "failures": 333,
+      "source": "suivi",
+      "spark": [
+        98.1,
+        98.2,
+        97.9,
+        98.3,
+        98.0,
+        98.1,
+        97.9,
+        98.2,
+        98.0,
+        98.1,
+        97.9,
+        98.0,
+        95.6,
+        92.1
+      ],
+      "detail": {
+        "by_step": [
+          {
+            "label": "recherche serveur",
+            "share_pct": 71
+          }
+        ],
+        "by_error": [
+          {
+            "label": "délai dépassé",
+            "share_pct": 64
+          }
+        ],
+        "by_lang": [
+          {
+            "label": "espagnol",
+            "share_pct": 58
+          }
+        ],
+        "by_version": [
+          {
+            "label": "1.1.15",
+            "share_pct": 92
+          }
+        ],
+        "note": "La baisse commence **avec la version 1.1.15** et touche surtout la **recherche serveur**, qui dépasse son délai. Les autres versions ne bougent pas. Piste : la nouvelle recherche par photo appelle le serveur deux fois. **À vérifier en replay.**"
+      }
+    },
+    {
+      "key": "skin_match",
+      "name": "Verdict produit",
+      "status": "green",
+      "rate_pct": 97.4,
+      "norm_pct": 97.0,
+      "attempts": 2980,
+      "failures": 77,
+      "source": "suivi",
+      "spark": [
+        97.0,
+        97.2,
+        96.8,
+        97.5,
+        97.3,
+        97.4,
+        97.2,
+        97.4,
+        97.3,
+        97.4,
+        97.2,
+        97.5,
+        97.4,
+        97.4
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "adjust",
+      "name": "Ajuster ma routine",
+      "status": "green",
+      "rate_pct": 98.6,
+      "norm_pct": 98.0,
+      "attempts": 148,
+      "failures": 2,
+      "source": "suivi",
+      "spark": [
+        97.9,
+        98.1,
+        98.4,
+        98.2,
+        98.5,
+        98.6,
+        98.4,
+        98.6,
+        98.5,
+        98.7,
+        98.5,
+        98.6,
+        98.7,
+        98.6
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "photo_analysis",
+      "name": "Analyse photo",
+      "status": "green",
+      "rate_pct": 99.1,
+      "norm_pct": 99.0,
+      "attempts": 1855,
+      "failures": 17,
+      "source": "prod",
+      "spark": [
+        99.0,
+        99.1,
+        98.9,
+        99.0,
+        99.1,
+        99.0,
+        98.9,
+        99.1,
+        99.0,
+        99.0,
+        99.1,
+        98.9,
+        99.0,
+        99.1
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "payment",
+      "name": "Paiement et déblocage",
+      "status": "green",
+      "rate_pct": 99.5,
+      "norm_pct": 99.0,
+      "attempts": 214,
+      "failures": 1,
+      "source": "prod",
+      "spark": [
+        99.2,
+        99.3,
+        99.2,
+        99.4,
+        99.3,
+        99.4,
+        99.5,
+        99.4,
+        99.5,
+        99.4,
+        99.5,
+        99.6,
+        99.5,
+        99.5
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "meal",
+      "name": "Repas",
+      "status": "green",
+      "rate_pct": 99.7,
+      "norm_pct": 99.0,
+      "attempts": 3640,
+      "failures": 11,
+      "source": "suivi",
+      "spark": [
+        99.6,
+        99.7,
+        99.5,
+        99.6,
+        99.7,
+        99.6,
+        99.5,
+        99.7,
+        99.6,
+        99.6,
+        99.7,
+        99.5,
+        99.6,
+        99.7
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "routine_generation",
+      "name": "Génération de routine",
+      "status": "green",
+      "rate_pct": 99.8,
+      "norm_pct": 99.5,
+      "attempts": 412,
+      "failures": 1,
+      "source": "suivi",
+      "spark": [
+        99.7,
+        99.8,
+        99.6,
+        99.7,
+        99.8,
+        99.7,
+        99.6,
+        99.8,
+        99.7,
+        99.7,
+        99.8,
+        99.6,
+        99.7,
+        99.8
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "onboarding_verdict",
+      "name": "Verdict de l'onboarding",
+      "status": "green",
+      "rate_pct": 99.8,
+      "norm_pct": 99.6,
+      "attempts": 1180,
+      "failures": 2,
+      "source": "prod",
+      "spark": [
+        99.7,
+        99.8,
+        99.6,
+        99.7,
+        99.8,
+        99.7,
+        99.6,
+        99.8,
+        99.7,
+        99.7,
+        99.8,
+        99.6,
+        99.7,
+        99.8
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "food_scan",
+      "name": "Scan aliment",
+      "status": "green",
+      "rate_pct": 99.8,
+      "norm_pct": 99.4,
+      "attempts": 960,
+      "failures": 2,
+      "source": "suivi",
+      "spark": [
+        99.7,
+        99.8,
+        99.6,
+        99.7,
+        99.8,
+        99.7,
+        99.6,
+        99.8,
+        99.7,
+        99.7,
+        99.8,
+        99.6,
+        99.7,
+        99.8
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "point_repere",
+      "name": "Point Repère",
+      "status": "green",
+      "rate_pct": 99.9,
+      "norm_pct": 99.7,
+      "attempts": 305,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        99.8,
+        99.9,
+        99.7,
+        99.8,
+        99.9,
+        99.8,
+        99.7,
+        99.9,
+        99.8,
+        99.8,
+        99.9,
+        99.7,
+        99.8,
+        99.9
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "auth",
+      "name": "Connexion",
+      "status": "green",
+      "rate_pct": 99.9,
+      "norm_pct": 99.8,
+      "attempts": 1320,
+      "failures": 1,
+      "source": "suivi",
+      "spark": [
+        99.8,
+        99.9,
+        99.7,
+        99.8,
+        99.9,
+        99.8,
+        99.7,
+        99.9,
+        99.8,
+        99.8,
+        99.9,
+        99.7,
+        99.8,
+        99.9
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "bilan_j28",
+      "name": "Bilan J28",
+      "status": "green",
+      "rate_pct": 100.0,
+      "norm_pct": 99.5,
+      "attempts": 64,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        100,
+        null,
+        100,
+        100,
+        99.0,
+        100,
+        100,
+        null,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    }
+  ],
+  "release": {
+    "version": "1.1.15",
+    "adoption_pct": 38,
+    "previous": "1.1.14",
+    "degrading": [
+      "product_scan"
+    ],
+    "stalled_screens": 0,
+    "crash_free_users_pct": 99.88,
+    "first_seen_day": "2026-10-21"
+  },
+  "money": {
+    "funnel": [
+      {
+        "label": "Nouveaux",
+        "value": 1240
+      },
+      {
+        "label": "Analyse vue",
+        "value": 880
+      },
+      {
+        "label": "Paywall vu",
+        "value": 719
+      },
+      {
+        "label": "Achat",
+        "value": 214
+      }
+    ],
+    "paid_not_unlocked": 0,
+    "entitlement_mismatches": 2
+  },
+  "screens": [
+    {
+      "screen_name": "scanner_auth",
+      "label": "Scanner (connexion)",
+      "stalls": 3
+    },
+    {
+      "screen_name": "bilan_j28",
+      "label": "Bilan J28",
+      "stalls": 1
+    }
+  ],
+  "protected": {
+    "success_pct": 99.6,
+    "total": 1830
+  }
+}

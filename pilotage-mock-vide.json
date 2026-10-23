@@ -1,0 +1,461 @@
+{
+  "period": "day",
+  "from": "2026-10-22",
+  "to": "2026-10-22",
+  "built_at": "2026-10-23T07:02:00Z",
+  "data_note": "Le suivi de l'app n'est allumé que sur vos appareils : les fonctions se rempliront à la mise en vente de 1.1.14.",
+  "verdict": {
+    "status": "green",
+    "title": "Tout va bien",
+    "sentence": "Toutes les fonctions sont dans leur normale.",
+    "focus": null
+  },
+  "kpis": {
+    "revenue": {
+      "value_eur": 1312.4,
+      "norm_eur": 1209.23,
+      "delta_pct": 9
+    },
+    "new_users": null,
+    "purchases": null
+  },
+  "functions": [
+    {
+      "key": "photo_analysis",
+      "name": "Analyse photo",
+      "status": "green",
+      "rate_pct": 99.2,
+      "norm_pct": 99.0,
+      "attempts": 1790,
+      "failures": 14,
+      "source": "prod",
+      "spark": [
+        99.0,
+        99.1,
+        98.9,
+        99.0,
+        99.1,
+        99.0,
+        98.9,
+        99.1,
+        99.0,
+        99.0,
+        99.1,
+        98.9,
+        99.0,
+        99.1
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "payment",
+      "name": "Paiement et déblocage",
+      "status": "green",
+      "rate_pct": 99.6,
+      "norm_pct": 99.0,
+      "attempts": 182,
+      "failures": 1,
+      "source": "prod",
+      "spark": [
+        99.4,
+        99.5,
+        99.3,
+        99.4,
+        99.5,
+        99.4,
+        99.3,
+        99.5,
+        99.4,
+        99.4,
+        99.5,
+        99.3,
+        99.4,
+        99.5
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "onboarding_verdict",
+      "name": "Verdict de l'onboarding",
+      "status": "green",
+      "rate_pct": 99.7,
+      "norm_pct": 99.6,
+      "attempts": 1104,
+      "failures": 3,
+      "source": "prod",
+      "spark": [
+        99.6,
+        99.7,
+        99.5,
+        99.6,
+        99.7,
+        99.6,
+        99.5,
+        99.7,
+        99.6,
+        99.6,
+        99.7,
+        99.5,
+        99.6,
+        99.7
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "product_scan",
+      "name": "Scan produit",
+      "status": "grey",
+      "rate_pct": 100.0,
+      "norm_pct": null,
+      "attempts": 6,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        100
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "skin_match",
+      "name": "Verdict produit",
+      "status": "grey",
+      "rate_pct": 100.0,
+      "norm_pct": null,
+      "attempts": 4,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "adjust",
+      "name": "Ajuster ma routine",
+      "status": "grey",
+      "rate_pct": 100.0,
+      "norm_pct": null,
+      "attempts": 2,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "meal",
+      "name": "Repas",
+      "status": "grey",
+      "rate_pct": 100.0,
+      "norm_pct": null,
+      "attempts": 9,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        100,
+        null,
+        100
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "routine_generation",
+      "name": "Génération de routine",
+      "status": "grey",
+      "rate_pct": null,
+      "norm_pct": null,
+      "attempts": 0,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "food_scan",
+      "name": "Scan aliment",
+      "status": "grey",
+      "rate_pct": 100.0,
+      "norm_pct": null,
+      "attempts": 3,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "bilan_j28",
+      "name": "Bilan J28",
+      "status": "grey",
+      "rate_pct": null,
+      "norm_pct": null,
+      "attempts": 0,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "point_repere",
+      "name": "Point Repère",
+      "status": "grey",
+      "rate_pct": 100.0,
+      "norm_pct": null,
+      "attempts": 1,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "auth",
+      "name": "Connexion",
+      "status": "grey",
+      "rate_pct": 100.0,
+      "norm_pct": null,
+      "attempts": 5,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    },
+    {
+      "key": "startup",
+      "name": "Démarrage",
+      "status": "grey",
+      "rate_pct": 100.0,
+      "norm_pct": null,
+      "attempts": 14,
+      "failures": 0,
+      "source": "suivi",
+      "spark": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        100,
+        100,
+        100
+      ],
+      "detail": {
+        "by_step": [],
+        "by_error": [],
+        "by_lang": [],
+        "by_version": [],
+        "note": null
+      }
+    }
+  ],
+  "release": null,
+  "money": {
+    "funnel": null,
+    "paid_not_unlocked": 0,
+    "entitlement_mismatches": null
+  },
+  "screens": [],
+  "protected": null
+}
