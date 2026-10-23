@@ -454,7 +454,8 @@
   "money": {
     "funnel": null,
     "paid_not_unlocked": 0,
-    "entitlement_mismatches": null
+    "entitlement_mismatches": null,
+    "anonymous_unlinked": 1
   },
   "screens": [],
   "protected": null

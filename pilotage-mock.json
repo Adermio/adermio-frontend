@@ -474,7 +474,8 @@
       }
     ],
     "paid_not_unlocked": 0,
-    "entitlement_mismatches": 2
+    "entitlement_mismatches": 2,
+    "anonymous_unlinked": 3
   },
   "screens": [
     {

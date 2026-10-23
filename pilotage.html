@@ -498,10 +498,12 @@
     var pnu = isNum(m.paid_not_unlocked)
       ? '<span class="tag ' + (m.paid_not_unlocked > 0 ? 'bad' : 'ok') + '">' + int(m.paid_not_unlocked) + '</span>' : '—';
     var mis = isNum(m.entitlement_mismatches) ? int(m.entitlement_mismatches) : '—';
+    var anon = isNum(m.anonymous_unlinked) ? int(m.anonymous_unlinked) : '—';
     return '<div class="card"><div class="label">L\'argent</div><h2 style="margin-top:6px">Du nouveau à l\'achat</h2>' + body +
       '<div class="mini-rows" style="margin-top:10px">' +
       '<div class="r"><span>Payés mais pas débloqués</span><b>' + pnu + '</b></div>' +
-      '<div class="r"><span>Écarts Apple / serveur</span><b>' + mis + '</b></div></div></div>';
+      '<div class="r"><span>Écarts Apple / serveur</span><b>' + mis + '</b></div>' +
+      '<div class="r"><span>Achats anonymes pas encore reliés</span><b>' + anon + '</b></div></div></div>';
   }
 
   function screensCard(d) {
